@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "94278495791",
+    "firebase_url": "https://feedback-tower-test.firebaseio.com",
+    "project_id": "feedback-tower-test",
+    "storage_bucket": "feedback-tower-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94278495791:android:6554eace87fc38dc",
+        "android_client_info": {
+          "package_name": "com.feedbacktower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94278495791-t7gak9mk13l5vcdasvt79cq3utt6t249.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaUvjOpKALi2ccUhxB8Tf4hd1JaIK99JA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94278495791-t7gak9mk13l5vcdasvt79cq3utt6t249.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

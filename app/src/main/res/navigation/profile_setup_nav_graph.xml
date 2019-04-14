@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph"
+            app:startDestination="@id/personalDetailsFragment">
+
+    <fragment android:id="@+id/personalDetailsFragment"
+              android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
+              android:label="fragment_personal_details" tools:layout="@layout/fragment_personal_details">
+        <action android:id="@+id/action_personalDetailsFragment_to_addressDetailsFragment"
+                app:destination="@id/addressDetailsFragment"/>
+    </fragment>
+    <fragment android:id="@+id/addressDetailsFragment" android:name="com.feedbacktower.fragments.AddressDetailsFragment"
+              android:label="fragment_address_details" tools:layout="@layout/fragment_address_details">
+        <action android:id="@+id/action_addressDetailsFragment_to_accountTypeSelectionFragment"
+                app:destination="@id/accountTypeSelectionFragment"/>
+    </fragment>
+    <fragment android:id="@+id/accountTypeSelectionFragment"
+              android:name="com.feedbacktower.fragments.AccountTypeSelectionFragment"
+              android:label="fragment_account_selection_type" tools:layout="@layout/fragment_account_selection_type"/>
+</navigation>

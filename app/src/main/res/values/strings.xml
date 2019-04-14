@@ -3,4 +3,38 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="log_in">LOG IN</string>
+    <string name="app_logo_desc">App Logo Image</string>
+    <string name="otp">OTP</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="birth_date">Birth date</string>
+    <string name="continue_">continue</string>
+    <string name="select_state">Select State</string>
+    <string name="select_city">Select City</string>
+    <string name="enter_pin">Enter Pincode</string>
+    <string name="enter_address">Enter Address</string>
+    <string name="business_name">Business name</string>
+    <string name="est_reg">Establishment Registration No.</string>
+    <string name="business_cat">Business Category</string>
+    <string name="office_address">Office Address</string>
+    <string name="office_phone">Office Contact</string>
+    <string name="office_website">Business Website</string>
+    <string name="write_review">Write review</string>
+    <string name="write_something">Write Something...</string>
+    <string name="send_review">SEND REVIEW</string>
+    <string name="send_suggestion">Send Suggestion</string>
+    <string name="send">send</string>
+    <string name="payment">Payment</string>
+    <string name="proceed_to_pay">PROCEED TO PAY</string>
+    <string name="select_interests">Select Interests</string>
+    <string name="select_interest">Select Your Interests</string>
+    <string name="save_selection">SAVE SELECTION</string>
+    <string name="cd_cat_image">CategoryImage</string>
 </resources>

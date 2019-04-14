@@ -1,19 +1,14 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'androidx.navigation.safeargs'
 
-
 android {
-    compileSdkVersion rootProject.compileSdkVersion
     dataBinding {
         enabled = true
     }
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
@@ -33,37 +28,39 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlin_version"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.legacy:legacy-support-v4:$rootProject.legacySupportVersion"
+    implementation "androidx.vectordrawable:vectordrawable:$rootProject.vectorDrawablesVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "com.google.android.material:material:$rootProject.supportLibraryVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
-    implementation "androidx.vectordrawable:vectordrawable:$rootProject.vectorDrawableVersion"
     implementation "android.arch.work:work-runtime-ktx:$rootProject.workVersion"
     implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
     implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
-    implementation "androidx.legacy:legacy-support-v4:$rootProject.supportLibraryVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-    implementation "org.jetbrains.anko:anko-commons:$rootProject.ankoCommonsVersion"
     implementation "androidx.preference:preference:$rootProject.supportLibraryVersion"
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+
+    //anko commons
+    implementation "org.jetbrains.anko:anko-commons:$rootProject.ankoCommonsVersion"
+
+    //glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
 
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.google.firebase:firebase-config:16.1.2'
-    implementation 'com.google.firebase:firebase-firestore:17.1.5'
+    //databinding
+    kapt "com.android.databinding:compiler:$rootProject.androidPluginVersion"
 
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
-
 }
-apply plugin: 'com.google.gms.google-services'

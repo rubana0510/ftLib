@@ -12,8 +12,16 @@ import com.feedbacktower.databinding.DialogSelectInterestsBinding
 import com.feedbacktower.util.InjectorUtils
 import com.feedbacktower.viewmodels.BusinessCategoriesViewModel
 
-class SelectInterestsFragment : DialogFragment() {
+class SelectInterestsFragment: DialogFragment() {
+
     private lateinit var viewModel: BusinessCategoriesViewModel
+    companion object {
+        fun getInstance(): SelectInterestsFragment {
+            val fragment = SelectInterestsFragment()
+            return fragment
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +42,4 @@ class SelectInterestsFragment : DialogFragment() {
             adapter.submitList(it)
         })
     }
-
-
 }

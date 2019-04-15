@@ -27,6 +27,18 @@ fun View.gone() {
     this.visibility = View.GONE
 }
 
+fun Float.toRemarkText(): String{
+   return when(this){
+        0f-> ""
+       1f-> "GOOD1"
+       2f-> "GOOD2"
+       3f-> "GOOD3"
+       4f-> "GOOD4"
+       5f-> "GOOD5"
+       else -> ""
+    }
+}
+
 fun Int.dpToPx(context: Context): Int {
     val displayMetrics = context.resources.displayMetrics
     return Math.round(this * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))

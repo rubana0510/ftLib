@@ -37,4 +37,10 @@
     <string name="select_interest">Select Your Interests</string>
     <string name="save_selection">SAVE SELECTION</string>
     <string name="cd_cat_image">CategoryImage</string>
+    <string name="title_activity_business_main">Feedback Tower</string>
+    <string name="title_search">Search</string>
+    <string name="title_reviews">Reviews and Ratings</string>
+    <string name="title_suggestions">Suggstions</string>
+    <string name="title_my_account">My Account</string>
+    <string name="home_screen_fragment_title">Feedback Tower</string>
 </resources>

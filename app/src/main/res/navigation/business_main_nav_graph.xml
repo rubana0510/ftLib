@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/business_main_nav_graph" app:startDestination="@id/navigation_home">
+    <fragment
+            android:id="@+id/navigation_home"
+            android:name="com.feedbacktower.fragments.HomeFragment"
+            android:label="@string/title_home"
+            tools:layout="@layout/fragment_home">
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_search"
+            android:name="com.feedbacktower.fragments.SearchFragment"
+            android:label="@string/title_search"
+            tools:layout="@layout/fragment_search">
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_review"
+            android:name="com.feedbacktower.fragments.business.ReviewsFragment"
+            android:label="@string/title_reviews"
+            tools:layout="@layout/fragment_reviews">
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_suggestion"
+            android:name="com.feedbacktower.fragments.business.SuggestionsFragment"
+            android:label="@string/title_suggestions"
+            tools:layout="@layout/fragment_suggestions">
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_account"
+            android:name="com.feedbacktower.fragments.business.AccountFragment"
+            android:label="@string/title_my_account"
+            tools:layout="@layout/fragment_account">
+    </fragment>
+</navigation>

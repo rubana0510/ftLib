@@ -43,4 +43,6 @@
     <string name="title_suggestions">Suggstions</string>
     <string name="title_my_account">My Account</string>
     <string name="home_screen_fragment_title">Feedback Tower</string>
+    <string name="no_suggestions_yet">No suggestions yet</string>
+    <string name="no_reviews_yet">No Reviews Yet</string>
 </resources>

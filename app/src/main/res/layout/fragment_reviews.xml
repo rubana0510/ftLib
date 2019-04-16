@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.business.ReviewsFragment">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+        <variable name="isLoading" type="Boolean"/>
+    </data>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-        <TextView
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="reviews"/>
+                android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/reviewListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:isGone="@{isLoading}"/>
+            <TextView
+                    android:id="@+id/message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/no_reviews_yet"
+                    app:isGone="@{isLoading}"/>
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

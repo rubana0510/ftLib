@@ -3,6 +3,7 @@ package com.feedbacktower.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.feedbacktower.BusinessMainActivity
 import com.feedbacktower.util.launchActivity
 
 class SplashScreen : AppCompatActivity() {
@@ -11,7 +12,7 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         Handler().postDelayed({
-            launchActivity<ProfileSetupScreen>()
+            launchActivity<BusinessMainActivity>()
         }, 1000)
     }
 }

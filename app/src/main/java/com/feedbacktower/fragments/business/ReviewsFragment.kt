@@ -45,9 +45,9 @@ class ReviewsFragment : Fragment() {
 
     private fun fetchReviewList() {
         val list = listOf(
-            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "5", "Now"),
-            Review("2", "1", "Sanket Naik", "2", "Best Garage2", "5", "Now"),
-            Review("3", "1", "Sanket Naik", "2", "Best Garage3", "5", "Now")
+            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "It was really great experience using your service. Hope we will get the same for years to come.", "Now", "ss"),
+            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "It was really great experience using your service.", "Now", "ss"),
+            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "It was really great experience.", "Now", "ss")
         )
         reviewAdapter.submitList(list)
     }

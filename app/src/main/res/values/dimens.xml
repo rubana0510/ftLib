@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="edittext_margin">24dp</dimen>
     <dimen name="drawable_padding">16dp</dimen>
+    <dimen name="replyBubbleRadius">8dp</dimen>
 </resources>

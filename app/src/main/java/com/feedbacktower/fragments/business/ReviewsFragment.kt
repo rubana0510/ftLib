@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ class ReviewsFragment : Fragment() {
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
     private lateinit var reviewAdapter: ReviewListAdapter
+    private var isListEmpty: Boolean? = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,10 +31,16 @@ class ReviewsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
     private fun initUI(binding: FragmentReviewsBinding) {
         reviewListView = binding.reviewListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
+        isListEmpty = binding.isListEmpty
 
         //setup list
         reviewListView.layoutManager = LinearLayoutManager(requireContext())
@@ -45,10 +53,17 @@ class ReviewsFragment : Fragment() {
 
     private fun fetchReviewList() {
         val list = listOf(
-            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "It was really great experience using your service. Hope we will get the same for years to come.", "Now", "ss"),
-            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "It was really great experience using your service.", "Now", "ss"),
-            Review("1", "1", "Sanket Naik", "2", "Best Garage1", "It was really great experience.", "Now", "ss")
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience using your service. Hope we will get the same for years to come.", "1", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience using your service.", "2", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
+            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss")
         )
+        isListEmpty = list.isEmpty()
         reviewAdapter.submitList(list)
     }
 

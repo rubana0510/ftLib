@@ -27,7 +27,7 @@
     <string name="office_phone">Office Contact</string>
     <string name="office_website">Business Website</string>
     <string name="write_review">Write review</string>
-    <string name="write_something">Write Something...</string>
+    <string name="write_something">Write Something…</string>
     <string name="send_review">SEND REVIEW</string>
     <string name="send_suggestion">Send Suggestion</string>
     <string name="send">send</string>
@@ -39,11 +39,23 @@
     <string name="cd_cat_image">CategoryImage</string>
     <string name="title_activity_business_main">Feedback Tower</string>
     <string name="title_search">Search</string>
-    <string name="title_reviews">Reviews and Ratings</string>
-    <string name="title_suggestions">Suggstions</string>
+    <string name="title_reviews">Reviews</string>
+    <string name="title_suggestions">Suggestions</string>
     <string name="title_my_account">My Account</string>
     <string name="home_screen_fragment_title">Feedback Tower</string>
     <string name="no_suggestions_yet">No suggestions yet</string>
     <string name="no_reviews_yet">No Reviews Yet</string>
     <string name="reply">REPLY</string>
+    <string name="no_feed_yet">No Feed Yet</string>
+    <string name="like_image_button">Like image Button</string>
+    <string name="cd_business_logo">Business logo</string>
+    <string name="edit_profile">EDIT PROFILE</string>
+
+    <string name="likes">%d likes</string>
+    <string name="write_your_reply">Write your reply...</string>
+    <string name="no_search_results">No Search Results</string>
+    <string name="dot_bullet">•</string>
+    <string name="title_timeline">Timeline</string>
+    <string name="timeline">Timeline</string>
+    <string name="title_details">Details</string>
 </resources>

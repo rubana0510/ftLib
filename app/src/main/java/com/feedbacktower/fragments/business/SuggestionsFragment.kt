@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,11 +22,13 @@ class SuggestionsFragment : Fragment() {
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
     private lateinit var suggestionAdapter: SuggestionListAdapter
+    private var isListEmpty: Boolean? = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentSuggestionsBinding.inflate(inflater, container, false)
+        (activity as AppCompatActivity).supportActionBar?.show()
         initUI(binding)
         return binding.root
     }
@@ -34,6 +37,7 @@ class SuggestionsFragment : Fragment() {
         suggestionListView = binding.suggestionListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
+        isListEmpty = binding.isListEmpty
 
         //setup list
         suggestionListView.layoutManager = LinearLayoutManager(requireContext())
@@ -46,10 +50,16 @@ class SuggestionsFragment : Fragment() {
 
     private fun fetchSuggestionList() {
         val list = listOf(
-            Suggestion("1", "1", "Sanket Naik", "2", "Please change1", "5", "USER", "", ""),
-            Suggestion("2", "1", "Sanket Naik", "2", "Please change2", "4", "USER", "", ""),
-            Suggestion("3", "1", "Sanket Naik", "2", "Please change3", "2", "USER", "", "")
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
+            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "Thanks a lot for the suggestion", "ss", "Now", "Yesterday")
         )
+        isListEmpty = list.isEmpty()
         suggestionAdapter.submitList(list)
     }
 

@@ -4,28 +4,50 @@
         tools:context=".fragments.business.ReviewsFragment">
     <data>
         <variable name="isLoading" type="Boolean"/>
+        <variable name="isListEmpty" type="Boolean"/>
     </data>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefresh"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <FrameLayout
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:title="@string/title_reviews"
+                    app:titleTextColor="@color/white"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reviewListView"
+            <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:isGone="@{isLoading}"/>
-            <TextView
-                    android:id="@+id/message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/no_reviews_yet"
-                    app:isGone="@{isLoading}"/>
-        </FrameLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+                    android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/reviewListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:listitem="@layout/item_review"
+                        app:isGone="@{isLoading}"/>
+                <TextView
+                        android:id="@+id/message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/no_reviews_yet"
+                        app:isGone="@{!isListEmpty}"/>
+            </FrameLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
 </layout>

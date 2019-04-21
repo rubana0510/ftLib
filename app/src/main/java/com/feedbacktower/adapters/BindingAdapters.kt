@@ -1,5 +1,3 @@
-
-
 package com.feedbacktower.adapters
 
 import android.view.View
@@ -17,6 +15,7 @@ fun bindIsGone(view: View, isGone: Boolean) {
         View.VISIBLE
     }
 }
+
 @BindingAdapter("loadImage")
 fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
@@ -26,8 +25,9 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
             .into(view)
     }
 }
+
 @BindingAdapter("loadRoundImage")
-fun bindImageFromUrlRound(view: ImageView, imageUrl: String?) {
+fun bindImageFromDrawable(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(view.context)
             .load(imageUrl)
@@ -35,4 +35,12 @@ fun bindImageFromUrlRound(view: ImageView, imageUrl: String?) {
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(view)
     }
+}
+
+@BindingAdapter("loadDrawableImage")
+fun bindImageFromUrlRound(view: ImageView, drawable: Int) {
+    Glide.with(view.context)
+        .load(drawable)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(view)
 }

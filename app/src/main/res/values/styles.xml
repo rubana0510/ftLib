@@ -1,20 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@style/Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Light"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light">
+    </style>
 
     <style name="editTextPassword" parent="ThemeOverlay.MaterialComponents.TextInputEditText.FilledBox.Dense"/>
 
@@ -30,12 +32,22 @@
     </style>
 
     <style name="ButtonFilledStyle" parent="Widget.MaterialComponents.Button">
-<item name="android:textSize">12sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">#212121</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cornerRadius">24dp</item>
     </style>
 
     <style name="ButtonOutlinedStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
-
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#212121</item>
+        <item name="android:background">@drawable/bg_rounded_outline</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+    <style name="ImageButtonStyle">
+        <item name="android:padding">8dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme.NoActionBar">
@@ -44,13 +56,34 @@
 
     <style name="MediumText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">#464646</item>
+        <item name="android:textColor">#414141</item>
     </style>
+
     <style name="MediumBoldText" parent="MediumText">
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="SmallText" parent="TextAppearance.AppCompat.Small">
+
+    </style>
+    <style name="SuggestionMessageStyle" parent="SmallText">
+
+    </style>
+
+
+    <style name="SuggestionReplyStyle" parent="SmallText">
+
+    </style>
+    <style name="ReviewMessageStyle" parent="SmallText">
+
+    </style>
+
+
+    <style name="UserFullNameStyle" parent="SmallText">
+
+    </style>
+
+    <style name="UserProfileImageStyle">
 
     </style>
 
@@ -68,4 +101,21 @@
     <style name="TinyText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">12sp</item>
     </style>
+    <style name="businessNameStyle" parent="SmallText">
+
+    </style>
+    <style name="businessCategoryStyle"></style>
+    <style name="businessCityStyle"></style>
+    <style name="businessNameBigStyle" parent="LargeText">
+
+    </style>
+    <style name="IconTextViewStyle" parent="MediumText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+    </style>
+
 </resources>

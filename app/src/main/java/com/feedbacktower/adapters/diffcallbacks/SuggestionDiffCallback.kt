@@ -1,4 +1,4 @@
-package com.feedbacktower.adapters
+package com.feedbacktower.adapters.diffcallbacks
 
 import androidx.recyclerview.widget.DiffUtil
 import com.feedbacktower.data.models.Suggestion

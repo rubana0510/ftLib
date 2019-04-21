@@ -7,6 +7,10 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.ImageView
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.R
@@ -27,15 +31,15 @@ fun View.gone() {
     this.visibility = View.GONE
 }
 
-fun Float.toRemarkText(): String{
-   return when(this){
-        0f-> ""
-       1f-> "GOOD1"
-       2f-> "GOOD2"
-       3f-> "GOOD3"
-       4f-> "GOOD4"
-       5f-> "GOOD5"
-       else -> ""
+fun Float.toRemarkText(): String {
+    return when (this) {
+        0f -> ""
+        1f -> "GOOD1"
+        2f -> "GOOD2"
+        3f -> "GOOD3"
+        4f -> "GOOD4"
+        5f -> "GOOD5"
+        else -> ""
     }
 }
 
@@ -71,3 +75,28 @@ inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noi
 }
 
 inline fun <reified T : Any> newIntent(context: Context): Intent = Intent(context, T::class.java)
+
+
+
+//recyclerview utils
+enum class Orientation { H, V }
+
+internal fun RecyclerView.setLinearLayoutManager(context: Context, orientation: Orientation = Orientation.V) {
+    if (orientation == Orientation.V)
+        layoutManager = LinearLayoutManager(context)
+    else
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+}
+
+internal fun RecyclerView.setItemAnimator() {
+    itemAnimator = DefaultItemAnimator()
+}
+
+internal fun RecyclerView.enableSeparator(context: Context) {
+    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL))
+}
+
+internal fun RecyclerView.setVertical(context: Context) {
+    layoutManager = LinearLayoutManager(context)
+    itemAnimator = DefaultItemAnimator()
+}

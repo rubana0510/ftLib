@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.adapters.diffcallbacks.SuggestionDiffCallback
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.ItemSuggestionBinding
 

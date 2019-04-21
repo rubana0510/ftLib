@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="count" type="com.feedbacktower.data.local.models.Count"/>
+    </data>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    android:padding="8dp">
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <com.feedbacktower.views.SquareImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_count_ring"/>
+            <TextView
+                    style="@style/LargeBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="509"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:text="@{count.value}"/>
+        </FrameLayout>
+
+        <TextView
+                style="@style/TinyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Total Ratings"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="@{count.label}"/>
+    </LinearLayout>
+</layout>

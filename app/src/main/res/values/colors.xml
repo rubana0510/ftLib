@@ -10,4 +10,6 @@
     <color name="white">#ffffff</color>
     <color name="grey61">#616161</color>
     <color name="greye0">#e0e0e0</color>
+    <color name="colorDivider">#414141</color>
+    <color name="windowBackground">#F5F5F5</color>
 </resources>

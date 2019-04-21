@@ -13,12 +13,18 @@
             android:name="com.feedbacktower.fragments.SearchFragment"
             android:label="@string/title_search"
             tools:layout="@layout/fragment_search">
+        <action android:id="@+id/action_navigation_search_to_businessDetailsActivity"
+                app:destination="@id/businessDetailsActivity"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_review"
             android:name="com.feedbacktower.fragments.business.ReviewsFragment"
             android:label="@string/title_reviews"
             tools:layout="@layout/fragment_reviews">
+        <argument
+                android:name="bottomNav"
+                android:defaultValue="true"
+                app:argType="boolean"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_suggestion"
@@ -30,6 +36,8 @@
             android:id="@+id/navigation_account"
             android:name="com.feedbacktower.fragments.business.AccountFragment"
             android:label="@string/title_my_account"
-            tools:layout="@layout/fragment_account">
+            tools:layout="@layout/fragment_business_account">
     </fragment>
+    <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
+              android:label="activity_business_details" tools:layout="@layout/activity_business_details"/>
 </navigation>

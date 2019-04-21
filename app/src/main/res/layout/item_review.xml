@@ -8,6 +8,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_card_rounded"
+            android:layout_margin="@dimen/cardMargin"
             android:padding="16dp">
         <ImageView
                 android:id="@+id/starIm"
@@ -31,11 +33,11 @@
                 android:layout_height="30dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/starIm"
-                android:background="#A7FFEB"
                 android:layout_marginStart="16dp"
                 app:loadRoundImage="@{review.userProfileImage}"/>
         <TextView
-                style="@style/SmallBoldText"
+                android:id="@+id/userName"
+                style="@style/UserFullNameStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/userProfileImage"
@@ -47,7 +49,7 @@
                 android:text="@{review.userFullName}"/>
         <TextView
                 android:id="@+id/reviewMessage"
-                style="@style/MediumBoldText"
+                style="@style/ReviewMessageStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/userProfileImage"
@@ -60,9 +62,9 @@
                 style="@style/TinyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/reviewMessage"
+                app:layout_constraintBaseline_toBaselineOf="@id/userName"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="8dp"
-        tools:text="21 min ago"/>
+                tools:text="21 min ago"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

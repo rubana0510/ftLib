@@ -5,4 +5,21 @@
     <dimen name="edittext_margin">24dp</dimen>
     <dimen name="drawable_padding">16dp</dimen>
     <dimen name="replyBubbleRadius">8dp</dimen>
+    <dimen name="postProfilePhotoSize">30dp</dimen>
+    <dimen name="dividerHeight">1px</dimen>
+    <dimen name="dividerMargin">4dp</dimen>
+    <dimen name="marginStartItem">8dp</dimen>
+    <dimen name="marginTopItem">8dp</dimen>
+    <dimen name="marginEndItem">8dp</dimen>
+    <dimen name="paddingItemTop">8dp</dimen>
+    <dimen name="paddingItemVertical">8dp</dimen>
+    <dimen name="marginItemHorizontal">8dp</dimen>
+    <dimen name="marginItemSubVertical">4dp</dimen>
+    <dimen name="marginItemSubHorizontal">4dp</dimen>
+    <dimen name="cardRadius">8dp</dimen>
+    <dimen name="cardMargin">8dp</dimen>
+    <dimen name="businessSearchProfileImage">50dp</dimen>
+    <dimen name="layoutMarginStart">16dp</dimen>
+    <dimen name="layoutMarginEnd">16dp</dimen>
+    <dimen name="layoutMarginTop">16dp</dimen>
 </resources>

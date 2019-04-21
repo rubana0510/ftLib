@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.adapters.diffcallbacks.ReviewDiffCallback
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.ItemReviewBinding
 

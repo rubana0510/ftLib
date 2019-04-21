@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/business_details_tab_graph"
+            app:startDestination="@id/navigation_business_detail">
+    <fragment
+            android:id="@+id/navigation_business_detail"
+            android:name="com.feedbacktower.fragments.BusinessDetailFragment"
+            android:label="Detail"
+            tools:layout="@layout/fragment_business_detail">
+        <action android:id="@+id/action_navigation_business_detail_to_navigation_review"
+                app:destination="@id/navigation_review"/>
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_review"
+            android:name="com.feedbacktower.fragments.business.ReviewsFragment"
+            android:label="@string/title_reviews"
+            tools:layout="@layout/fragment_reviews">
+        <argument
+                android:name="bottomNav"
+                android:defaultValue="false"
+                app:argType="boolean"/>
+    </fragment>
+</navigation>

@@ -99,4 +99,5 @@ internal fun RecyclerView.enableSeparator(context: Context) {
 internal fun RecyclerView.setVertical(context: Context) {
     layoutManager = LinearLayoutManager(context)
     itemAnimator = DefaultItemAnimator()
+    setHasFixedSize(true)
 }

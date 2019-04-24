@@ -51,11 +51,11 @@ class RateReviewDialog : BottomSheetDialogFragment() {
         sendRatingButton = contentView.sendRatingButton
         reviewInput = contentView.reviewInput
         remarkText = contentView.remarkText
+        ratingBar = contentView.ratingBar
 
 
         closeButton.setOnClickListener { dialog.dismiss() }
-        ratingBar.onRatingBarChangeListener =
-            RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
+        RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
         sendRatingButton.setOnClickListener { sendRatings() }
     }
 

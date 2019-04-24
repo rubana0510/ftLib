@@ -23,10 +23,16 @@
     <style name="EditTextStyle" parent="ThemeOverlay.MaterialComponents.TextInputEditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:colorAccent">@color/grey42</item>
+        <item name="android:maxLines">1</item>
     </style>
     <style name="TextInputLayoutStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="hintTextAppearance">@style/TextInputLayout.HintText</item>
+        <item name="android:layout_marginTop">8dp</item>
     </style>
     <style name="DialogTitleStyle" parent="Base.TextAppearance.AppCompat.Title">
     </style>
@@ -98,6 +104,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="LargeTitleText" parent="LargeBoldText">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
     <style name="TinyText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">12sp</item>
     </style>
@@ -116,6 +127,16 @@
         <item name="android:drawablePadding">16dp</item>
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
+    </style>
+    <style name="TextLinkStyle">
+        <item name="android:padding">8dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TextInputLayout.HintText" parent="Base.Widget.MaterialComponents.TextInputLayout">
+        <item name="android:textColor">#212121</item>
+        <item name="android:textSize">@dimen/text_tiny_size</item>
     </style>
 
 </resources>

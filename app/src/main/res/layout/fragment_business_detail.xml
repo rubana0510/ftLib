@@ -9,13 +9,15 @@
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onViewReviewsClicked" type="android.view.View.OnClickListener"/>
+        <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
         <variable name="isTimelineLoading" type="Boolean"/>
     </data>
-    <LinearLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
         <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AppBarOverlay">
@@ -33,6 +35,7 @@
         <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/appbar"
                 android:fitsSystemWindows="true"
                 android:isScrollContainer="false">
 
@@ -113,16 +116,73 @@
                             android:text="@{business.businessAddress"/>
                     <include layout="@layout/layout_divider"/>
 
-                    <TextView
-                            style="@style/IconTextViewStyle"
-                            android:drawableStart="@drawable/ic_star_black_24dp"
-                            android:drawableEnd="@drawable/ic_arrow_right_24dp"
-                            android:onClick="@{onViewReviewsClicked}"
-                            tools:text="View all 100 reviews"
-                            android:text="@{`View all ` + business.businessTotalReviews + ` reviews`}"/>
-                    <include layout="@layout/layout_divider"/>
 
                 </LinearLayout>
+                <TextView
+                        android:id="@+id/rr_heading"
+                        style="@style/SmallBoldText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/layoutMarginTop"
+                        app:layout_constraintTop_toBottomOf="@id/ll1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textColor="@color/colorPrimary"
+                        android:text="@string/rate_and_review"/>
+                <androidx.appcompat.widget.AppCompatRatingBar
+                        android:id="@+id/ratingBar"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rr_heading"
+                        android:layout_marginTop="4dp"
+                        android:numStars="5"/>
+                <Button
+                        android:id="@+id/sendSuggestionButton"
+                        style="@style/ButtonFilledStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ratingBar"
+                        android:onClick="@{onSendSuggestionClicked}"
+                        android:text="@string/send_suggestion"/>
+
+                <TextView
+                        android:id="@+id/tvTitle2"
+                        style="@style/SmallBoldText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/layoutMarginStart"
+                        android:layout_marginTop="@dimen/layoutMarginTop"
+                        app:layout_constraintTop_toBottomOf="@id/sendSuggestionButton"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:textColor="@color/colorPrimary"
+                        android:text="@string/title_reviews"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/reviewListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitle2"
+                        android:layout_marginTop="@dimen/marginTopItem"
+                        android:nestedScrollingEnabled="false"
+                        app:isGone="@{isTimelineLoading}"/>
+                <TextView
+                        android:id="@+id/viewAllReviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View all reviews"
+                        android:drawableEnd="@drawable/ic_arrow_right_24dp"
+                        android:drawablePadding="16dp"
+                        android:padding="8dp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/reviewListView"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:onClick="@{onViewReviewsClicked}"
+                        android:textColor="@color/colorPrimary"/>
                 <TextView
                         android:id="@+id/tvTitle1"
                         style="@style/SmallBoldText"
@@ -130,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layoutMarginStart"
                         android:layout_marginTop="@dimen/layoutMarginTop"
-                        app:layout_constraintTop_toBottomOf="@id/ll1"
+                        app:layout_constraintTop_toBottomOf="@id/viewAllReviews"
                         app:layout_constraintStart_toStartOf="parent"
                         android:textColor="@color/colorPrimary"
                         android:text="@string/timeline"/>
@@ -160,7 +220,8 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:visibility="gone"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

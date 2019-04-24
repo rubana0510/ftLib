@@ -22,4 +22,6 @@
     <dimen name="layoutMarginStart">16dp</dimen>
     <dimen name="layoutMarginEnd">16dp</dimen>
     <dimen name="layoutMarginTop">16dp</dimen>
+    <dimen name="text_tiny_size">12sp</dimen>
+
 </resources>

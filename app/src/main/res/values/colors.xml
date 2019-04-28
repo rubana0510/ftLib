@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#34B7E3</color>
-    <color name="colorPrimaryDark">#00838F</color>
+    <color name="colorPrimary">#FF34B6E2</color>
+    <color name="colorPrimaryDark">#FF34B6E2</color>
     <color name="colorAccent">#FFCC66</color>
 
     //greys
@@ -12,4 +12,8 @@
     <color name="greye0">#e0e0e0</color>
     <color name="colorDivider">#414141</color>
     <color name="windowBackground">#F5F5F5</color>
+
+
+    <color name="textLight">#FFFFFF</color>
+    <color name="hintLight">#CCFFFFFF</color>
 </resources>

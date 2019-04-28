@@ -1,21 +1,32 @@
 package com.feedbacktower.data
 
-import androidx.lifecycle.LiveData
 import com.feedbacktower.data.models.BusinessCategory
-import com.feedbacktower.firestore.FirestoreManager
+import com.feedbacktower.data.repos.BaseRepository
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.service.ApiServiceDescriptor
 
-class BusinessCategoriesRepository private constructor(val manager: FirestoreManager){
+class BusinessCategoriesRepository private constructor() :
+    BaseRepository() {
+
+    private val apiService: ApiServiceDescriptor by lazy { ApiService.create() }
 
     companion object {
 
         // For Singleton instantiation
-        @Volatile private var instance: BusinessCategoriesRepository? = null
+        @Volatile
+        private var instance: BusinessCategoriesRepository? = null
 
-        fun getInstance(manager: FirestoreManager) =
+        fun getInstance() =
             instance ?: synchronized(this) {
-                instance ?: BusinessCategoriesRepository(manager).also { instance = it }
+                instance ?: BusinessCategoriesRepository().also { instance = it }
             }
     }
 
-    fun getBusinessCategories() = manager.getBusinessCategories()
+    suspend fun getBusinessCategoriesAsync(): MutableList<BusinessCategory>? {
+        val categoriesResponse = safeApiCall(
+            call = { apiService.getBusinessCategoriesAsync().await() },
+            errorMessage = "Error Fetching Popular Movies"
+        )
+        return categoriesResponse?.toMutableList()
+    }
 }

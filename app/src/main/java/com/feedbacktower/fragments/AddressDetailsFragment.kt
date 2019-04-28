@@ -17,8 +17,7 @@ class AddressDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         val v =  inflater.inflate(R.layout.fragment_address_details, container, false)
         v.continueButton.setOnClickListener {
-            val direction = AddressDetailsFragmentDirections.actionAddressDetailsFragmentToAccountTypeSelectionFragment()
-            findNavController().navigate(direction)
+
         }
         return v
     }

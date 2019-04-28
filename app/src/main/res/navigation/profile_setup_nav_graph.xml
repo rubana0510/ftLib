@@ -7,15 +7,27 @@
     <fragment android:id="@+id/personalDetailsFragment"
               android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
               android:label="fragment_personal_details" tools:layout="@layout/fragment_personal_details">
-        <action android:id="@+id/action_personalDetailsFragment_to_addressDetailsFragment"
-                app:destination="@id/addressDetailsFragment"/>
+
+        <action android:id="@+id/action_personalDetailsFragment_to_selectCityFragment"
+                app:destination="@id/selectCityFragment"/>
     </fragment>
-    <fragment android:id="@+id/addressDetailsFragment" android:name="com.feedbacktower.fragments.AddressDetailsFragment"
-              android:label="fragment_address_details" tools:layout="@layout/fragment_address_details">
-        <action android:id="@+id/action_addressDetailsFragment_to_accountTypeSelectionFragment"
+    <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
+              android:label="fragment_address_details" tools:layout="@layout/fragment_select_city">
+
+        <action android:id="@+id/action_selectCityFragment_to_accountTypeSelectionFragment"
                 app:destination="@id/accountTypeSelectionFragment"/>
     </fragment>
     <fragment android:id="@+id/accountTypeSelectionFragment"
               android:name="com.feedbacktower.fragments.AccountTypeSelectionFragment"
-              android:label="fragment_account_selection_type" tools:layout="@layout/fragment_account_selection_type"/>
+              android:label="fragment_account_selection_type" tools:layout="@layout/fragment_account_selection_type">
+        <action android:id="@+id/action_accountTypeSelectionFragment_to_businessSetup1Fragment"
+                app:destination="@id/businessSetup1Fragment"/>
+    </fragment>
+    <fragment android:id="@+id/businessSetup1Fragment" android:name="com.feedbacktower.fragments.BusinessSetup1Fragment"
+              android:label="BusinessSetup1Fragment">
+        <action android:id="@+id/action_businessSetup1Fragment_to_businessSetup2Fragment"
+                app:destination="@id/businessSetup2Fragment"/>
+    </fragment>
+    <fragment android:id="@+id/businessSetup2Fragment" android:name="com.feedbacktower.fragments.BusinessSetup2Fragment"
+              android:label="BusinessSetup2Fragment"/>
 </navigation>

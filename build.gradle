@@ -27,6 +27,7 @@ buildscript {
         rxJavaVersion = '2.0.1'
         retrofitAdapterVersion = '2.3.0'
         retrofitGsonVersion = '2.3.0'
+        kotlinCoroutineVersion = '1.0.1'
         ktlintVersion = '0.29.0'
         ankoVersion = '0.10.4'
         googleAuthVersion = '16.0.1'

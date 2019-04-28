@@ -1,19 +1,30 @@
 package com.feedbacktower.data
 
+import android.content.Context
+import android.content.SharedPreferences
+
 class AppPrefs private constructor() {
 
     companion object {
 
-        // For Singleton instantiation
         @Volatile
-        private var instance: AppPrefs? = null
+        private lateinit var sharedPrefs: SharedPreferences
+        private var appPrefs: AppPrefs? = null
 
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: AppPrefs().also { instance = it }
+        fun getInstance(context: Context): AppPrefs =
+            appPrefs ?: synchronized(this) {
+                appPrefs ?: AppPrefs().also {
+                    appPrefs = it
+                    sharedPrefs = context.getSharedPreferences("ft_prefs", Context.MODE_PRIVATE)
+                }
             }
     }
 
-    fun isSignedIn(): Boolean = false
+    var authToken: String?
+        get() = sharedPrefs.getString("AUTH_TOKEN", null)
+        set(value) {
+            sharedPrefs.edit().putString("AUTH_TOKEN", value).apply()
+        }
+
 
 }

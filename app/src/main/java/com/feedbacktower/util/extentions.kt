@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.R
+import java.util.*
 
 
 fun ImageView.loadImage(context: Context, url: String) {
@@ -30,6 +31,15 @@ fun View.visible() {
 fun View.gone() {
     this.visibility = View.GONE
 }
+
+fun View.enable() {
+    this.isEnabled = true
+}
+
+fun View.disable() {
+    this.isEnabled = false
+}
+
 
 fun Float.toRemarkText(): String {
     return when (this) {
@@ -77,7 +87,6 @@ inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noi
 inline fun <reified T : Any> newIntent(context: Context): Intent = Intent(context, T::class.java)
 
 
-
 //recyclerview utils
 enum class Orientation { H, V }
 
@@ -100,4 +109,10 @@ internal fun RecyclerView.setVertical(context: Context) {
     layoutManager = LinearLayoutManager(context)
     itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
+}
+
+internal fun getMaxDob(): Long {
+    val cal: Calendar = Calendar.getInstance()
+    cal.timeInMillis = System.currentTimeMillis()
+    return cal.timeInMillis
 }

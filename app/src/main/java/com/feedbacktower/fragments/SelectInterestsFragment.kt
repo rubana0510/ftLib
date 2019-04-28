@@ -12,9 +12,10 @@ import com.feedbacktower.databinding.DialogSelectInterestsBinding
 import com.feedbacktower.util.InjectorUtils
 import com.feedbacktower.viewmodels.BusinessCategoriesViewModel
 
-class SelectInterestsFragment: DialogFragment() {
+class SelectInterestsFragment : DialogFragment() {
 
     private lateinit var viewModel: BusinessCategoriesViewModel
+
     companion object {
         fun getInstance(): SelectInterestsFragment {
             val fragment = SelectInterestsFragment()
@@ -38,7 +39,8 @@ class SelectInterestsFragment: DialogFragment() {
     }
 
     private fun subscribeUi(adapter: CategoryListAdapter) {
-        viewModel.getCategories().observe(viewLifecycleOwner, Observer {
+        viewModel.fetchBusinessCategories()
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
         })
     }

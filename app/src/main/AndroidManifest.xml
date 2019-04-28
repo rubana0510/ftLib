@@ -5,11 +5,13 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+            android:name=".App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:usesCleartextTraffic="true"
             android:theme="@style/AppTheme">
         <activity android:name=".ui.CustomerMainActivity"
                   android:theme="@style/AppTheme.NoActionBar">
@@ -24,16 +26,19 @@
                 android:label="@string/title_activity_business_main"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ui.SplashScreen">
+        <activity android:name=".ui.SplashScreen"
+                  android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RegisterPhoneScreen">
+        <activity android:name=".ui.RegisterPhoneScreen"
+                  android:theme="@style/AuthTheme">
         </activity>
-        <activity android:name=".ui.LoginScreen">
+        <activity android:name=".ui.LoginScreen"
+                  android:theme="@style/AuthTheme">
         </activity>
         <activity
                 android:name=".ui.ProfileSetupScreen"
@@ -44,6 +49,13 @@
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <receiver
+                android:name=".network.utils.ConnectivityReceiver"
+                android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

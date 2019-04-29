@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.ActivityLoginScreenBinding
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.utils.ConnectivityReceiver
@@ -82,12 +83,15 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                 return@phoneLogin
             }
             response?.let {
-               /* if (response.status) {
-                    toast("Success")
+                if (response.status) {
+                    AppPrefs.getInstance(this).apply {
+                        user = it.payload.user
+                        authToken = it.payload.token
+                    }
+                    launchActivity<ProfileSetupScreen>()
                 } else {
                     toast(response.msg)
-                }*/
-                launchActivity<ProfileSetupScreen>()
+                }
             }
         }
     }

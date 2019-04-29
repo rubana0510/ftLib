@@ -14,7 +14,7 @@ class SplashScreen : AppCompatActivity() {
 
         if (AppPrefs.getInstance(this).authToken != null) {
             Handler().postDelayed({
-                launchActivity<BusinessMainActivity>()
+                launchActivity<LoginScreen>()
                 finish()
             }, 1000)
         } else {

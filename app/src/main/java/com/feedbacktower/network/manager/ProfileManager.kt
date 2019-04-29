@@ -36,7 +36,7 @@ class ProfileManager {
             apiService.updatePersonalDetailsAsync(
                 hashMapOf(
                     "firstName" to firstName,
-                    "lastname" to lastName,
+                    "lastName" to lastName,
                     "dob" to dob,
                     "emailId" to email
                 )

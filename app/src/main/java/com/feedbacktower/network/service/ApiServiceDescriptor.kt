@@ -3,6 +3,7 @@ package com.feedbacktower.network.service
 import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.AuthResponse
 import com.feedbacktower.network.models.TokenRes
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
@@ -15,7 +16,7 @@ interface ApiServiceDescriptor {
     @POST("/auth/login")
     fun loginAsync(
         @Body map: HashMap<String, Any>
-    ): Deferred<ApiResponse<User>>
+    ): Deferred<ApiResponse<AuthResponse>>
 
     @POST("/auth/pre-register")
     fun preRegisterAsync(

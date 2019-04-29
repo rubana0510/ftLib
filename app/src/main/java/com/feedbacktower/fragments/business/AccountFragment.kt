@@ -61,7 +61,7 @@ class AccountFragment : Fragment() {
             AccountOption(2, "My Reviews", "20 reviews", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "10 suggestions", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
-            AccountOption(5, "Logout", "Logout from ${R.string.app_name}", R.drawable.ic_post_like_filled)
+            AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
     }
@@ -72,10 +72,10 @@ class AccountFragment : Fragment() {
 
     private fun submitCounts() {
         val counts = listOf(
-            Count(1, "102", "Label 1"),
-            Count(2, "1", "Label 1"),
-            Count(3, "92", "Label 1"),
-            Count(4, "1002", "Label 1")
+            Count(1, "4.2", "Average Ratings"),
+            Count(2, "3", "Rank"),
+            Count(3, "1099", "Total Reviews"),
+            Count(4, "102", "Total Suggestions")
         )
         countAdapter.submitList(counts)
     }

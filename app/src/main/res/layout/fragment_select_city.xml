@@ -8,32 +8,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/activity_horizontal_margin">
-        <TextView
-                style="@style/DialogTitleStyle"
-                android:id="@+id/dialogTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/select_interest"/>
-        <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_close_black_24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/categoryGridView"
+                android:id="@+id/cityList"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dialogTitle"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="16dp"
+                android:padding="@dimen/activity_horizontal_margin"
                 app:isGone="@{isLoading}"/>
         <ProgressBar
                 android:layout_width="wrap_content"
@@ -44,14 +29,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:isGone="@{!isLoading}"/>
         <Button
-                android:id="@+id/saveSelectionButton"
-                style="@style/ButtonFilledStyle"
-                android:layout_width="match_parent"
+                style="@style/ButtonFilledStyle.Big"
+                android:id="@+id/continueButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_gravity="end"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:text="@string/save_selection"
-                app:isGone="@{isLoading}"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/continue_"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -22,7 +22,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/accountOptionTitle"
                 app:layout_constraintBottom_toBottomOf="@id/accountOptionSummary"
-                app:loadDrawableImage="@{option.icon}"/>
+                app:loadDrawableImage="@{option.icon}"
+        android:visibility="invisible"/>
         <TextView
                 style="@style/MediumText"
                 android:id="@+id/accountOptionTitle"

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
 import com.feedbacktower.fragments.utils.SpinnerDatePickerDialog
 import com.feedbacktower.network.manager.ProfileManager
@@ -72,6 +73,8 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
 
             updateDetails(firstName, lastName, email, dob)
         }
+
+        binding.user = AppPrefs.getInstance(requireContext()).user
     }
 
     private fun updateDetails(firstName: String, lastName: String, email: String, dob: String) {

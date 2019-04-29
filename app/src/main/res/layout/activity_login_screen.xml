@@ -98,6 +98,7 @@
                     app:layout_constraintBottom_toTopOf="@id/loginButton"
                     android:layout_marginBottom="16dp"
                     android:onClick="@{onForgotClicked}"
+                    android:visibility="invisible"
                     android:text="@string/forgot_password"/>
             <Button
                     style="@style/ButtonFilledStyle.Big"

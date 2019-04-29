@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
     <data>
-
+        <variable name="user" type="com.feedbacktower.network.models.AuthResponse.User"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +26,8 @@
                         android:id="@+id/firstNameInput"
                         android:imeOptions="actionNext"
                         android:drawableEnd="@drawable/ic_person_outline_black_24dp"
-                        android:drawablePadding="@dimen/drawable_padding"/>
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:text="@{user.firstName}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -41,7 +42,8 @@
                         android:id="@+id/lastNameInput"
                         android:imeOptions="actionNext"
                         android:drawableEnd="@drawable/ic_person_outline_black_24dp"
-                        android:drawablePadding="@dimen/drawable_padding"/>
+                        android:drawablePadding="@dimen/drawable_padding"
+                        android:text="@{user.lastName}"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -54,7 +56,9 @@
                     android:id="@+id/emailInput"
                     android:imeOptions="actionNext"
                     android:drawableEnd="@drawable/ic_email_black_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"/>
+                    android:drawablePadding="@dimen/drawable_padding"
+                    android:text="@{user.emailId}"/>
+
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 style="@style/TextInputLayoutStyle"
@@ -66,7 +70,9 @@
                     android:imeOptions="actionDone"
                     android:drawableEnd="@drawable/ic_perm_contact_calendar_black_24dp"
                     android:drawablePadding="@dimen/drawable_padding"
-                    android:inputType="date"/>
+                    android:inputType="date"
+                    android:text="@{user.dob}"/>
+
         </com.google.android.material.textfield.TextInputLayout>
         <Button
                 style="@style/ButtonFilledStyle.Big"

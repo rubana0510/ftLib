@@ -135,6 +135,7 @@
 
     <style name="TinyText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#212121</item>
     </style>
     <style name="businessNameStyle" parent="SmallText">
 

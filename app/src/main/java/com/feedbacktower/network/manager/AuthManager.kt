@@ -2,6 +2,7 @@ package com.feedbacktower.network.manager
 
 import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.AuthResponse
 import com.feedbacktower.network.models.TokenRes
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
@@ -29,7 +30,7 @@ class AuthManager {
     fun phoneLogin(
         phone: String,
         password: String,
-        onComplete: (ApiResponse<User>?, Throwable?) -> Unit
+        onComplete: (ApiResponse<AuthResponse>?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.loginAsync(hashMapOf("phone" to phone, "password" to password))

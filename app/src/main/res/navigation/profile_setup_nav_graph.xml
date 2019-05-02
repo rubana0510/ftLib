@@ -23,11 +23,11 @@
         <action android:id="@+id/action_accountTypeSelectionFragment_to_businessSetup1Fragment"
                 app:destination="@id/businessSetup1Fragment"/>
     </fragment>
-    <fragment android:id="@+id/businessSetup1Fragment" android:name="com.feedbacktower.fragments.BusinessSetup1Fragment"
+    <fragment android:id="@+id/businessSetup1Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
               android:label="Basic Details">
         <action android:id="@+id/action_businessSetup1Fragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2Fragment"/>
     </fragment>
-    <fragment android:id="@+id/businessSetup2Fragment" android:name="com.feedbacktower.fragments.BusinessSetup2Fragment"
+    <fragment android:id="@+id/businessSetup2Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
               android:label="Address Details"/>
 </navigation>

@@ -69,4 +69,5 @@
     <string name="select_date">SELECT DATE</string>
     <string name="continue_as_customer">CONTINUE AS CUSTOMER</string>
     <string name="register_businsess">Register Business</string>
+    <string name="post">POST</string>
 </resources>

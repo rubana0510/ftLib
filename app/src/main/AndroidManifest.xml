@@ -11,11 +11,17 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:usesCleartextTraffic="true"
-            android:theme="@style/AppTheme">
-        <activity android:name=".ui.CustomerMainActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
-
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true">
+        <activity android:name=".ui.ScannerScreen">
+        </activity>
+        <activity android:name=".ui.PostTextScreen">
+        </activity>
+        <activity android:name=".ui.SubscriptionPlansScreen">
+        </activity>
+        <activity
+                android:name=".ui.CustomerMainActivity"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".ui.BusinessDetailsActivity"
@@ -26,19 +32,22 @@
                 android:label="@string/title_activity_business_main"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ui.SplashScreen"
-                  android:theme="@style/SplashTheme">
+        <activity
+                android:name=".ui.SplashScreen"
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RegisterPhoneScreen"
-                  android:theme="@style/AuthTheme">
+        <activity
+                android:name=".ui.RegisterPhoneScreen"
+                android:theme="@style/AuthTheme">
         </activity>
-        <activity android:name=".ui.LoginScreen"
-                  android:theme="@style/AuthTheme">
+        <activity
+                android:name=".ui.LoginScreen"
+                android:theme="@style/AuthTheme">
         </activity>
         <activity
                 android:name=".ui.ProfileSetupScreen"
@@ -49,11 +58,12 @@
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
         <receiver
                 android:name=".network.utils.ConnectivityReceiver"
                 android:enabled="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
     </application>

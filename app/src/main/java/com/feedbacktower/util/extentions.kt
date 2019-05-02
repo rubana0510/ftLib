@@ -77,6 +77,9 @@ fun isNameValid(name: String): Boolean {
 fun isEmailValid(email: String): Boolean {
     return email.isNotEmpty()
 }
+fun String.noValidWebsite(): Boolean {
+    return false
+}
 
 inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noinline init: Intent.() -> Unit = {}) {
     val intent = newIntent<T>(this)
@@ -107,6 +110,11 @@ internal fun RecyclerView.enableSeparator(context: Context) {
 
 internal fun RecyclerView.setVertical(context: Context) {
     layoutManager = LinearLayoutManager(context)
+    itemAnimator = DefaultItemAnimator()
+    setHasFixedSize(true)
+}
+internal fun RecyclerView.setHorizontal(context: Context) {
+    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
 }

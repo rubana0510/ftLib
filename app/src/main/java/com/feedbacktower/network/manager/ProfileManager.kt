@@ -1,6 +1,5 @@
 package com.feedbacktower.network.manager
 
-import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
@@ -45,5 +44,43 @@ class ProfileManager {
         }
     }
 
+
+    fun updateBusinessBasicDetails(
+        name: String,
+        regNo: String,
+        categoryId: String,
+        onComplete: (ApiResponse<Nothing>?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updatePersonalDetailsAsync(
+                hashMapOf(
+                    "name" to name,
+                    "regNo" to regNo,
+                    "categoryId" to categoryId
+                )
+            ).makeRequest(onComplete)
+        }
+    }
+
+    fun updateBusinessAddressDetails(
+        address: String,
+        contact: String,
+        website: String,
+        lat: Double?,
+        long: Double?,
+        onComplete: (ApiResponse<Nothing>?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updatePersonalDetailsAsync(
+                hashMapOf(
+                    "address" to address,
+                    "contact" to contact,
+                    "website" to website,
+                    "lat" to lat,
+                    "long" to long
+                )
+            ).makeRequest(onComplete)
+        }
+    }
 
 }

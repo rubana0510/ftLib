@@ -16,4 +16,14 @@
 
     <color name="textLight">#FFFFFF</color>
     <color name="hintLight">#CCFFFFFF</color>
+
+
+    <color name="planCard1">#F48FB1</color>
+    <color name="planCard2">#9FA8DA</color>
+    <color name="planCard3">#80DEEA</color>
+    <color name="planCard4">#C5E1A5</color>
+    <color name="planCard5">#FFAB91</color>
+    <color name="grey21">#212121</color>
+
+
 </resources>

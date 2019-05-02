@@ -113,7 +113,7 @@
                             android:drawableStart="@drawable/ic_location_on_black_24dp"
                             android:onClick="@{onLocationClicked}"
                             tools:text="Taleigao, Panaji Goa, 403524"
-                            android:text="@{business.businessAddress"/>
+                            android:text="@{business.businessAddress}"/>
                     <include layout="@layout/layout_divider"/>
 
 

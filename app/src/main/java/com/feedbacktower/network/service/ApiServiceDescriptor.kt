@@ -15,29 +15,40 @@ interface ApiServiceDescriptor {
 
     @POST("/auth/login")
     fun loginAsync(
-        @Body map: HashMap<String, Any>
+        @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<AuthResponse>>
 
     @POST("/auth/pre-register")
     fun preRegisterAsync(
-        @Body map: HashMap<String, Any>
+        @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<Nothing>>
 
     @POST("/auth/verify-otp")
     fun verifyOtpRegisterAsync(
-        @Body map: HashMap<String, Any>
+        @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<TokenRes>>
 
 
     @POST("/auth/register")
     fun registerPhoneAsync(
-        @Body map: HashMap<String, Any>
+        @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<User>>
 
     @POST("/profile/update")
     fun updatePersonalDetailsAsync(
-        @Body map: HashMap<String, Any>
+        @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<Nothing>>
+
+    @POST("/business/profile/update")
+    fun updateBusinessDetailsAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<Nothing>>
+
+    @POST("/business/address/update")
+    fun updateBusinessAddressAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<Nothing>>
+
 
     @POST("/projectx/index.php/API/Services/get_auth_pager")
     @FormUrlEncoded

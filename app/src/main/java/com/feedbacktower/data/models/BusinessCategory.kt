@@ -1,9 +1,19 @@
 package com.feedbacktower.data.models
 
+import com.google.gson.annotations.SerializedName
+
 data class BusinessCategory(
-    val catId: String,
-    val catName: String,
-    val catType: String,
-    val catFee: String,
-    var catSelected: Boolean
-)
+    @SerializedName("id")
+    val id: String,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("popular")
+    val popular: Boolean,
+    @SerializedName("featured")
+    val featured: Boolean
+) {
+    val image: String
+        get() = "base_url" + id
+
+    var selected: Boolean = false
+}

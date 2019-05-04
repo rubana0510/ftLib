@@ -18,6 +18,8 @@ class RegisterPhoneScreen : AppCompatActivity() {
     private enum class State { INITIAL, OTP_SENT, OTP_VERIFIED, REGISTERED }
 
     private var state = State.INITIAL
+    // TODO : Remove below line!!
+    private lateinit var OTP_RECEIVED: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,16 +111,15 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 hideLoading()
                 return@preRegister
             }
-            response?.let {
-                if (response.status) {
-                    state = State.OTP_SENT
-                    toast("OTP sent to your Phone")
-                } else {
-                    toast(response.msg)
-                }
-                hideLoading()
-                updateUi()
+            if (response != null) {
+                OTP_RECEIVED = response.user.otp
+                state = State.OTP_SENT
+                toast("OTP sent to your Phone")
+            } else {
+                toast("Unknown error occurred")
             }
+            hideLoading()
+            updateUi()
         }
     }
 
@@ -131,17 +132,15 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 hideLoading()
                 return@verifyOtpRegister
             }
-            response?.let {
-                if (response.status) {
-                    state = State.OTP_VERIFIED
-                    AppPrefs.getInstance(this).authToken = it.payload.token
-                    toast("OTP verified")
-                } else {
-                    toast(response.msg)
-                }
-                hideLoading()
-                updateUi()
+            if (response != null) {
+                AppPrefs.getInstance(this).authToken = response.token
+                state = State.OTP_VERIFIED
+                toast("OTP verified")
+            } else {
+                toast("Unknown error occurred")
             }
+            hideLoading()
+            updateUi()
         }
     }
 
@@ -154,16 +153,15 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 hideLoading()
                 return@rp
             }
-            response?.let {
-                if (response.status) {
-                    state = State.REGISTERED
-                    toast("Registered")
-                } else {
-                    toast(response.msg)
-                }
-                hideLoading()
-                updateUi()
+
+            if (response != null) {
+                state = State.REGISTERED
+                toast("Registered")
+            } else {
+                toast("Unknown error occurred")
             }
+            hideLoading()
+            updateUi()
         }
     }
 

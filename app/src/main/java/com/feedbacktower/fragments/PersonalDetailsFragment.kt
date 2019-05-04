@@ -87,11 +87,11 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@updatePersonalDetails
                 }
-                response?.let {
-                    PersonalDetailsFragmentDirections.actionPersonalDetailsFragmentToSelectCityFragment().let {
-                        findNavController().navigate(it)
-                    }
+
+                PersonalDetailsFragmentDirections.actionPersonalDetailsFragmentToSelectCityFragment().let {
+                    findNavController().navigate(it)
                 }
+
             }
     }
 

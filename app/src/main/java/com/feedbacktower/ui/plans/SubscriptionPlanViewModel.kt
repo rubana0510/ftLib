@@ -1,13 +1,17 @@
-package com.feedbacktower.viewmodels
+package com.feedbacktower.ui.plans
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.feedbacktower.data.BusinessCategoriesRepository
 import com.feedbacktower.data.models.BusinessCategory
+import com.feedbacktower.data.models.SubscriptionPlan
+import com.feedbacktower.data.repository.PlansDataSource
+import com.feedbacktower.data.repository.PlansDataSourceImpl
+import com.feedbacktower.network.models.ApiResponse
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class BusinessCategoriesViewModel internal constructor(private val repository: BusinessCategoriesRepository) : ViewModel() {
+class SubscriptionPlanViewModel internal constructor(private val plansDataSourceImpl: PlansDataSourceImpl) :
+    ViewModel() {
     private val parentJob = Job()
 
     private val coroutineContext: CoroutineContext
@@ -15,14 +19,11 @@ class BusinessCategoriesViewModel internal constructor(private val repository: B
 
     private val scope = CoroutineScope(coroutineContext)
 
-
-
-    val categoriesLiveData = MutableLiveData<MutableList<BusinessCategory>>()
+    val plans = plansDataSourceImpl.fetchedSubscriptionPlans
 
     fun fetchBusinessCategories() {
         scope.launch {
-            val categoryList = repository.getBusinessCategoriesAsync()
-            categoriesLiveData.postValue(categoryList)
+            plansDataSourceImpl.fetchSubscriptionPlans()
         }
     }
 

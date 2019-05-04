@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.disable
@@ -26,7 +27,7 @@ class BusinessSetup1Fragment : Fragment() {
     private lateinit var regNoInput: TextInputEditText
     private lateinit var catIdInput: TextInputEditText
 
-    private var selectedCatId: String? = null
+    private var selectedCatId: String? = "232323"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,17 +40,19 @@ class BusinessSetup1Fragment : Fragment() {
     }
 
     private fun initUi(binding: FragmentBusinessSetup1Binding) {
+
+        binding.business = AppPrefs.getInstance(requireContext()).user?.business
+
         nameLayout = binding.businessNameLayout
         regLayout = binding.estRegNoLayout
         categoryIdLayout = binding.businessCatLayout
 
         nameInput = binding.businessNameInput
+        regNoInput = binding.estRegNoInput
         catIdInput = binding.businessCatInput
-        catIdInput = binding.businessCatInput
-
         continueButton = binding.continueButton
 
-        continueButton.setOnClickListener {
+        binding.onContinueClick =  View.OnClickListener {
             if (valid(nameInput.text.toString().trim(), regNoInput.text.toString().trim(), selectedCatId)) {
                 updateDetails(
                     nameInput.text.toString().trim(),
@@ -57,6 +60,8 @@ class BusinessSetup1Fragment : Fragment() {
                 )
             }
         }
+
+        catIdInput.setOnClickListener { BusinessSetup1FragmentDirections.actionBusinessSetup1FragmentToSelectCityFragment2() }
     }
 
     private fun hideLoading() {
@@ -109,9 +114,7 @@ class BusinessSetup1Fragment : Fragment() {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@updateBusinessBasicDetails
                 }
-                response?.let {
-                    navigateNext()
-                }
+                navigateNext()
             }
     }
 

@@ -1,19 +1,17 @@
 package com.feedbacktower.fragments
-
-
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.databinding.FragmentAccountSelectionTypeBinding
+import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.ui.CustomerMainActivity
-import com.feedbacktower.util.gone
 import com.feedbacktower.util.launchActivity
-import com.feedbacktower.util.visible
-import kotlinx.android.synthetic.main.fragment_account_selection_type.view.*
+import org.jetbrains.anko.toast
 
 class AccountTypeSelectionFragment : Fragment() {
 
@@ -21,18 +19,28 @@ class AccountTypeSelectionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val v = inflater.inflate(R.layout.fragment_account_selection_type, container, false)
-        v.customerButton.setOnClickListener {
-            activity?.launchActivity<CustomerMainActivity>()
-        }
 
-        v.businessButton.setOnClickListener {
-            AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragmentToBusinessSetup1Fragment().let {
-                findNavController().navigate(it)
+        val binding = FragmentAccountSelectionTypeBinding.inflate(inflater, container, false)
+        initUi(binding)
+        return binding.root
+    }
+
+    private fun initUi(binding: FragmentAccountSelectionTypeBinding) {
+        binding.onCutomerContinue = View.OnClickListener {  requireActivity().launchActivity<CustomerMainActivity>()}
+        binding.onBusinessContinue = View.OnClickListener {  registerAsBusiness()}
+        binding.user = AppPrefs.getInstance(requireContext()).user
+    }
+
+    private fun registerAsBusiness() {
+        AuthManager.getInstance()
+            .registerAsBusiness{_,error->
+                if(error != null)
+                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragmentToBusinessSetup1Fragment().let {
+                        findNavController().navigate(it)
+                    }
+                else
+                    requireActivity().toast(error?.message?:getString(R.string.default_err_message))
             }
-        }
-        return v
     }
 
 

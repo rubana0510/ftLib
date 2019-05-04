@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentBusinessSetup2Binding
 import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.ui.SubscriptionPlansScreen
+import com.feedbacktower.ui.plans.SubscriptionPlansScreen
 import com.feedbacktower.util.disable
 import com.feedbacktower.util.enable
 import com.feedbacktower.util.launchActivity
@@ -41,6 +42,9 @@ class BusinessSetup2Fragment : Fragment() {
     }
 
     private fun initUi(binding: FragmentBusinessSetup2Binding) {
+
+        binding.business = AppPrefs.getInstance(requireContext()).user?.business
+
         addressLayout = binding.officeAddressLayout
         contactLayout = binding.officeContactLayout
         websiteLayout = binding.officeWebsiteLayout
@@ -51,7 +55,7 @@ class BusinessSetup2Fragment : Fragment() {
 
         continueButton = binding.continueButton
 
-        continueButton.setOnClickListener {
+        binding.onContinueClick =  View.OnClickListener {
             if (valid(
                     addressInput.text.toString().trim(),
                     contactInput.text.toString().trim(),
@@ -98,7 +102,6 @@ class BusinessSetup2Fragment : Fragment() {
     }
 
 
-
     private fun navigateNext() {
         requireActivity().launchActivity<SubscriptionPlansScreen>()
     }
@@ -122,9 +125,9 @@ class BusinessSetup2Fragment : Fragment() {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@updateBusinessAddressDetails
                 }
-                response?.let {
-                    navigateNext()
-                }
+
+                navigateNext()
+
             }
     }
 }

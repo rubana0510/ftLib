@@ -7,15 +7,21 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.CategoryDiffCallback
 import com.feedbacktower.data.models.BusinessCategory
-import com.feedbacktower.databinding.ItemInterestsCategoryBinding
+import com.feedbacktower.databinding.ItemListCategoryBinding
 
 /**
  * Created by sanket on 12-02-2019.
  */
-class CategoryListAdapter : ListAdapter<BusinessCategory, CategoryListAdapter.ViewHolder>(CategoryDiffCallback()) {
+class CategoryListAdapter(
+    private val listener: ToggleListener
+) : ListAdapter<BusinessCategory, CategoryListAdapter.ViewHolder>(CategoryDiffCallback()) {
+
+    enum class Type { LIST, GRID }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         return ViewHolder(
-            ItemInterestsCategoryBinding.inflate(
+            ItemListCategoryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -25,17 +31,20 @@ class CategoryListAdapter : ListAdapter<BusinessCategory, CategoryListAdapter.Vi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(createClickListener(item), item)
+        holder.bind(createClickListener(item, position), item)
     }
 
-    private fun createClickListener(item: BusinessCategory): View.OnClickListener = View.OnClickListener {
-        item.catSelected = !item.catSelected
-    }
+    private fun createClickListener(item: BusinessCategory, position: Int): View.OnClickListener =
+        View.OnClickListener {
+            item.selected = !item.selected
+            notifyItemChanged(position)
+            listener.categoryToggled(item)
+        }
 
     fun getItemAtPos(position: Int): BusinessCategory = getItem(position)
 
     class ViewHolder(
-        val binding: ItemInterestsCategoryBinding
+        val binding: ItemListCategoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: BusinessCategory) {
             binding.apply {
@@ -44,5 +53,9 @@ class CategoryListAdapter : ListAdapter<BusinessCategory, CategoryListAdapter.Vi
                 executePendingBindings()
             }
         }
+    }
+
+    public interface ToggleListener {
+        fun categoryToggled(item: BusinessCategory)
     }
 }

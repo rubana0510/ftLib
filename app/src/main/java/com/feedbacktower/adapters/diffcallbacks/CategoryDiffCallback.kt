@@ -5,7 +5,7 @@ import com.feedbacktower.data.models.BusinessCategory
 
 class CategoryDiffCallback : DiffUtil.ItemCallback<BusinessCategory>() {
     override fun areItemsTheSame(oldItem: BusinessCategory, newItem: BusinessCategory): Boolean {
-        return oldItem.catId == newItem.catId
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: BusinessCategory, newItem: BusinessCategory): Boolean {

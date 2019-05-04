@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".ui.PostTextScreen">
         </activity>
-        <activity android:name=".ui.SubscriptionPlansScreen">
+        <activity android:name=".ui.plans.SubscriptionPlansScreen">
         </activity>
         <activity
                 android:name=".ui.CustomerMainActivity"

@@ -82,17 +82,17 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                 toast(error.message ?: getString(R.string.default_err_message))
                 return@phoneLogin
             }
-            response?.let {
-                if (response.status) {
-                    AppPrefs.getInstance(this).apply {
-                        user = it.payload.user
-                        authToken = it.payload.token
-                    }
-                    launchActivity<ProfileSetupScreen>()
-                } else {
-                    toast(response.msg)
+
+            if (response != null) {
+                AppPrefs.getInstance(this).apply {
+                    user = response.user
+                    authToken = response.token
                 }
+                launchActivity<ProfileSetupScreen>()
+            } else {
+                toast("Unknown error occurred")
             }
+
         }
     }
 

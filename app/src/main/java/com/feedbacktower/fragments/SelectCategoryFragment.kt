@@ -7,19 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
-import com.feedbacktower.adapters.CategoryInterestAdapter
+import com.feedbacktower.adapters.CategoryListAdapter
 import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.databinding.FragmentSelectInterestsBinding
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.setGrid
+import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
 
-class SelectInterestsFragment : Fragment() {
-    private lateinit var adapter: CategoryInterestAdapter
+class SelectCategoryFragment : Fragment() {
+    private lateinit var adapter: CategoryListAdapter
 
     companion object {
-        fun getInstance(): SelectInterestsFragment {
-            val fragment = SelectInterestsFragment()
+        fun getInstance(): SelectCategoryFragment {
+            val fragment = SelectCategoryFragment()
             return fragment
         }
     }
@@ -31,34 +32,18 @@ class SelectInterestsFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentSelectInterestsBinding.inflate(inflater, container, false)
         val context = context ?: return binding.root
-        adapter = CategoryInterestAdapter(toggleListener)
-        binding.categoryGridView.setGrid(requireContext(), 2)
+        adapter = CategoryListAdapter(toggleListener)
+        binding.categoryGridView.setVertical(requireContext())
         binding.categoryGridView.adapter = adapter
-        binding.saveSelectionButton.setOnClickListener { navigateNext() }
         getInterests(binding)
         return binding.root
     }
 
-    private fun navigateNext() {
-        SelectInterestsFragmentDirections.actionSelectInterestsFragmentToAccountTypeSelectionFragment().let {
-            findNavController().navigate(it)
-        }
-    }
 
-    private val toggleListener = object : CategoryInterestAdapter.ToggleListener {
+    private val toggleListener = object : CategoryListAdapter.ToggleListener {
         override fun categoryToggled(item: BusinessCategory) {
-            toggleCategoryInterest(item)
+            findNavController().navigateUp()
         }
-    }
-
-    private fun toggleCategoryInterest(item: BusinessCategory) {
-        ProfileManager.getInstance()
-            .setUnsetCategoryInterest(item.id, item.selected) { CategoriesResponse, error ->
-                if (error != null) {
-                    //requireContext().toast(error.message ?: getString(R.string.default_err_message))
-                    return@setUnsetCategoryInterest
-                }
-            }
     }
 
     private fun getInterests(binding: FragmentSelectInterestsBinding) {

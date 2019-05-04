@@ -1,9 +1,7 @@
 package com.feedbacktower.network.manager
 
 import com.feedbacktower.data.models.User
-import com.feedbacktower.network.models.ApiResponse
-import com.feedbacktower.network.models.AuthResponse
-import com.feedbacktower.network.models.TokenRes
+import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
@@ -30,7 +28,7 @@ class AuthManager {
     fun phoneLogin(
         phone: String,
         password: String,
-        onComplete: (ApiResponse<AuthResponse>?, Throwable?) -> Unit
+        onComplete: (AuthResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.loginAsync(hashMapOf("phone" to phone, "password" to password))
@@ -40,7 +38,7 @@ class AuthManager {
 
     fun preRegister(
         phone: String,
-        onComplete: (ApiResponse<Nothing>?, Throwable?) -> Unit
+        onComplete: (PreRegResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.preRegisterAsync(hashMapOf("phone" to phone))
@@ -51,7 +49,7 @@ class AuthManager {
     fun verifyOtpRegister(
         phone: String,
         otp: String,
-        onComplete: (ApiResponse<TokenRes>?, Throwable?) -> Unit
+        onComplete: (TokenRes?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.verifyOtpRegisterAsync(hashMapOf("phone" to phone, "otp" to otp))
@@ -62,10 +60,19 @@ class AuthManager {
     fun registerPhone(
         phone: String,
         password: String,
-        onComplete: (ApiResponse<User>?, Throwable?) -> Unit
+        onComplete: (User?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.registerPhoneAsync(hashMapOf("phone" to phone, "password" to password))
+                .makeRequest(onComplete)
+        }
+    }
+
+    fun registerAsBusiness(
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.registerAsBusinessAsync()
                 .makeRequest(onComplete)
         }
     }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <ScrollView     android:layout_width="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="business" type="com.feedbacktower.network.models.AuthResponse.User.Business"/>
+        <variable name="onContinueClick" type="android.view.View.OnClickListener"/>
+    </data>
+    <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
         <LinearLayout
@@ -17,6 +20,7 @@
                         style="@style/EditTextStyle"
                         android:id="@+id/businessNameInput"
                         android:drawableEnd="@drawable/ic_person_outline_black_24dp"
+                        android:text="@{business.name}"
                         android:drawablePadding="@dimen/drawable_padding"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -27,6 +31,7 @@
                         style="@style/EditTextStyle"
                         android:id="@+id/estRegNoInput"
                         android:drawableEnd="@drawable/ic_email_black_24dp"
+                        android:text="@{business.regNo}"
                         android:drawablePadding="@dimen/drawable_padding"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -36,9 +41,9 @@
                 <com.google.android.material.textfield.TextInputEditText
                         style="@style/EditTextStyle"
                         android:id="@+id/businessCatInput"
-                        android:drawableEnd="@drawable/ic_perm_contact_calendar_black_24dp"
+                        android:drawableEnd="@drawable/ic_arrow_down_24"
                         android:drawablePadding="@dimen/drawable_padding"
-                        android:inputType="text"/>
+                        android:inputType="none"/>
             </com.google.android.material.textfield.TextInputLayout>
             <Button
                     style="@style/ButtonFilledStyle.Big"
@@ -49,7 +54,8 @@
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/continue_"/>
+                    android:text="@string/continue_"
+                    android:onClick="@{onContinueClick}"/>
         </LinearLayout>
     </ScrollView>
 </layout>

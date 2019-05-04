@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.ImageView
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.R
@@ -115,6 +112,12 @@ internal fun RecyclerView.setVertical(context: Context) {
 }
 internal fun RecyclerView.setHorizontal(context: Context) {
     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    itemAnimator = DefaultItemAnimator()
+    setHasFixedSize(true)
+}
+
+internal fun RecyclerView.setGrid(context: Context, span: Int){
+    layoutManager = GridLayoutManager(context, span)
     itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
 }

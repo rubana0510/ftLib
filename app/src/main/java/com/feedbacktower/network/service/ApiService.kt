@@ -27,8 +27,8 @@ class ApiService {
                 readTimeout(Constants.Service.Timeout.READ, TimeUnit.MILLISECONDS)
                 writeTimeout(Constants.Service.Timeout.WRITE, TimeUnit.MILLISECONDS)
                 addInterceptor(HttpLoggingInterceptor().apply {
-                  //  level = HttpLoggingInterceptor.Level.BODY
-                    level = HttpLoggingInterceptor.Level.HEADERS
+                   level = HttpLoggingInterceptor.Level.BODY
+                   // level = HttpLoggingInterceptor.Level.HEADERS
                 })
                 addNetworkInterceptor ani@{ chain ->
                     val request = chain.request().newBuilder()

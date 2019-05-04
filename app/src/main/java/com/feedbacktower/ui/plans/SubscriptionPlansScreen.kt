@@ -1,4 +1,4 @@
-package com.feedbacktower.ui
+package com.feedbacktower.ui.plans
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

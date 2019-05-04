@@ -1,4 +1,4 @@
-package com.feedbacktower.data.repos
+package com.feedbacktower.data.repository
 
 import android.util.Log
 import retrofit2.Response

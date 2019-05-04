@@ -3,25 +3,23 @@ package com.feedbacktower.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.CategoryDiffCallback
-import com.feedbacktower.adapters.diffcallbacks.CityDiffCallback
 import com.feedbacktower.data.models.BusinessCategory
-import com.feedbacktower.data.models.City
-import com.feedbacktower.databinding.ItemCityBinding
 import com.feedbacktower.databinding.ItemInterestsCategoryBinding
-import com.feedbacktower.fragments.SelectCityFragmentDirections
+import com.feedbacktower.databinding.ItemListCategoryBinding
 
 /**
  * Created by sanket on 12-02-2019.
  */
-class CityListAdapter : ListAdapter<City, CityListAdapter.ViewHolder>(CityDiffCallback()) {
-    private var lastCitySelected: City? = null
+class CategoryInterestAdapter(
+    private val listener: ToggleListener
+) : ListAdapter<BusinessCategory, CategoryInterestAdapter.ViewHolder>(CategoryDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemCityBinding.inflate(
+            ItemInterestsCategoryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -31,26 +29,31 @@ class CityListAdapter : ListAdapter<City, CityListAdapter.ViewHolder>(CityDiffCa
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(createClickListener(item), item)
+        holder.bind(createClickListener(item, position), item)
     }
 
-    private fun createClickListener(item: City): View.OnClickListener = View.OnClickListener { view ->
-        SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
-            view.findNavController().navigate(it)
+    private fun createClickListener(item: BusinessCategory, position: Int): View.OnClickListener =
+        View.OnClickListener {
+            item.selected = !item.selected
+            notifyItemChanged(position)
+            listener.categoryToggled(item)
         }
-    }
 
-    fun getItemAtPos(position: Int): City = getItem(position)
+    fun getItemAtPos(position: Int): BusinessCategory = getItem(position)
 
     class ViewHolder(
-        val binding: ItemCityBinding
+        val binding: ItemInterestsCategoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(listener: View.OnClickListener, item: City) {
+        fun bind(listener: View.OnClickListener, item: BusinessCategory) {
             binding.apply {
-                city = item
+                businessCategory = item
                 clickListener = listener
                 executePendingBindings()
             }
         }
+    }
+
+    public interface ToggleListener {
+        fun categoryToggled(item: BusinessCategory)
     }
 }

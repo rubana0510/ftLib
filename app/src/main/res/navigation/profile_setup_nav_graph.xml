@@ -14,8 +14,8 @@
     <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
               android:label="Select your City" tools:layout="@layout/fragment_select_city">
 
-        <action android:id="@+id/action_selectCityFragment_to_accountTypeSelectionFragment"
-                app:destination="@id/accountTypeSelectionFragment"/>
+        <action android:id="@+id/action_selectCityFragment_to_selectInterestsFragment"
+                app:destination="@id/selectInterestsFragment"/>
     </fragment>
     <fragment android:id="@+id/accountTypeSelectionFragment"
               android:name="com.feedbacktower.fragments.AccountTypeSelectionFragment"
@@ -27,7 +27,17 @@
               android:label="Basic Details">
         <action android:id="@+id/action_businessSetup1Fragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2Fragment"/>
+        <action android:id="@+id/action_businessSetup1Fragment_to_selectCityFragment2"
+                app:destination="@id/selectCityFragment2"/>
     </fragment>
     <fragment android:id="@+id/businessSetup2Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
               android:label="Address Details"/>
+    <fragment android:id="@+id/selectInterestsFragment"
+              android:name="com.feedbacktower.fragments.SelectInterestsFragment"
+              android:label="SelectInterestsFragment">
+        <action android:id="@+id/action_selectInterestsFragment_to_accountTypeSelectionFragment"
+                app:destination="@id/accountTypeSelectionFragment"/>
+    </fragment>
+    <fragment android:id="@+id/selectCityFragment2" android:name="com.feedbacktower.fragments.SelectCityFragment"
+              android:label="SelectCityFragment"/>
 </navigation>

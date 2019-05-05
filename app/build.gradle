@@ -28,6 +28,14 @@ android {
             def serverBaseUrl = properties.getProperty("server_base_url", "")
             it.buildConfigField 'String', "SERVER_BASE_URL", serverBaseUrl
             it.resValue 'string', "server_base_url", serverBaseUrl
+
+            def merchantKey = properties.getProperty("merchant_key", "")
+            it.buildConfigField 'String', "MERCHANT_KEY", merchantKey
+            it.resValue 'string', "merchant_key", merchantKey
+
+            def merchantId = properties.getProperty("merchant_id", "")
+            it.buildConfigField 'String', "MERCHANT_ID", merchantId
+            it.resValue 'string', "merchant_id", merchantId
         }
     }
     buildTypes {
@@ -80,6 +88,9 @@ dependencies {
 
     //qr
     implementation 'com.google.zxing:core:3.3.3'
+
+    //payu
+    implementation 'com.payumoney.sdkui:plug-n-play:1.5.0'
 
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"

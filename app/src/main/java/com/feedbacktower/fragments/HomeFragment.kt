@@ -16,8 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
 import com.feedbacktower.adapters.PostListAdapter
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
+import com.feedbacktower.network.manager.PostManager
+import com.feedbacktower.ui.PostTextScreen
+import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 
 
@@ -40,9 +44,15 @@ class HomeFragment : Fragment() {
 
     private fun initUi(binding: FragmentHomeBinding) {
         binding.toolbar.title = getString(R.string.app_name)
+        binding.addPostListener = View.OnClickListener { requireActivity().launchActivity<PostTextScreen>() }
         feedListView = binding.feedListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
+        binding.isCustomer = AppPrefs.getInstance(requireContext()).user?.userType == "CUSTOMER"
+
+        swipeRefresh.setOnRefreshListener {
+            fetchPostList()
+        }
 
         //setup list
         feedListView.setVertical(requireContext())
@@ -54,6 +64,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchPostList() {
+        PostManager.getInstance()
+            .getPosts("", "NEW") { response, error ->
+                isLoading = false
+                noPosts = response?.posts?.isEmpty()
+                postAdapter.submitList(response?.posts)
+            }
+    }
+
+    private fun fetchPostList2() {
         val posts = listOf(
             Post(
                 "1",

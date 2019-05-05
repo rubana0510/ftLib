@@ -4,8 +4,10 @@
         tools:context=".fragments.HomeFragment">
 
     <data>
+        <variable name="isCustomer" type="Boolean"/>
         <variable name="isLoading" type="Boolean"/>
         <variable name="noPosts" type="Boolean"/>
+        <variable name="addPostListener" type="android.view.View.OnClickListener"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -50,6 +52,15 @@
                         android:layout_gravity="center"
                         android:text="@string/no_feed_yet"
                         app:isGone="@{!noPosts}"/>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        app:isGone="@{isCustomer}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_arrow_right_24dp"
+                        android:rotation="-90"
+                        android:layout_gravity="end|bottom"
+                        android:layout_margin="16dp"
+                        android:onClick="@{addPostListener}"/>
             </FrameLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>

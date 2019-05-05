@@ -7,7 +7,7 @@
     <data>
         <variable name="onCutomerContinue" type="android.view.View.OnClickListener"/>
         <variable name="onBusinessContinue" type="android.view.View.OnClickListener"/>
-        <variable name="user" type="com.feedbacktower.network.models.AuthResponse.User"/>
+        <variable name="user" type="com.feedbacktower.data.models.User"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

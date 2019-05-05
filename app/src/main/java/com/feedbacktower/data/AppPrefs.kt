@@ -2,6 +2,7 @@ package com.feedbacktower.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.AuthResponse
 import com.google.gson.Gson
 
@@ -28,10 +29,10 @@ class AppPrefs private constructor() {
             sharedPrefs.edit().putString("AUTH_TOKEN", value).apply()
         }
 
-    var user: AuthResponse.User?
+    var user: User?
         get() {
-            val user: AuthResponse.User? =
-                Gson().fromJson(sharedPrefs.getString("USER", null), AuthResponse.User::class.java)
+            val user: User? =
+                Gson().fromJson(sharedPrefs.getString("USER", null), User::class.java)
             return user
         }
         set(value) {

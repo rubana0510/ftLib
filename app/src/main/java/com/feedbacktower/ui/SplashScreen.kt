@@ -11,17 +11,21 @@ class SplashScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (AppPrefs.getInstance(this).authToken != null) {
+        val user = AppPrefs.getInstance(this).user
+        if (user == null) {
             Handler().postDelayed({
                 launchActivity<LoginScreen>()
                 finish()
             }, 1000)
         } else {
-            Handler().postDelayed({
-                launchActivity<LoginScreen>()
-                finish()
-            }, 1000)
+            if (!user.profileSetup)
+                launchActivity<ProfileSetupScreen>()
+            else if (user.business == null)
+                launchActivity<CustomerMainActivity>()
+            else
+                launchActivity<BusinessProfileSetupScreen> { }
+
+            finish()
         }
     }
 }

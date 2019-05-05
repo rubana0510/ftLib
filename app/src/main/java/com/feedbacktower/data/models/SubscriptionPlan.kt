@@ -1,40 +1,34 @@
 package com.feedbacktower.data.models
 
-import com.feedbacktower.R
-import java.lang.IllegalArgumentException
+import com.google.gson.annotations.SerializedName
 
 data class SubscriptionPlan(
-    val planId: String,
-    val planName: String,
-    val type: String,
-    val duration: Int,
-    val fee: Double,
-    val walletAmount: Double
-) {
-    val planType: PlanType
-        get() {
-            return when (type) {
-                "YEAR" -> PlanType.YEAR
-                "DAY" -> PlanType.DAY
-                "MONTH" -> PlanType.MONTH
-                else -> throw IllegalArgumentException()
-            }
-        }
-    val durationUnitDisplay: String
-        get() {
-            return when (planType) {
-                PlanType.YEAR -> if (duration == 1) "YEAR" else "YEARS"
-                PlanType.DAY -> if (duration == 1) "DAY" else "DAYS"
-                PlanType.MONTH -> if (duration == 1) "MONTH" else "MONTHS"
-                else -> throw IllegalArgumentException()
-            }
-        }
-    val durationDisplay: String
-        get() = duration.toString()
-
+    @SerializedName("businessCategoryId")
+    val businessCategoryId: String?,
+    @SerializedName("createdAt")
+    val createdAt: String,
+    @SerializedName("fee")
+    val fee: String,
+    @SerializedName("id")
+    val id: String,
+    @SerializedName("masterBusinessCategoryId")
+    val masterBusinessCategoryId: Int,
+    @SerializedName("maxPhotoPost")
+    val maxPhotoPost: Int,
+    @SerializedName("maxTextPost")
+    val maxTextPost: Int,
+    @SerializedName("maxVideoPost")
+    val maxVideoPost: Int,
+    @SerializedName("maxWalletCashback")
+    val maxWalletCashback: String,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("period")
+    val period: String,
+    @SerializedName("periodType")
+    val periodType: String,
+    @SerializedName("updatedAt")
+    val updatedAt: String
+){
     var isSelected: Boolean = false
-
-    var cardColor: Int = R.color.planCard1
-
-    enum class PlanType { YEAR, MONTH, DAY, UNKNOWN }
 }

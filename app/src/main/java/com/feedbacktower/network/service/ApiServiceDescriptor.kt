@@ -6,10 +6,7 @@ import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.*
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiServiceDescriptor {
 
@@ -53,17 +50,41 @@ interface ApiServiceDescriptor {
     fun registerAsBusinessAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
     @POST("/profile/set-business-interest")
-    fun setBusinessCategoryInterestAsync( @Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+    fun setBusinessCategoryInterestAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
+    @POST("/transaction/generate-hash")
+    fun generateHashAsync(@Body params: GenerateHashRequest): Deferred<ApiResponse<GenerateHashResponse?>>
+
+    @POST("/post/")
+    fun createTextPostAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
+    @GET("/post/")
+    fun getPostsAsync(
+        @Query("timestamp") timestamp: String,
+        @Query("type") type: String
+    ): Deferred<ApiResponse<GetPostsResponse?>>
+
+    @GET("/review/{businessId}/")
+    fun getBusinessReviewsAsync(
+        @Path("businessId") businessId: String
+    ): Deferred<ApiResponse<GetReviewsResponse?>>
+
+    @GET("/review/")
+    fun getMyReviewsAsync(
+        @Query("timestamp") timestamp: String
+    ): Deferred<ApiResponse<GetReviewsResponse?>>
+
+    @GET("/suggestion/")
+    fun getMySuggestionsAsync(
+        @Query("timestamp") timestamp: String
+    ): Deferred<ApiResponse<GetSuggestionsResponse?>>
+
 
     @GET("/subscription-plan/")
-    fun getAllSubscriptionPlans(): Deferred<ApiResponse<List<SubscriptionPlan>>>
+    fun getSubscriptionPlansAsync(): Deferred<ApiResponse<PlanListResponse?>>
 
     @GET("/business-category/")
     fun getCategoriesAsync(): Deferred<ApiResponse<GetCategoriesResponse?>>
 
-    @POST("/projectx/index.php/API/Services/get_auth_pager")
-    @FormUrlEncoded
-    fun getBusinessCategoriesAsync(
-    ): Deferred<Response<List<BusinessCategory>>>
 
 }

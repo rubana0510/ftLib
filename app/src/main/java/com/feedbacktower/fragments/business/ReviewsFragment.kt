@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentReviewsBinding
+import com.feedbacktower.network.manager.ReviewsManager
 
 
 class ReviewsFragment : Fragment() {
@@ -52,16 +53,107 @@ class ReviewsFragment : Fragment() {
     }
 
     private fun fetchReviewList() {
+        swipeRefresh.isRefreshing = true
+        ReviewsManager.getInstance()
+            .getMyReviews("") { response, throwable ->
+                swipeRefresh.isRefreshing = true
+                isListEmpty = response?.review?.isEmpty()
+                reviewAdapter.submitList(response?.review)
+            }
+    }
+
+    private fun fetchReviewList2() {
         val list = listOf(
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience using your service. Hope we will get the same for years to come.", "1", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience using your service.", "2", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss"),
-            Review("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "Best Garage1", "It was really great experience.", "5", "ss")
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "1",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience using your service.",
+                "2",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            ),
+            Review(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "Best Garage1",
+                "It was really great experience.",
+                "5",
+                "ss"
+            )
         )
         isListEmpty = list.isEmpty()
         reviewAdapter.submitList(list)

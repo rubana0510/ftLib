@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.SuggestionListAdapter
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentSuggestionsBinding
+import com.feedbacktower.network.manager.SuggestionsManager
 
 
 class SuggestionsFragment : Fragment() {
@@ -47,17 +48,115 @@ class SuggestionsFragment : Fragment() {
         fetchSuggestionList()
     }
 
-
     private fun fetchSuggestionList() {
+        swipeRefresh.isRefreshing = true
+        SuggestionsManager.getInstance()
+            .getSuggestions("") { response, error ->
+                swipeRefresh.isRefreshing = false
+                isListEmpty = response?.suggestions?.isEmpty()
+                suggestionAdapter.submitList(response?.suggestions)
+            }
+    }
+
+
+    private fun fetchSuggestionList2() {
         val list = listOf(
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "", "ss", "Now", "Yesterday"),
-            Suggestion("1", "1", "Sanket Naik", "https://via.placeholder.com/50", "2", "It was really great experience using your service. Hope we will get the same for years to come.", "Thanks a lot for the suggestion", "ss", "Now", "Yesterday")
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "",
+                "ss",
+                "Now",
+                "Yesterday"
+            ),
+            Suggestion(
+                "1",
+                "1",
+                "Sanket Naik",
+                "https://via.placeholder.com/50",
+                "2",
+                "It was really great experience using your service. Hope we will get the same for years to come.",
+                "Thanks a lot for the suggestion",
+                "ss",
+                "Now",
+                "Yesterday"
+            )
         )
         isListEmpty = list.isEmpty()
         suggestionAdapter.submitList(list)

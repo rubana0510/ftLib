@@ -4,6 +4,7 @@
         tools:context=".fragments.business.AccountFragment">
     <data>
         <variable name="url" type="String"/>
+        <variable name="user" type="com.feedbacktower.data.models.User"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +45,8 @@
                             app:layout_constraintTop_toTopOf="@id/businessName"
                             app:layout_constraintBottom_toBottomOf="@id/editProfileButton"
                             android:layout_marginStart="24dp"
-                            app:loadRoundImage="@{url}"/>
+                            app:loadRoundImage="@{url}"
+                    />
                     <TextView
                             style="@style/LargeText"
                             android:id="@+id/businessName"
@@ -55,7 +57,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
                             tools:text="Sai Photo Studio"
-                            android:text="Sai Photo Studio"/>
+                            android:text="@{user.business.name}"/>
                     <TextView
                             style="@style/MediumBoldText"
                             android:id="@+id/businessCategory"

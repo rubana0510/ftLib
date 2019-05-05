@@ -1,14 +1,14 @@
 package com.feedbacktower.adapters.diffcallbacks
 
 import androidx.recyclerview.widget.DiffUtil
-import com.feedbacktower.data.models.SubscriptionPlan
+import com.feedbacktower.network.models.PlanListResponse
 
-class PlanDiffCallback : DiffUtil.ItemCallback<SubscriptionPlan>() {
-    override fun areItemsTheSame(oldItem: SubscriptionPlan, newItem: SubscriptionPlan): Boolean {
-        return oldItem.planId == newItem.planId
+class PlanDiffCallback : DiffUtil.ItemCallback<PlanListResponse.Plan>() {
+    override fun areItemsTheSame(oldItem: PlanListResponse.Plan, newItem: PlanListResponse.Plan): Boolean {
+        return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: SubscriptionPlan, newItem: SubscriptionPlan): Boolean {
+    override fun areContentsTheSame(oldItem: PlanListResponse.Plan, newItem: PlanListResponse.Plan): Boolean {
         return oldItem == newItem
     }
 

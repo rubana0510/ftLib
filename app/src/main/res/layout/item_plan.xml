@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="androidx.core.content.ContextCompat"/>
-        <variable name="plan" type="com.feedbacktower.data.models.SubscriptionPlan"/>
+        <variable name="plan" type="com.feedbacktower.network.models.PlanListResponse.Plan"/>
         <variable name="clickListener" type="android.view.View.OnClickListener"/>
     </data>
     <androidx.cardview.widget.CardView
@@ -12,10 +12,7 @@
             app:cardCornerRadius="24dp"
             app:cardUseCompatPadding="true"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@{ContextCompat.getColor(context,  plan.cardColor)}"
-            android:onClick="@{clickListener}"
-            android:clickable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless">
+            android:onClick="@{clickListener}">
         <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +33,7 @@
                         android:textColor="@color/grey21"
                         android:textSize="50sp"
                         tools:text="1"
-                        android:text="@{plan.durationDisplay}"/>
+                        android:text="@{plan.period}"/>
                 <TextView
                         style="@style/LargeBoldText"
                         android:layout_width="wrap_content"
@@ -46,7 +43,7 @@
                         android:textColor="@color/grey42"
                         android:layout_marginTop="12dp"
                         tools:text="YEAR"
-                        android:text="@{plan.durationUnitDisplay}"/>
+                        android:text="@{plan.periodType}"/>
                 <TextView
                         style="@style/SmallBoldText"
                         android:layout_width="wrap_content"

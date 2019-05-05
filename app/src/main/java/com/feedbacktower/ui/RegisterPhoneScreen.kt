@@ -10,6 +10,7 @@ import com.feedbacktower.databinding.ActivityRegisterPhoneScreenBinding
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.gone
+import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.visible
 import kotlinx.android.synthetic.main.activity_register_phone_screen.*
 import org.jetbrains.anko.toast
@@ -156,6 +157,7 @@ class RegisterPhoneScreen : AppCompatActivity() {
 
             if (response != null) {
                 state = State.REGISTERED
+                launchActivity<ProfileSetupScreen>()
                 toast("Registered")
             } else {
                 toast("Unknown error occurred")

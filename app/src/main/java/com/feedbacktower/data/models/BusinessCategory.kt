@@ -8,7 +8,7 @@ data class BusinessCategory(
     @SerializedName("name")
     val name: String,
     @SerializedName("popular")
-    val popular: Boolean,
+    val popular: Int,
     @SerializedName("featured")
     val featured: Boolean
 ) {

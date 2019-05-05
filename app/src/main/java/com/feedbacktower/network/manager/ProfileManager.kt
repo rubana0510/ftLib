@@ -2,6 +2,7 @@ package com.feedbacktower.network.manager
 
 import com.feedbacktower.network.models.EmptyResponse
 import com.feedbacktower.network.models.GetCategoriesResponse
+import com.feedbacktower.network.models.PlanListResponse
 import com.feedbacktower.network.models.UpdateProfileResponse
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
@@ -89,6 +90,14 @@ class ProfileManager {
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getCategoriesAsync().makeRequest(onComplete)
+        }
+    }
+
+    fun getSubscriptionPlans(
+        onComplete: (PlanListResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getSubscriptionPlansAsync().makeRequest(onComplete)
         }
     }
 

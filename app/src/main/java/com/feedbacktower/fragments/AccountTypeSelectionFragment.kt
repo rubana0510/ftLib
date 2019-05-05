@@ -9,6 +9,7 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentAccountSelectionTypeBinding
 import com.feedbacktower.network.manager.AuthManager
+import com.feedbacktower.ui.BusinessProfileSetupScreen
 import com.feedbacktower.ui.CustomerMainActivity
 import com.feedbacktower.util.launchActivity
 import org.jetbrains.anko.toast
@@ -35,9 +36,7 @@ class AccountTypeSelectionFragment : Fragment() {
         AuthManager.getInstance()
             .registerAsBusiness{_,error->
                 if(error != null)
-                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragmentToBusinessSetup1Fragment().let {
-                        findNavController().navigate(it)
-                    }
+                   requireActivity().launchActivity<BusinessProfileSetupScreen>()
                 else
                     requireActivity().toast(error?.message?:getString(R.string.default_err_message))
             }

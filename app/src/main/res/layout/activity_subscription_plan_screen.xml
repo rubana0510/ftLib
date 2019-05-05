@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ui.plans.SubscriptionPlansScreen">
+    <data>
+        <variable name="onContinueClick" type="android.view.View.OnClickListener"/>
+        <variable name="plan" type="com.feedbacktower.network.models.PlanListResponse.Plan"/>
+        <variable name="isLoading" type="boolean"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <androidx.cardview.widget.CardView
+                android:layout_width="250dp"
+                android:layout_height="300dp"
+                app:cardCornerRadius="24dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:isGone="@{isLoading}">
+
+            <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="16dp">
+                    <TextView
+                            style="@style/LargeBoldText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:textColor="@color/grey21"
+                            android:textSize="50sp"
+                            tools:text="1"
+                            android:text="@{plan.period}"/>
+                    <TextView
+                            style="@style/LargeBoldText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:textColor="@color/grey42"
+                            android:layout_marginTop="12dp"
+                            tools:text="YEAR"
+                            android:text="@{plan.periodType}"/>
+                    <TextView
+                            style="@style/SmallBoldText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:textColor="@color/grey42"
+                            android:text="SUBSCRIPTION"
+                    />
+
+                    <TextView
+                            style="@style/MediumBoldText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:maxLines="1"
+                            android:layout_marginTop="8dp"
+                            android:textColor="@color/grey42"
+                            android:text="@{`₹` + plan.fee}"
+                            tools:text="200"
+                    />
+                </LinearLayout>
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_check_circle_black_24dp"
+                        android:layout_gravity="end|top"
+                        android:tint="@color/black"
+                        app:isGone="@{!plan.isSelected}"/>
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:isGone="@{!isLoading}"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/planListView"
+                android:layout_marginTop="16dp"
+                tools:text="Pay Rs.500 and get Rs.1000 in wallet"
+                android:gravity="center_horizontal"/>
+        <Button
+                android:id="@id/continueButton"
+                style="@style/ButtonFilledStyle.Big"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp"
+                android:text="@string/continue_"
+                app:isGone="@{isLoading}"
+                android:onClick="@{onContinueClick}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

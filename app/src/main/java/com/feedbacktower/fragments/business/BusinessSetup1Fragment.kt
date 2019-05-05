@@ -2,6 +2,7 @@ package com.feedbacktower.fragments.business
 
 
 import android.os.Bundle
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
+import com.feedbacktower.fragments.SelectCategoryFragment
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.disable
 import com.feedbacktower.util.enable
@@ -27,7 +30,7 @@ class BusinessSetup1Fragment : Fragment() {
     private lateinit var regNoInput: TextInputEditText
     private lateinit var catIdInput: TextInputEditText
 
-    private var selectedCatId: String? = "232323"
+    private var selectedCatId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,9 +53,10 @@ class BusinessSetup1Fragment : Fragment() {
         nameInput = binding.businessNameInput
         regNoInput = binding.estRegNoInput
         catIdInput = binding.businessCatInput
+        catIdInput.inputType = InputType.TYPE_NULL
         continueButton = binding.continueButton
 
-        binding.onContinueClick =  View.OnClickListener {
+        binding.onContinueClick = View.OnClickListener {
             if (valid(nameInput.text.toString().trim(), regNoInput.text.toString().trim(), selectedCatId)) {
                 updateDetails(
                     nameInput.text.toString().trim(),
@@ -61,7 +65,16 @@ class BusinessSetup1Fragment : Fragment() {
             }
         }
 
-        catIdInput.setOnClickListener { BusinessSetup1FragmentDirections.actionBusinessSetup1FragmentToSelectCityFragment2() }
+        catIdInput.setOnClickListener {
+            val fragment = SelectCategoryFragment.getInstance()
+            fragment.listener = object : SelectCategoryFragment.CategorySelectListener {
+                override fun onSelect(category: BusinessCategory) {
+                    catIdInput.setText(category.name)
+                    selectedCatId = category.id
+                }
+            }
+            fragment.show(fragmentManager, "select_category")
+        }
     }
 
     private fun hideLoading() {

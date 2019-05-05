@@ -57,7 +57,7 @@ class AccountFragment : Fragment() {
 
     private fun submitOptions() {
         val options = listOf(
-            AccountOption(1, "Subscription", "102 days left", R.drawable.ic_post_like_filled),
+            AccountOption(1, "Subscription", "XXX days left", R.drawable.ic_post_like_filled),
             AccountOption(2, "My Reviews", "20 reviews", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "10 suggestions", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),

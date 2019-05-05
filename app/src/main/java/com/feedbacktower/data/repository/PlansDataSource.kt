@@ -1,10 +1,10 @@
 package com.feedbacktower.data.repository
 
 import androidx.lifecycle.LiveData
-import com.feedbacktower.data.models.SubscriptionPlan
 import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.PlanListResponse
 
 interface PlansDataSource {
-    val fetchedSubscriptionPlans: LiveData<ApiResponse<List<SubscriptionPlan>>>
+    val fetchedSubscriptionPlans: LiveData<ApiResponse<PlanListResponse?>>
     suspend fun fetchSubscriptionPlans()
 }

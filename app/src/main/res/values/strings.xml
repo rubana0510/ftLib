@@ -70,4 +70,5 @@
     <string name="continue_as_customer">CONTINUE AS CUSTOMER</string>
     <string name="register_businsess">Register Business</string>
     <string name="post">POST</string>
+    <string name="select_plan">Select Your Plan</string>
 </resources>

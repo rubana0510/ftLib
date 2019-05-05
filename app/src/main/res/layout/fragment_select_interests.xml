@@ -21,6 +21,7 @@
                 android:layout_marginTop="16dp"
                 app:isGone="@{isLoading}"/>
         <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"

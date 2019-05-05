@@ -88,7 +88,12 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                     user = response.user
                     authToken = response.token
                 }
-                launchActivity<ProfileSetupScreen>()
+                if (!response.user.profileSetup)
+                    launchActivity<ProfileSetupScreen>()
+                else if (response.user.business == null)
+                    launchActivity<CustomerMainActivity>()
+                else
+                    launchActivity<BusinessProfileSetupScreen> { }
             } else {
                 toast("Unknown error occurred")
             }

@@ -13,7 +13,7 @@ class PlansDataSourceImpl(private val apiService: ApiServiceDescriptor) : PlansD
         get() = _fetchedPlans
 
     override suspend fun fetchSubscriptionPlans() {
-        val response = apiService.getSubscriptionPlansAsync().await()
+        val response = apiService.getSubscriptionPlansAsync("1").await()
         _fetchedPlans.postValue(response)
     }
 }

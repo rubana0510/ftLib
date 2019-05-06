@@ -14,6 +14,9 @@ import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.visible
 import kotlinx.android.synthetic.main.activity_register_phone_screen.*
 import org.jetbrains.anko.toast
+import android.content.Intent
+
+
 
 class RegisterPhoneScreen : AppCompatActivity() {
     private enum class State { INITIAL, OTP_SENT, OTP_VERIFIED, REGISTERED }
@@ -81,7 +84,8 @@ class RegisterPhoneScreen : AppCompatActivity() {
             State.OTP_VERIFIED -> {
                 textInputPhone.visible()
                 textInputPhone.isEnabled = false
-                textInputOtp.gone()
+                textInputOtp.isEnabled = false
+                textInputOtp.visible()
                 textInputPassword.visible()
                 textInputPassword.requestFocus()
             }
@@ -113,7 +117,7 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 return@preRegister
             }
             if (response != null) {
-                OTP_RECEIVED = response.user.otp
+              //  OTP_RECEIVED = response.user.otp
                 state = State.OTP_SENT
                 toast("OTP sent to your Phone")
             } else {
@@ -157,7 +161,10 @@ class RegisterPhoneScreen : AppCompatActivity() {
 
             if (response != null) {
                 state = State.REGISTERED
-                launchActivity<ProfileSetupScreen>()
+                AppPrefs.getInstance(this).user = response
+                launchActivity<ProfileSetupScreen>{
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
                 toast("Registered")
             } else {
                 toast("Unknown error occurred")

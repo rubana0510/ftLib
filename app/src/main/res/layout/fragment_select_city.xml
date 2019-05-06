@@ -28,17 +28,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:isGone="@{!isLoading}"/>
-        <Button
-                style="@style/ButtonFilledStyle.Big"
-                android:id="@+id/continueButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:layout_marginBottom="24dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/continue_"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

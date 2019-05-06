@@ -38,7 +38,7 @@ class AuthManager {
 
     fun preRegister(
         phone: String,
-        onComplete: (PreRegResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.preRegisterAsync(hashMapOf("phone" to phone))

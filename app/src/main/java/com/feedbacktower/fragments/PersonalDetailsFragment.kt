@@ -88,6 +88,14 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                     return@updatePersonalDetails
                 }
 
+                AppPrefs.getInstance(requireContext()).apply {
+                    user = user?.apply {
+                        this.firstName = firstName
+                        this.lastName = lastName
+                        this.emailId = email
+                        this.dob = dob
+                    }
+                }
                 PersonalDetailsFragmentDirections.actionPersonalDetailsFragmentToSelectCityFragment().let {
                     findNavController().navigate(it)
                 }

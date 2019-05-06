@@ -53,9 +53,15 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
 
     private fun getPlanList(binding: ActivitySubscriptionPlanScreenBinding) {
+        val categoryId = AppPrefs.getInstance(this).getValue("MASTER_CAT_ID")
+        if (categoryId == null) {
+            toast("Select category")
+            finish()
+            return
+        }
         binding.isLoading = true
         ProfileManager.getInstance()
-            .getSubscriptionPlans { planListResponse, error ->
+            .getSubscriptionPlans(categoryId) { planListResponse, error ->
                 binding.isLoading = false
                 if (error != null) {
                     toast(error.message ?: getString(R.string.default_err_message))
@@ -78,7 +84,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     private fun generateHashForPayment(plan: PlanListResponse.Plan) {
         val txId = "TXID${System.currentTimeMillis()}"
         val requestParams: GenerateHashRequest = GenerateHashRequest(
-            plan.fee,
+            plan.id,
             user.emailId,
             user.firstName,
             plan.name,
@@ -108,8 +114,8 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .setProductName(plan.name)
             .setFirstName(user.firstName)
             .setEmail(user.emailId)
-            .setsUrl("feedbacktower.com/success")
-            .setfUrl("feedbacktower.com/failure")
+            .setsUrl("${BuildConfig.SERVER_BASE_URL}/payment/success.html")
+            .setfUrl("${BuildConfig.SERVER_BASE_URL}/payment/failure.html")
             .setUdf1(requestParams.udf1)
             .setUdf2(requestParams.udf2)
             .setUdf3(requestParams.udf3)
@@ -122,7 +128,12 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         val paymentParams: PayUmoneySdkInitializer.PaymentParam = builder.build()
         paymentParams.setMerchantHash(hash)
 
-        PayUmoneyFlowManager.startPayUMoneyFlow(paymentParams, this, com.feedbacktower.R.style.AppTheme_NoActionBar, false)
+        PayUmoneyFlowManager.startPayUMoneyFlow(
+            paymentParams,
+            this,
+            com.feedbacktower.R.style.AppTheme_NoActionBar,
+            false
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -136,7 +147,9 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                 if (transactionResponse.transactionStatus == TransactionResponse.TransactionStatus.SUCCESSFUL) {
                     //Success Transaction
                     toast("Payment Successful")
-                    launchActivity<BusinessMainActivity>()
+                    launchActivity<BusinessMainActivity> {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                 } else {
                     //Failure Transaction
                     toast("Payment is unsuccessful, Please try again.")

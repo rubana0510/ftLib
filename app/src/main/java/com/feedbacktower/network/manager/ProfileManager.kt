@@ -94,10 +94,11 @@ class ProfileManager {
     }
 
     fun getSubscriptionPlans(
+        categoryId: String,
         onComplete: (PlanListResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getSubscriptionPlansAsync().makeRequest(onComplete)
+            apiService.getSubscriptionPlansAsync(categoryId).makeRequest(onComplete)
         }
     }
 

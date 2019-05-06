@@ -29,6 +29,14 @@ class AppPrefs private constructor() {
             sharedPrefs.edit().putString("AUTH_TOKEN", value).apply()
         }
 
+    fun setValue(key: String, value: String) {
+        sharedPrefs.edit().putString(key, value).apply()
+    }
+
+    fun getValue(key: String): String? {
+        return sharedPrefs.getString(key, null)
+    }
+
     var user: User?
         get() {
             val user: User? =

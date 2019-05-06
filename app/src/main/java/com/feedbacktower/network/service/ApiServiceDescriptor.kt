@@ -18,7 +18,7 @@ interface ApiServiceDescriptor {
     @POST("/auth/pre-register")
     fun preRegisterAsync(
         @Body map: HashMap<String, Any?>
-    ): Deferred<ApiResponse<PreRegResponse?>>
+    ): Deferred<ApiResponse<EmptyResponse?>>
 
     @POST("/auth/verify-otp")
     fun verifyOtpRegisterAsync(
@@ -36,12 +36,12 @@ interface ApiServiceDescriptor {
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<UpdateProfileResponse?>>
 
-    @POST("/business/update")
+    @POST("/business/register")
     fun updateBusinessAddressAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/business/update")
+    @POST("/business/register")
     fun updateBusinessDetailsAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
@@ -52,8 +52,11 @@ interface ApiServiceDescriptor {
     @POST("/profile/set-business-interest")
     fun setBusinessCategoryInterestAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/transaction/generate-hash")
+    @POST("/transaction/request")
     fun generateHashAsync(@Body params: GenerateHashRequest): Deferred<ApiResponse<GenerateHashResponse?>>
+
+    @POST("/transaction/response")
+    fun saveTransactionResponse(@Body params: TransactionResponse): Deferred<ApiResponse<EmptyResponse?>>
 
     @POST("/post/")
     fun createTextPostAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
@@ -81,10 +84,17 @@ interface ApiServiceDescriptor {
 
 
     @GET("/subscription-plan/")
-    fun getSubscriptionPlansAsync(): Deferred<ApiResponse<PlanListResponse?>>
+    fun getSubscriptionPlansAsync(
+        @Query("category") categoryId: String
+    ): Deferred<ApiResponse<PlanListResponse?>>
 
     @GET("/business-category/")
     fun getCategoriesAsync(): Deferred<ApiResponse<GetCategoriesResponse?>>
+
+    @GET("/location/city/")
+    fun getCitiesAsync(
+        @Query("search") search: String = ""
+    ): Deferred<ApiResponse<GetCitiesResponse?>>
 
 
 }

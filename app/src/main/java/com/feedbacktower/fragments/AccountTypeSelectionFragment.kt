@@ -35,10 +35,11 @@ class AccountTypeSelectionFragment : Fragment() {
     private fun registerAsBusiness() {
         AuthManager.getInstance()
             .registerAsBusiness{_,error->
-                if(error != null)
-                   requireActivity().launchActivity<BusinessProfileSetupScreen>()
-                else
+                if(error != null){
                     requireActivity().toast(error?.message?:getString(R.string.default_err_message))
+                }else{
+                    requireActivity().launchActivity<BusinessProfileSetupScreen>()
+                }
             }
     }
 

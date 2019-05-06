@@ -1,5 +1,6 @@
 package com.feedbacktower.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -89,11 +90,17 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                     authToken = response.token
                 }
                 if (!response.user.profileSetup)
-                    launchActivity<ProfileSetupScreen>()
+                    launchActivity<ProfileSetupScreen>() {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                 else if (response.user.business == null)
-                    launchActivity<CustomerMainActivity>()
+                    launchActivity<CustomerMainActivity>() {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                 else
-                    launchActivity<BusinessProfileSetupScreen> { }
+                    launchActivity<BusinessProfileSetupScreen> {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
             } else {
                 toast("Unknown error occurred")
             }

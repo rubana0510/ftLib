@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.BusinessCategory
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
 import com.feedbacktower.fragments.SelectCategoryFragment
 import com.feedbacktower.network.manager.ProfileManager
@@ -31,6 +32,7 @@ class BusinessSetup1Fragment : Fragment() {
     private lateinit var catIdInput: TextInputEditText
 
     private var selectedCatId: String? = null
+    private var selectedMasterCatId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +73,8 @@ class BusinessSetup1Fragment : Fragment() {
                 override fun onSelect(category: BusinessCategory) {
                     catIdInput.setText(category.name)
                     selectedCatId = category.id
+                    selectedMasterCatId = category.masterBusinessCategoryId
+                    AppPrefs.getInstance(requireContext()).setValue("MASTER_CAT_ID", selectedMasterCatId?:"")
                 }
             }
             fragment.show(fragmentManager, "select_category")
@@ -119,6 +123,7 @@ class BusinessSetup1Fragment : Fragment() {
         regNo: String
     ) {
         showLoading()
+
         ProfileManager.getInstance()
             .updateBusinessBasicDetails(name, regNo, selectedCatId!!)
             { response, error ->

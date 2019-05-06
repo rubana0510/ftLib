@@ -9,9 +9,11 @@ import androidx.navigation.fragment.findNavController
 import com.feedbacktower.adapters.CityListAdapter
 import com.feedbacktower.data.models.City
 import com.feedbacktower.databinding.FragmentSelectCityBinding
+import com.feedbacktower.network.manager.LocationManager
 import com.feedbacktower.util.setVertical
 
 class SelectCityFragment : Fragment() {
+    private lateinit var adapter: CityListAdapter
 
     companion object {
         fun getInstance(): SelectCityFragment {
@@ -28,24 +30,21 @@ class SelectCityFragment : Fragment() {
         val binding = FragmentSelectCityBinding.inflate(inflater, container, false)
         val context = context ?: return binding.root
 
-        val adapter = CityListAdapter()
+        adapter = CityListAdapter()
         binding.cityList.setVertical(requireContext())
         binding.cityList.adapter = adapter
-        adapter.submitList(
-            listOf(
-                City("1", "Panjim", "1", "Goa"),
-                City("2", "Mapusa", "1", "Goa"),
-                City("3", "Margao", "1", "Goa"),
-                City("4", "Vasco", "1", "Goa"),
-                City("5", "Porvorim", "1", "Goa")
-            )
-        )
-        binding.continueButton.setOnClickListener {
-            SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
-                findNavController().navigate(it)
-            }
-        }
+
+        fetchCities(binding)
         return binding.root
+    }
+
+    private fun fetchCities(binding: FragmentSelectCityBinding) {
+        LocationManager.getInstance()
+            .getCities { response, error ->
+                if (error == null) {
+                    adapter.submitList(response?.cities)
+                }
+            }
     }
 
 }

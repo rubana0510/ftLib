@@ -32,4 +32,13 @@ class TransactionManager {
             apiService.generateHashAsync(params).makeRequest(onComplete)
         }
     }
+
+    fun saveResponse(
+        params: TransactionResponse,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.saveTransactionResponse(params).makeRequest(onComplete)
+        }
+    }
 }

@@ -32,7 +32,7 @@
               android:label="Address Details"/>
     <fragment android:id="@+id/selectInterestsFragment"
               android:name="com.feedbacktower.fragments.SelectInterestsFragment"
-              android:label="SelectInterestsFragment">
+              android:label="Select Your Interests">
         <action android:id="@+id/action_selectInterestsFragment_to_accountTypeSelectionFragment"
                 app:destination="@id/accountTypeSelectionFragment"/>
     </fragment>

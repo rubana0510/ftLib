@@ -5,49 +5,49 @@ import com.google.gson.annotations.SerializedName
 
 data class Business(
     @SerializedName("address")
-    val address: String,
+    var address: String,
     @SerializedName("avgReview")
-    val avgReview: Int,
+    var avgReview: Int,
     @SerializedName("businessCategory")
-    val businessCategory: String,
+    var businessCategory: String,
     @SerializedName("businessCategoryId")
-    val businessCategoryId: String,
+    var businessCategoryId: String,
     @SerializedName("cityId")
-    val cityId: String,
+    var cityId: String,
     @SerializedName("createdAt")
-    val createdAt: String,
+    var createdAt: String,
     @SerializedName("discountAmount")
-    val discountAmount: String,
+    var discountAmount: String,
     @SerializedName("emailId")
-    val emailId: String,
+    var emailId: String,
     @SerializedName("featured")
-    val featured: Boolean,
+    var featured: Boolean,
     @SerializedName("id")
-    val id: String,
+    var id: String,
     @SerializedName("location")
-    val location: Location,
+    var location: Location,
     @SerializedName("name")
-    val name: String?,
+    var name: String?,
     @SerializedName("phone")
-    val phone: String?,
+    var phone: String?,
     @SerializedName("rank")
-    val rank: Int,
+    var rank: Int,
     @SerializedName("regNo")
-    val regNo: String?,
+    var regNo: String?,
     @SerializedName("status")
-    val status: String,
+    var status: String,
     @SerializedName("totalReviews")
-    val totalReviews: Int,
+    var totalReviews: Int,
     @SerializedName("totalSuggestions")
-    val totalSuggestions: Int,
+    var totalSuggestions: Int,
     @SerializedName("updatedAt")
-    val updatedAt: String,
+    var updatedAt: String,
     @SerializedName("userId")
-    val userId: String,
+    var userId: String,
     @SerializedName("visible")
-    val visible: Boolean,
+    var visible: Boolean,
     @SerializedName("walletAmount")
-    val walletAmount: String,
+    var walletAmount: String,
     @SerializedName("website")
-    val website: String
+    var website: String
 )

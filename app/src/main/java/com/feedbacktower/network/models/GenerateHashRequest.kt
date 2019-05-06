@@ -3,8 +3,8 @@ import com.google.gson.annotations.SerializedName
 
 
 data class GenerateHashRequest(
-    @SerializedName("amount")
-    val amount: String,
+    @SerializedName("subscriptionPlanId")
+    val subscriptionPlanId: String,
     @SerializedName("email")
     val email: String,
     @SerializedName("firstname")

@@ -17,8 +17,12 @@ import com.feedbacktower.databinding.ActivitySubscriptionPlanScreenBinding
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
 import com.feedbacktower.network.models.GenerateHashRequest
+import com.feedbacktower.network.models.GenerateHashResponse
 import com.feedbacktower.network.models.PlanListResponse
+import com.feedbacktower.payment.models.PayUResponseSuccess
+import com.feedbacktower.payment.models.PayUResponseFailure
 import com.feedbacktower.util.launchActivity
+import com.google.gson.Gson
 import com.payumoney.core.PayUmoneySdkInitializer
 import com.payumoney.core.entity.TransactionResponse
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager
@@ -30,6 +34,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
     private lateinit var planListView: RecyclerView
     private lateinit var planAdapter: PlanAdapter
+    private var hashResponse: GenerateHashResponse? = null
     private var plan: PlanListResponse.Plan? = null
     private lateinit var user: User
     private val TAG = "SubscriptionPlansScreen"
@@ -101,14 +106,18 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                     toast(getString(R.string.default_err_message))
                     return@generateHash
                 }
-                initiatePayment(requestParams, response.hash, plan)
+                initiatePayment(requestParams, response, plan)
             }
     }
 
-    private fun initiatePayment(requestParams: GenerateHashRequest, hash: String, plan: PlanListResponse.Plan) {
+    private fun initiatePayment(
+        requestParams: GenerateHashRequest,
+        response: GenerateHashResponse,
+        plan: PlanListResponse.Plan
+    ) {
         val builder: PayUmoneySdkInitializer.PaymentParam.Builder = PayUmoneySdkInitializer.PaymentParam.Builder()
 
-        builder.setAmount(plan.fee)
+        builder.setAmount(response.txn.totalAmount.toString())
             .setTxnId(requestParams.txnid)
             .setPhone(user.phone)
             .setProductName(plan.name)
@@ -121,12 +130,11 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .setUdf3(requestParams.udf3)
             .setUdf4(requestParams.udf4)
             .setUdf5(requestParams.udf5)
-            .setIsDebug(true)
             .setKey(BuildConfig.MERCHANT_KEY)
             .setMerchantId(BuildConfig.MERCHANT_ID)
 
         val paymentParams: PayUmoneySdkInitializer.PaymentParam = builder.build()
-        paymentParams.setMerchantHash(hash)
+        paymentParams.setMerchantHash(response.hash)
 
         PayUmoneyFlowManager.startPayUMoneyFlow(
             paymentParams,
@@ -134,6 +142,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             com.feedbacktower.R.style.AppTheme_NoActionBar,
             false
         )
+        hashResponse = response
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -144,29 +153,61 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
             if (transactionResponse?.getPayuResponse() != null) {
 
+                val payuResponse = transactionResponse.getPayuResponse()
+                val merchantResponse = transactionResponse.transactionDetails
+                Log.d(TAG, "payuResponse: $payuResponse")
+                Log.d(TAG, "merchantResponse : $merchantResponse")
+
                 if (transactionResponse.transactionStatus == TransactionResponse.TransactionStatus.SUCCESSFUL) {
                     //Success Transaction
-                    toast("Payment Successful")
-                    launchActivity<BusinessMainActivity> {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
+                    val payUResponseSuccess: PayUResponseSuccess? =
+                        Gson().fromJson(payuResponse, PayUResponseSuccess::class.java)
+                    toast("Payment Successful: Updaing status")
+                    saveTransactionStatus(
+                        com.feedbacktower.network.models.TransactionResponse(
+                            payUResponseSuccess?.result?.mihpayid,
+                            "success",
+                            hashResponse?.txn?.id!!
+                        )
+                    )
+
                 } else {
                     //Failure Transaction
+
+                    val payUResponseFailure: PayUResponseFailure? =
+                        Gson().fromJson(payuResponse, PayUResponseFailure::class.java)
+                    saveTransactionStatus(
+                        com.feedbacktower.network.models.TransactionResponse(
+                            null,
+                            "failure",
+                            hashResponse?.txn?.id!!
+                        )
+                    )
                     toast("Payment is unsuccessful, Please try again.")
                 }
-                // Response from Payumoney
-                val payuResponse = transactionResponse.getPayuResponse()
 
-                Log.d(TAG, "payuResponse: " + payuResponse)
-                // Response from SURl and FURL
-                val merchantResponse = transactionResponse.transactionDetails
-
-                Log.d(TAG, "merchantResponse : " + merchantResponse)
             } else if (resultModel?.error != null) {
                 Log.d(TAG, "Error response : " + resultModel.error.transactionResponse)
             } else {
                 Log.d(TAG, "Both objects are null!")
             }
         }
+        hashResponse = null
+    }
+
+    private fun saveTransactionStatus(tXresponse: com.feedbacktower.network.models.TransactionResponse) {
+        TransactionManager.getInstance()
+            .saveResponse(
+                tXresponse
+            ) { response, error ->
+                if (error == null) {
+                    launchActivity<BusinessMainActivity> {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                } else {
+                    toast(error.message ?: getString(R.string.default_err_message))
+                    Log.e(TAG, "Error: ${error.message}")
+                }
+            }
     }
 }

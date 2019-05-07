@@ -60,7 +60,7 @@ class AuthManager {
     fun registerPhone(
         phone: String,
         password: String,
-        onComplete: (User?, Throwable?) -> Unit
+        onComplete: (AuthResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.registerPhoneAsync(hashMapOf("phone" to phone, "password" to password))

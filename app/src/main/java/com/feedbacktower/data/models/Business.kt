@@ -9,7 +9,7 @@ data class Business(
     @SerializedName("avgReview")
     var avgReview: Int,
     @SerializedName("businessCategory")
-    var businessCategory: String,
+    var businessCategory: BusinessCategory,
     @SerializedName("businessCategoryId")
     var businessCategoryId: String,
     @SerializedName("cityId")
@@ -40,6 +40,8 @@ data class Business(
     var totalReviews: Int,
     @SerializedName("totalSuggestions")
     var totalSuggestions: Int,
+    @SerializedName("totalRating")
+    var totalRating: Double,
     @SerializedName("updatedAt")
     var updatedAt: String,
     @SerializedName("userId")

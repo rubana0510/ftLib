@@ -4,6 +4,7 @@
         tools:context=".fragments.business.AccountFragment">
     <data>
         <variable name="url" type="String"/>
+        <variable name="business" type="com.feedbacktower.data.models.User"/>
         <variable name="user" type="com.feedbacktower.data.models.User"/>
     </data>
     <LinearLayout
@@ -66,8 +67,7 @@
                             app:layout_constraintStart_toEndOf="@id/businessProfileImage"
                             app:layout_constraintTop_toBottomOf="@id/businessName"
                             android:layout_marginStart="16dp"
-                            tools:text="Photo Studio"
-                            android:text="Photo Studio"/>
+                            tools:text="Photo Studio"/>
                     <com.google.android.material.button.MaterialButton
                             android:id="@+id/editProfileButton"
                             style="@style/ButtonOutlinedStyle"

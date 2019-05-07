@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AccountOptionsAdapter
 import com.feedbacktower.adapters.CountAdapter
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
@@ -53,13 +54,15 @@ class AccountFragment : Fragment() {
         submitOptions()
 
         binding.url = "https://via.placeholder.com/150"
+        binding.user = AppPrefs.getInstance(requireContext()).user!!
     }
 
     private fun submitOptions() {
+        val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val options = listOf(
-            AccountOption(1, "Subscription", "XXX days left", R.drawable.ic_post_like_filled),
-            AccountOption(2, "My Reviews", "20 reviews", R.drawable.ic_post_like_filled),
-            AccountOption(3, "My Suggestions", "10 suggestions", R.drawable.ic_post_like_filled),
+            AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
+            AccountOption(2, "My Reviews", "${business.totalReviews} reviews", R.drawable.ic_post_like_filled),
+            AccountOption(3, "My Suggestions", "${business.totalSuggestions} suggestions", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
@@ -71,11 +74,12 @@ class AccountFragment : Fragment() {
     }
 
     private fun submitCounts() {
+        val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val counts = listOf(
-            Count(1, "4.2", "Average Ratings"),
-            Count(2, "3", "Rank"),
-            Count(3, "1099", "Total Reviews"),
-            Count(4, "102", "Total Suggestions")
+            Count(1, "${business.totalRating/business.totalReviews}", "Average Ratings"),
+            Count(2, "${business.rank}", "Rank"),
+            Count(3, "${business.totalReviews}", "Total Reviews"),
+            Count(4, "${business.totalSuggestions}", "Total Suggestions")
         )
         countAdapter.submitList(counts)
     }

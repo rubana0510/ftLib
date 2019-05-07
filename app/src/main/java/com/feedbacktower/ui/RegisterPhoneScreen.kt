@@ -161,7 +161,10 @@ class RegisterPhoneScreen : AppCompatActivity() {
 
             if (response != null) {
                 state = State.REGISTERED
-                AppPrefs.getInstance(this).user = response
+                AppPrefs.getInstance(this).apply {
+                    user = response.user
+                    authToken = response.token
+                }
                 launchActivity<ProfileSetupScreen>{
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }

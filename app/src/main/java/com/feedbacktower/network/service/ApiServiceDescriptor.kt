@@ -29,7 +29,7 @@ interface ApiServiceDescriptor {
     @POST("/auth/register")
     fun registerPhoneAsync(
         @Body map: HashMap<String, Any?>
-    ): Deferred<ApiResponse<User?>>
+    ): Deferred<ApiResponse<AuthResponse?>>
 
     @POST("/profile/update")
     fun updatePersonalDetailsAsync(
@@ -56,7 +56,7 @@ interface ApiServiceDescriptor {
     fun generateHashAsync(@Body params: GenerateHashRequest): Deferred<ApiResponse<GenerateHashResponse?>>
 
     @POST("/transaction/response")
-    fun saveTransactionResponse(@Body params: TransactionResponse): Deferred<ApiResponse<EmptyResponse?>>
+    fun saveTransactionResponseAsync(@Body params: TransactionResponse): Deferred<ApiResponse<EmptyResponse?>>
 
     @POST("/post/")
     fun createTextPostAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>

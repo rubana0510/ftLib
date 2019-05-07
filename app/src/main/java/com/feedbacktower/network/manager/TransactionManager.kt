@@ -38,7 +38,7 @@ class TransactionManager {
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.saveTransactionResponse(params).makeRequest(onComplete)
+            apiService.saveTransactionResponseAsync(params).makeRequest(onComplete)
         }
     }
 }

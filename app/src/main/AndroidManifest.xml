@@ -16,7 +16,8 @@
             tools:replace="android:allowBackup,android:usesCleartextTraffic">
         <activity android:name=".ui.ScannerScreen">
         </activity>
-        <activity android:name=".ui.PostTextScreen">
+        <activity android:name=".ui.PostTextScreen"
+        android:label="@string/write_something">
         </activity>
         <activity android:name=".ui.plans.SubscriptionPlansScreen"
         android:label="@string/select_plan">

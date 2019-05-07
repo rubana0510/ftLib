@@ -62,7 +62,7 @@
                 style="@style/ImageButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_post_like"
+                app:srcCompat="@drawable/ic_thumb_up_black_24dp"
                 app:layout_constraintStart_toStartOf="@id/postCaption"
                 app:layout_constraintTop_toBottomOf="@id/postCaption"
                 android:contentDescription="@string/like_image_button"
@@ -77,6 +77,6 @@
                 app:layout_constraintStart_toEndOf="@id/likeImageButton"
                 app:layout_constraintTop_toTopOf="@id/likeImageButton"
                 app:layout_constraintBottom_toBottomOf="@id/likeImageButton"
-                android:text="@{post.postLikes + `likes`}"/>
+                android:text="@{post.postLikes + ` likes`}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

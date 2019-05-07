@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
 
     private fun fetchPostList() {
         PostManager.getInstance()
-            .getPosts("", "NEW") { response, error ->
+            .getPosts("2019-05-03 20:24:59", "NEW") { response, error ->
                 isLoading = false
                 noPosts = response?.posts?.isEmpty()
                 postAdapter.submitList(response?.posts)

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import com.feedbacktower.BusinessMainActivity
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.ActivityLoginScreenBinding
@@ -89,18 +90,24 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                     user = response.user
                     authToken = response.token
                 }
-                if (!response.user.profileSetup)
-                    launchActivity<ProfileSetupScreen>() {
+                if (response.user.userType == "CUSTOMER") {
+                    if (!response.user.profileSetup)
+                        launchActivity<ProfileSetupScreen>() {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                    else if (response.user.business == null)
+                        launchActivity<CustomerMainActivity>() {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                    else
+                        launchActivity<BusinessProfileSetupScreen> {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                } else if (response.user.userType == "BUSINESS") {
+                    launchActivity<BusinessMainActivity> {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
-                else if (response.user.business == null)
-                    launchActivity<CustomerMainActivity>() {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                else
-                    launchActivity<BusinessProfileSetupScreen> {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
+                }
             } else {
                 toast("Unknown error occurred")
             }

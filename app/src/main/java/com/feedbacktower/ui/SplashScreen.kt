@@ -1,5 +1,6 @@
 package com.feedbacktower.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -18,13 +19,24 @@ class SplashScreen : AppCompatActivity() {
                 finish()
             }, 1000)
         } else {
-            if (!user.profileSetup)
-                launchActivity<ProfileSetupScreen>()
-            else if (user.business == null)
-                launchActivity<CustomerMainActivity>()
-            else
-                launchActivity<BusinessProfileSetupScreen> { }
-
+            if (user.userType == "CUSTOMER") {
+                if (!user.profileSetup)
+                    launchActivity<ProfileSetupScreen>() {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                else if (user.business == null)
+                    launchActivity<CustomerMainActivity>() {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                else
+                    launchActivity<BusinessProfileSetupScreen> {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+            } else if (user.userType == "BUSINESS") {
+                launchActivity<BusinessMainActivity> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+            }
             finish()
         }
     }

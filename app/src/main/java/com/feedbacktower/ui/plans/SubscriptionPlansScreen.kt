@@ -21,6 +21,7 @@ import com.feedbacktower.network.models.GenerateHashResponse
 import com.feedbacktower.network.models.PlanListResponse
 import com.feedbacktower.payment.models.PayUResponseSuccess
 import com.feedbacktower.payment.models.PayUResponseFailure
+import com.feedbacktower.ui.LoginScreen
 import com.feedbacktower.util.launchActivity
 import com.google.gson.Gson
 import com.payumoney.core.PayUmoneySdkInitializer
@@ -132,6 +133,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .setUdf5(requestParams.udf5)
             .setKey(BuildConfig.MERCHANT_KEY)
             .setMerchantId(BuildConfig.MERCHANT_ID)
+            .setIsDebug(BuildConfig.DEBUG)
 
         val paymentParams: PayUmoneySdkInitializer.PaymentParam = builder.build()
         paymentParams.setMerchantHash(response.hash)
@@ -201,9 +203,14 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                 tXresponse
             ) { response, error ->
                 if (error == null) {
-                    launchActivity<BusinessMainActivity> {
+                    launchActivity<LoginScreen> {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
+                    AppPrefs.getInstance(this).apply {
+                        authToken = null
+                        user = null
+                    }
+                    toast("Please login again")
                 } else {
                     toast(error.message ?: getString(R.string.default_err_message))
                     Log.e(TAG, "Error: ${error.message}")

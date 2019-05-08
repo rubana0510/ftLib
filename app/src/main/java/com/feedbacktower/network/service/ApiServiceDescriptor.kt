@@ -34,7 +34,11 @@ interface ApiServiceDescriptor {
     @POST("/profile/update")
     fun updatePersonalDetailsAsync(
         @Body map: HashMap<String, Any?>
-    ): Deferred<ApiResponse<UpdateProfileResponse?>>
+    ): Deferred<ApiResponse<EmptyResponse?>>
+
+    @POST("profile/continue-as-customer")
+    fun continueAsCustomerAsync(): Deferred<ApiResponse<EmptyResponse?>>
+
 
     @POST("/business/register")
     fun updateBusinessAddressAsync(
@@ -60,6 +64,24 @@ interface ApiServiceDescriptor {
 
     @POST("/post/")
     fun createTextPostAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
+    @POST("/review/")
+    fun addReviewAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
+    @POST("/suggestion/")
+    fun addSuggestionAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
+    @PUT("/post/like/{postId}")
+    fun likePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
+
+    @PUT("/post/unlike/{postId}")
+    fun unLikePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
+
+
+    @GET("/business/{businessId}")
+    fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>
+
+
 
     @GET("/post/")
     fun getPostsAsync(
@@ -95,6 +117,16 @@ interface ApiServiceDescriptor {
     fun getCitiesAsync(
         @Query("search") search: String = ""
     ): Deferred<ApiResponse<GetCitiesResponse?>>
+
+    @GET("/business/list/")
+    fun searchBusinessAsync(
+        @Query("search") search: String = ""
+    ): Deferred<ApiResponse<SearchBusinessResponse?>>
+
+    @GET("/review/{businessId}")
+    fun businessReviewsAsync(
+        @Path("businessId") businessId: String
+    ): Deferred<ApiResponse<SearchBusinessResponse?>>
 
 
 }

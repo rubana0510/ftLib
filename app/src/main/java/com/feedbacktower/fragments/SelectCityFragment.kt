@@ -5,12 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.adapters.CityListAdapter
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.City
 import com.feedbacktower.databinding.FragmentSelectCityBinding
 import com.feedbacktower.network.manager.LocationManager
+import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.setVertical
+import org.jetbrains.anko.toast
 
 class SelectCityFragment : Fragment() {
     private lateinit var adapter: CityListAdapter
@@ -30,7 +34,23 @@ class SelectCityFragment : Fragment() {
         val binding = FragmentSelectCityBinding.inflate(inflater, container, false)
         val context = context ?: return binding.root
 
-        adapter = CityListAdapter()
+        adapter = CityListAdapter(object : CityListAdapter.Listener {
+            override fun onCityClick(city: City) {
+                ProfileManager.getInstance()
+                    .updateCity(city.id.toString()) { response, error ->
+                        if (error == null) {
+                            AppPrefs.getInstance(requireContext()).setValue("USER_CITY", city.id.toString())
+                            SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
+                                findNavController().navigate(it)
+                            }
+                        }else{
+                            requireContext().toast("Error saving City")
+                        }
+                    }
+
+            }
+
+        })
         binding.cityList.setVertical(requireContext())
         binding.cityList.adapter = adapter
 

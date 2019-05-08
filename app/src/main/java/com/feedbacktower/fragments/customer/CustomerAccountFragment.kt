@@ -1,5 +1,6 @@
 package com.feedbacktower.fragments.customer
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,8 +10,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AccountOptionsAdapter
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.databinding.FragmentCustomerAccountBinding
+import com.feedbacktower.ui.ProfileSetupScreen
+import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.util.launchActivity
 
 
 class CustomerAccountFragment : Fragment() {
@@ -40,7 +45,10 @@ class CustomerAccountFragment : Fragment() {
         accountOptionsView.adapter = accountOptionsAdapter
         submitOptions()
 
-        binding.url = "https://via.placeholder.com/150"
+        binding.userFullName = AppPrefs.getInstance(requireContext()).user?.firstName +" " +AppPrefs.getInstance(requireContext()).user?.lastName
+        binding.editProfileButtonClicked = View.OnClickListener {
+            requireActivity().launchActivity<ProfileSetupScreen>()
+        }
     }
 
     private fun submitOptions() {
@@ -55,6 +63,14 @@ class CustomerAccountFragment : Fragment() {
 
     private val onItemSelected = { option: AccountOption ->
         Log.d(TAG, "${option.title} selected")
+        if(option.id == 5){
+            //logout
+            AppPrefs.getInstance(requireContext()).authToken = null
+            AppPrefs.getInstance(requireContext()).user = null
+            requireActivity().launchActivity<SplashScreen> {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        }
     }
 
 }

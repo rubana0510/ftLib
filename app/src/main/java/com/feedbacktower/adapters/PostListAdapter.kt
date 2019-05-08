@@ -13,12 +13,12 @@ import java.lang.IllegalStateException
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter : ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback()) {
+class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
-            is TextPostViewHolder -> holder.bind(createClickListener(item), item)
-            is MediaPostViewHolder -> holder.bind(createClickListener(item), item)
+            is TextPostViewHolder -> holder.bind(createLikeClickListener(item, position), item)
+            is MediaPostViewHolder -> holder.bind(createLikeClickListener(item, position), item)
             else -> throw IllegalArgumentException()
         }
     }
@@ -64,11 +64,18 @@ class PostListAdapter : ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback())
         }
     }
 
-    private fun createClickListener(item: Post): View.OnClickListener = View.OnClickListener {
-
+    private fun createLikeClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener {
+        listener?.onClick(item, pos)
     }
 
     fun getItemAtPos(position: Int): Post = getItem(position)
+
+    fun updateLike(position: Int, liked: Boolean) {
+        getItem(position).liked = if(liked) 1 else 0
+
+       // getItem(position).postLikes -1
+        notifyItemChanged(position)
+    }
 
     class MediaPostViewHolder(
         val binding: ItemPostMediaBinding
@@ -92,5 +99,9 @@ class PostListAdapter : ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback())
                 executePendingBindings()
             }
         }
+    }
+
+    interface LikeListener {
+        fun onClick(item: Post, position: Int)
     }
 }

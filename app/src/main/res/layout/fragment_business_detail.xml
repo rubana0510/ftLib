@@ -5,11 +5,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.BusinessDetailFragment">
     <data>
-        <variable name="business" type="com.feedbacktower.network.models.BusinessDetails"/>
+        <variable name="business" type="com.feedbacktower.network.models.BusinessDetailsResponse.Business"/>
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onViewReviewsClicked" type="android.view.View.OnClickListener"/>
         <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
+        <variable name="sendReviewButtonClicked" type="android.view.View.OnClickListener"/>
         <variable name="isTimelineLoading" type="Boolean"/>
     </data>
     <RelativeLayout
@@ -63,7 +64,7 @@
                         app:layout_constraintEnd_toStartOf="@id/averageRatings"
                         app:layout_constraintTop_toTopOf="@id/businessProfileImage"
                         tools:text="Roy Garage"
-                        android:text="@{business.businessName}"/>
+                        android:text="@{business.name}"/>
                 <TextView
                         android:id="@+id/businessCategory"
                         style="@style/businessCategoryStyle"
@@ -75,7 +76,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/businessName"
                         tools:text="Car Garage"
-                        android:text="@{business.businessCategoryName}"/>
+                        android:text="@{business.businessCategory.name}"/>
                 <TextView
                         android:id="@+id/averageRatings"
                         android:layout_width="wrap_content"
@@ -87,7 +88,7 @@
                         android:layout_marginEnd="@dimen/marginEndItem"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBaseline_toBaselineOf="@id/businessName"
-                        android:text="@{business.businessAverageRatings + `(` + business.businessTotalReviews  + `)`}"
+                        android:text="-"
                 />
 
                 <LinearLayout
@@ -105,7 +106,7 @@
                             android:drawableStart="@drawable/ic_call_black_24dp"
                             android:onClick="@{onCallClicked}"
                             tools:text="+919922887766"
-                            android:text="@{business.businessPhone}"/>
+                            android:text="@{business.phone}"/>
                     <include layout="@layout/layout_divider"/>
 
                     <TextView
@@ -113,7 +114,7 @@
                             android:drawableStart="@drawable/ic_location_on_black_24dp"
                             android:onClick="@{onLocationClicked}"
                             tools:text="Taleigao, Panaji Goa, 403524"
-                            android:text="@{business.businessAddress}"/>
+                            android:text="@{business.address}"/>
                     <include layout="@layout/layout_divider"/>
 
 
@@ -137,7 +138,18 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rr_heading"
                         android:layout_marginTop="4dp"
+                        android:visibility="gone"
                         android:numStars="5"/>
+                <Button
+                        android:id="@+id/sendReviewButton"
+                        style="@style/ButtonFilledStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rr_heading"
+                        android:onClick="@{sendReviewButtonClicked}"
+                        android:text="@string/send_review"/>
                 <Button
                         android:id="@+id/sendSuggestionButton"
                         style="@style/ButtonFilledStyle"
@@ -145,7 +157,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ratingBar"
+                        app:layout_constraintTop_toBottomOf="@id/sendReviewButton"
                         android:onClick="@{onSendSuggestionClicked}"
                         android:text="@string/send_suggestion"/>
 
@@ -193,6 +205,7 @@
                         app:layout_constraintTop_toBottomOf="@id/viewAllReviews"
                         app:layout_constraintStart_toStartOf="parent"
                         android:textColor="@color/colorPrimary"
+                        android:visibility="gone"
                         android:text="@string/timeline"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/postListView"
@@ -201,6 +214,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/tvTitle1"
                         android:layout_marginTop="@dimen/marginTopItem"
                         android:nestedScrollingEnabled="false"
+                        android:visibility="gone"
                         app:isGone="@{isTimelineLoading}"/>
                 <ProgressBar
                         android:id="@+id/progressBar"

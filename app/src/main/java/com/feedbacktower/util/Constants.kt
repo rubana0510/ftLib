@@ -5,7 +5,6 @@ import com.feedbacktower.BuildConfig
 object Constants {
     object Service {
         object Secrets {
-            const val API_KEY = BuildConfig.FT_API_KEY
             const val BASE_URL = BuildConfig.SERVER_BASE_URL
         }
 
@@ -22,7 +21,7 @@ object Constants {
     const val KEY_LISTTYPE = "LIST_TYPE"
     const val KEY_CATEGORY = "KEY_CATEGORY"
     const val KEY_KEYWORD = "KEY_KEYWORD"
-    const val MIN_PASSWORD_LENGTH = 5
+    const val MIN_PASSWORD_LENGTH = 8
     const val MAX_PASSWORD_LENGTH = 15
     const val SERVICE_ID: String = "SERVICE_ID"
     const val AUTHORIZATION: String = "Authorization"

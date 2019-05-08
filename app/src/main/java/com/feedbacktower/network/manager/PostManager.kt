@@ -38,4 +38,18 @@ class PostManager {
         }
     }
 
+    fun likePost(businessId: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.likePostAsync(businessId)
+                .makeRequest(onComplete)
+        }
+    }
+
+    fun unlikePost(businessId: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.unLikePostAsync(businessId)
+                .makeRequest(onComplete)
+        }
+    }
+
 }

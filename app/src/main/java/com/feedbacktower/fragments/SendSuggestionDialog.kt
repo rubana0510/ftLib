@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.feedbacktower.R
 import com.feedbacktower.callbacks.BottomSheetOnStateChanged
+import com.feedbacktower.network.manager.SuggestionsManager
 import kotlinx.android.synthetic.main.dialog_send_suggestion.view.*
 import org.jetbrains.anko.toast
 
@@ -27,11 +28,13 @@ class SendSuggestionDialog : BottomSheetDialogFragment() {
     private lateinit var closeButton: ImageButton
     private lateinit var suggestionMessageInput: EditText
     private lateinit var sendSuggestionButton: Button
+    private lateinit var businessId: String
 
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
         ctx = activity ?: return
+        businessId = arguments?.getString("businessId")!!
         val contentView = View.inflate(context, R.layout.dialog_send_suggestion, null)
         dialog.setContentView(contentView)
         val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
@@ -55,9 +58,23 @@ class SendSuggestionDialog : BottomSheetDialogFragment() {
     private fun sendSuggestion() {
         val suggestionMessage: String = suggestionMessageInput.text.toString()
         if (suggestionMessage.isNotEmpty()) return
-        ctx.toast("Sending suggestion..\"$suggestionMessage\"")
+        SuggestionsManager.getInstance()
+            .addSuggestion(
+                hashMapOf<String, Any?>(
+                    "businessId" to businessId,
+                    "message" to suggestionMessage
+                )
+            ){_,error->
+                if(error == null){
+                    dialog.dismiss()
+                    ctx.toast("Sending suggestion..\"$suggestionMessage\"")
+                }
 
-        dialog.dismiss()
+            }
+
+
+
+
     }
 
 }

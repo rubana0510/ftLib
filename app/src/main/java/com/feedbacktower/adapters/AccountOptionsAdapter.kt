@@ -12,7 +12,7 @@ import com.feedbacktower.databinding.ItemAccountOptionBinding
 /**
  * Created by sanket on 16-04-2019.
  */
-class AccountOptionsAdapter(val onItemClick: (AccountOption) -> Int) :
+class AccountOptionsAdapter(val onItemClick: (AccountOption) -> Unit) :
     ListAdapter<AccountOption, AccountOptionsAdapter.ViewHolder>(OptionsDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(

@@ -23,6 +23,7 @@ import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.ui.PostTextScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
+import java.text.FieldPosition
 
 
 class HomeFragment : Fragment() {
@@ -56,11 +57,37 @@ class HomeFragment : Fragment() {
 
         //setup list
         feedListView.setVertical(requireContext())
-        postAdapter = PostListAdapter()
+        postAdapter = PostListAdapter(likeListener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
         fetchPostList()
+    }
+
+    private val likeListener = object : PostListAdapter.LikeListener {
+        override fun onClick(item: Post, position: Int) {
+            if (item.isLiked) {
+                //unlike
+                unLikePost(item, position)
+            } else {
+                //like
+                likePost(item, position)
+            }
+        }
+    }
+
+    private fun unLikePost(item: Post, position: Int) {
+        PostManager.getInstance()
+            .unlikePost(item.postId) { _, _ ->
+                postAdapter.updateLike(position, !item.isLiked)
+            }
+    }
+
+    private fun likePost(item: Post, position: Int) {
+        PostManager.getInstance()
+            .likePost(item.postId) { _, _ ->
+                postAdapter.updateLike(position, !item.isLiked)
+            }
     }
 
     private fun fetchPostList() {
@@ -71,47 +98,4 @@ class HomeFragment : Fragment() {
                 postAdapter.submitList(response?.posts)
             }
     }
-
-    private fun fetchPostList2() {
-        val posts = listOf(
-            Post(
-                "1",
-                "2",
-                "Magic Muncheez",
-                "https://via.placeholder.com/150",
-                "Try This, its super amazing!",
-                "https://via.placeholder.com/500",
-                PostListAdapter.POST_PHOTO,
-                "today",
-                5
-            ),
-            Post(
-                "1",
-                "2",
-                "Magic Muncheez",
-                "https://via.placeholder.com/150",
-                "Try This, its super amazing!",
-                "https://via.placeholder.com/500",
-                PostListAdapter.POST_TEXT,
-                "yesterday",
-                10
-            ),
-            Post(
-                "1",
-                "2",
-                "Magic Muncheez",
-                "https://via.placeholder.com/150",
-                "Try This, its super amazing!",
-                "https://via.placeholder.com/500",
-                PostListAdapter.POST_VIDEO,
-                "now",
-                102
-            )
-        )
-        isLoading = false
-        noPosts = posts.isEmpty()
-        postAdapter.submitList(posts)
-    }
-
-
 }

@@ -17,7 +17,7 @@ import com.feedbacktower.fragments.SelectCityFragmentDirections
 /**
  * Created by sanket on 12-02-2019.
  */
-class CityListAdapter : ListAdapter<City, CityListAdapter.ViewHolder>(CityDiffCallback()) {
+class CityListAdapter (private  val listener: Listener): ListAdapter<City, CityListAdapter.ViewHolder>(CityDiffCallback()) {
     private var lastCitySelected: City? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -35,9 +35,7 @@ class CityListAdapter : ListAdapter<City, CityListAdapter.ViewHolder>(CityDiffCa
     }
 
     private fun createClickListener(item: City): View.OnClickListener = View.OnClickListener { view ->
-        SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
-            view.findNavController().navigate(it)
-        }
+        listener.onCityClick(item)
     }
 
     fun getItemAtPos(position: Int): City = getItem(position)
@@ -52,5 +50,9 @@ class CityListAdapter : ListAdapter<City, CityListAdapter.ViewHolder>(CityDiffCa
                 executePendingBindings()
             }
         }
+    }
+
+    interface Listener{
+        fun onCityClick(city: City)
     }
 }

@@ -1,5 +1,6 @@
 package com.feedbacktower.fragments.business
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +16,8 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
+import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.util.launchActivity
 
 
 class AccountFragment : Fragment() {
@@ -71,6 +74,14 @@ class AccountFragment : Fragment() {
 
     private val onItemSelected = { option: AccountOption ->
         Log.d(TAG, "${option.title} selected")
+        if(option.id == 5){
+            //logout
+            AppPrefs.getInstance(requireContext()).authToken = null
+            AppPrefs.getInstance(requireContext()).user = null
+            requireActivity().launchActivity<SplashScreen> {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        }
     }
 
     private fun submitCounts() {

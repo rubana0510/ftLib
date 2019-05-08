@@ -123,9 +123,9 @@ class BusinessSetup1Fragment : Fragment() {
         regNo: String
     ) {
         showLoading()
-
+        val cityId = AppPrefs.getInstance(requireContext()).getValue("USER_CITY")
         ProfileManager.getInstance()
-            .updateBusinessBasicDetails(name, regNo, selectedCatId!!)
+            .updateBusinessBasicDetails(name, regNo, selectedCatId!!, cityId?:"")
             { response, error ->
                 hideLoading()
                 if (error != null) {

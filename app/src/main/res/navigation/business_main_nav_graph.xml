@@ -39,5 +39,7 @@
             tools:layout="@layout/fragment_business_account">
     </fragment>
     <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
-              android:label="activity_business_details" tools:layout="@layout/activity_business_details"/>
+              android:label="activity_business_details" tools:layout="@layout/activity_business_details">
+        <argument android:name="businessId" app:argType="string"/>
+    </activity>
 </navigation>

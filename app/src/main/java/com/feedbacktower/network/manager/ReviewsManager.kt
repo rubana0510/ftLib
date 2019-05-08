@@ -30,5 +30,11 @@ class ReviewsManager {
                 .makeRequest(onComplete)
         }
     }
+    fun addReview(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.addReviewAsync(payload)
+                .makeRequest(onComplete)
+        }
+    }
 
 }

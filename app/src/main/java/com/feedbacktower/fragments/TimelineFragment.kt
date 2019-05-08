@@ -45,14 +45,14 @@ class TimelineFragment : Fragment() {
         feedListView.layoutManager = LinearLayoutManager(requireContext())
         feedListView.itemAnimator = DefaultItemAnimator()
         feedListView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
-        postAdapter = PostListAdapter()
+        postAdapter = PostListAdapter(null)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
-        fetchPostList()
+       // fetchPostList()
     }
 
-    private fun fetchPostList() {
+ /*   private fun fetchPostList() {
         val posts = listOf(
             Post(
                 "1",
@@ -91,7 +91,7 @@ class TimelineFragment : Fragment() {
         isLoading = false
         noPosts = posts.isEmpty()
         postAdapter.submitList(posts)
-    }
+    }*/
 
 
 }

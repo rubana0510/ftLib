@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.feedbacktower.R
 import com.feedbacktower.callbacks.BottomSheetOnStateChanged
+import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.util.toRemarkText
 import kotlinx.android.synthetic.main.dialog_rate_review.view.*
 import org.jetbrains.anko.toast
@@ -30,11 +31,14 @@ class RateReviewDialog : BottomSheetDialogFragment() {
     private lateinit var reviewInput: EditText
     private lateinit var sendRatingButton: Button
     private lateinit var remarkText: TextView
+    private lateinit var businessId: String
 
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
         ctx = activity ?: return
+        businessId = arguments?.getString("businessId")!!
+
         val contentView = View.inflate(context, R.layout.dialog_rate_review, null)
         dialog.setContentView(contentView)
         val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
@@ -62,9 +66,19 @@ class RateReviewDialog : BottomSheetDialogFragment() {
     private fun sendRatings() {
         val noOfStars: Int = ratingBar.numStars
         val reviewSummary: String = reviewInput.text.toString()
-        ctx.toast("Sending ratings..$noOfStars stars with \"$reviewSummary\"")
 
-        dialog.dismiss()
+        ReviewsManager.getInstance()
+            .addReview(
+                hashMapOf<String, Any?>(
+                    "businessId" to businessId,
+                    "rating" to noOfStars,
+                    "comment" to reviewSummary
+                )
+            ){_,_->
+
+                dialog.dismiss()
+            }
+
     }
 
 }

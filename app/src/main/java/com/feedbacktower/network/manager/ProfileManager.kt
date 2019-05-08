@@ -1,9 +1,6 @@
 package com.feedbacktower.network.manager
 
-import com.feedbacktower.network.models.EmptyResponse
-import com.feedbacktower.network.models.GetCategoriesResponse
-import com.feedbacktower.network.models.PlanListResponse
-import com.feedbacktower.network.models.UpdateProfileResponse
+import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
@@ -32,7 +29,7 @@ class ProfileManager {
         lastName: String,
         email: String,
         dob: String,
-        onComplete: (UpdateProfileResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updatePersonalDetailsAsync(
@@ -51,6 +48,7 @@ class ProfileManager {
         name: String,
         regNo: String,
         categoryId: String,
+        cityId: String,
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -58,12 +56,32 @@ class ProfileManager {
                 hashMapOf(
                     "name" to name,
                     "regNo" to regNo,
-                    "categoryId" to categoryId
+                    "categoryId" to categoryId,
+                    "cityId" to cityId
                 )
             ).makeRequest(onComplete)
         }
     }
 
+    fun updateCity(
+        cityId: String,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updatePersonalDetailsAsync(
+                hashMapOf(
+                    "cityId" to cityId
+                )
+            ).makeRequest(onComplete)
+        }
+    }
+    fun continueAsCustomer(
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.continueAsCustomerAsync().makeRequest(onComplete)
+        }
+    }
     fun updateBusinessAddressDetails(
         address: String,
         contact: String,
@@ -113,5 +131,27 @@ class ProfileManager {
             ).makeRequest(onComplete)
         }
     }
+
+    fun getBusinessDetails(
+        businessId: String,
+        onComplete: (BusinessDetailsResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getBusinessDetailsAsync(
+                businessId
+            ).makeRequest(onComplete)
+        }
+    }
+    fun searchBusiness(
+        search: String,
+        onComplete: (SearchBusinessResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.searchBusinessAsync(
+                search
+            ).makeRequest(onComplete)
+        }
+    }
+
 
 }

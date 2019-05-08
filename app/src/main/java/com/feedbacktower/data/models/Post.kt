@@ -20,8 +20,17 @@ data class Post(
     val postType: String,
     val postAddedAt: String,
     @SerializedName("totalLikes")
-    val postLikes: Int
+    val postLikes: Int,
+    @SerializedName("business")
+    val business: Business,
+    @SerializedName("liked")
+    var liked: Int,
+    @SerializedName("user")
+    val user: User
 ) {
+
+    val isLiked: Boolean
+        get() = liked == 1
     val businessProfileImage: String
         get() = BuildConfig.SERVER_BASE_URL + "/user/" + userId
 

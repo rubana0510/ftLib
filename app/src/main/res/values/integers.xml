@@ -2,4 +2,5 @@
 <resources>
     <integer name="count_grid_count">4</integer>
     <integer name="char_length_reply">50</integer>
+    <integer name="phone_length">10</integer>
 </resources>

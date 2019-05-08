@@ -8,8 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categoryGridView"
                 android:layout_width="0dp"
@@ -18,7 +17,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:paddingBottom="100dp"
+                android:clipToPadding="false"
                 app:isGone="@{isLoading}"/>
         <ProgressBar
                 android:id="@+id/progressBar"
@@ -31,7 +34,7 @@
                 app:isGone="@{!isLoading}"/>
         <Button
                 android:id="@+id/saveSelectionButton"
-                style="@style/ButtonFilledStyle"
+                style="@style/ButtonFilledStyle.Big"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"

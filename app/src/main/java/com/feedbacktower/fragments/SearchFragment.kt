@@ -1,7 +1,10 @@
 package com.feedbacktower.fragments
 
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,8 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.SearchBusinessAdapter
 import com.feedbacktower.databinding.FragmentSearchBinding
+import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.SearchBusiness
+import com.feedbacktower.ui.BusinessDetailsActivity
+import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
+import kotlinx.android.synthetic.main.fragment_search.view.*
 
 
 class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
@@ -48,15 +55,43 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
         searchListView.adapter = searchBusinessAdapter
         isLoading = binding.isLoading
         isListEmpty = binding.isListEmpty
-        fetchBusinessList()
+        binding.queryInput.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                search(s)
+            }
+
+        })
+        //fetchBusinessList()
+    }
+
+    private fun search(s: CharSequence?) {
+        isLoading = true
+        if(s.isNullOrEmpty()) return
+
+        ProfileManager.getInstance()
+            .searchBusiness(s.toString()){response, error->
+                if(error == null){
+                    isLoading = false
+                    isListEmpty = response?.businesses?.isEmpty()
+                    searchBusinessAdapter.submitList(response?.businesses)
+                }
+            }
     }
 
     override fun onItemClick(item: SearchBusiness) {
-        val direction = SearchFragmentDirections.actionNavigationSearchToBusinessDetailsActivity()
-        findNavController().navigate(direction)
+
+        requireActivity().launchActivity<BusinessDetailsActivity> {
+            putExtra("businessId", item.businessId)
+        }
     }
 
-    private fun fetchBusinessList() {
+   /* private fun fetchBusinessList() {
         val list = listOf(
             SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
             SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
@@ -71,7 +106,7 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
         isLoading = false
         isListEmpty = list.isEmpty()
         searchBusinessAdapter.submitList(list)
-    }
+    }*/
 
 
 }

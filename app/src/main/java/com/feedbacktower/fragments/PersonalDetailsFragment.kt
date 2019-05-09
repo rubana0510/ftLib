@@ -1,5 +1,6 @@
 package com.feedbacktower.fragments
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.InputType
@@ -23,6 +24,9 @@ import com.google.android.material.textfield.TextInputLayout
 import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
 import java.util.*
+import android.R
+
+
 
 class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelectedListener {
     private val TAG = "PersonalDetails"
@@ -73,7 +77,18 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
 
             updateDetails(firstName, lastName, email, dob)
         }
-
+        binding.onAttachClick = View.OnClickListener {
+            //open picker
+            AlertDialog.Builder(requireContext())
+                .setTitle("Choose one")
+                .setItems(arrayOf("CAMERA", "GALLERY")) { dialog, which ->
+                    if(which == 0){
+                        //open camera
+                    }else{
+                        //open gallery
+                    }
+                }
+        }
         binding.user = AppPrefs.getInstance(requireContext()).user
     }
 

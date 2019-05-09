@@ -1,5 +1,6 @@
 package com.feedbacktower.data.models
 
+import com.feedbacktower.util.Constants
 import com.google.gson.annotations.SerializedName
 
 
@@ -24,4 +25,9 @@ data class User(
     var userType: String,
     @SerializedName("business")
     var business: Business?
-)
+){
+    val profileImage: String
+    get(){
+        return Constants.Service.Secrets.BASE_URL + "/user/" + id
+    }
+}

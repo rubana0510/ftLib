@@ -63,6 +63,8 @@
         </activity>
         <activity android:name=".ui.BusinessProfileSetupScreen"
                   android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".utilities.cropper.MyCropperActivity"/>
+        <activity android:name=".utilities.cropper.CropImageActivity"/>
 
         <receiver
                 android:name=".network.utils.ConnectivityReceiver"

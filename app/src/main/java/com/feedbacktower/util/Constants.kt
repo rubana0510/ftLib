@@ -27,4 +27,5 @@ object Constants {
     const val AUTHORIZATION: String = "Authorization"
     const val PHONE_LENGTH = 10
     const val OTP_LENGTH = 6
+    const val CROP_IMAGE_QUALITY: Int = 60
 }

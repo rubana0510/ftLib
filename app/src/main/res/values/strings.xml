@@ -71,4 +71,9 @@
     <string name="register_businsess">Register Business</string>
     <string name="post">POST</string>
     <string name="select_plan">Select Your Plan</string>
+    <string name="select_account_type">Select Account Type</string>
+    <string name="pick_image_intent_chooser_title">Pick Image</string>
+    <string name="crop_image_activity_title">Crop</string>
+    <string name="crop_image_activity_no_permissions">No permissions</string>
+    <string name="file_provider_authority">sdsd</string>
 </resources>

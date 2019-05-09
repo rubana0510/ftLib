@@ -14,6 +14,7 @@ import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.utils.ConnectivityReceiver
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.navigateUser
 import kotlinx.android.synthetic.main.activity_login_screen.*
 import org.jetbrains.anko.toast
 
@@ -90,24 +91,7 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                     user = response.user
                     authToken = response.token
                 }
-                if (response.user.userType == "CUSTOMER") {
-                    if (!response.user.profileSetup)
-                        launchActivity<ProfileSetupScreen>() {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                    else if (response.user.business == null)
-                        launchActivity<CustomerMainActivity>() {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                    else
-                        launchActivity<BusinessProfileSetupScreen> {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                } else if (response.user.userType == "BUSINESS") {
-                    launchActivity<BusinessMainActivity> {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                }
+                navigateUser(response.user)
             } else {
                 toast("Unknown error occurred")
             }

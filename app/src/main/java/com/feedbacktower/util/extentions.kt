@@ -10,7 +10,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.feedbacktower.BusinessMainActivity
 import com.feedbacktower.R
+import com.feedbacktower.data.models.User
+import com.feedbacktower.ui.CustomerMainActivity
+import com.feedbacktower.ui.ProfileSetupScreen
 import java.util.*
 
 
@@ -77,7 +81,24 @@ fun isEmailValid(email: String): Boolean {
 fun String.noValidWebsite(): Boolean {
     return false
 }
+fun Activity.navigateUser(user: User) {
+    if (user.userType == "CUSTOMER") {
+        if (!user.profileSetup) {
+            launchActivity<ProfileSetupScreen>{
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        } else {
+            launchActivity<CustomerMainActivity> {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        }
 
+    } else if (user.userType == "BUSINESS") {
+        launchActivity<BusinessMainActivity> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+    }
+}
 inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noinline init: Intent.() -> Unit = {}) {
     val intent = newIntent<T>(this)
     intent.init()

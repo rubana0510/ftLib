@@ -2,14 +2,26 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph"
-            app:startDestination="@id/businessSetup1Fragment"
+            app:startDestination="@id/accountTypeSelectionFragment"
 >
 
-    <fragment android:id="@+id/businessSetup1Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
+    <fragment android:id="@+id/accountTypeSelectionFragment"
+              android:name="com.feedbacktower.fragments.AccountTypeSelectionFragment"
+              android:label="@string/select_account_type" tools:layout="@layout/fragment_account_selection_type">
+        <action android:id="@+id/action_accountTypeSelectionFragment2_to_businessSetup1Fragment"
+                app:destination="@id/businessSetup1Fragment"/>
+    </fragment>
+
+    <fragment android:id="@+id/businessSetup1Fragment"
+              android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
               android:label="Basic Details">
         <action android:id="@+id/action_businessSetup1Fragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2Fragment"/>
     </fragment>
-    <fragment android:id="@+id/businessSetup2Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
+
+    <fragment android:id="@+id/businessSetup2Fragment"
+              android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
               android:label="Address Details"/>
+
+
 </navigation>

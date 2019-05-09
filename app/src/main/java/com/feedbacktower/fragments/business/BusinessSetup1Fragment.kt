@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.BusinessCategory
-import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
 import com.feedbacktower.fragments.SelectCategoryFragment
 import com.feedbacktower.network.manager.ProfileManager

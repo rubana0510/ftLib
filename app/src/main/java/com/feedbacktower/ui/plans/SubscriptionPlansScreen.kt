@@ -164,7 +164,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                     //Success Transaction
                     val payUResponseSuccess: PayUResponseSuccess? =
                         Gson().fromJson(payuResponse, PayUResponseSuccess::class.java)
-                    toast("Payment Successful: Updaing status")
+                    toast("Payment Successful: Updating status")
                     saveTransactionStatus(
                         com.feedbacktower.network.models.TransactionResponse(
                             payUResponseSuccess?.result?.mihpayid,
@@ -203,14 +203,16 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                 tXresponse
             ) { response, error ->
                 if (error == null) {
-                    launchActivity<LoginScreen> {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    if(tXresponse.status.equals("success")){
+                        launchActivity<LoginScreen> {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        AppPrefs.getInstance(this).apply {
+                            authToken = null
+                            user = null
+                        }
+                        toast("Please login again")
                     }
-                    AppPrefs.getInstance(this).apply {
-                        authToken = null
-                        user = null
-                    }
-                    toast("Please login again")
                 } else {
                     toast(error.message ?: getString(R.string.default_err_message))
                     Log.e(TAG, "Error: ${error.message}")

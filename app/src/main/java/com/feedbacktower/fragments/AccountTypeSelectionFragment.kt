@@ -47,7 +47,9 @@ class AccountTypeSelectionFragment : Fragment() {
                 if (error != null) {
                     requireActivity().toast(error.message ?: getString(R.string.default_err_message))
                 } else {
-                    requireActivity().launchActivity<BusinessProfileSetupScreen>()
+                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragmentToBusinessSetup1Fragment().let {
+                        findNavController().navigate(it)
+                    }
                 }
             }
     }

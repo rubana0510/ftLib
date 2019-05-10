@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.SearchBusinessDiffCallback
+import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.databinding.ItemSearchBusinessBinding
 import com.feedbacktower.network.models.SearchBusiness
 
@@ -13,7 +13,7 @@ import com.feedbacktower.network.models.SearchBusiness
  * Created by sanket on 16-04-2019.
  */
 class SearchBusinessAdapter(val listener: Listener) :
-    ListAdapter<SearchBusiness, SearchBusinessAdapter.ViewHolder>(SearchBusinessDiffCallback()) {
+    ListAdapter<SearchBusiness, SearchBusinessAdapter.ViewHolder>(DiffCallback<SearchBusiness>()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSearchBusinessBinding.inflate(

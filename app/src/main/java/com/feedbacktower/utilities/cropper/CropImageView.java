@@ -314,7 +314,7 @@ public class CropImageView extends FrameLayout {
 
     mScaleType = options.scaleType;
     mAutoZoomEnabled = options.autoZoomEnabled;
-    mMaxZoom = options.maxZoom;
+    mMaxZoom = options.maxZoom; 
     mShowCropOverlay = options.showCropOverlay;
     mShowProgressBar = options.showProgressBar;
     mFlipHorizontally = options.flipHorizontally;

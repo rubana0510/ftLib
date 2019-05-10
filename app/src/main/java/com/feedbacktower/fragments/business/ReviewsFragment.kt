@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentReviewsBinding
 import com.feedbacktower.network.manager.ReviewsManager
+import kotlinx.android.synthetic.main.fragment_reviews.*
 
 
 class ReviewsFragment : Fragment() {
@@ -23,11 +25,15 @@ class ReviewsFragment : Fragment() {
     private lateinit var message: TextView
     private lateinit var reviewAdapter: ReviewListAdapter
     private var isListEmpty: Boolean? = false
+    private var myReviews: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentReviewsBinding.inflate(inflater, container, false)
+        val args: ReviewsFragmentArgs by navArgs()
+        myReviews = args.myReviews
+        toolbar.title = if (myReviews) "My Reviews" else "Reviews"
         initUI(binding)
         return binding.root
     }

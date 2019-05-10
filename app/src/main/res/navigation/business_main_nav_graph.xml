@@ -25,21 +25,37 @@
                 android:name="bottomNav"
                 android:defaultValue="true"
                 app:argType="boolean"/>
+        <argument android:name="myReviews" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_suggestion"
             android:name="com.feedbacktower.fragments.business.SuggestionsFragment"
             android:label="@string/title_suggestions"
             tools:layout="@layout/fragment_suggestions">
+        <argument android:name="mySuggestions" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
+
     <fragment
             android:id="@+id/navigation_account"
             android:name="com.feedbacktower.fragments.business.AccountFragment"
             android:label="@string/title_my_account"
             tools:layout="@layout/fragment_business_account">
+        <action android:id="@+id/action_navigation_account_to_reviewsFragment" app:destination="@id/reviewsFragment"/>
+        <action android:id="@+id/action_navigation_account_to_suggestionsFragment"
+                app:destination="@id/suggestionsFragment"/>
+
     </fragment>
     <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
         <argument android:name="businessId" app:argType="string"/>
     </activity>
+    <fragment android:id="@+id/reviewsFragment" android:name="com.feedbacktower.fragments.business.ReviewsFragment"
+              android:label="My Reviews" tools:layout="@layout/fragment_reviews">
+        <argument android:name="myReviews" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
+    <fragment android:id="@+id/suggestionsFragment"
+              android:name="com.feedbacktower.fragments.business.SuggestionsFragment"
+              android:label="My Suggestions" tools:layout="@layout/fragment_suggestions">
+        <argument android:name="mySuggestions" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
 </navigation>

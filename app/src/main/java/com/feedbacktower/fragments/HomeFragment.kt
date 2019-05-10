@@ -66,27 +66,16 @@ class HomeFragment : Fragment() {
 
     private val likeListener = object : PostListAdapter.LikeListener {
         override fun onClick(item: Post, position: Int) {
-            if (item.isLiked) {
-                //unlike
-                unLikePost(item, position)
-            } else {
-                //like
-                likePost(item, position)
-            }
+            likeUnlikePost(item, position)
         }
     }
 
-    private fun unLikePost(item: Post, position: Int) {
-        PostManager.getInstance()
-            .unlikePost(item.postId) { _, _ ->
-                postAdapter.updateLike(position, !item.isLiked)
-            }
-    }
 
-    private fun likePost(item: Post, position: Int) {
+    private fun likeUnlikePost(item: Post, position: Int) {
         PostManager.getInstance()
-            .likePost(item.postId) { _, _ ->
-                postAdapter.updateLike(position, !item.isLiked)
+            .likePost(item.postId) { response, _ ->
+                if (response?.liked != null)
+                    postAdapter.updateLike(position, response.liked)
             }
     }
 

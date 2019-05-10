@@ -11,12 +11,12 @@
             app:cardUseCompatPadding="true"
             app:cardCornerRadius="8dp"
             android:layout_margin="@dimen/cardMargin"
+            app:contentPadding="0dp"
     android:clickable="true">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:onClick="@{onItemClick}">
             <ImageView
                     android:id="@+id/businessProfileImage"
@@ -36,13 +36,18 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Rolls Mania"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:text="@{business.businessName}"/>
+                    android:textSize="18sp"
+                    android:layout_marginTop="8dp"
+                    android:text="@{business.name}"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_star_filled_16dp"
                     tools:text="4.4"
+                    android:textStyle="bold"
+                    android:textColor="@color/grey42"
+                    android:layout_marginEnd="8dp"
+                    app:goneIfNull ="@{business.averageRatingsDisplay}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBaseline_toBaselineOf="@id/businessName"
                     android:text="@{business.averageRatingsDisplay}"/>
@@ -53,6 +58,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/businessProfileImage"
                     android:layout_marginStart="@dimen/marginStartItem"
+                    android:textColor="@color/grey21"
                     app:layout_constraintTop_toBottomOf="@id/businessName"
                     tools:text="Restaurant"
                     android:text="@{business.businessCategory}"/>
@@ -72,8 +78,9 @@
                     app:layout_constraintStart_toEndOf="@id/dotSeparator"
                     android:layout_marginStart="@dimen/marginStartItem"
                     app:layout_constraintTop_toBottomOf="@id/businessName"
-                    tools:text="Restaurant"
-                    android:text="@{business.cityName}"/>
+                    tools:text="Panaji"
+                    android:textColor="@color/grey21"
+                    android:text="@{business.city.name}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

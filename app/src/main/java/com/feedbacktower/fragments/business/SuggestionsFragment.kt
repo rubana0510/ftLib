@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.feedbacktower.adapters.SuggestionListAdapter
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentSuggestionsBinding
 import com.feedbacktower.network.manager.SuggestionsManager
+import kotlinx.android.synthetic.main.fragment_suggestions.*
 
 
 class SuggestionsFragment : Fragment() {
@@ -24,12 +26,16 @@ class SuggestionsFragment : Fragment() {
     private lateinit var message: TextView
     private lateinit var suggestionAdapter: SuggestionListAdapter
     private var isListEmpty: Boolean? = false
+    private var mySuggestions: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentSuggestionsBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.show()
+        val args: SuggestionsFragmentArgs by navArgs()
+        mySuggestions = args.mySuggestions
+        toolbar.title = if (mySuggestions) "My Suggestions" else "Suggestions"
         initUI(binding)
         return binding.root
     }

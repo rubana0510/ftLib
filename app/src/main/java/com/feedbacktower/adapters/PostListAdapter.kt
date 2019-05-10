@@ -71,9 +71,13 @@ class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, B
     fun getItemAtPos(position: Int): Post = getItem(position)
 
     fun updateLike(position: Int, liked: Boolean) {
-        getItem(position).liked = if(liked) 1 else 0
+        getItem(position).liked = if (liked) 1 else 0
+        getItemAtPos(position).postLikes =
+            if (liked)
+                getItemAtPos(position).postLikes + 1
+            else
+                getItemAtPos(position).postLikes - 1
 
-       // getItem(position).postLikes -1
         notifyItemChanged(position)
     }
 

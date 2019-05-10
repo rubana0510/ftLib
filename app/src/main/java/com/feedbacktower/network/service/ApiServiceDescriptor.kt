@@ -72,7 +72,7 @@ interface ApiServiceDescriptor {
     fun addSuggestionAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
     @PUT("/post/like/{postId}")
-    fun likePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
+    fun likePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<LikeUnlikeResponse?>>
 
     @PUT("/post/unlike/{postId}")
     fun unLikePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>

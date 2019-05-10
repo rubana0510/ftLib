@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -47,4 +48,18 @@ fun bindImageFromUrlRound(view: ImageView, drawable: Int) {
         .load(drawable)
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(view)
+}
+
+@BindingAdapter("isChecked")
+fun bindIsChecked(view: ImageButton, count: Int) {
+    view.isSelected = count == 1
+}
+
+@BindingAdapter("goneIfNull")
+fun bindGoneIfNull(view: View, gone: String?) {
+    view.visibility = if (gone == null) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
 }

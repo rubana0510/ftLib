@@ -56,7 +56,7 @@ class ProfileManager {
                 hashMapOf(
                     "name" to name,
                     "regNo" to regNo,
-                    "categoryId" to categoryId,
+                    "businessCategoryId" to categoryId,
                     "cityId" to cityId
                 )
             ).makeRequest(onComplete)

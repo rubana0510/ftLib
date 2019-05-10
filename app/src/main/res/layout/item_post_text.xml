@@ -68,11 +68,12 @@
                     style="@style/ImageButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_thumb_up_black_24dp"
+                    app:srcCompat="@drawable/ic_like"
                     app:layout_constraintStart_toStartOf="@id/postCaption"
                     app:layout_constraintTop_toBottomOf="@id/postCaption"
                     android:contentDescription="@string/like_image_button"
                     android:layout_marginTop="@dimen/marginItemSubVertical"
+                    app:isChecked="@{post.liked}"
                     android:onClick="@{likeClickListener}"/>
             <TextView
                     style="@style/SmallBoldText"

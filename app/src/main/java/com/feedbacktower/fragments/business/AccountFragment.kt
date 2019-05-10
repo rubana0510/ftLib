@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AccountOptionsAdapter
@@ -65,7 +66,12 @@ class AccountFragment : Fragment() {
         val options = listOf(
             AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
             AccountOption(2, "My Reviews", "${business.totalReviews} reviews", R.drawable.ic_post_like_filled),
-            AccountOption(3, "My Suggestions", "${business.totalSuggestions} suggestions", R.drawable.ic_post_like_filled),
+            AccountOption(
+                3,
+                "My Suggestions",
+                "${business.totalSuggestions} suggestions",
+                R.drawable.ic_post_like_filled
+            ),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
@@ -74,12 +80,29 @@ class AccountFragment : Fragment() {
 
     private val onItemSelected = { option: AccountOption ->
         Log.d(TAG, "${option.title} selected")
-        if(option.id == 5){
-            //logout
-            AppPrefs.getInstance(requireContext()).authToken = null
-            AppPrefs.getInstance(requireContext()).user = null
-            requireActivity().launchActivity<SplashScreen> {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        when (option.id) {
+            1 -> {
+
+            }
+            2 -> {
+                val d = AccountFragmentDirections.actionNavigationAccountToReviewsFragment()
+                d.myReviews = true
+                findNavController().navigate(d)
+            }
+            3 -> {
+                val d = AccountFragmentDirections.actionNavigationAccountToSuggestionsFragment()
+                d.mySuggestions = true
+                findNavController().navigate(d)
+            }
+            4 -> {
+
+            }
+            5 -> {
+                AppPrefs.getInstance(requireContext()).authToken = null
+                AppPrefs.getInstance(requireContext()).user = null
+                requireActivity().launchActivity<SplashScreen> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             }
         }
     }
@@ -87,7 +110,7 @@ class AccountFragment : Fragment() {
     private fun submitCounts() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val counts = listOf(
-            Count(1, "${business.totalRating/business.totalReviews}", "Average Ratings"),
+            Count(1, "${business.totalRating / business.totalReviews}", "Average Ratings"),
             Count(2, "${business.rank}", "Rank"),
             Count(3, "${business.totalReviews}", "Total Reviews"),
             Count(4, "${business.totalSuggestions}", "Total Suggestions")

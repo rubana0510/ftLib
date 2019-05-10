@@ -38,7 +38,7 @@ class PostManager {
         }
     }
 
-    fun likePost(businessId: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun likePost(businessId: String, onComplete: (LikeUnlikeResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.likePostAsync(businessId)
                 .makeRequest(onComplete)

@@ -93,6 +93,9 @@ dependencies {
     //payu
     implementation 'com.payumoney.sdkui:plug-n-play:1.5.0'
 
+    //firebase messaging
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

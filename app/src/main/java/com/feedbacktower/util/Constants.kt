@@ -28,4 +28,5 @@ object Constants {
     const val PHONE_LENGTH = 10
     const val OTP_LENGTH = 6
     const val CROP_IMAGE_QUALITY: Int = 60
+    const val DB_NAME: String = "feedbacktower"
 }

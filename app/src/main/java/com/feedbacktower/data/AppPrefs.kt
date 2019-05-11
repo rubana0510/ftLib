@@ -23,6 +23,12 @@ class AppPrefs private constructor() {
             }
     }
 
+    var firebaseToken: String?
+        get() = sharedPrefs.getString("FIREBASE_TOKEN", null)
+        set(value) {
+            sharedPrefs.edit().putString("FIREBASE_TOKEN", value).apply()
+        }
+
     var authToken: String?
         get() = sharedPrefs.getString("AUTH_TOKEN", null)
         set(value) {

@@ -8,9 +8,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_card_rounded"
-            android:layout_margin="@dimen/cardMargin"
-            android:padding="16dp">
+            android:padding="16dp"
+    android:layout_marginTop="@dimen/dimen_8dp">
         <ImageView
                 android:id="@+id/starIm"
                 android:layout_width="wrap_content"
@@ -26,7 +25,7 @@
                 app:layout_constraintStart_toStartOf="@id/starIm"
                 app:layout_constraintEnd_toEndOf="@id/starIm"
                 tools:text="4"
-                android:text="@{review.reviewScore}"/>
+                app:textSafe="@{review.rating}"/>
         <ImageView
                 android:id="@+id/userProfileImage"
                 android:layout_width="30dp"
@@ -34,7 +33,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@id/starIm"
                 android:layout_marginStart="16dp"
-                app:loadRoundImage="@{review.userProfileImage}"/>
+                app:toProfileRound="@{review.profileId}"/>
         <TextView
                 android:id="@+id/userName"
                 style="@style/UserFullNameStyle"
@@ -46,7 +45,7 @@
                 android:maxLines="1"
                 android:layout_marginStart="4dp"
                 tools:text="Jon Sno"
-                android:text="@{review.userFullName}"/>
+                android:text="@{review.reviewerName}"/>
         <TextView
                 android:id="@+id/reviewMessage"
                 style="@style/ReviewMessageStyle"
@@ -57,7 +56,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="8dp"
                 tools:text="It was really great experience using your service. Hope we will get the same for years to come."
-                android:text="@{review.reviewMessage}"/>
+                android:text="@{review.comment}" android:fontFamily="@font/cabin"/>
         <TextView
                 style="@style/TinyText"
                 android:layout_width="wrap_content"
@@ -65,6 +64,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/userName"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="8dp"
-                tools:text="21 min ago"/>
+                tools:text="21 min ago"
+                app:toDate="@{review.updatedAt}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

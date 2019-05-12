@@ -55,7 +55,7 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
         searchListView.adapter = searchBusinessAdapter
         isLoading = binding.isLoading
         isListEmpty = binding.isListEmpty
-        binding.queryInput.addTextChangedListener(object: TextWatcher{
+        binding.queryInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
 
@@ -63,20 +63,23 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                search(s)
+                val query: String? = s?.toString()
+                if (query.isNullOrEmpty()) return
+
+                search(s.toString())
             }
 
         })
         //fetchBusinessList()
     }
 
-    private fun search(s: CharSequence?) {
+    private fun search(s: String) {
         isLoading = true
-        if(s.isNullOrEmpty()) return
+        if (s.length < 2) return
 
         ProfileManager.getInstance()
-            .searchBusiness(s.toString()){response, error->
-                if(error == null){
+            .searchBusiness(s) { response, error ->
+                if (error == null) {
                     isLoading = false
                     isListEmpty = response?.businesses?.isEmpty()
                     searchBusinessAdapter.submitList(response?.businesses)
@@ -90,23 +93,4 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
             putExtra("businessId", item.businessId)
         }
     }
-
-   /* private fun fetchBusinessList() {
-        val list = listOf(
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0),
-            SearchBusiness("1", "2", "Magic Muncheez", "Restaurant", "Panaji", "https://via.placeholder.com/150", 5.0)
-        )
-        isLoading = false
-        isListEmpty = list.isEmpty()
-        searchBusinessAdapter.submitList(list)
-    }*/
-
-
 }

@@ -5,85 +5,93 @@
         <variable name="post" type="com.feedbacktower.data.models.Post"/>
         <variable name="likeClickListener" type="android.view.View.OnClickListener"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:orientation="vertical"
+    <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="4dp"
+            app:contentPadding="@dimen/dimen_8dp"
             android:layout_marginTop="4dp"
-            android:paddingTop="@dimen/paddingItemVertical"
-            android:paddingBottom="@dimen/paddingItemVertical"
-            android:background="@drawable/bg_card">
-        <ImageView
-                android:id="@+id/businessProfileImage"
-                android:layout_width="@dimen/postProfilePhotoSize"
-                android:layout_height="@dimen/postProfilePhotoSize"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="@dimen/marginStartItem"
-                android:layout_marginTop="@dimen/marginTopItem"
-                app:loadRoundImage="@{post.businessProfileImage}"
-                android:contentDescription="@string/cd_business_logo"/>
-        <TextView
-                android:id="@+id/userName"
-                style="@style/SmallBoldText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/businessProfileImage"
-                app:layout_constraintTop_toTopOf="@id/businessProfileImage"
-                app:layout_constraintBottom_toBottomOf="@id/businessProfileImage"
-                android:maxLines="1"
-                android:layout_marginStart="@dimen/marginItemSubHorizontal"
-                tools:text="Bhojan"
-                android:text="@{post.businessName}"/>
-        <com.feedbacktower.views.PostImageView
-                android:id="@+id/postImageView"
+            app:cardUseCompatPadding="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/marginItemSubVertical"
-                app:layout_constraintTop_toBottomOf="@+id/businessProfileImage"
-                app:loadImage="@{post.postMediaUrl}"/>
-        <TextView
-                android:id="@+id/postCaption"
-                style="@style/SmallText"
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/postImageView"
-                app:layout_constraintStart_toStartOf="@id/businessProfileImage"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/marginItemSubVertical"
-                android:layout_marginStart="@dimen/marginStartItem"
-                android:layout_marginEnd="@dimen/marginEndItem"
-                tools:text="It was really great experience using your service. Hope we will get the same for years to come."
-                android:text="@{post.postCaption}"/>
-        <TextView
-                android:id="@+id/timestamp"
-                style="@style/TinyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="@dimen/marginEndItem"
-                app:layout_constraintBaseline_toBaselineOf="@id/userName"
-                tools:text="21 min ago"/>
-        <ImageButton
-                android:id="@+id/likeImageButton"
-                style="@style/ImageButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_post_like"
-                app:layout_constraintStart_toStartOf="@id/postCaption"
-                app:layout_constraintTop_toBottomOf="@id/postCaption"
-                android:layout_marginTop="@dimen/marginItemSubVertical"
-                android:contentDescription="@string/like_image_button"
-                android:onClick="@{likeClickListener}"/>
-        <TextView
-                style="@style/SmallBoldText"
-                android:id="@+id/noOfLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="102 likes"
-                app:layout_constraintStart_toEndOf="@id/likeImageButton"
-                app:layout_constraintTop_toTopOf="@id/likeImageButton"
-                app:layout_constraintBottom_toBottomOf="@id/likeImageButton"
-                android:text="@{post.postLikes + ` likes`}"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:paddingTop="@dimen/paddingItemVertical"
+                android:paddingBottom="@dimen/paddingItemVertical">
+            <ImageView
+                    android:id="@+id/businessProfileImage"
+                    android:layout_width="@dimen/postProfilePhotoSize"
+                    android:layout_height="@dimen/postProfilePhotoSize"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:toProfileRound="@{post.user.id}"
+                    android:contentDescription="@string/cd_business_logo"/>
+            <TextView
+                    android:id="@+id/userName"
+                    style="@style/SmallBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                    app:layout_constraintTop_toTopOf="@id/businessProfileImage"
+                    app:layout_constraintBottom_toBottomOf="@id/businessProfileImage"
+                    android:maxLines="1"
+                    android:layout_marginStart="4dp"
+                    tools:text="Bhojan"
+                    android:text="@{post.business.name}"/>
+            <com.feedbacktower.views.PostImageView
+                    android:id="@+id/postImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/marginItemSubVertical"
+                    app:layout_constraintTop_toBottomOf="@+id/businessProfileImage"
+                    app:loadImage="@{post.media}"/>
+            <TextView
+                    android:id="@+id/postCaption"
+                    style="@style/MediumText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/postImageView"
+                    app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="@dimen/marginItemSubVertical"
+                    android:layout_marginStart="@dimen/marginItemHorizontal"
+                    android:layout_marginEnd="@dimen/marginItemHorizontal"
+                    tools:text="It was really great experience using your service. Hope we will get the same for years to come."
+                    android:text="@{post.text}"/>
+            <TextView
+                    android:id="@+id/timestamp"
+                    style="@style/TinyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/marginItemHorizontal"
+                    app:layout_constraintBaseline_toBaselineOf="@id/userName"
+                    app:toDate="@{post.createdAt}"
+                    tools:text="21 min ago"/>
+            <ImageButton
+                    android:id="@+id/likeImageButton"
+                    style="@style/ImageButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_like"
+                    app:layout_constraintStart_toStartOf="@id/postCaption"
+                    app:layout_constraintTop_toBottomOf="@id/postCaption"
+                    android:contentDescription="@string/like_image_button"
+                    android:layout_marginTop="@dimen/marginItemSubVertical"
+                    app:isChecked="@{post.liked}"
+                    android:onClick="@{likeClickListener}"/>
+            <TextView
+                    style="@style/SmallBoldText"
+                    android:id="@+id/noOfLikes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="102 likes"
+                    app:layout_constraintStart_toEndOf="@id/likeImageButton"
+                    app:layout_constraintTop_toTopOf="@id/likeImageButton"
+                    app:layout_constraintBottom_toBottomOf="@id/likeImageButton"
+                    android:text="@{post.totalLikes + ` likes`}"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

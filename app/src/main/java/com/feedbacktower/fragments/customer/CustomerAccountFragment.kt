@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AccountOptionsAdapter
@@ -53,24 +54,39 @@ class CustomerAccountFragment : Fragment() {
 
     private fun submitOptions() {
         val options = listOf(
-            AccountOption(2, "My Reviews", "- reviews", R.drawable.ic_post_like_filled),
-            AccountOption(3, "My Suggestions", "-suggestions", R.drawable.ic_post_like_filled),
+            AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
+            AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
-            AccountOption(5, "Logout", "Logout from ${R.string.app_name}", R.drawable.ic_post_like_filled)
+            AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
     }
 
     private val onItemSelected = { option: AccountOption ->
         Log.d(TAG, "${option.title} selected")
-        if(option.id == 5){
-            //logout
-            AppPrefs.getInstance(requireContext()).authToken = null
-            AppPrefs.getInstance(requireContext()).user = null
-            requireActivity().launchActivity<SplashScreen> {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        when (option.id) {
+            1 -> {
+
+            }
+            2 -> {
+                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToReviewsFragment(null)
+                findNavController().navigate(d)
+            }
+            3 -> {
+                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToSuggestionsFragment()
+                d.mySuggestions = true
+                findNavController().navigate(d)
+            }
+            4 -> {
+
+            }
+            5 -> {
+                AppPrefs.getInstance(requireContext()).authToken = null
+                AppPrefs.getInstance(requireContext()).user = null
+                requireActivity().launchActivity<SplashScreen> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             }
         }
     }
-
 }

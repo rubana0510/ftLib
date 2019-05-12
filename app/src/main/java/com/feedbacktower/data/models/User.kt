@@ -28,10 +28,6 @@ data class User(
     @SerializedName("business")
     var business: Business?
 ){
-    val profileImage: String
-    get(){
-        return Constants.Service.Secrets.BASE_URL + "/user/" + id
-    }
     @PrimaryKey(autoGenerate = false)
     val userRowId: Int = USER_ROW_ID
 }

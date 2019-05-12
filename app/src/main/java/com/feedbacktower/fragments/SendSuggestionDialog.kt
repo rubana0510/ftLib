@@ -39,6 +39,7 @@ class SendSuggestionDialog : BottomSheetDialogFragment() {
         dialog.setContentView(contentView)
         val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior
+
         if (behavior != null && behavior is BottomSheetBehavior) {
             behavior.setBottomSheetCallback(onStateChangedCallback)
         }
@@ -57,24 +58,23 @@ class SendSuggestionDialog : BottomSheetDialogFragment() {
 
     private fun sendSuggestion() {
         val suggestionMessage: String = suggestionMessageInput.text.toString()
-        if (suggestionMessage.isNotEmpty()) return
+        if (suggestionMessage.isEmpty()) return
+        isCancelable = false
         SuggestionsManager.getInstance()
             .addSuggestion(
-                hashMapOf<String, Any?>(
+                hashMapOf(
                     "businessId" to businessId,
                     "message" to suggestionMessage
                 )
-            ){_,error->
-                if(error == null){
+            ) { _, error ->
+                isCancelable = true
+                if (error == null) {
                     dialog.dismiss()
                     ctx.toast("Sending suggestion..\"$suggestionMessage\"")
+                } else {
+                    requireContext().toast("Some error occurred")
                 }
-
             }
-
-
-
-
     }
 
 }

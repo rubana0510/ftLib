@@ -1,36 +1,35 @@
 package com.feedbacktower.data.models
 
-import com.feedbacktower.BuildConfig
 import com.google.gson.annotations.SerializedName
 
 data class Post(
     @SerializedName("id")
-    val postId: String,
+    val id: String,
     @SerializedName("userId")
     val userId: String,
     @SerializedName("businessId")
     val businessId: String,
-    @SerializedName("businessName")
-    val businessName: String,
-    @SerializedName("text")
-    val postCaption: String,
-    @SerializedName("media")
-    val postMediaUrl: String,
     @SerializedName("type")
-    val postType: String,
-    val postAddedAt: String,
+    val type: String,
+    @SerializedName("text")
+    val text: String,
+    @SerializedName("media")
+    val media: String?,
+    @SerializedName("visible")
+    val visible: Boolean,
     @SerializedName("totalLikes")
-    var postLikes: Int,
-    @SerializedName("business")
-    val business: Business,
+    var totalLikes: Int,
+    @SerializedName("createdAt")
+    val createdAt: String,
+    @SerializedName("updatedAt")
+    val updatedAt: String,
     @SerializedName("liked")
     var liked: Int,
     @SerializedName("user")
-    val user: User
-) {
-
-    val businessProfileImage: String
-        get() = BuildConfig.SERVER_BASE_URL + "/user/" + userId
+    val user: User,
+    @SerializedName("business")
+    val business: Business
+): BaseModel(id) {
 
     data class Business(
         @SerializedName("id")
@@ -40,10 +39,10 @@ data class Post(
     )
 
     data class User(
-        @SerializedName("firstName")
-        val firstName: String,
         @SerializedName("id")
         val id: String,
+        @SerializedName("firstName")
+        val firstName: String,
         @SerializedName("lastName")
         val lastName: String
     )

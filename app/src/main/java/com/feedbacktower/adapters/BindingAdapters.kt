@@ -6,11 +6,15 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.feedbacktower.util.Constants
+import com.feedbacktower.util.toRelativeTime
 
 @BindingAdapter("isGone")
 fun bindIsGone(view: View, isGone: Boolean) {
@@ -63,3 +67,33 @@ fun bindGoneIfNull(view: View, gone: String?) {
         View.VISIBLE
     }
 }
+
+@BindingAdapter("textSafe")
+fun bindTextSafe(view: TextView, text: Any) {
+    view.text = text.toString()
+}
+
+@BindingAdapter("toDate")
+fun bindToDate(view: TextView, text: String?) {
+    text?.let {
+        view.text = text.toRelativeTime()
+    }
+}
+
+@BindingAdapter("toProfileRound")
+fun bindToProfileRound(view: ImageView, userId: String?) {
+    if (!userId.isNullOrEmpty()) {
+        Glide.with(view.context)
+            .load("${Constants.Service.Secrets.BASE_URL}/user/$userId.jpg")
+            .apply(RequestOptions().circleCrop())
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(view)
+    }
+}
+
+
+@BindingAdapter("checkedIfOne")
+fun bindCheckedIfOne(view: SwipeRefreshLayout, value: Boolean) {
+    view.isRefreshing = value
+}
+

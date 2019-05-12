@@ -1,13 +1,14 @@
 package com.feedbacktower.network.models
 
 import com.feedbacktower.data.models.BaseModel
+import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.data.models.City
 import com.feedbacktower.util.Constants
 import com.google.gson.annotations.SerializedName
 
 data class SearchBusiness(
     @SerializedName("businessCategory")
-    val businessCategory: Any,
+    val businessCategory: BusinessCategory,
     @SerializedName("businessCategoryId")
     val businessCategoryId: String,
     @SerializedName("city")

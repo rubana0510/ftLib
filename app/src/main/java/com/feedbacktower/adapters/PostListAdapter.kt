@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.feedbacktower.adapters.diffcallbacks.PostDiffCallback
+import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemPostTextBinding
 import com.feedbacktower.databinding.ItemPostMediaBinding
@@ -13,7 +13,7 @@ import java.lang.IllegalStateException
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback()) {
+class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -56,7 +56,7 @@ class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, B
 
 
     override fun getItemViewType(position: Int): Int {
-        return when (getItem(position).postType) {
+        return when (getItem(position).type) {
             POST_TEXT -> 0
             POST_PHOTO -> 1
             POST_VIDEO -> 1
@@ -72,11 +72,11 @@ class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, B
 
     fun updateLike(position: Int, liked: Boolean) {
         getItem(position).liked = if (liked) 1 else 0
-        getItemAtPos(position).postLikes =
+        getItemAtPos(position).totalLikes =
             if (liked)
-                getItemAtPos(position).postLikes + 1
+                getItemAtPos(position).totalLikes + 1
             else
-                getItemAtPos(position).postLikes - 1
+                getItemAtPos(position).totalLikes - 1
 
         notifyItemChanged(position)
     }

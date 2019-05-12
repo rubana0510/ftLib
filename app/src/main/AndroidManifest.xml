@@ -15,7 +15,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
-            tools:replace="android:allowBackup,android:usesCleartextTraffic">
+            tools:replace="android:allowBackup,android:usesCleartextTraffic" tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.ScannerScreen">
         </activity>
         <activity android:name=".ui.PostTextScreen"
@@ -76,6 +76,7 @@
             </intent-filter>
         </receiver>
         <service android:name=".notifications.MyFirebaseMessagingService"/>
+        <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
     </application>
 
 </manifest>

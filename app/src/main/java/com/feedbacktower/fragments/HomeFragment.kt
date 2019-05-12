@@ -49,18 +49,16 @@ class HomeFragment : Fragment() {
         feedListView = binding.feedListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
-        binding.isCustomer = AppPrefs.getInstance(requireContext()).user?.userType == "CUSTOMER"
-
-        swipeRefresh.setOnRefreshListener {
-            fetchPostList()
-        }
-
+        binding.isBusiness= AppPrefs.getInstance(requireContext()).user?.userType == "BUSINESS"
         //setup list
         feedListView.setVertical(requireContext())
         postAdapter = PostListAdapter(likeListener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
+        swipeRefresh.setOnRefreshListener {
+            fetchPostList()
+        }
         fetchPostList()
     }
 
@@ -73,16 +71,17 @@ class HomeFragment : Fragment() {
 
     private fun likeUnlikePost(item: Post, position: Int) {
         PostManager.getInstance()
-            .likePost(item.postId) { response, _ ->
+            .likePost(item.id) { response, _ ->
                 if (response?.liked != null)
                     postAdapter.updateLike(position, response.liked)
             }
     }
 
     private fun fetchPostList() {
+        swipeRefresh.isRefreshing = true
         PostManager.getInstance()
             .getPosts("2019-05-03 20:24:59", "NEW") { response, error ->
-                isLoading = false
+                swipeRefresh.isRefreshing = false
                 noPosts = response?.posts?.isEmpty()
                 postAdapter.submitList(response?.posts)
             }

@@ -1,20 +1,44 @@
 package com.feedbacktower.data.models
 
-import com.feedbacktower.BuildConfig
 import com.google.gson.annotations.SerializedName
 
 data class Review(
     @SerializedName("id")
-    val reviewId: String,
+    val id: String,
     @SerializedName("userId")
     val userId: String,
-    @SerializedName("status")
-    val userFullName: String = "Unknown",
-    val userProfileImage : String = BuildConfig.SERVER_BASE_URL + "/User/" + userId,
+    @SerializedName("businessId")
     val businessId: String,
-    @SerializedName("comment")
-    val reviewMessage: String,
     @SerializedName("rating")
-    val reviewScore: String,
-    val createdAt: String
-)
+    val rating: Int,
+    @SerializedName("comment")
+    val comment: String,
+    @SerializedName("visible")
+    val visible: Boolean,
+    @SerializedName("createdAt")
+    val createdAt: String,
+    @SerializedName("updatedAt")
+    val updatedAt: String,
+    @SerializedName("user")
+    val user: User?,
+    @SerializedName("business")
+    val business: Business
+) : BaseModel(id) {
+    val reviewerName: String
+        get() {
+            return if (user == null) {
+                business.name ?: "Unknown"
+            } else {
+                return if (user.business == null) {
+                    "${user.firstName} ${user.lastName}"
+                } else {
+                    user.business?.name ?: "Unknown"
+                }
+            }
+        }
+    val profileId: String
+        get() {
+            return user?.id ?: business.userId
+        }
+}
+

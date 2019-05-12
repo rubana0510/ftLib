@@ -21,10 +21,24 @@
             android:name="com.feedbacktower.fragments.customer.CustomerAccountFragment"
             android:label="@string/title_my_account"
             tools:layout="@layout/fragment_customer_account">
+        <action android:id="@+id/action_navigation_customer_account_to_suggestionsFragment"
+                app:destination="@id/suggestionsFragment"/>
+        <action android:id="@+id/action_navigation_customer_account_to_reviewsFragment"
+                app:destination="@id/reviewsFragment"/>
     </fragment>
     <activity
             android:id="@+id/businessDetailsActivity"
             android:name="com.feedbacktower.ui.BusinessDetailsActivity"
             android:label="activity_business_details"
             tools:layout="@layout/activity_business_details"/>
+    <fragment android:name="com.feedbacktower.fragments.ReviewsFragment"
+              android:label="fragment_reviews" tools:layout="@layout/fragment_reviews"
+              android:id="@+id/reviewsFragment">
+        <argument android:name="businessId" app:argType="string" app:nullable="true"/>
+        <argument android:name="forMe" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
+    <fragment android:id="@+id/suggestionsFragment" android:name="com.feedbacktower.fragments.SuggestionsFragment"
+              android:label="fragment_suggestions" tools:layout="@layout/fragment_suggestions">
+        <argument android:name="mySuggestions" app:argType="boolean" android:defaultValue="true"/>
+    </fragment>
 </navigation>

@@ -27,6 +27,7 @@
                     android:padding="8dp"
                     android:layout_marginStart="@dimen/marginStartItem"
                     android:layout_centerVertical="true"
+                    android:tint="@color/white"
                     android:layout_gravity="start|center_vertical"/>
             <EditText
                     android:id="@+id/queryInput"
@@ -39,6 +40,8 @@
                     android:layout_toEndOf="@+id/searchIcon"
                     android:layout_toStartOf="@+id/clearButton"
                     android:hint="@string/title_search"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/light_gray"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:maxLines="1"/>
@@ -48,6 +51,7 @@
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_close_black_24dp"
                     android:padding="8dp"
+                    android:tint="@color/white"
                     android:layout_marginEnd="@dimen/marginEndItem"
                     android:layout_centerVertical="true"
                     android:background="?attr/selectableItemBackgroundBorderless"

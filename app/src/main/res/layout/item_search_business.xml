@@ -61,7 +61,7 @@
                     android:textColor="@color/grey21"
                     app:layout_constraintTop_toBottomOf="@id/businessName"
                     tools:text="Restaurant"
-                    android:text="@{business.businessCategory}"/>
+                    android:text="@{business.businessCategory.name}"/>
             <TextView
                     android:id="@+id/dotSeparator"
                     android:layout_width="wrap_content"

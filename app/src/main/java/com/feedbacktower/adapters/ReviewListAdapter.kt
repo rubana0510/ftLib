@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.ReviewDiffCallback
+import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.ItemReviewBinding
 
 /**
  * Created by sanket on 16-04-2019.
  */
-class ReviewListAdapter : ListAdapter<Review, ReviewListAdapter.ViewHolder>(ReviewDiffCallback()) {
+class ReviewListAdapter : ListAdapter<Review, ReviewListAdapter.ViewHolder>(DiffCallback<Review>()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemReviewBinding.inflate(

@@ -15,7 +15,9 @@ import com.feedbacktower.R
 import com.feedbacktower.data.models.User
 import com.feedbacktower.ui.CustomerMainActivity
 import com.feedbacktower.ui.ProfileSetupScreen
+import java.text.SimpleDateFormat
 import java.util.*
+import java.text.ParseException
 
 
 fun ImageView.loadImage(context: Context, url: String) {
@@ -78,13 +80,15 @@ fun isNameValid(name: String): Boolean {
 fun isEmailValid(email: String): Boolean {
     return email.isNotEmpty()
 }
+
 fun String.noValidWebsite(): Boolean {
     return false
 }
+
 fun Activity.navigateUser(user: User) {
     if (user.userType == "CUSTOMER") {
         if (!user.profileSetup) {
-            launchActivity<ProfileSetupScreen>{
+            launchActivity<ProfileSetupScreen> {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
         } else {
@@ -99,6 +103,7 @@ fun Activity.navigateUser(user: User) {
         }
     }
 }
+
 inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noinline init: Intent.() -> Unit = {}) {
     val intent = newIntent<T>(this)
     intent.init()
@@ -131,13 +136,14 @@ internal fun RecyclerView.setVertical(context: Context) {
     itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
 }
+
 internal fun RecyclerView.setHorizontal(context: Context) {
     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
 }
 
-internal fun RecyclerView.setGrid(context: Context, span: Int){
+internal fun RecyclerView.setGrid(context: Context, span: Int) {
     layoutManager = GridLayoutManager(context, span)
     itemAnimator = DefaultItemAnimator()
     setHasFixedSize(true)
@@ -147,4 +153,33 @@ internal fun getMaxDob(): Long {
     val cal: Calendar = Calendar.getInstance()
     cal.timeInMillis = System.currentTimeMillis()
     return cal.timeInMillis
+}
+
+internal fun Int.noZero(): String {
+    return if (this == 0) "-"
+    else this.toString()
+}
+
+internal fun String.toRelativeTime(): String {
+    try {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH)
+        val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
+        val currentTime: Long = System.currentTimeMillis() / 1000
+        val oldTime: Long = format.parse(this).time / 1000
+        val diff = currentTime - oldTime
+        val secs = diff.toInt()
+        val mins = diff.toInt() / 60
+        val hours = diff.toInt() / (60 * 60)
+
+        return if (secs < 60)
+            "Just now"
+        else if (mins < 60)
+            "$mins min${if (mins == 1) "" else "s"} ago"
+        else if (hours < 24)
+            "$hours hour${if (hours == 1) "" else "s"} ago"
+        else
+            toFormat.format(Date(oldTime))
+    } catch (e: ParseException) {
+        return this
+    }
 }

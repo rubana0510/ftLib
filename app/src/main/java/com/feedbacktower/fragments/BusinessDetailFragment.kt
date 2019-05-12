@@ -18,6 +18,7 @@ import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.BusinessDetails
 import com.feedbacktower.util.setVertical
+import java.lang.IllegalArgumentException
 
 
 class BusinessDetailFragment : Fragment() {
@@ -31,43 +32,23 @@ class BusinessDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentBusinessDetailBinding.inflate(inflater, container, false)
-        val args: BusinessDetailFragmentArgs by navArgs()
-        initUi(binding, args.businessId)
+        val businessId = arguments?.getString("businessId")?: throw  IllegalArgumentException("Invalid business args")
+        initUi(binding, businessId)
         return binding.root
     }
 
     private fun initUi(binding: FragmentBusinessDetailBinding, businessId: String) {
 
-
-        /*binding.business = BusinessDetails(
-            "id1",
-            "bid1",
-            "Rodreguez Tailors",
-            "1234",
-            "cid1",
-            "Tailor",
-            "https://via.placeholder.com/200",
-            "http://website.com",
-            233,
-            "Mapusa, Goa",
-            "+91-9876543210",
-            "4.5",
-            "APPROVED",
-            "1234"
-        )*/
         binding.onViewReviewsClicked = View.OnClickListener {
-            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationReview().let {
-                findNavController().navigate(it)
-            }
+            val d = BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationReview(businessId)
+            findNavController().navigate(d)
         }
         binding.onSendSuggestionClicked = View.OnClickListener {
             val d = SendSuggestionDialog()
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager, "suggestion")
-        }/*
-        binding.ratingBar.onRatingBarChangeListener {_,_,_->
-            RateReviewDialog().show(fragmentManager, "review")
-        }*/
+        }
+
 
         binding.sendReviewButtonClicked = View.OnClickListener {
             val d = RateReviewDialog()
@@ -88,74 +69,9 @@ class BusinessDetailFragment : Fragment() {
         ProfileManager.getInstance()
             .getBusinessDetails(businessId) { response, error ->
                 if (error == null && response?.business != null) {
-                    binding.business = response?.business
-                    reviewAdapter.submitList(response?.business?.reviews)
+                    binding.business = response.business
+                    reviewAdapter.submitList(response.business.reviews)
                 }
             }
     }
-
-    private fun fetchReviews() {
-        val list = listOf(
-            Review(
-                "1",
-                "1",
-                "Sanket Naik",
-                "https://via.placeholder.com/50",
-                "Best Garage1",
-                "It was really great experience using your service. Hope we will get the same for years to come.",
-                "1",
-                "ss"
-            ),
-            Review(
-                "1",
-                "1",
-                "Sanket Naik",
-                "https://via.placeholder.com/50",
-                "Best Garage1",
-                "It was really great experience using your service.",
-                "2",
-                "ss"
-            )
-        )
-        reviewAdapter.submitList(list)
-    }
-
-    /* private fun fetchTimeline() {
-         val posts = listOf(
-             Post(
-                 "1",
-                 "2",
-                 "Magic Muncheez",
-                 "https://via.placeholder.com/150",
-                 "Try This, its super amazing!",
-                 "https://via.placeholder.com/500",
-                 PostListAdapter.POST_PHOTO,
-                 "today",
-                 5
-             ),
-             Post(
-                 "1",
-                 "2",
-                 "Magic Muncheez",
-                 "https://via.placeholder.com/150",
-                 "Try This, its super amazing!",
-                 "https://via.placeholder.com/500",
-                 PostListAdapter.POST_TEXT,
-                 "yesterday",
-                 10
-             ),
-             Post(
-                 "1",
-                 "2",
-                 "Magic Muncheez",
-                 "https://via.placeholder.com/150",
-                 "Try This, its super amazing!",
-                 "https://via.placeholder.com/500",
-                 PostListAdapter.POST_VIDEO,
-                 "now",
-                 102
-             )
-         )
-         postAdapter.submitList(posts)
-     }*/
 }

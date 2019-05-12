@@ -11,6 +11,7 @@
             app:cardCornerRadius="0dp"
             app:cardElevation="4dp"
             android:layout_marginTop="4dp"
+            app:contentPadding="@dimen/dimen_8dp"
             app:cardUseCompatPadding="true">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:orientation="vertical"
@@ -24,7 +25,7 @@
                     android:layout_height="@dimen/postProfilePhotoSize"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:loadRoundImage="@{post.businessProfileImage}"
+                    app:toProfileRound="@{post.user.id}"
                     android:contentDescription="@string/cd_business_logo"/>
             <TextView
                     android:id="@+id/userName"
@@ -45,13 +46,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/businessProfileImage"
-                    app:layout_constraintStart_toStartOf="@id/businessProfileImage"
+                    app:layout_constraintStart_toEndOf="@id/businessProfileImage"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="@dimen/marginItemSubVertical"
                     android:layout_marginStart="@dimen/marginItemHorizontal"
                     android:layout_marginEnd="@dimen/marginItemHorizontal"
                     tools:text="It was really great experience using your service. Hope we will get the same for years to come."
-                    android:text="@{post.postCaption}"/>
+                    android:text="@{post.text}"/>
             <TextView
                     android:id="@+id/timestamp"
                     style="@style/TinyText"
@@ -61,7 +62,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="@dimen/marginItemHorizontal"
                     app:layout_constraintBaseline_toBaselineOf="@id/userName"
-                    android:text="@{post.postAddedAt}"
+                    app:toDate="@{post.createdAt}"
                     tools:text="21 min ago"/>
             <ImageButton
                     android:id="@+id/likeImageButton"
@@ -84,7 +85,7 @@
                     app:layout_constraintStart_toEndOf="@id/likeImageButton"
                     app:layout_constraintTop_toTopOf="@id/likeImageButton"
                     app:layout_constraintBottom_toBottomOf="@id/likeImageButton"
-                    android:text="@{post.postLikes + ` likes`}"/>
+                    android:text="@{post.totalLikes + ` likes`}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

@@ -24,12 +24,28 @@ class ReviewsManager {
             }
     }
 
+    fun getBusinessReviews(
+        businessId: String?,
+        timestamp: String,
+        onComplete: (GetReviewsResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getBusinessReviewsAsync(
+                businessId = businessId,
+                timestamp = timestamp
+            ).makeRequest(onComplete)
+        }
+
+    }
+
     fun getMyReviews(timestamp: String, onComplete: (GetReviewsResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getMyReviewsAsync(timestamp)
-                .makeRequest(onComplete)
+            apiService.getMyReviewsAsync(
+                timestamp = timestamp
+            ).makeRequest(onComplete)
         }
     }
+
     fun addReview(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.addReviewAsync(payload)

@@ -17,8 +17,10 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
+import com.feedbacktower.ui.ProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
 import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.noZero
 
 
 class AccountFragment : Fragment() {
@@ -57,21 +59,19 @@ class AccountFragment : Fragment() {
         accountOptionsView.adapter = accountOptionsAdapter
         submitOptions()
 
-        binding.url = "https://via.placeholder.com/150"
+
         binding.user = AppPrefs.getInstance(requireContext()).user!!
+        binding.editProfileButtonClicked = View.OnClickListener {
+            requireActivity().launchActivity<ProfileSetupScreen>()
+        }
     }
 
     private fun submitOptions() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val options = listOf(
             AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
-            AccountOption(2, "My Reviews", "${business.totalReviews} reviews", R.drawable.ic_post_like_filled),
-            AccountOption(
-                3,
-                "My Suggestions",
-                "${business.totalSuggestions} suggestions",
-                R.drawable.ic_post_like_filled
-            ),
+            AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
+            AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
@@ -85,8 +85,7 @@ class AccountFragment : Fragment() {
 
             }
             2 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToReviewsFragment()
-                d.myReviews = true
+                val d = AccountFragmentDirections.actionNavigationAccountToReviewsFragment("")
                 findNavController().navigate(d)
             }
             3 -> {
@@ -110,10 +109,10 @@ class AccountFragment : Fragment() {
     private fun submitCounts() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val counts = listOf(
-            Count(1, "${business.totalRating / business.totalReviews}", "Average Ratings"),
-            Count(2, "${business.rank}", "Rank"),
-            Count(3, "${business.totalReviews}", "Total Reviews"),
-            Count(4, "${business.totalSuggestions}", "Total Suggestions")
+            Count(1, business.rank.noZero(), "Rank"),
+            Count(2, "${business.totalRating / business.totalReviews}", "Ratings"),
+            Count(3, "${business.totalReviews}", "Reviews"),
+            Count(4, "${business.totalSuggestions}", "Suggestions")
         )
         countAdapter.submitList(counts)
     }

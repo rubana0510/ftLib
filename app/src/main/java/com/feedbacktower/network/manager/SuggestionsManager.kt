@@ -30,6 +30,13 @@ class SuggestionsManager {
                 .makeRequest(onComplete)
         }
     }
+
+    fun getMySuggestions(timestamp: String, onComplete: (GetSuggestionsResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getMySuggestionsAsync(timestamp)
+                .makeRequest(onComplete)
+        }
+    }
     fun addSuggestion(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.addSuggestionAsync(payload)

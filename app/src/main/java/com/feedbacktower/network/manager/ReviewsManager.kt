@@ -25,7 +25,7 @@ class ReviewsManager {
     }
 
     fun getBusinessReviews(
-        businessId: String?,
+        businessId: String,
         timestamp: String,
         onComplete: (GetReviewsResponse?, Throwable?) -> Unit
     ) {
@@ -37,6 +37,8 @@ class ReviewsManager {
         }
 
     }
+
+
 
     fun getMyReviews(timestamp: String, onComplete: (GetReviewsResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {

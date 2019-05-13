@@ -18,7 +18,6 @@
             android:label="@string/title_reviews"
             tools:layout="@layout/fragment_reviews">
         <argument android:name="businessId" app:argType="string"/>
-        <argument android:name="forMe" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
     <argument android:name="businessId" app:argType="string"/>
 </navigation>

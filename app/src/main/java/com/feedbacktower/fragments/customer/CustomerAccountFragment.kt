@@ -69,12 +69,11 @@ class CustomerAccountFragment : Fragment() {
 
             }
             2 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToReviewsFragment(null)
+                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMyReviewsFragment2()
                 findNavController().navigate(d)
             }
             3 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToSuggestionsFragment()
-                d.mySuggestions = true
+                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMySuggestionsFragment2()
                 findNavController().navigate(d)
             }
             4 -> {

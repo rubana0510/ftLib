@@ -64,12 +64,12 @@ class RateReviewDialog : BottomSheetDialogFragment() {
     }
 
     private fun sendRatings() {
-        val noOfStars: Int = ratingBar.numStars
+        val noOfStars: Int = ratingBar.rating.toInt()
         val reviewSummary: String = reviewInput.text.toString()
 
         ReviewsManager.getInstance()
             .addReview(
-                hashMapOf<String, Any?>(
+                hashMapOf(
                     "businessId" to businessId,
                     "rating" to noOfStars,
                     "comment" to reviewSummary

@@ -91,7 +91,7 @@ interface ApiServiceDescriptor {
     @POST("/suggestion/")
     fun addSuggestionAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/suggestion/")
+    @GET("/profile/my-suggestions/")
     fun getMySuggestionsAsync(
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>

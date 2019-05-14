@@ -6,8 +6,6 @@ import com.google.gson.annotations.SerializedName
 data class Business(
     @SerializedName("address")
     var address: String,
-    @SerializedName("avgReview")
-    var avgReview: Int,
     @SerializedName("businessCategory")
     var businessCategory: BusinessCategory,
     @SerializedName("businessCategoryId")
@@ -52,4 +50,11 @@ data class Business(
     var walletAmount: String,
     @SerializedName("website")
     var website: String
-)
+) {
+    val averageRatings: String
+        get() {
+            if (totalReviews == 0) return "-"
+            else if (totalRating == 0.0) return "-"
+            else return String.format("%.1f", (totalRating / totalReviews))
+        }
+}

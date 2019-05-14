@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/receiver_nav_graph"
+            app:startDestination="@id/receiverScanFragment">
+
+    <fragment android:id="@+id/receiverScanFragment"
+              android:name="com.feedbacktower.fragments.business.ReceiverScanFragment"
+              android:label="fragment_reciver_scan" tools:layout="@layout/fragment_reciver_scan"/>
+    <fragment android:id="@+id/receiverWaitFragment"
+              android:name="com.feedbacktower.fragments.business.ReceiverWaitFragment"
+              android:label="fragment_reciver_wait" tools:layout="@layout/fragment_reciver_wait"/>
+</navigation>

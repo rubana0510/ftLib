@@ -19,6 +19,7 @@ import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
 import com.feedbacktower.ui.ProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.noZero
 
@@ -64,6 +65,10 @@ class AccountFragment : Fragment() {
         binding.editProfileButtonClicked = View.OnClickListener {
             requireActivity().launchActivity<ProfileSetupScreen>()
         }
+        binding.onScanClicked = View.OnClickListener {
+            requireActivity().launchActivity<SenderActivity>()
+        }
+
     }
 
     private fun submitOptions() {
@@ -109,7 +114,7 @@ class AccountFragment : Fragment() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val counts = listOf(
             Count(1, business.rank.noZero(), "Rank"),
-            Count(2, "${business.totalRating / business.totalReviews}", "Ratings"),
+            Count(2, "${business.averageRatings}", "Ratings"),
             Count(3, "${business.totalReviews}", "Reviews"),
             Count(4, "${business.totalSuggestions}", "Suggestions")
         )

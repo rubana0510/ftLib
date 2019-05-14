@@ -16,6 +16,7 @@ import com.feedbacktower.data.models.Post
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.network.models.BusinessDetails
 import com.feedbacktower.util.setVertical
 import java.lang.IllegalArgumentException
@@ -32,7 +33,7 @@ class BusinessDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentBusinessDetailBinding.inflate(inflater, container, false)
-        val businessId = arguments?.getString("businessId")?: throw  IllegalArgumentException("Invalid business args")
+        val businessId = arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid business args")
         initUi(binding, businessId)
         return binding.root
     }
@@ -70,8 +71,15 @@ class BusinessDetailFragment : Fragment() {
             .getBusinessDetails(businessId) { response, error ->
                 if (error == null && response?.business != null) {
                     binding.business = response.business
-                    reviewAdapter.submitList(response.business.reviews)
+                    //reviewAdapter.submitList(response.business.reviews)
                 }
             }
+        ReviewsManager.getInstance().getBusinessReviews(businessId, "") { response, error ->
+            if (error == null) {
+                reviewAdapter.submitList(response?.review)
+            }else{
+
+            }
+        }
     }
 }

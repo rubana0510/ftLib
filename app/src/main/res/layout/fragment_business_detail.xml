@@ -5,13 +5,14 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.BusinessDetailFragment">
     <data>
-        <variable name="business" type="com.feedbacktower.network.models.BusinessDetailsResponse.Business"/>
+        <variable name="business" type="com.feedbacktower.data.models.Business"/>
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onViewReviewsClicked" type="android.view.View.OnClickListener"/>
         <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
         <variable name="sendReviewButtonClicked" type="android.view.View.OnClickListener"/>
         <variable name="isTimelineLoading" type="Boolean"/>
+        <variable name="isReviewLoading" type="Boolean"/>
     </data>
     <RelativeLayout
             android:layout_width="match_parent"
@@ -51,7 +52,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginStart="@dimen/layoutMarginStart"
                         android:layout_marginTop="@dimen/layoutMarginTop"
-                        app:loadRoundImage="@{business.businessProfileImage}"/>
+                        app:toProfileRound="@{business.id}"/>
                 <TextView
                         android:id="@+id/businessName"
                         style="@style/businessNameBigStyle"
@@ -88,7 +89,7 @@
                         android:layout_marginEnd="@dimen/marginEndItem"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintBaseline_toBaselineOf="@id/businessName"
-                        android:text="-"
+                        android:text="@{business.averageRatings}"
                 />
 
                 <LinearLayout
@@ -178,8 +179,7 @@
                         android:layout_height="match_parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvTitle2"
                         android:layout_marginTop="@dimen/marginTopItem"
-                        android:nestedScrollingEnabled="false"
-                        app:isGone="@{isTimelineLoading}"/>
+                        android:nestedScrollingEnabled="false"/>
                 <TextView
                         android:id="@+id/viewAllReviews"
                         android:layout_width="wrap_content"

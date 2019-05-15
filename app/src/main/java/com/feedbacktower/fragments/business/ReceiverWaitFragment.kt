@@ -8,16 +8,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
 import com.feedbacktower.R
+import com.feedbacktower.databinding.FragmentReciverWaitBinding
 
 
 class ReceiverWaitFragment : Fragment() {
 
+    private lateinit var binding: FragmentReciverWaitBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reciver_wait, container, false)
+        binding = FragmentReciverWaitBinding.inflate(inflater, container, false)
+        return  binding.root
     }
 
 

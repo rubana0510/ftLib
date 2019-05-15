@@ -59,7 +59,7 @@ class SenderQrFragment : Fragment() {
     }
 
     private fun listenForScanned(data: String) {
-        qrImage.gone()
+      //  qrImage.gone()
         Log.d(TAG, "Checking Status...")
         QRTransactionManager.getInstance()
             .checkStatusSender(data) { response, error ->
@@ -73,13 +73,16 @@ class SenderQrFragment : Fragment() {
                         Handler().postDelayed({
                             listenForScanned(data)
                         }, Constants.QR_STATUS_CHECK_INTERVAL)
+                        return@let
+                    }else{
+                        //scanned
+                        Log.d(TAG, "SCANNED: ${response.receiver}")
+                        requireContext().toast("Code scanned by: ${response.receiver.name}")
+                        SenderQrFragmentDirections.actionSenderQrFragmentToSenderWaitFragment().let {dir->
+                            findNavController().navigate(dir)
+                        }
                     }
-                    //scanned
-                    Log.d(TAG, "SCANNED: ${response.receiver}")
-                    requireContext().toast("Code scanned by: ${response.receiver.name}")
-                    SenderQrFragmentDirections.actionSenderQrFragmentToSenderWaitFragment().let {dir->
-                        findNavController().navigate(dir)
-                    }
+
                 }
             }
     }

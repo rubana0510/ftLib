@@ -76,4 +76,5 @@
     <string name="crop_image_activity_title">Crop</string>
     <string name="crop_image_activity_no_permissions">No permissions</string>
     <string name="file_provider_authority">sdsd</string>
+    <string name="send_request">SEND REQUEST</string>
 </resources>

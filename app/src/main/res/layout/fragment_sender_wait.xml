@@ -1,13 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragments.business.SenderWaitFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".fragments.business.SenderWaitFragment">
+    <data>
+        <variable name="business" type="com.feedbacktower.data.models.Business"/>
+        <variable name="transaction" type="com.feedbacktower.network.models.QrTransaction"/>
+    </data>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <TextView
+                style="@style/LargeBoldText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                tools:text="Code scanned at"
+                android:layout_marginStart="@dimen/dimen_16dp"/>
+        <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="8dp"
+                android:layout_margin="@dimen/cardMargin"
+                app:contentPadding="0dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <ImageView
+                        android:id="@+id/businessProfileImage"
+                        android:layout_width="@dimen/businessSearchProfileImage"
+                        android:layout_height="@dimen/businessSearchProfileImage"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="#CE93D8"
+                        app:toProfileRound="@{business.id}"/>
+                <TextView
+                        android:id="@+id/businessName"
+                        style="@style/businessNameStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                        android:layout_marginStart="@dimen/marginStartItem"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Rolls Mania"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:layout_marginTop="8dp"
+                        android:text="@{business.name}"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_star_filled_16dp"
+                        tools:text="4.4"
+                        android:textStyle="bold"
+                        android:textColor="@color/grey42"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBaseline_toBaselineOf="@id/businessName"
+                        android:text="@{business.averageRatings}"/>
+                <TextView
+                        android:id="@+id/businessCategory"
+                        style="@style/businessCategoryStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                        android:layout_marginStart="@dimen/marginStartItem"
+                        android:textColor="@color/grey21"
+                        app:layout_constraintTop_toBottomOf="@id/businessName"
+                        tools:text="Restaurant"
+                        android:text="@{business.businessCategory.name}"/>
+                <TextView
+                        android:id="@+id/dotSeparator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dot_bullet"
+                        android:layout_marginStart="@dimen/marginStartItem"
+                        app:layout_constraintTop_toBottomOf="@id/businessName"
+                        app:layout_constraintStart_toEndOf="@id/businessCategory"/>
+                <TextView
+                        android:id="@+id/businessCity"
+                        style="@style/businessCityStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/dotSeparator"
+                        android:layout_marginStart="@dimen/marginStartItem"
+                        app:layout_constraintTop_toBottomOf="@id/businessName"
+                        tools:text="Panaji"
+                        android:textColor="@color/grey21"
+                        android:text="@{business.city.name}"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    <ProgressBar
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_gravity="center"/>
-
-</FrameLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:showIfScanned="@{transaction.status}">
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    style="@style/LargeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_16dp"
+                    tools:text="Waiting for payment request..."
+                    android:layout_marginStart="@dimen/dimen_16dp"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:showIfRequested="@{transaction.status}">
+            <TextView
+                    style="@style/LargeBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    tools:text="Payment Request"/>
+            <TextView
+                    style="@style/LargeBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    tools:text="Rs. 50"/>
+            <Button
+                    style="@style/ButtonFilledStyle.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ACCEPT REQUEST"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:showIfApproved="@{transaction.status}">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:srcCompat="@drawable/ic_check_circle_black_48dp"
+                    android:tint="@color/button_green"/>
+            <TextView
+                    style="@style/LargeBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    tools:text="Payment Sent"/>
+            <TextView
+                    style="@style/LargeBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    tools:text="Rs. 50"/>
+            <Button
+                    style="@style/ButtonFilledStyle.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GO BACK"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

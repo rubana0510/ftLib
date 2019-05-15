@@ -17,7 +17,8 @@ class SenderWaitFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sender_wait, container, false)
+        val view =  inflater.inflate(R.layout.fragment_sender_wait, container, false)
+        return  view
     }
 
 

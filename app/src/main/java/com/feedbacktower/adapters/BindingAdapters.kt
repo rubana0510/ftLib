@@ -14,7 +14,9 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.util.Constants
+import com.feedbacktower.util.gone
 import com.feedbacktower.util.toRelativeTime
+import com.feedbacktower.util.visible
 
 @BindingAdapter("isGone")
 fun bindIsGone(view: View, isGone: Boolean) {
@@ -97,3 +99,28 @@ fun bindCheckedIfOne(view: SwipeRefreshLayout, value: Boolean) {
     view.isRefreshing = value
 }
 
+
+@BindingAdapter("showIfApproved")
+fun bindIshowIfApproved(view: View, value: String) {
+    if (value == "APPROVED")
+        view.visible()
+    else
+        view.gone()
+}
+
+
+@BindingAdapter("showIfRequested")
+fun bindIshowIfRequested(view: View, value: String) {
+    if (value == "REQUESTED")
+        view.visible()
+    else
+        view.gone()
+}
+
+@BindingAdapter("showIfScanned")
+fun bindShowIfScanned(view: View, value: String) {
+    if (value == "SCANNED")
+        view.visible()
+    else
+        view.gone()
+}

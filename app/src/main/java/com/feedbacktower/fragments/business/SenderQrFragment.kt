@@ -1,65 +1,100 @@
 package com.feedbacktower.fragments.business
 
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-
+import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
-import com.feedbacktower.qrscanner.AutoFocusMode
-import com.feedbacktower.qrscanner.CodeScanner
-import com.feedbacktower.qrscanner.DecodeCallback
-import com.feedbacktower.qrscanner.ErrorCallback
-import com.feedbacktower.qrscanner.ScanMode
-import com.feedbacktower.util.PermissionManager
+import com.feedbacktower.network.manager.QRTransactionManager
+import com.feedbacktower.network.models.QrTxStatus
+import com.feedbacktower.qrscanner.BarcodeEncoder
+import com.feedbacktower.util.Constants
+import com.feedbacktower.util.gone
+import com.feedbacktower.util.visible
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.WriterException
 import kotlinx.android.synthetic.main.fragment_sender_qr.view.*
+import org.jetbrains.anko.toast
+import java.lang.IllegalStateException
 
 
 class SenderQrFragment : Fragment() {
-    private lateinit var codeScanner: CodeScanner
+    private val TAG = "SenderQrFragment"
+    private lateinit var qrImage: ImageView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sender_qr, container, false)
-        PermissionManager.getInstance().requestCameraPermission(requireActivity())
-        codeScanner = CodeScanner(requireContext(), view.scannerView)
-        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
-        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-        // ex. listOf(BarcodeFormat.QR_CODE)
-        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
-        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
-        codeScanner.isFlashEnabled = false // Whether to enable flash or not
-        codeScanner.decodeCallback = DecodeCallback {
-            requireActivity().runOnUiThread {
-                Toast.makeText(requireActivity(), "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
-            }
-        }
-        codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-            requireActivity().runOnUiThread {
-                Toast.makeText(requireActivity(), "Camera initialization error: ${it.message}",
-                    Toast.LENGTH_LONG).show()
-            }
-        }
-
-        view.scannerView.setOnClickListener {
-            codeScanner.startPreview()
-        }
+        qrImage = view.qrImage
+        generateQr()
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        codeScanner.startPreview()
+    private fun generateQr() {
+        qrImage.gone()
+        QRTransactionManager.getInstance()
+            .generate { response, error ->
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                    return@generate
+                }
+                if (response == null) throw  IllegalStateException("Generate QR response cannot be null")
+                requireContext().toast("Qr code generated: ${response.txn.id}, please scan")
+                val bitmap = printQRCode(response.txn.id)
+                qrImage.setImageBitmap(bitmap)
+                qrImage.visible()
+                listenForScanned(response.txn.id)
+            }
     }
 
-    override fun onPause() {
-        codeScanner.releaseResources()
-        super.onPause()
+    private fun listenForScanned(data: String) {
+        qrImage.gone()
+        Log.d(TAG, "Checking Status...")
+        QRTransactionManager.getInstance()
+            .checkStatusSender(data) { response, error ->
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                    return@checkStatusSender
+                }
+                response?.let {
+                    Log.d(TAG, "QrTxStatus: ${it.txn.status}")
+                    if (it.txn.txStatus != QrTxStatus.SCANNED) {
+                        Handler().postDelayed({
+                            listenForScanned(data)
+                        }, Constants.QR_STATUS_CHECK_INTERVAL)
+                    }
+                    //scanned
+                    Log.d(TAG, "SCANNED: ${response.receiver}")
+                    requireContext().toast("Code scanned by: ${response.receiver.name}")
+                    SenderQrFragmentDirections.actionSenderQrFragmentToSenderWaitFragment().let {dir->
+                        findNavController().navigate(dir)
+                    }
+                }
+            }
+    }
+
+
+    private fun printQRCode(textToQR: String): Bitmap? {
+        val multiFormatWriter = MultiFormatWriter()
+        try {
+            val bitMatrix = multiFormatWriter.encode(textToQR, BarcodeFormat.QR_CODE, 300, 300)
+            val barcodeEncoder = BarcodeEncoder()
+            return barcodeEncoder.createBitmap(bitMatrix)
+        } catch (e: WriterException) {
+            e.printStackTrace()
+            return null
+        }
+
     }
 }

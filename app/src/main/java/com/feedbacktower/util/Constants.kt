@@ -29,4 +29,5 @@ object Constants {
     const val OTP_LENGTH = 6
     const val CROP_IMAGE_QUALITY: Int = 60
     const val DB_NAME: String = "feedbacktower"
+    const val QR_STATUS_CHECK_INTERVAL: Long = 3000L
 }

@@ -24,6 +24,8 @@ data class Business(
     var id: String,
     @SerializedName("location")
     var location: Location,
+    @SerializedName("city")
+    val city: City,
     @SerializedName("name")
     var name: String?,
     @SerializedName("phone")

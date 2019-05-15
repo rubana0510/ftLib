@@ -127,4 +127,30 @@ interface ApiServiceDescriptor {
     @GET("/business/{businessId}")
     fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>
 
+
+    //QR Transaction
+    @POST("/qr-transfer/generate")
+    fun generateQrCodeAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
+
+    @POST("/qr-transfer/scan")
+    fun scanQrCodeAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<ScanQrResponse?>>
+
+    @POST("/qr-transfer/sender")
+    fun checkQrTransferStatusSenderAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<QrStatusSenderResponse?>>
+
+    @POST("/qr-transfer/receiver")
+    fun checkQrTransferStatusReceiverAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<QrStatusRecieverResponse?>>
+
+    @POST("/qr-transfer/payment-request")
+    fun requestPaymentAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
+
+    @POST("/qr-transfer/payment-confirm")
+    fun confirmPaymentAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
+
 }

@@ -5,10 +5,10 @@
              android:layout_height="match_parent"
              tools:context=".fragments.business.SenderQrFragment">
 
-    <com.feedbacktower.qrscanner.CodeScannerView
-            android:id="@+id/scannerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"/>
 
+    <ImageView
+            android:id="@+id/qrImage"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"/>
 </FrameLayout>

@@ -5,7 +5,10 @@
             app:startDestination="@id/senderQrFragment">
 
     <fragment android:id="@+id/senderQrFragment" android:name="com.feedbacktower.fragments.business.SenderQrFragment"
-              android:label="fragment_sender_qr" tools:layout="@layout/fragment_sender_qr"/>
+              android:label="fragment_sender_qr" tools:layout="@layout/fragment_sender_qr">
+        <action android:id="@+id/action_senderQrFragment_to_senderWaitFragment"
+                app:destination="@id/senderWaitFragment"/>
+    </fragment>
     <fragment android:id="@+id/senderWaitFragment"
               android:name="com.feedbacktower.fragments.business.SenderWaitFragment"
               android:label="fragment_sender_wait" tools:layout="@layout/fragment_sender_wait"/>

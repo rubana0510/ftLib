@@ -11,5 +11,7 @@
     </fragment>
     <fragment android:id="@+id/senderWaitFragment"
               android:name="com.feedbacktower.fragments.business.SenderWaitFragment"
-              android:label="fragment_sender_wait" tools:layout="@layout/fragment_sender_wait"/>
+              android:label="fragment_sender_wait" tools:layout="@layout/fragment_sender_wait">
+        <argument android:name="txid" app:argType="string"/>
+    </fragment>
 </navigation>

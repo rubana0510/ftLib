@@ -1,12 +1,20 @@
 package com.feedbacktower.network.manager
 
+import android.net.Uri
+import android.util.Log
+import androidx.core.net.toFile
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
+import com.feedbacktower.util.toRequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
 class PostManager {
     private val TAG = "PostManager"
@@ -35,6 +43,22 @@ class PostManager {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.createTextPostAsync(hashMapOf("text" to text))
                 .makeRequest(onComplete)
+        }
+    }
+
+    fun createPhotoPost(text: String, file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+
+        if (!file.exists()) {
+            Log.e(TAG, "uploadImages: FileNotFound")
+            return
+        }
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+        val filePart = MultipartBody.Part.createFormData("media", file.name, requestBody)
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.createPhotoPostAsync(
+                filePart,
+                text.toRequestBody()
+            ).makeRequest(onComplete)
         }
     }
 

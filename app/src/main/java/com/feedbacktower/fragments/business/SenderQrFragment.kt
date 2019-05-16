@@ -29,6 +29,8 @@ import java.lang.IllegalStateException
 class SenderQrFragment : Fragment() {
     private val TAG = "SenderQrFragment"
     private lateinit var qrImage: ImageView
+    //TODO: remove later
+    private var foregraound: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,8 +60,18 @@ class SenderQrFragment : Fragment() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        foregraound = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        foregraound = false
+    }
+
     private fun listenForScanned(data: String) {
-      //  qrImage.gone()
+        //  qrImage.gone()
         Log.d(TAG, "Checking Status...")
         QRTransactionManager.getInstance()
             .checkStatusSender(data) { response, error ->
@@ -71,16 +83,18 @@ class SenderQrFragment : Fragment() {
                     Log.d(TAG, "QrTxStatus: ${it.txn.status}")
                     if (it.txn.txStatus != QrTxStatus.SCANNED) {
                         Handler().postDelayed({
-                            listenForScanned(data)
+                            if (foregraound)
+                                listenForScanned(data)
                         }, Constants.QR_STATUS_CHECK_INTERVAL)
                         return@let
-                    }else{
+                    } else {
                         //scanned
                         Log.d(TAG, "SCANNED: ${response.receiver}")
                         requireContext().toast("Code scanned by: ${response.receiver.name}")
-                        SenderQrFragmentDirections.actionSenderQrFragmentToSenderWaitFragment().let {dir->
-                            findNavController().navigate(dir)
-                        }
+                        SenderQrFragmentDirections.actionSenderQrFragmentToSenderWaitFragment(response.txn.id)
+                            .let { dir ->
+                                findNavController().navigate(dir)
+                            }
                     }
 
                 }

@@ -19,6 +19,7 @@ import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
 import com.feedbacktower.ui.ProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.noZero
@@ -66,7 +67,7 @@ class AccountFragment : Fragment() {
             requireActivity().launchActivity<ProfileSetupScreen>()
         }
         binding.onScanClicked = View.OnClickListener {
-            requireActivity().launchActivity<SenderActivity>()
+            requireActivity().launchActivity<ReceiverActivity>()
         }
 
     }

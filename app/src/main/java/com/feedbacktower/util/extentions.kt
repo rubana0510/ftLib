@@ -15,9 +15,13 @@ import com.feedbacktower.R
 import com.feedbacktower.data.models.User
 import com.feedbacktower.ui.CustomerMainActivity
 import com.feedbacktower.ui.ProfileSetupScreen
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.text.ParseException
+import android.net.Uri
 
 
 fun ImageView.loadImage(context: Context, url: String) {
@@ -182,4 +186,27 @@ internal fun String.toRelativeTime(): String {
     } catch (e: ParseException) {
         return this
     }
+
+    }
+fun String.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this)
+
+fun Int.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this.toString())
+
+fun Activity.uriToFile(_uri: Uri): File{
+    var filePath: String? = null
+    if (_uri != null && "content" == _uri.getScheme()) {
+        val cursor = this.contentResolver.query(
+            _uri,
+            arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA),
+            null,
+            null,
+            null
+        )
+        cursor.moveToFirst()
+        filePath = cursor.getString(0)
+        cursor.close()
+    } else {
+        filePath = _uri.getPath()
+    }
+    return File(filePath)
 }

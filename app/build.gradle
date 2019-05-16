@@ -96,6 +96,9 @@ dependencies {
     //firebase messaging
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
+    //filepicker
+    implementation 'com.zhihu.android:matisse:0.5.1'
+
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

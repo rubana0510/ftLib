@@ -49,7 +49,7 @@ data class Business(
     @SerializedName("visible")
     var visible: Boolean,
     @SerializedName("walletAmount")
-    var walletAmount: String,
+    var walletAmount: Double,
     @SerializedName("website")
     var website: String
 ) {

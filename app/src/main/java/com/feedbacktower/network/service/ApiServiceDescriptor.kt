@@ -5,6 +5,8 @@ import com.feedbacktower.data.models.SubscriptionPlan
 import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.*
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -58,6 +60,13 @@ interface ApiServiceDescriptor {
     @POST("/post/")
     fun createTextPostAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
+    @Multipart
+    @POST("/post/image")
+    fun createPhotoPostAsync(
+        @Part file: MultipartBody.Part,
+        @Part("text") name: RequestBody
+        ): Deferred<ApiResponse<EmptyResponse?>>
+
     @GET("/post/")
     fun getPostsAsync(
         @Query("timestamp") timestamp: String,
@@ -93,6 +102,10 @@ interface ApiServiceDescriptor {
 
     @GET("/profile/my-suggestions/")
     fun getMySuggestionsAsync(
+        @Query("timestamp") timestamp: String
+    ): Deferred<ApiResponse<GetSuggestionsResponse?>>
+    @GET("/suggestion/")
+    fun getSuggestionsAsync(
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>
 
@@ -148,7 +161,9 @@ interface ApiServiceDescriptor {
     ): Deferred<ApiResponse<QrStatusRecieverResponse?>>
 
     @POST("/qr-transfer/payment-request")
-    fun requestPaymentAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
+    fun requestPaymentAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<QrPaymentStatus?>>
 
     @POST("/qr-transfer/payment-confirm")
     fun confirmPaymentAsync(): Deferred<ApiResponse<QrPaymentStatus?>>

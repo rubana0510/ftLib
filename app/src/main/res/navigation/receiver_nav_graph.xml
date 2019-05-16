@@ -12,5 +12,7 @@
     </fragment>
     <fragment android:id="@+id/receiverWaitFragment"
               android:name="com.feedbacktower.fragments.business.ReceiverWaitFragment"
-              android:label="fragment_reciver_wait" tools:layout="@layout/fragment_reciver_wait"/>
+              android:label="fragment_reciver_wait" tools:layout="@layout/fragment_reciver_wait">
+        <argument android:name="txid" app:argType="string"/>
+    </fragment>
 </navigation>

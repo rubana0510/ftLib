@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.feedbacktower.R
 import com.feedbacktower.network.manager.QRTransactionManager
 import com.feedbacktower.qrscanner.*
+import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.PermissionManager
+import com.feedbacktower.util.launchActivity
 import kotlinx.android.synthetic.main.fragment_reciver_scan.view.*
 import org.jetbrains.anko.toast
 
@@ -48,7 +50,7 @@ class ReceiverScanFragment : Fragment() {
                 ).show()
             }
         }
-
+        view.showQr.setOnClickListener { requireActivity().launchActivity<SenderActivity>() }
         view.scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
@@ -64,7 +66,7 @@ class ReceiverScanFragment : Fragment() {
                 }
                 if (response == null) throw  IllegalStateException("Scan QR response cannot be null")
                 requireContext().toast("Qr scan success: ${response.txn.id}")
-                ReceiverScanFragmentDirections.actionReceiverScanFragmentToReceiverWaitFragment().let {
+                ReceiverScanFragmentDirections.actionReceiverScanFragmentToReceiverWaitFragment(response.txn.id).let {
                     findNavController().navigate(it)
                 }
             }

@@ -5,6 +5,7 @@
     <data>
         <variable name="business" type="com.feedbacktower.data.models.Business"/>
         <variable name="transaction" type="com.feedbacktower.network.models.QrTransaction"/>
+        <variable name="onRequestConfirmClick" type="android.view.View.OnClickListener"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -132,7 +133,8 @@
                     style="@style/ButtonFilledStyle.Big"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ACCEPT REQUEST"/>
+                    android:text="ACCEPT REQUEST"
+            android:onClick="@{onRequestConfirmClick}"/>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"

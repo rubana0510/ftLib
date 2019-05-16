@@ -26,7 +26,7 @@ class SuggestionsManager {
 
     fun getSuggestions(timestamp: String, onComplete: (GetSuggestionsResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getMySuggestionsAsync(timestamp)
+            apiService.getSuggestionsAsync(timestamp)
                 .makeRequest(onComplete)
         }
     }

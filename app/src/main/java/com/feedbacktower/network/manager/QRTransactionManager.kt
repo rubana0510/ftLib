@@ -60,10 +60,11 @@ class QRTransactionManager {
     }
 
     fun requestPayment(
+        code: String, amount: Double,
         onComplete: (QrPaymentStatus?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.requestPaymentAsync().makeRequest(onComplete)
+            apiService.requestPaymentAsync(hashMapOf("code" to code, "amount" to amount)).makeRequest(onComplete)
         }
     }
 

@@ -5,14 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.SuggestionDiffCallback
+import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.ItemSuggestionBinding
 
 /**
  * Created by sanket on 16-04-2019.
  */
-class SuggestionListAdapter : ListAdapter<Suggestion, SuggestionListAdapter.ViewHolder>(SuggestionDiffCallback()) {
+class SuggestionListAdapter(private val listener: ReplyListener?) :
+    ListAdapter<Suggestion, SuggestionListAdapter.ViewHolder>(
+        DiffCallback<Suggestion>()
+    ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSuggestionBinding.inflate(
@@ -29,7 +32,7 @@ class SuggestionListAdapter : ListAdapter<Suggestion, SuggestionListAdapter.View
     }
 
     private fun createClickListener(item: Suggestion): View.OnClickListener = View.OnClickListener {
-
+        listener?.onReplyClick(item)
     }
 
     fun getItemAtPos(position: Int): Suggestion = getItem(position)
@@ -44,5 +47,9 @@ class SuggestionListAdapter : ListAdapter<Suggestion, SuggestionListAdapter.View
                 executePendingBindings()
             }
         }
+    }
+
+    interface ReplyListener {
+        fun onReplyClick(suggestion: Suggestion)
     }
 }

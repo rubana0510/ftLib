@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.SuggestionListAdapter
+import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentSuggestionsBinding
 import com.feedbacktower.network.manager.SuggestionsManager
 
@@ -24,21 +25,18 @@ class SuggestionsFragment : Fragment() {
     private lateinit var suggestionAdapter: SuggestionListAdapter
     private var isListEmpty: Boolean? = false
     private var isLoading: Boolean? = true
-    private var mySuggestions: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentSuggestionsBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.show()
-        val args: SuggestionsFragmentArgs by navArgs()
-        mySuggestions = args.mySuggestions
         initUI(binding)
         return binding.root
     }
 
     private fun initUI(binding: FragmentSuggestionsBinding) {
-        binding.toolbar.title = if (mySuggestions) "My Suggestions" else "Suggestions"
+        binding.toolbar.title ="Suggestions"
 
         suggestionListView = binding.suggestionListView
         swipeRefresh = binding.swipeRefresh
@@ -49,12 +47,18 @@ class SuggestionsFragment : Fragment() {
         //setup list
         suggestionListView.layoutManager = LinearLayoutManager(requireContext())
         suggestionListView.itemAnimator = DefaultItemAnimator()
-        suggestionAdapter = SuggestionListAdapter()
+        suggestionAdapter = SuggestionListAdapter(onReplyClick)
         suggestionListView.adapter = suggestionAdapter
         swipeRefresh.setOnRefreshListener {
             fetchSuggestionList()
         }
         fetchSuggestionList()
+    }
+
+    private val onReplyClick = object : SuggestionListAdapter.ReplyListener {
+        override fun onReplyClick(suggestion: Suggestion) {
+            ReplySuggestionDialog.getInstance(suggestion).show(fragmentManager, ReplySuggestionDialog.TAG)
+        }
     }
 
     private fun fetchSuggestionList() {

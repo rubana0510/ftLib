@@ -38,6 +38,12 @@ interface ApiServiceDescriptor {
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
+    @Multipart
+    @POST("/profile/upload")
+    fun uploadProfileAsync(
+        @Part file: MultipartBody.Part
+    ): Deferred<ApiResponse<EmptyResponse?>>
+
     @GET("/location/city/")
     fun getCitiesAsync(
         @Query("search") search: String = ""
@@ -65,7 +71,7 @@ interface ApiServiceDescriptor {
     fun createPhotoPostAsync(
         @Part file: MultipartBody.Part,
         @Part("text") name: RequestBody
-        ): Deferred<ApiResponse<EmptyResponse?>>
+    ): Deferred<ApiResponse<EmptyResponse?>>
 
     @GET("/post/")
     fun getPostsAsync(
@@ -104,10 +110,17 @@ interface ApiServiceDescriptor {
     fun getMySuggestionsAsync(
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>
+
     @GET("/suggestion/")
     fun getSuggestionsAsync(
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>
+
+    @POST("/suggestion/reply")
+    fun replySuggestionAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<EmptyResponse?>>
+
 
     @GET("/subscription-plan/")
     fun getSubscriptionPlansAsync(

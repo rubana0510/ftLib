@@ -19,7 +19,7 @@
                 app:layout_constraintStart_toEndOf="@id/starIm"
                 app:layout_constraintTop_toBottomOf="@id/dialogTitle"
                 android:layout_marginStart="16dp"
-                app:loadRoundImage="@{suggestion.userProfileImage}"/>
+                app:toProfileRound="@{suggestion.user.id}"/>
         <TextView
                 android:id="@+id/userName"
                 style="@style/SmallBoldText"
@@ -31,7 +31,7 @@
                 android:maxLines="1"
                 android:layout_marginStart="4dp"
                 tools:text="Jon Sno"
-                android:text="@{suggestion.userFullName}"/>
+                android:text="@{suggestion.user.firstName + ` ` + suggestion.user.lastName}"/>
         <TextView
                 android:id="@+id/suggestionMessage"
                 style="@style/SuggestionMessageStyle"
@@ -49,22 +49,21 @@
                 android:hint="@string/write_your_reply"
                 android:background="@drawable/bg_reply"
                 android:maxLength="@integer/char_length_reply"
-                android:layout_marginStart="@dimen/marginStartItem"
                 android:layout_marginTop="@dimen/marginTopItem"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/suggestionMessage">
             <com.google.android.material.textfield.TextInputEditText
                     style="@style/EditTextStyle"
-                    android:id="@+id/suggestionMessageInput"
+                    android:id="@+id/replyMessageInput"
                     android:lines="4"
                     android:padding="@dimen/drawable_padding"
                     android:background="@null"
                     android:gravity="start"/>
         </com.google.android.material.textfield.TextInputLayout>
         <Button
-                android:id="@+id/sendSuggestionButton"
-                style="@style/ButtonFilledStyle"
+                android:id="@+id/sendReplyButton"
+                style="@style/ButtonFilledStyle.Big"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginTopItem"

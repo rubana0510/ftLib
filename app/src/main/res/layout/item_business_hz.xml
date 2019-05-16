@@ -19,7 +19,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
-                app:loadRoundImage="@{suggestion.userProfileImage}"/>
+                app:toProfileRound="@{suggestion.user.id}"/>
         <TextView
                 android:id="@+id/userName"
                 style="@style/SmallBoldText"
@@ -31,7 +31,7 @@
                 android:maxLines="1"
                 android:layout_marginStart="4dp"
                 tools:text="Jon Sno"
-                android:text="@{suggestion.userFullName}"/>
+                android:text="@{suggestion.user.firstName + ` ` + suggestion.user.lastName}"/>
         <TextView
                 android:id="@+id/suggestionMessage"
                 style="@style/SuggestionMessageStyle"
@@ -52,7 +52,7 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/userName"
                 android:layout_marginTop="8dp"
                 tools:text="21 min ago"
-                android:text="@{suggestion.createdAt}"/>
+                app:toDate="@{suggestion.createdAt}"/>
         <com.google.android.material.button.MaterialButton
                 style="@style/ButtonFilledStyle"
                 android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                     android:padding="8dp"
                     tools:text="21 min ago"
                     android:layout_gravity="end"
-                    android:text="@{suggestion.repliedAt}"/>
+                    app:toDate="@{suggestion.repliedAt}"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

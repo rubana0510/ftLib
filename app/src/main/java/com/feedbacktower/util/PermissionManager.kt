@@ -17,7 +17,7 @@ class PermissionManager private constructor(){
                 }
             }
     }
-    private fun requestMediaPermission(activity: Activity) {
+    fun requestMediaPermission(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             ActivityCompat.requestPermissions(
                 activity,

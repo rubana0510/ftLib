@@ -1,6 +1,7 @@
 package com.feedbacktower.data.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Suggestion(
     @SerializedName("businessId")
@@ -23,7 +24,7 @@ data class Suggestion(
     val userId: String,
     @SerializedName("visible")
     val visible: Boolean
-) {
+): Serializable {
     val isReplied: Boolean
     get() {
         return !reply.isNullOrEmpty()

@@ -1,12 +1,18 @@
 package com.feedbacktower.network.manager
 
+import android.util.Log
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
+import com.feedbacktower.util.toRequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
 class ProfileManager {
     private val TAG = "ProfileManager"
@@ -75,6 +81,7 @@ class ProfileManager {
             ).makeRequest(onComplete)
         }
     }
+
     fun continueAsCustomer(
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
@@ -82,6 +89,7 @@ class ProfileManager {
             apiService.continueAsCustomerAsync().makeRequest(onComplete)
         }
     }
+
     fun updateBusinessAddressDetails(
         address: String,
         contact: String,
@@ -142,6 +150,7 @@ class ProfileManager {
             ).makeRequest(onComplete)
         }
     }
+
     fun searchBusiness(
         search: String,
         onComplete: (SearchBusinessResponse?, Throwable?) -> Unit
@@ -153,5 +162,18 @@ class ProfileManager {
         }
     }
 
+    fun uploadProfile(file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        if (!file.exists()) {
+            Log.e(TAG, "uploadImages: FileNotFound")
+            return
+        }
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+        val filePart = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.uploadProfileAsync(
+                filePart
+            ).makeRequest(onComplete)
+        }
+    }
 
 }

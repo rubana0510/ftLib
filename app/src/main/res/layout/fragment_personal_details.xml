@@ -11,12 +11,27 @@
             android:orientation="vertical"
             android:gravity="center_horizontal"
             tools:context=".fragments.PersonalDetailsFragment">
-        <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="24dp"
-                android:onClick="@{onAttachClick}"
-                app:toProfileRound="@{user.id}"/>
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp">
+            <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:onClick="@{onAttachClick}"
+                    android:background="@drawable/bg_count_ring"
+                    app:toProfileRound="@{user.id}"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="mini"
+                    android:tint="@color/white"
+                    app:srcCompat="@drawable/ic_create"
+                    app:backgroundTint="@color/grey42"
+                    android:onClick="@{onAttachClick}"
+                    android:layout_gravity="end|bottom"/>
+        </FrameLayout>
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

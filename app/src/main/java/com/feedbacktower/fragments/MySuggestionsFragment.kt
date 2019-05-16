@@ -49,7 +49,7 @@ class MySuggestionsFragment : Fragment() {
         //setup list
         suggestionListView.layoutManager = LinearLayoutManager(requireContext())
         suggestionListView.itemAnimator = DefaultItemAnimator()
-        suggestionAdapter = SuggestionListAdapter()
+        suggestionAdapter = SuggestionListAdapter(null)
         suggestionListView.adapter = suggestionAdapter
         swipeRefresh.setOnRefreshListener {
             fetchSuggestionList()

@@ -6,6 +6,7 @@ import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -29,12 +30,16 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
 import com.feedbacktower.fragments.utils.SpinnerDatePickerDialog
 import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.util.disable
-import com.feedbacktower.util.enable
-import com.feedbacktower.util.isEmailValid
+import com.feedbacktower.util.*
+import com.feedbacktower.utilities.Glide4Engine
 import com.feedbacktower.utilities.ImageEditHelper
+import com.feedbacktower.utilities.cropper.CropImage
+import com.feedbacktower.utilities.cropper.CropImageActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.internal.entity.CaptureStrategy
 import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
@@ -45,7 +50,7 @@ import java.util.*
 class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelectedListener {
     private val TAG = "PersonalDetails"
     private val PERMISSION_CODE = 399
-    private val PICK_IMAGE_CODE = 1011
+    private val REQUEST_CODE_CHOOSE_IMAGE = 1011
     private val CAPTURE_PHOTO_CODE = 1011
     private lateinit var firstNameLayout: TextInputLayout
     private lateinit var lastNameLayout: TextInputLayout
@@ -97,24 +102,10 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
             updateDetails(firstName, lastName, email, dob)
         }
         binding.onAttachClick = View.OnClickListener {
-            //open picker
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !allPermissionsGranted()) {
-                requestMediaPermission()
-                return@OnClickListener
-            }
-            AlertDialog.Builder(requireContext())
-                .setTitle("Choose one")
-                .setItems(arrayOf("CAMERA", "GALLERY")) { _, pos ->
-                    if (pos == 0) {
-                        startActivityForResult(
-                            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                            , PICK_IMAGE_CODE
-                        )
-                    } else {
-                        takePicture()
-                    }
-                }.show()
+
+            pickImage()
         }
+        PermissionManager.getInstance().requestMediaPermission(requireActivity())
         binding.user = AppPrefs.getInstance(requireContext()).user
     }
 
@@ -156,18 +147,54 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
-            if (requestCode == PICK_IMAGE_CODE) {
-                val selectedImage: Uri? = data?.data
-                val path: String = getPath(selectedImage!!)
+            /*   if (requestCode == PICK_IMAGE_CODE) {
+                   val selectedImage: Uri? = data?.data
+                   val path: String = getPath(selectedImage!!)
+                   //upload photo
+                   //confirmUpload(path)
+                   ImageEditHelper.openCropper(requireContext(), this, Uri.parse(path))
+               } else*/
+            if (requestCode == REQUEST_CODE_CHOOSE_IMAGE) {
                 //upload photo
-                //confirmUpload(path)
-                ImageEditHelper.openCropper(requireContext(), this, Uri.parse(path))
-            } else if (requestCode == CAPTURE_PHOTO_CODE) {
-                //upload photo
-                //confirmUpload(lastImagePath)
-                ImageEditHelper.openCropper(requireContext(), this, Uri.parse(lastImagePath))
+                //confirmUpload(lastImagePath))
+                var mSelected = Matisse.obtainResult(data!!)
+                Log.d("Matisse", "mSelected Image: $mSelected")
+                if (mSelected.size < 1) {
+                    requireContext().toast("Some error occurred")
+                    return
+
+                }
+                uploadProfile(mSelected[0])
             }
         }
+    }
+
+    private fun uploadProfile(uri: Uri?) {
+        val file = activity?.uriToFile(uri!!)
+        ProfileManager.getInstance()
+            .uploadProfile(file!!) { _, error ->
+
+                if (error == null) {
+                    requireContext().toast("Uploaded successfully")
+
+                } else {
+                    requireContext().toast(error.message ?: "Error")
+                }
+            }
+    }
+
+    private fun pickImage() {
+        Matisse.from(this)
+            .choose(MimeType.ofImage())
+            .maxSelectable(1)/*
+            .capture(true)
+            .captureStrategy(CaptureStrategy())*/
+            .showSingleMediaType(true)
+            .gridExpectedSize(resources.getDimensionPixelSize(com.feedbacktower.R.dimen.grid_expected_size))
+            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            .thumbnailScale(0.85f)
+            .imageEngine(Glide4Engine())
+            .forResult(REQUEST_CODE_CHOOSE_IMAGE)
     }
 
     private fun confirmUpload(lastImagePath: String?) {
@@ -179,7 +206,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
             .setTitle("Set as your profile?")
             .setMessage("Image will be set as you profile picture.")
             .setPositiveButton("OKAY", { dialogInterface, i ->
-                //upload image
+
             })
             .setNegativeButton("CANCEL", null)
             .show()

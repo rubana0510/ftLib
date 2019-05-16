@@ -43,5 +43,13 @@ class SuggestionsManager {
                 .makeRequest(onComplete)
         }
     }
+    fun replySuggestion(id: String, reply: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.replySuggestionAsync(
+                hashMapOf("id" to id, "reply" to reply)
+            ).makeRequest(onComplete)
+        }
+    }
+
 
 }

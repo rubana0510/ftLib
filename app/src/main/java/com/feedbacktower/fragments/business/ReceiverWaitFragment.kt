@@ -14,6 +14,7 @@ import com.feedbacktower.R
 import com.feedbacktower.databinding.FragmentReciverWaitBinding
 import com.feedbacktower.network.manager.QRTransactionManager
 import com.feedbacktower.network.models.QrTxStatus
+import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 
 
@@ -24,6 +25,7 @@ class ReceiverWaitFragment : Fragment() {
     private lateinit var binding: FragmentReciverWaitBinding
     //TODO: remove later
     private var foregraound: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,7 +34,7 @@ class ReceiverWaitFragment : Fragment() {
         binding = FragmentReciverWaitBinding.inflate(inflater, container, false)
         listenForChange(args.txid)
         binding.onSendRequestClick = View.OnClickListener { sendRequest() }
-        return  binding.root
+        return binding.root
     }
 
     override fun onResume() {
@@ -44,6 +46,7 @@ class ReceiverWaitFragment : Fragment() {
         super.onPause()
         foregraound = false
     }
+
     private fun listenForChange(data: String) {
         //  qrImage.gone()
         Log.d(TAG, "Checking Status...")
@@ -56,27 +59,37 @@ class ReceiverWaitFragment : Fragment() {
                 response?.let {
                     binding.business = it.sender
                     binding.transaction = it.txn
-                    requireContext().toast("Status: ${it.txn.status}")
-                    if(it.txn.txStatus == QrTxStatus.APPROVED){
+                    //requireContext().toast("Status: ${it.txn.status}")
+
+                    binding.scanned = it.txn.txStatus == QrTxStatus.SCANNED
+                    binding.requested = it.txn.txStatus == QrTxStatus.REQUESTED
+                    binding.approved = it.txn.txStatus == QrTxStatus.APPROVED
+                    binding.isLoading = it.txn.txStatus == QrTxStatus.SCANNED || it.txn.txStatus == QrTxStatus.REQUESTED
+
+                    if (it.txn.txStatus == QrTxStatus.APPROVED) {
                         Handler().postDelayed({
                             activity?.finish()
                         }, 1000)
-                    }else{
-                        listenForChange(data)
+                    } else {
+
+                        Handler().postDelayed({
+                            listenForChange(data)
+                        }, Constants.QR_STATUS_CHECK_INTERVAL)
                     }
 
                 }
             }
     }
+
     private fun sendRequest() {
         val code = args.txid
         val amount = binding.amountEntered.text.toString().trim().toDouble()
-        if(amount > binding.business!!.walletAmount){
+        if (amount > binding.business!!.walletAmount) {
             requireContext().toast("Invalid amount")
             return
         }
         QRTransactionManager.getInstance()
-            .requestPayment(code, amount){ response, error ->
+            .requestPayment(code, amount) { response, error ->
                 if (error != null) {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@requestPayment

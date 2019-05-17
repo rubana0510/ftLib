@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.gone
 import com.feedbacktower.util.toRelativeTime
@@ -36,6 +37,7 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
             .into(view)
     }
 }
+
 @BindingAdapter("postImage")
 fun bindPostImage(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
@@ -111,26 +113,29 @@ fun bindCheckedIfOne(view: SwipeRefreshLayout, value: Boolean) {
 
 
 @BindingAdapter("showIfApproved")
-fun bindShowIfApproved(view: View, value: String) {
-    if (value == "APPROVED")
-        view.visible()
-    else
-        view.gone()
+fun bindShowIfApproved(view: View, value: QrTxStatus?) {
+    view.visibility = if (value == QrTxStatus.APPROVED) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
 }
 
 
 @BindingAdapter("showIfRequested")
-fun bindShowIfRequested(view: View, value: String) {
-    if (value == "REQUESTED")
-        view.visible()
-    else
-        view.gone()
+fun bindShowIfRequested(view: View, value: QrTxStatus?) {
+    view.visibility = if (value ==  QrTxStatus.REQUESTED) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
 }
 
 @BindingAdapter("showIfScanned")
-fun bindShowIfScanned(view: View, value: String) {
-    if (value == "SCANNED")
-        view.visible()
-    else
-        view.gone()
+fun bindShowIfScanned(view: View, value: QrTxStatus?) {
+    view.visibility = if (value == QrTxStatus.SCANNED) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
 }

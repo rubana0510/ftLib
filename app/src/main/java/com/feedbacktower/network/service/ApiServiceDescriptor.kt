@@ -179,6 +179,8 @@ interface ApiServiceDescriptor {
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
     @POST("/qr-transfer/payment-confirm")
-    fun confirmPaymentAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
+    fun confirmPaymentAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<QrPaymentStatus?>>
 
 }

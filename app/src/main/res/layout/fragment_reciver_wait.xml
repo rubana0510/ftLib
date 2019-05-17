@@ -7,6 +7,10 @@
         <variable name="transaction" type="com.feedbacktower.network.models.QrTransaction"/>
         <variable name="business" type="com.feedbacktower.data.models.Business"/>
         <variable name="onSendRequestClick" type="android.view.View.OnClickListener"/>
+        <variable name="scanned" type="Boolean"/>
+        <variable name="approved" type="Boolean"/>
+        <variable name="requested" type="Boolean"/>
+        <variable name="isLoading" type="Boolean"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -40,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    app:showIfScanned="@{transaction.status}"
+                    app:isGone="@{!scanned}"
                     android:orientation="vertical">
                 <TextView
                         style="@style/MediumText"
@@ -82,7 +86,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="center"
-                    app:showIfRequested="@{transaction.status}">
+                    app:isGone="@{!isLoading}">
                 <ProgressBar
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -108,7 +112,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    app:showIfApproved="@{transaction.status}">
+                    android:visibility="gone"
+                    app:isGone="@{!approved}">
                 <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -120,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_8dp"
-                        tools:text="Payment Received!"/>
+                        android:text="Payment Received!"/>
                 <TextView
                         style="@style/LargeBoldText"
                         android:layout_width="wrap_content"

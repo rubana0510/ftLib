@@ -20,7 +20,7 @@ class PostImageView : AppCompatImageView {
     }
 
     private fun getHeight(width: Int): Int {
-        return (1.2 * width).toInt()
+        return (1.1 * width).toInt()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

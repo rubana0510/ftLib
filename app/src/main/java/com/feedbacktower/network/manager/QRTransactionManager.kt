@@ -69,10 +69,13 @@ class QRTransactionManager {
     }
 
     fun confirmPayment(
+        code: String, approved: Boolean,
         onComplete: (QrPaymentStatus?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.confirmPaymentAsync().makeRequest(onComplete)
+            apiService.confirmPaymentAsync(
+                hashMapOf("code" to code,"approved" to approved)
+            ).makeRequest(onComplete)
         }
     }
 

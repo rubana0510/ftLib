@@ -6,6 +6,11 @@
         <variable name="business" type="com.feedbacktower.data.models.Business"/>
         <variable name="transaction" type="com.feedbacktower.network.models.QrTransaction"/>
         <variable name="onRequestConfirmClick" type="android.view.View.OnClickListener"/>
+        <variable name="onGoBackClick" type="android.view.View.OnClickListener"/>
+        <variable name="scanned" type="Boolean"/>
+        <variable name="approved" type="Boolean"/>
+        <variable name="requested" type="Boolean"/>
+        <variable name="isLoading" type="Boolean"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -16,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_16dp"
-                tools:text="Code scanned at"
+                android:text="Code scanned at"
                 android:layout_marginStart="@dimen/dimen_16dp"/>
         <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -99,7 +104,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:showIfScanned="@{transaction.status}">
+                app:isGone="@{!isLoading}">
             <ProgressBar
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -108,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_16dp"
-                    tools:text="Waiting for payment request..."
+                    android:text="Waiting for payment request..."
                     android:layout_marginStart="@dimen/dimen_16dp"/>
         </LinearLayout>
         <LinearLayout
@@ -116,19 +121,20 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:showIfRequested="@{transaction.status}">
+                android:visibility="gone"
+                app:isGone="@{!requested}">
             <TextView
                     style="@style/LargeBoldText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8dp"
-                    tools:text="Payment Request"/>
+                    android:text="Payment Request"/>
             <TextView
                     style="@style/LargeBoldText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8dp"
-                    tools:text="Rs. 50"/>
+                    android:text="@{`` + transaction.amount}"/>
             <Button
                     style="@style/ButtonFilledStyle.Big"
                     android:layout_width="match_parent"
@@ -141,7 +147,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:showIfApproved="@{transaction.status}">
+                android:visibility="gone"
+                app:isGone="@{!approved}">
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -153,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8dp"
-                    tools:text="Payment Sent"/>
+                    android:text="Payment Sent"/>
             <TextView
                     style="@style/LargeBoldText"
                     android:layout_width="wrap_content"
@@ -164,6 +171,7 @@
                     style="@style/ButtonFilledStyle.Big"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="@{onGoBackClick}"
                     android:text="GO BACK"/>
         </LinearLayout>
     </LinearLayout>

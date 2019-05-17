@@ -23,7 +23,6 @@ class SenderWaitFragment : Fragment() {
     private val TAG = "SenderWaitFrag"
     private val args: SenderWaitFragmentArgs by navArgs()
     private lateinit var binding: FragmentSenderWaitBinding
-
     //TODO: remove later
     private var foregraound: Boolean = false
 
@@ -35,6 +34,7 @@ class SenderWaitFragment : Fragment() {
         binding = FragmentSenderWaitBinding.inflate(inflater, container, false)
         listenForScanned(args.txid)
         binding.onRequestConfirmClick = View.OnClickListener { acceptRequest() }
+        binding.onGoBackClick = View.OnClickListener { requireActivity().finish() }
         return binding.root
     }
 
@@ -50,8 +50,16 @@ class SenderWaitFragment : Fragment() {
                 response?.let {
                     binding.business = it.receiver
                     binding.transaction = it.txn
-                    if (foregraound)
-                        listenForScanned(data)
+                    binding.scanned = it.txn.txStatus == QrTxStatus.SCANNED
+                    binding.requested = it.txn.txStatus == QrTxStatus.REQUESTED
+                    binding.approved = it.txn.txStatus == QrTxStatus.APPROVED
+                    binding.isLoading = it.txn.txStatus == QrTxStatus.SCANNED
+                    if(it.txn.txStatus == QrTxStatus.APPROVED) return@checkStatusSender
+                    if (foregraound) {
+                        Handler().postDelayed({
+                            listenForScanned(data)
+                        }, Constants.QR_STATUS_CHECK_INTERVAL)
+                    }
 
                 }
             }
@@ -71,7 +79,7 @@ class SenderWaitFragment : Fragment() {
 
         Log.d(TAG, "Checking Status...")
         QRTransactionManager.getInstance()
-            .confirmPayment { response, error ->
+            .confirmPayment(args.txid, true) { response, error ->
                 if (error != null) {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@confirmPayment

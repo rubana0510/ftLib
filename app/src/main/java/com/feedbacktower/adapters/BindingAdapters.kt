@@ -36,6 +36,16 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
             .into(view)
     }
 }
+@BindingAdapter("postImage")
+fun bindPostImage(view: ImageView, imageUrl: String?) {
+    if (!imageUrl.isNullOrEmpty()) {
+        Glide.with(view.context)
+            .load("${Constants.Service.Secrets.BASE_URL}/posts/$imageUrl")
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(view)
+    }
+}
+
 
 @BindingAdapter("loadRoundImage")
 fun bindImageFromDrawable(view: ImageView, imageUrl: String?) {
@@ -101,7 +111,7 @@ fun bindCheckedIfOne(view: SwipeRefreshLayout, value: Boolean) {
 
 
 @BindingAdapter("showIfApproved")
-fun bindIshowIfApproved(view: View, value: String) {
+fun bindShowIfApproved(view: View, value: String) {
     if (value == "APPROVED")
         view.visible()
     else
@@ -110,7 +120,7 @@ fun bindIshowIfApproved(view: View, value: String) {
 
 
 @BindingAdapter("showIfRequested")
-fun bindIshowIfRequested(view: View, value: String) {
+fun bindShowIfRequested(view: View, value: String) {
     if (value == "REQUESTED")
         view.visible()
     else

@@ -127,7 +127,7 @@ class HomeFragment : Fragment() {
     private fun fetchPostList() {
         swipeRefresh.isRefreshing = true
         PostManager.getInstance()
-            .getPosts("2019-05-03 20:24:59", "NEW") { response, error ->
+            .getPosts("", "NEW") { response, error ->
                 swipeRefresh.isRefreshing = false
                 noPosts = response?.posts?.isEmpty()
                 postAdapter.submitList(response?.posts)

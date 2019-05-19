@@ -107,8 +107,8 @@ fun bindToProfileRound(view: ImageView, userId: String?) {
 
 
 @BindingAdapter("checkedIfOne")
-fun bindCheckedIfOne(view: SwipeRefreshLayout, value: Boolean) {
-    view.isRefreshing = value
+fun bindCheckedIfOne(view: ImageButton, value: Int) {
+    view.isSelected = value == 1
 }
 
 

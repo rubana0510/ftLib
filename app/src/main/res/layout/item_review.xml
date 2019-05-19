@@ -3,12 +3,13 @@
         xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable name="review" type="com.feedbacktower.data.models.Review"/>
+        <variable name="openProfileListener" type="android.view.View.OnClickListener"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="8dp"
     android:layout_marginTop="@dimen/dimen_8dp">
         <ImageView
                 android:id="@+id/starIm"
@@ -54,7 +55,7 @@
                 app:layout_constraintTop_toBottomOf="@id/userProfileImage"
                 app:layout_constraintStart_toStartOf="@id/userProfileImage"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 tools:text="It was really great experience using your service. Hope we will get the same for years to come."
                 android:text="@{review.comment}" android:fontFamily="@font/cabin"/>
         <TextView

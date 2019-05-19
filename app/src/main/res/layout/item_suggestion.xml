@@ -4,6 +4,7 @@
     <data>
         <variable name="suggestion" type="com.feedbacktower.data.models.Suggestion"/>
         <variable name="replyClickListener" type="android.view.View.OnClickListener"/>
+        <variable name="openProfileListener" type="android.view.View.OnClickListener"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
@@ -18,8 +19,7 @@
                 android:layout_height="@dimen/postProfilePhotoSize"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="16dp"
-                app:toProfileRound="@{suggestion.user.id}"/>
+                app:toProfileRound="@{suggestion.displayId}"/>
         <TextView
                 android:id="@+id/userName"
                 style="@style/SmallBoldText"
@@ -31,7 +31,8 @@
                 android:maxLines="1"
                 android:layout_marginStart="4dp"
                 tools:text="Jon Sno"
-                android:text="@{suggestion.user.firstName + ` ` + suggestion.user.lastName}"/>
+                android:onClick="@{openProfileListener}"
+                android:text="@{suggestion.displayName}"/>
         <TextView
                 android:id="@+id/suggestionMessage"
                 style="@style/SuggestionMessageStyle"

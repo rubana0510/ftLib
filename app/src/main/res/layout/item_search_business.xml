@@ -25,7 +25,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:background="#CE93D8"
-                    app:loadRoundImage="@{business.businessProfileImage}"/>
+                    app:toProfileRound="@{business.userId}"/>
             <TextView
                     android:id="@+id/businessName"
                     style="@style/businessNameStyle"

@@ -42,6 +42,7 @@ class PermissionManager private constructor() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PermissionChecker.PERMISSION_GRANTED
 
+    fun readyToPickImage(context: Context) = cameraPermissionGranted(context) && writeStoragePermissionGranted(context)
     public fun requestCameraPermission(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             ActivityCompat.requestPermissions(

@@ -7,7 +7,9 @@
         <variable name="isBusiness" type="Boolean"/>
         <variable name="isLoading" type="Boolean"/>
         <variable name="noPosts" type="Boolean"/>
+        <variable name="currentCity" type="String"/>
         <variable name="addPostListener" type="android.view.View.OnClickListener"/>
+        <variable name="selectCityListener" type="android.view.View.OnClickListener"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -18,16 +20,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AppBarOverlay">
-
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+            <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:title="@string/app_name"
-                    app:titleTextColor="@color/white"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
+                    android:layout_height="wrap_content">
+                <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        app:title="@string/app_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/colorPrimary"
+                        app:titleTextColor="@color/white"
+                        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_margin="4dp"
+                        android:padding="@dimen/dimen_12dp"
+                        android:textColor="@color/white"
+                        android:onClick="@{selectCityListener}"
+                        android:text="@{currentCity}"
+                        tools:text="Select City"/>
+            </FrameLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

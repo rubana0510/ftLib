@@ -7,6 +7,10 @@
             android:name="com.feedbacktower.fragments.HomeFragment"
             android:label="@string/title_home"
             tools:layout="@layout/fragment_home">
+        <action android:id="@+id/action_navigation_home_to_businessDetailsActivity"
+                app:destination="@id/businessDetailsActivity"/>
+        <action android:id="@+id/action_navigation_home_to_selectCityFragment2"
+                app:destination="@id/selectCityFragment2"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_search"
@@ -23,6 +27,8 @@
             tools:layout="@layout/fragment_reviews">
         <argument android:name="forMe" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="businessId" app:argType="string" app:nullable="true" android:defaultValue="0"/>
+        <action android:id="@+id/action_navigation_review_to_businessDetailsActivity"
+                app:destination="@id/businessDetailsActivity"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_suggestion"
@@ -30,6 +36,8 @@
             android:label="@string/title_suggestions"
             tools:layout="@layout/fragment_suggestions">
         <argument android:name="mySuggestions" app:argType="boolean" android:defaultValue="false"/>
+        <action android:id="@+id/action_navigation_suggestion_to_businessDetailsActivity"
+                app:destination="@id/businessDetailsActivity"/>
     </fragment>
 
     <fragment
@@ -41,6 +49,8 @@
                 app:destination="@id/myReviewsFragment"/>
         <action android:id="@+id/action_navigation_account_to_mySuggestionsFragment"
                 app:destination="@id/mySuggestionsFragment"/>
+        <action android:id="@+id/action_navigation_account_to_personalDetailsFragment2"
+                app:destination="@id/personalDetailsFragment2"/>
     </fragment>
     <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
@@ -50,4 +60,13 @@
               android:label="fragment_my_reviews" tools:layout="@layout/fragment_my_reviews"/>
     <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.fragments.MySuggestionsFragment"
               android:label="fragment_my_suggestions" tools:layout="@layout/fragment_my_suggestions"/>
+    <fragment android:id="@+id/personalDetailsFragment2"
+              android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
+              android:label="PersonalDetailsFragment">
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
+    <fragment android:id="@+id/selectCityFragment2" android:name="com.feedbacktower.fragments.SelectCityFragment"
+              android:label="SelectCityFragment">
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+    </fragment>
 </navigation>

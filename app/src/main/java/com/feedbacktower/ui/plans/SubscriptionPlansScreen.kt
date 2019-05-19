@@ -12,6 +12,7 @@ import com.feedbacktower.BusinessMainActivity
 import com.feedbacktower.R
 import com.feedbacktower.adapters.PlanAdapter
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.Plan
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.ActivitySubscriptionPlanScreenBinding
 import com.feedbacktower.network.manager.ProfileManager
@@ -36,7 +37,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     private lateinit var planListView: RecyclerView
     private lateinit var planAdapter: PlanAdapter
     private var hashResponse: GenerateHashResponse? = null
-    private var plan: PlanListResponse.Plan? = null
+    private var plan: Plan? = null
     private lateinit var user: User
     private val TAG = "SubscriptionPlansScreen"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +60,9 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
 
     private fun getPlanList(binding: ActivitySubscriptionPlanScreenBinding) {
-        val categoryId = AppPrefs.getInstance(this).getValue("MASTER_CAT_ID")
+        var categoryId = AppPrefs.getInstance(this).getValue("MASTER_CAT_ID")
+        if (categoryId == null)
+            categoryId = AppPrefs.getInstance(this).business?.businessCategory?.masterBusinessCategoryId
         if (categoryId == null) {
             toast("Select category")
             finish()
@@ -87,7 +90,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         generateHashForPayment(plan!!)
     }
 
-    private fun generateHashForPayment(plan: PlanListResponse.Plan) {
+    private fun generateHashForPayment(plan: Plan) {
         val txId = "TXID${System.currentTimeMillis()}"
         val requestParams: GenerateHashRequest = GenerateHashRequest(
             plan.id,
@@ -114,7 +117,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     private fun initiatePayment(
         requestParams: GenerateHashRequest,
         response: GenerateHashResponse,
-        plan: PlanListResponse.Plan
+        plan: Plan
     ) {
         val builder: PayUmoneySdkInitializer.PaymentParam.Builder = PayUmoneySdkInitializer.PaymentParam.Builder()
 
@@ -203,7 +206,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                 tXresponse
             ) { response, error ->
                 if (error == null) {
-                    if(tXresponse.status.equals("success")){
+                    if (tXresponse.status.equals("success")) {
                         launchActivity<LoginScreen> {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         }

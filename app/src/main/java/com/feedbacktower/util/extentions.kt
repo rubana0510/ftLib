@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.BusinessMainActivity
-import com.feedbacktower.R
 import com.feedbacktower.data.models.User
 import com.feedbacktower.ui.CustomerMainActivity
 import com.feedbacktower.ui.ProfileSetupScreen
@@ -22,7 +21,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.text.ParseException
 import android.net.Uri
-
+import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
+import org.joda.time.DateTimeZone
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 fun ImageView.loadImage(context: Context, url: String) {
     Glide.with(context)
@@ -51,12 +54,12 @@ fun View.disable() {
 fun Float.toRemarkText(): String {
     return when (this) {
         0f -> ""
-        1f -> "GOOD1"
-        2f -> "GOOD2"
-        3f -> "GOOD3"
-        4f -> "GOOD4"
-        5f -> "GOOD5"
-        else -> ""
+        1f -> "Poor"
+        2f -> "Satisfactory"
+        3f -> "Good"
+        4f -> "Very Good"
+        5f -> "Excellent"
+        else ->  this.toString()
     }
 }
 
@@ -166,10 +169,12 @@ internal fun Int.noZero(): String {
 
 internal fun String.toRelativeTime(): String {
     try {
-        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH)
+        val dt = DateTime(this, DateTimeZone.UTC)
+
         val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
+        val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         val currentTime: Long = System.currentTimeMillis() / 1000
-        val oldTime: Long = format.parse(this).time / 1000
+        val oldTime: Long = dt.millis / 1000
         val diff = currentTime - oldTime
         val secs = diff.toInt()
         val mins = diff.toInt() / 60
@@ -182,17 +187,18 @@ internal fun String.toRelativeTime(): String {
         else if (hours < 24)
             "$hours hour${if (hours == 1) "" else "s"} ago"
         else
-            toFormat.format(Date(oldTime))
+            toFormat.format(Date(oldTime * 1000))
     } catch (e: ParseException) {
         return this
     }
 
-    }
+}
+
 fun String.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this)
 
 fun Int.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this.toString())
 
-fun Activity.uriToFile(_uri: Uri): File{
+fun Activity.uriToFile(_uri: Uri): File {
     var filePath: String? = null
     if (_uri != null && "content" == _uri.getScheme()) {
         val cursor = this.contentResolver.query(
@@ -209,4 +215,10 @@ fun Activity.uriToFile(_uri: Uri): File{
         filePath = _uri.getPath()
     }
     return File(filePath)
+}
+
+fun isCurrentBusiness(businessId: String, context: Context): Boolean {
+    val currentBusinessId =
+        AppPrefs.getInstance(context).user?.business?.id ?: throw IllegalArgumentException("Invalid user")
+    return currentBusinessId == businessId
 }

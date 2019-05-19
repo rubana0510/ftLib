@@ -29,21 +29,9 @@ data class Post(
     val user: User,
     @SerializedName("business")
     val business: Business
-): BaseModel(id) {
+) : BaseModel(id) {
 
-    data class Business(
-        @SerializedName("id")
-        val id: String,
-        @SerializedName("name")
-        val name: String
-    )
+    val isLiked: Boolean
+        get() = liked == 1
 
-    data class User(
-        @SerializedName("id")
-        val id: String,
-        @SerializedName("firstName")
-        val firstName: String,
-        @SerializedName("lastName")
-        val lastName: String
-    )
 }

@@ -89,6 +89,7 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
             if (response != null) {
                 AppPrefs.getInstance(this).apply {
                     user = response.user
+                    business = response.user.business
                     authToken = response.token
                 }
                 navigateUser(response.user)

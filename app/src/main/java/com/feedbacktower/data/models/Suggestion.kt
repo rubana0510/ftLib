@@ -15,26 +15,40 @@ data class Suggestion(
     @SerializedName("repliedAt")
     val repliedAt: String,
     @SerializedName("reply")
-    val reply: String,
+    val reply: String?,
     @SerializedName("updatedAt")
     val updatedAt: String,
     @SerializedName("user")
-    val user: User,
+    val user: User?,
+    @SerializedName("business")
+    val business: Business?,
     @SerializedName("userId")
     val userId: String,
     @SerializedName("visible")
     val visible: Boolean
-): Serializable {
+) : Serializable {
+    val displayName: String
+        get() {
+            return if (user != null) {
+                user.firstName + " " + user.lastName
+            } else {
+                return if (business != null) {
+                    "${business.name}"
+                } else {
+                    "Unknown"
+                }
+            }
+        }
+    val displayId: String
+        get() {
+            return if (user != null) {
+                userId
+            } else {
+                business?.userId ?: ""
+            }
+        }
     val isReplied: Boolean
-    get() {
-        return !reply.isNullOrEmpty()
-    }
-    data class User(
-        @SerializedName("firstName")
-        val firstName: String,
-        @SerializedName("id")
-        val id: String,
-        @SerializedName("lastName")
-        val lastName: String
-    )
+        get() {
+            return !reply.isNullOrEmpty()
+        }
 }

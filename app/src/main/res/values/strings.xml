@@ -77,4 +77,11 @@
     <string name="crop_image_activity_no_permissions">No permissions</string>
     <string name="file_provider_authority">sdsd</string>
     <string name="send_request">SEND REQUEST</string>
+
+    <!--trimmer-->
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="short_seconds">sec</string>
+    <string name="megabyte">MB</string>
+    <string name="kilobyte">KB</string>
 </resources>

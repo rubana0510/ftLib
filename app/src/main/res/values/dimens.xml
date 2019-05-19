@@ -25,4 +25,8 @@
     <dimen name="text_tiny_size">12sp</dimen>
     <dimen name="grid_expected_size">100dp</dimen>
 
+    <!-- VIDEO TRIMMER-->
+    <dimen name="progress_video_line_height">2dp</dimen>
+    <dimen name="frames_video_height">40dip</dimen>
+
 </resources>

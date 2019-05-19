@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.feedbacktower.adapters.CityListAdapter
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.City
@@ -17,7 +18,7 @@ import org.jetbrains.anko.toast
 
 class SelectCityFragment : Fragment() {
     private lateinit var adapter: CityListAdapter
-
+    private val args: SelectCityFragmentArgs by navArgs()
     companion object {
         fun getInstance(): SelectCityFragment {
             val fragment = SelectCityFragment()
@@ -38,9 +39,15 @@ class SelectCityFragment : Fragment() {
                 ProfileManager.getInstance()
                     .updateCity(city.id.toString()) { response, error ->
                         if (error == null) {
+
                             AppPrefs.getInstance(requireContext()).setValue("USER_CITY", city.id.toString())
-                            SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
-                                findNavController().navigate(it)
+                            AppPrefs.getInstance(requireContext()).setValue("CITY", city.name)
+                            if(args.onboarding){
+                                SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
+                                    findNavController().navigate(it)
+                                }
+                            }else{
+                                findNavController().navigateUp()
                             }
                         }else{
                             requireContext().toast("Error saving City")

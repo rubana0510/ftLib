@@ -14,7 +14,7 @@ data class QrTransaction(
     @SerializedName("senderBusinessId")
     val senderBusinessId: String,
     @SerializedName("amountAvailable")
-    val amountAvailable: String,
+    val amountAvailable: Double,
     @SerializedName("status")
     val status: String,
     @SerializedName("updatedAt")

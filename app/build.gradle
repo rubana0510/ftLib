@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 5
-        versionName "0.1"
+        versionCode 6
+        versionName "0.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -99,6 +99,12 @@ dependencies {
     //filepicker
     implementation 'com.zhihu.android:matisse:0.5.1'
 
+    //jodatime
+    implementation 'joda-time:joda-time:2.10.2'
+
+    //videotrimmer
+
+    implementation 'com.googlecode.mp4parser:isoparser:1.1.20'
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

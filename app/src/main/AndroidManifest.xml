@@ -18,6 +18,10 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:replace="android:allowBackup,android:usesCleartextTraffic">
+        <activity android:name=".ui.VideoTrimmerScreen">
+        </activity>
+        <activity android:name=".ui.myplan.MyPlanScreen">
+        </activity>
         <activity android:name=".utilities.cropper.ImagePreviewActivity">
         </activity>
         <activity android:name=".ui.qrtransfer.SenderActivity">

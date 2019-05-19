@@ -8,7 +8,7 @@ const val USER_ROW_ID = 0
 @Entity(tableName = "user")
 data class User(
     @SerializedName("city")
-    var city: Any?,
+    var city: City?,
     @SerializedName("dob")
     var dob: String,
     @SerializedName("emailId")
@@ -26,7 +26,7 @@ data class User(
     @SerializedName("userType")
     var userType: String,
     @SerializedName("business")
-    var business: Business?
+    var business: MyBusiness?
 ){
     @PrimaryKey(autoGenerate = false)
     val userRowId: Int = USER_ROW_ID

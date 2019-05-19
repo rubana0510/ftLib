@@ -39,6 +39,14 @@ class PostManager {
         }
     }
 
+    fun getBusinessPosts(businessId: String, timestamp: String, type: String, onComplete: (GetPostsResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getBusinessPostsAsync(businessId, timestamp, type)
+                .makeRequest(onComplete)
+        }
+    }
+
+
     fun createTextPost(text: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.createTextPostAsync(hashMapOf("text" to text))
@@ -65,13 +73,6 @@ class PostManager {
     fun likePost(businessId: String, onComplete: (LikeUnlikeResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.likePostAsync(businessId)
-                .makeRequest(onComplete)
-        }
-    }
-
-    fun unlikePost(businessId: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
-            apiService.unLikePostAsync(businessId)
                 .makeRequest(onComplete)
         }
     }

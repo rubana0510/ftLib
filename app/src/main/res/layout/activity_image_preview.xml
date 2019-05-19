@@ -14,9 +14,24 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/postCaption"
     />
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="@dimen/dimen_80dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+    android:visibility="gone"/>
     <EditText
-            android:id="@+id/postCaption" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:padding="16dp" app:layout_constraintBottom_toTopOf="@+id/postButton"/>
+            android:id="@+id/postCaption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:lines="2"
+            android:maxLines="2"
+            app:layout_constraintBottom_toTopOf="@+id/postButton"
+            android:hint="Write a caption.."/>
     <Button
             android:id="@+id/postButton" style="@style/ButtonFilledStyle.Big"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"

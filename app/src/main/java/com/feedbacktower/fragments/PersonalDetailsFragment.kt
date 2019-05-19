@@ -24,7 +24,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.loader.content.CursorLoader
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
@@ -61,7 +63,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
     private lateinit var lastNameInput: TextInputEditText
     private lateinit var emailInput: TextInputEditText
     private lateinit var dobInput: TextInputEditText
-
+    private val args: PersonalDetailsFragmentArgs by navArgs()
     private var lastImagePath: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +87,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
         dobInput = binding.birthdateInput
         dobInput.inputType = InputType.TYPE_NULL
         continueButton = binding.continueButton
+
         dobInput.setOnClickListener {
             val dialog = SpinnerDatePickerDialog.getInstance()
             dialog.setDateSelectListener(this@PersonalDetailsFragment)
@@ -102,11 +105,17 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
             updateDetails(firstName, lastName, email, dob)
         }
         binding.onAttachClick = View.OnClickListener {
-
-            pickImage()
+            if (PermissionManager.getInstance().readyToPickImage(requireContext()))
+                pickImage()
+            else {
+                PermissionManager.getInstance().requestMediaPermission(requireActivity())
+            }
         }
         PermissionManager.getInstance().requestMediaPermission(requireActivity())
         binding.user = AppPrefs.getInstance(requireContext()).user
+        if (binding.user?.dob == null) {
+            dobInput.setText("Select Date")
+        }
     }
 
     private fun takePicture() {
@@ -252,7 +261,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
         ) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(
             activity!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -275,10 +284,13 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                         this.dob = dob
                     }
                 }
-                PersonalDetailsFragmentDirections.actionPersonalDetailsFragmentToSelectCityFragment().let {
-                    findNavController().navigate(it)
+                if (!args.onboarding) {
+                    findNavController().navigateUp()
+                } else {
+                    PersonalDetailsFragmentDirections.actionPersonalDetailsFragmentToSelectCityFragment().let {
+                        findNavController().navigate(it)
+                    }
                 }
-
             }
     }
 
@@ -308,7 +320,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                 emailLayout.error = "Enter valid email id"
                 false
             }
-            dob.isEmpty() -> {
+            dob.isEmpty() || dob.equals("Select Date") -> {
                 dobLayout.error = "Enter valid DOB"
                 false
             }

@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import com.feedbacktower.R
 import com.feedbacktower.callbacks.BottomSheetOnStateChanged
 import com.feedbacktower.network.manager.ReviewsManager
@@ -59,9 +60,10 @@ class RateReviewDialog : BottomSheetDialogFragment() {
 
 
         closeButton.setOnClickListener { dialog.dismiss() }
-        RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
+        ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
         sendRatingButton.setOnClickListener { sendRatings() }
     }
+
 
     private fun sendRatings() {
         val noOfStars: Int = ratingBar.rating.toInt()

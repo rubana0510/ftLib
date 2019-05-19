@@ -3,11 +3,13 @@ package com.feedbacktower.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.ItemReviewBinding
+import com.feedbacktower.fragments.ReviewsFragmentDirections
 
 /**
  * Created by sanket on 16-04-2019.
@@ -25,13 +27,14 @@ class ReviewListAdapter : ListAdapter<Review, ReviewListAdapter.ViewHolder>(Diff
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(createClickListener(item), item)
+        holder.bind(createProfileClickListener(item), item)
     }
 
-    private fun createClickListener(item: Review): View.OnClickListener = View.OnClickListener {
-
+    private fun createProfileClickListener(item: Review): View.OnClickListener = View.OnClickListener {view->
+        ReviewsFragmentDirections.actionNavigationReviewToBusinessDetailsActivity(item.businessId).let {
+            view.findNavController().navigate(it)
+        }
     }
-
 
     fun getItemAtPos(position: Int): Review = getItem(position)
 
@@ -40,6 +43,7 @@ class ReviewListAdapter : ListAdapter<Review, ReviewListAdapter.ViewHolder>(Diff
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: Review) {
             binding.apply {
+                openProfileListener= listener
                 review = item
                 executePendingBindings()
             }

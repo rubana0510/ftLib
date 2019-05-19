@@ -55,12 +55,21 @@ interface ApiServiceDescriptor {
     @POST("/profile/set-business-interest")
     fun setBusinessCategoryInterestAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
+    @GET("/business/")
+    fun getMyBusinessAsync(): Deferred<ApiResponse<MyBusinessResponse?>>
+
+
     //PAYMENTS
     @POST("/transaction/request")
     fun generateHashAsync(@Body params: GenerateHashRequest): Deferred<ApiResponse<GenerateHashResponse?>>
 
     @POST("/transaction/response")
     fun saveTransactionResponseAsync(@Body params: TransactionResponse): Deferred<ApiResponse<EmptyResponse?>>
+
+    @GET("/transaction/")
+    fun getTransactionsAsync(): Deferred<ApiResponse<PlanTransactionsResponse?>>
+
+
 
     //POST
     @POST("/post/")
@@ -75,6 +84,13 @@ interface ApiServiceDescriptor {
 
     @GET("/post/")
     fun getPostsAsync(
+        @Query("timestamp") timestamp: String,
+        @Query("type") type: String
+    ): Deferred<ApiResponse<GetPostsResponse?>>
+
+    @GET("/post/business/{businessId}/")
+    fun getBusinessPostsAsync(
+        @Path("businessId") businessId: String?,
         @Query("timestamp") timestamp: String,
         @Query("type") type: String
     ): Deferred<ApiResponse<GetPostsResponse?>>
@@ -116,7 +132,7 @@ interface ApiServiceDescriptor {
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>
 
-    @POST("/suggestion/reply")
+    @PUT("/suggestion/reply")
     fun replySuggestionAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>

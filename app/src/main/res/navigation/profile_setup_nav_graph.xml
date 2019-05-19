@@ -10,12 +10,14 @@
 
         <action android:id="@+id/action_personalDetailsFragment_to_selectCityFragment"
                 app:destination="@id/selectCityFragment"/>
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
     <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
               android:label="Select your City" tools:layout="@layout/fragment_select_city">
 
         <action android:id="@+id/action_selectCityFragment_to_selectInterestsFragment"
                 app:destination="@id/selectInterestsFragment"/>
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
     <fragment android:id="@+id/accountTypeSelectionFragment"
               android:name="com.feedbacktower.fragments.AccountTypeSelectionFragment"

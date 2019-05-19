@@ -50,6 +50,7 @@
                         android:imeOptions="actionNext"
                         android:drawableEnd="@drawable/ic_person_outline_black_24dp"
                         android:drawablePadding="@dimen/drawable_padding"
+                        android:maxLines="1"
                         android:text="@{user.firstName}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,6 +67,7 @@
                         android:imeOptions="actionNext"
                         android:drawableEnd="@drawable/ic_person_outline_black_24dp"
                         android:drawablePadding="@dimen/drawable_padding"
+                        android:maxLines="1"
                         android:text="@{user.lastName}"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

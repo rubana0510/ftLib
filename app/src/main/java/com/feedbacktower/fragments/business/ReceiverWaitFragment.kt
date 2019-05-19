@@ -25,6 +25,7 @@ class ReceiverWaitFragment : Fragment() {
     private lateinit var binding: FragmentReciverWaitBinding
     //TODO: remove later
     private var foregraound: Boolean = false
+    private var senderWalletAmount = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,17 +60,20 @@ class ReceiverWaitFragment : Fragment() {
                 response?.let {
                     binding.business = it.sender
                     binding.transaction = it.txn
+                    senderWalletAmount = it.txn.amountAvailable
                     //requireContext().toast("Status: ${it.txn.status}")
 
                     binding.scanned = it.txn.txStatus == QrTxStatus.SCANNED
                     binding.requested = it.txn.txStatus == QrTxStatus.REQUESTED
                     binding.approved = it.txn.txStatus == QrTxStatus.APPROVED
-                    binding.isLoading = it.txn.txStatus == QrTxStatus.SCANNED || it.txn.txStatus == QrTxStatus.REQUESTED
+                    binding.isLoading = it.txn.txStatus == QrTxStatus.REQUESTED
 
                     if (it.txn.txStatus == QrTxStatus.APPROVED) {
+                        requireContext().toast("Transfer success")
                         Handler().postDelayed({
                             activity?.finish()
                         }, 1000)
+                        return@checkStatusReceiver
                     } else {
 
                         Handler().postDelayed({
@@ -83,8 +87,17 @@ class ReceiverWaitFragment : Fragment() {
 
     private fun sendRequest() {
         val code = args.txid
-        val amount = binding.amountEntered.text.toString().trim().toDouble()
-        if (amount > binding.business!!.walletAmount) {
+        val amountText = binding.amountEntered.text?.toString()?.trim()
+        if (amountText.isNullOrEmpty()) {
+            requireContext().toast("Enter amount")
+            return
+        }
+        val amount =  try {
+             amountText.toDouble()
+        }catch (e: NumberFormatException){
+            0.0
+        }
+        if (amount <= 0 || amount > senderWalletAmount) {
             requireContext().toast("Invalid amount")
             return
         }

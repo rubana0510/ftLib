@@ -4,6 +4,7 @@
     <data>
         <variable name="post" type="com.feedbacktower.data.models.Post"/>
         <variable name="likeClickListener" type="android.view.View.OnClickListener"/>
+        <variable name="openProfileListener" type="android.view.View.OnClickListener"/>
     </data>
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -38,6 +39,7 @@
                     android:maxLines="1"
                     android:layout_marginStart="4dp"
                     tools:text="Bhojan"
+                    android:onClick="@{openProfileListener}"
                     android:text="@{post.business.name}"/>
             <com.feedbacktower.views.PostImageView
                     android:id="@+id/postImageView"
@@ -80,7 +82,7 @@
                     app:layout_constraintTop_toBottomOf="@id/postCaption"
                     android:contentDescription="@string/like_image_button"
                     android:layout_marginTop="@dimen/marginItemSubVertical"
-                    app:isChecked="@{post.liked}"
+                    app:checkedIfOne="@{post.liked}"
                     android:onClick="@{likeClickListener}"/>
             <TextView
                     style="@style/SmallBoldText"

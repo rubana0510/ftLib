@@ -36,7 +36,7 @@ class SuggestionsFragment : Fragment() {
     }
 
     private fun initUI(binding: FragmentSuggestionsBinding) {
-        binding.toolbar.title ="Suggestions"
+        binding.toolbar.title = "Suggestions"
 
         suggestionListView = binding.suggestionListView
         swipeRefresh = binding.swipeRefresh
@@ -57,7 +57,14 @@ class SuggestionsFragment : Fragment() {
 
     private val onReplyClick = object : SuggestionListAdapter.ReplyListener {
         override fun onReplyClick(suggestion: Suggestion) {
-            ReplySuggestionDialog.getInstance(suggestion).show(fragmentManager, ReplySuggestionDialog.TAG)
+            val dialog = ReplySuggestionDialog.getInstance(suggestion)
+            dialog.listener = object : ReplySuggestionDialog.ReplyCancelListener {
+                override fun onReply(suggestion: Suggestion) {
+                    fetchSuggestionList()
+                }
+            }
+            dialog.show(fragmentManager, ReplySuggestionDialog.TAG)
+
         }
     }
 

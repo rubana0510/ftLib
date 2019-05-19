@@ -54,7 +54,13 @@ class SenderWaitFragment : Fragment() {
                     binding.requested = it.txn.txStatus == QrTxStatus.REQUESTED
                     binding.approved = it.txn.txStatus == QrTxStatus.APPROVED
                     binding.isLoading = it.txn.txStatus == QrTxStatus.SCANNED
-                    if(it.txn.txStatus == QrTxStatus.APPROVED) return@checkStatusSender
+                    if(it.txn.txStatus == QrTxStatus.APPROVED){
+                        requireContext().toast("Transfer success")
+                        Handler().postDelayed({
+                            activity?.finish()
+                        }, 1000)
+                        return@checkStatusSender
+                    }
                     if (foregraound) {
                         Handler().postDelayed({
                             listenForScanned(data)

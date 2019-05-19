@@ -11,43 +11,44 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:title="@string/title_suggestions"
-                app:titleTextColor="@color/white"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
 
-    </com.google.android.material.appbar.AppBarLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <FrameLayout
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:title="@string/title_suggestions"
+                    app:titleTextColor="@color/white"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/suggestionListView"
+            <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:listitem="@layout/item_suggestion"
-                    app:isGone="@{isLoading}"/>
-            <TextView
-                    android:id="@+id/message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/no_suggestions_yet"
-                    app:isGone="@{!isListEmpty}"/>
-        </FrameLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                    android:background="@color/white">
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/suggestionListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:listitem="@layout/item_suggestion"
+                        app:isGone="@{isLoading}"/>
+                <TextView
+                        android:id="@+id/message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/no_suggestions_yet"
+                        app:isGone="@{!isListEmpty}"/>
+            </FrameLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 </layout>

@@ -17,8 +17,10 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
+import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.ui.ProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
@@ -64,7 +66,9 @@ class AccountFragment : Fragment() {
 
         binding.user = AppPrefs.getInstance(requireContext()).user!!
         binding.editProfileButtonClicked = View.OnClickListener {
-            requireActivity().launchActivity<ProfileSetupScreen>()
+            val dir = AccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment2()
+            dir.onboarding = false
+            findNavController().navigate(dir)
         }
         binding.onScanClicked = View.OnClickListener {
             requireActivity().launchActivity<ReceiverActivity>()
@@ -72,12 +76,29 @@ class AccountFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchBusinessDetails()
+    }
+
+    private fun fetchBusinessDetails() {
+        ProfileManager.getInstance()
+            .getMyBusiness { response, error ->
+                if (error == null) {
+                    AppPrefs.getInstance(requireContext()).business = response?.business
+                    submitOptions()
+                    Log.d(TAG, "Details updated")
+                }
+            }
+    }
+
     private fun submitOptions() {
-        val business = AppPrefs.getInstance(requireContext()).user?.business!!
+        val business = AppPrefs.getInstance(requireContext()).business!!
         val options = listOf(
-            AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
+            AccountOption(6, "My Wallet", "Your balance is ₹${business.walletAmount}", R.drawable.ic_post_like_filled),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
+            AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
@@ -88,7 +109,7 @@ class AccountFragment : Fragment() {
         Log.d(TAG, "${option.title} selected")
         when (option.id) {
             1 -> {
-
+                requireActivity().launchActivity<MyPlanScreen>()
             }
             2 -> {
                 val d = AccountFragmentDirections.actionNavigationAccountToMyReviewsFragment()
@@ -108,6 +129,9 @@ class AccountFragment : Fragment() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
             }
+            6 -> {
+                //show current plan details
+            }
         }
     }
 
@@ -115,7 +139,7 @@ class AccountFragment : Fragment() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val counts = listOf(
             Count(1, business.rank.noZero(), "Rank"),
-            Count(2, "${business.averageRatings}", "Ratings"),
+            Count(2, business.averageRatings, "Ratings"),
             Count(3, "${business.totalReviews}", "Reviews"),
             Count(4, "${business.totalSuggestions}", "Suggestions")
         )

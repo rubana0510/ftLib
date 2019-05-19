@@ -2,8 +2,8 @@ package com.feedbacktower.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.feedbacktower.data.models.MyBusiness
 import com.feedbacktower.data.models.User
-import com.feedbacktower.network.models.AuthResponse
 import com.google.gson.Gson
 
 class AppPrefs private constructor() {
@@ -45,12 +45,18 @@ class AppPrefs private constructor() {
 
     var user: User?
         get() {
-            val user: User? =
-                Gson().fromJson(sharedPrefs.getString("USER", null), User::class.java)
-            return user
+            return Gson().fromJson(sharedPrefs.getString("USER", null), User::class.java)
         }
         set(value) {
             sharedPrefs.edit().putString("USER", Gson().toJson(value)).apply()
+        }
+
+    var business: MyBusiness?
+        get() {
+            return Gson().fromJson(sharedPrefs.getString("BUSINESS", null), MyBusiness::class.java)
+        }
+        set(value) {
+            sharedPrefs.edit().putString("BUSINESS", Gson().toJson(value)).apply()
         }
 
 }

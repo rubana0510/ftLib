@@ -5,7 +5,7 @@
         tools:context=".ui.plans.SubscriptionPlansScreen">
     <data>
         <variable name="onContinueClick" type="android.view.View.OnClickListener"/>
-        <variable name="plan" type="com.feedbacktower.network.models.PlanListResponse.Plan"/>
+        <variable name="plan" type="com.feedbacktower.data.models.Plan"/>
         <variable name="isLoading" type="boolean"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -4,17 +4,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.PlanDiffCallback
-import com.feedbacktower.data.models.SubscriptionPlan
+import com.feedbacktower.adapters.diffcallbacks.DiffCallback
+import com.feedbacktower.data.models.Plan
 import com.feedbacktower.databinding.ItemPlanBinding
-import com.feedbacktower.network.models.PlanListResponse
 
 /**
  * Created by sanket on 16-04-2019.
  */
-class PlanAdapter : ListAdapter<PlanListResponse.Plan, PlanAdapter.ViewHolder>(PlanDiffCallback()) {
+class PlanAdapter : ListAdapter<Plan, PlanAdapter.ViewHolder>(DiffCallback<Plan>()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemPlanBinding.inflate(
@@ -31,18 +31,18 @@ class PlanAdapter : ListAdapter<PlanListResponse.Plan, PlanAdapter.ViewHolder>(P
 
     }
 
-    private fun createClickListener(item: PlanListResponse.Plan, pos: Int): View.OnClickListener = View.OnClickListener {
+    private fun createClickListener(item: Plan, pos: Int): View.OnClickListener = View.OnClickListener {
         item.isSelected = !item.isSelected
         notifyItemChanged(pos)
     }
 
 
-    fun getItemAtPos(position: Int): PlanListResponse.Plan = getItem(position)
+    fun getItemAtPos(position: Int): Plan = getItem(position)
 
     class ViewHolder(
         val binding: ItemPlanBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(listener: View.OnClickListener, item: PlanListResponse.Plan) {
+        fun bind(listener: View.OnClickListener, item: Plan) {
             binding.apply {
                 Log.d("PlanAdapter", "Item: $item")
                 clickListener = listener

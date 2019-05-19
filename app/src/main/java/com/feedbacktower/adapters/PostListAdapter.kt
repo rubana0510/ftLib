@@ -3,22 +3,33 @@ package com.feedbacktower.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemPostTextBinding
 import com.feedbacktower.databinding.ItemPostMediaBinding
+import com.feedbacktower.fragments.HomeFragmentDirections
 import java.lang.IllegalStateException
 
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
+class PostListAdapter(private val listener: LikeListener?) :
+    ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
-            is TextPostViewHolder -> holder.bind(createLikeClickListener(item, position), item)
-            is MediaPostViewHolder -> holder.bind(createLikeClickListener(item, position), item)
+            is TextPostViewHolder -> holder.bind(
+                createLikeClickListener(item, position),
+                createProfileClickListener(item, position),
+                item
+            )
+            is MediaPostViewHolder -> holder.bind(
+                createLikeClickListener(item, position),
+                createProfileClickListener(item, position),
+                item
+            )
             else -> throw IllegalArgumentException()
         }
     }
@@ -68,6 +79,12 @@ class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, B
         listener?.onClick(item, pos)
     }
 
+    private fun createProfileClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener {view->
+        HomeFragmentDirections.actionNavigationHomeToBusinessDetailsActivity(item.businessId).let {
+            view.findNavController().navigate(it)
+        }
+    }
+
     fun getItemAtPos(position: Int): Post = getItem(position)
 
     fun updateLike(position: Int, liked: Boolean) {
@@ -84,10 +101,11 @@ class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, B
     class MediaPostViewHolder(
         val binding: ItemPostMediaBinding
     ) : BaseViewHolder<Post>(binding.root) {
-        override fun bind(listener: View.OnClickListener, item: Post) {
+        override fun bind(listener: View.OnClickListener, profileListener: View.OnClickListener, item: Post) {
             binding.apply {
                 post = item
                 likeClickListener = listener
+                openProfileListener = profileListener
                 executePendingBindings()
             }
         }
@@ -96,10 +114,11 @@ class PostListAdapter(private val listener: LikeListener?) : ListAdapter<Post, B
     class TextPostViewHolder(
         val binding: ItemPostTextBinding
     ) : BaseViewHolder<Post>(binding.root) {
-        override fun bind(listener: View.OnClickListener, item: Post) {
+        override fun bind(listener: View.OnClickListener, profileListener: View.OnClickListener, item: Post) {
             binding.apply {
                 post = item
                 likeClickListener = listener
+                openProfileListener = profileListener
                 executePendingBindings()
             }
         }

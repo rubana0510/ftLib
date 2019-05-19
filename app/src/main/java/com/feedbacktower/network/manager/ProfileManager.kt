@@ -176,4 +176,10 @@ class ProfileManager {
         }
     }
 
+    fun getMyBusiness(onComplete: (MyBusinessResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getMyBusinessAsync().makeRequest(onComplete)
+        }
+    }
+
 }

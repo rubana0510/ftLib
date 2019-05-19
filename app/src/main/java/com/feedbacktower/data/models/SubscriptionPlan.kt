@@ -1,5 +1,6 @@
 package com.feedbacktower.data.models
 
+import com.feedbacktower.data.type.DurationType
 import com.google.gson.annotations.SerializedName
 
 data class SubscriptionPlan(
@@ -24,11 +25,19 @@ data class SubscriptionPlan(
     @SerializedName("name")
     val name: String,
     @SerializedName("period")
-    val period: String,
+    val period: Int,
     @SerializedName("periodType")
     val periodType: String,
     @SerializedName("updatedAt")
     val updatedAt: String
-){
+) {
+
     var isSelected: Boolean = false
+    val durationType: DurationType
+        get() = when (periodType) {
+            "YEAR" -> DurationType.YEAR
+            "MONTH" -> DurationType.MONTH
+            else -> DurationType.UNKNOWN
+        }
+
 }

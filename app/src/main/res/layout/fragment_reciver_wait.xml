@@ -22,7 +22,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="100dp"
-                app:toProfileRound="@{business.id}"/>
+                app:toProfileRound="@{business.userId}"/>
         <TextView
                 style="@style/LargeBoldText"
                 android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
                         style="@style/MediumText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Available balance is"
+                        android:text="Available balance is"
                         android:layout_marginTop="24dp"/>
                 <TextView
                         style="@style/LargeBoldText"
@@ -64,7 +64,7 @@
                         style="@style/MediumText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Enter the discount amount"
+                        android:text="Enter the discount amount"
                         android:layout_marginTop="24dp"/>
                 <EditText
                         android:id="@+id/amountEntered"
@@ -72,6 +72,9 @@
                         android:layout_height="wrap_content"
                         android:padding="16dp"
                         android:background="@drawable/bg_reply"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:inputType="numberDecimal"
                         android:layout_marginTop="@dimen/dimen_8dp"/>
                 <Button
                         style="@style/ButtonFilledStyle.Big"
@@ -86,7 +89,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="center"
-                    app:isGone="@{!isLoading}">
+                    app:isGone="@{!requested}">
                 <ProgressBar
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

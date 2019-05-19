@@ -33,6 +33,8 @@ import com.zhihu.matisse.MimeType
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.PermissionChecker
+import androidx.navigation.fragment.findNavController
+import com.feedbacktower.ui.VideoTrimmerScreen
 import com.feedbacktower.util.PERMISSION_CODE
 import com.feedbacktower.util.PermissionManager
 import com.feedbacktower.utilities.Glide4Engine
@@ -47,6 +49,7 @@ class HomeFragment : Fragment() {
     private lateinit var message: TextView
     private lateinit var postAdapter: PostListAdapter
     private var isLoading: Boolean? = false
+    private var currentCity: String? = null
     private var noPosts: Boolean? = false
     private val REQUEST_CODE_CHOOSE_IMAGE = 1012
     private val REQUEST_CODE_CHOOSE_VIDEO = 1013
@@ -66,7 +69,9 @@ class HomeFragment : Fragment() {
         feedListView = binding.feedListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
-        binding.isBusiness = AppPrefs.getInstance(requireContext()).user?.userType == "BUSINESS"
+        val appPrefs by lazy { AppPrefs.getInstance(requireContext()) }
+        binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
+        binding.currentCity = appPrefs.getValue("CITY")?:"Select City"
         //setup list
         feedListView.setVertical(requireContext())
         postAdapter = PostListAdapter(likeListener)
@@ -77,12 +82,19 @@ class HomeFragment : Fragment() {
             fetchPostList()
         }
 
+        binding.selectCityListener =View.OnClickListener {
+            val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment2()
+            dir.onboarding = false
+            findNavController().navigate(dir)
+        }
+
     }
 
     override fun onResume() {
         super.onResume()
         fetchPostList()
     }
+
     private val addPostClickListener = View.OnClickListener {
         with(PermissionManager.getInstance()) {
             if (cameraPermissionGranted(requireContext())
@@ -161,7 +173,7 @@ class HomeFragment : Fragment() {
             var mSelected = Matisse.obtainResult(data!!)
             Log.d("Matisse", "mSelected Image: $mSelected")
             if (mSelected.size < 1) {
-                requireContext().toast("Some error occurred")
+                requireContext().toast("No image selected")
                 return
 
             }
@@ -170,7 +182,14 @@ class HomeFragment : Fragment() {
             }
         } else if (requestCode == REQUEST_CODE_CHOOSE_VIDEO && resultCode == RESULT_OK) {
             var mSelected = Matisse.obtainResult(data!!)
+            if (mSelected.size < 1) {
+                requireContext().toast("No video selected")
+                return
+            }
             Log.d("Matisse", "mSelected Video: $mSelected")
+            requireActivity().launchActivity<VideoTrimmerScreen> {
+                putExtra("URI", mSelected[0])
+            }
         }
     }
 

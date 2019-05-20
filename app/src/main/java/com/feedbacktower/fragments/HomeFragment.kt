@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.selectCityListener =View.OnClickListener {
-            val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment2()
+            val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment3()
             dir.onboarding = false
             findNavController().navigate(dir)
         }

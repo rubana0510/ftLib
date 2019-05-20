@@ -218,6 +218,7 @@ fun Activity.uriToFile(_uri: Uri): File {
 }
 
 fun isCurrentBusiness(businessId: String, context: Context): Boolean {
+    if(AppPrefs.getInstance(context).user?.userType == "CUSTOMER") return false
     val currentBusinessId =
         AppPrefs.getInstance(context).user?.business?.id ?: throw IllegalArgumentException("Invalid user")
     return currentBusinessId == businessId

@@ -80,7 +80,7 @@ class PostListAdapter(private val listener: LikeListener?) :
     }
 
     private fun createProfileClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener {view->
-        HomeFragmentDirections.actionNavigationHomeToBusinessDetailsActivity(item.businessId).let {
+        HomeFragmentDirections.actionNavigationHomeToBusinessDetailsActivity2(item.businessId).let {
             view.findNavController().navigate(it)
         }
     }

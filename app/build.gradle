@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 6
-        versionName "0.2"
+        versionCode 7
+        versionName "0.3"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

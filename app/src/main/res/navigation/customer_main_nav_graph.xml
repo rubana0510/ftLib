@@ -7,6 +7,10 @@
             android:name="com.feedbacktower.fragments.HomeFragment"
             android:label="@string/title_home"
             tools:layout="@layout/fragment_home">
+        <action android:id="@+id/action_navigation_home_to_selectCityFragment3"
+                app:destination="@id/selectCityFragment3"/>
+        <action android:id="@+id/action_navigation_home_to_businessDetailsActivity2"
+                app:destination="@id/businessDetailsActivity"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_search"
@@ -30,9 +34,15 @@
             android:id="@+id/businessDetailsActivity"
             android:name="com.feedbacktower.ui.BusinessDetailsActivity"
             android:label="activity_business_details"
-            tools:layout="@layout/activity_business_details"/>
+            tools:layout="@layout/activity_business_details">
+        <argument android:name="businessId" app:argType="string"/>
+    </activity>
     <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.fragments.MySuggestionsFragment"
               android:label="fragment_my_suggestions" tools:layout="@layout/fragment_my_suggestions"/>
     <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.fragments.MyReviewsFragment"
               android:label="fragment_my_reviews" tools:layout="@layout/fragment_my_reviews"/>
+    <fragment android:id="@+id/selectCityFragment3" android:name="com.feedbacktower.fragments.SelectCityFragment"
+              android:label="SelectCityFragment">
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+    </fragment>
 </navigation>

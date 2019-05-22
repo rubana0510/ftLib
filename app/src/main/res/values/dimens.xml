@@ -29,4 +29,8 @@
     <dimen name="progress_video_line_height">2dp</dimen>
     <dimen name="frames_video_height">40dip</dimen>
 
+    <dimen name="file_icon_width">40dp</dimen>
+    <dimen name="file_icon_height">40dp</dimen>
+    <dimen name="file_name_textSize">17sp</dimen>
+    <dimen name="file_item_checkbox_size">22dp</dimen>
 </resources>

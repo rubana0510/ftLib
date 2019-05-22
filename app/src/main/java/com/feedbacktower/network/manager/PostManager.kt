@@ -2,6 +2,7 @@ package com.feedbacktower.network.manager
 
 import android.net.Uri
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.core.net.toFile
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
@@ -39,7 +40,12 @@ class PostManager {
         }
     }
 
-    fun getBusinessPosts(businessId: String, timestamp: String, type: String, onComplete: (GetPostsResponse?, Throwable?) -> Unit) {
+    fun getBusinessPosts(
+        businessId: String,
+        timestamp: String,
+        type: String,
+        onComplete: (GetPostsResponse?, Throwable?) -> Unit
+    ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getBusinessPostsAsync(businessId, timestamp, type)
                 .makeRequest(onComplete)
@@ -70,6 +76,22 @@ class PostManager {
         }
     }
 
+    fun createVideoPost(text: String, file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+
+        if (!file.exists()) {
+            Log.e(TAG, "uploadImages: FileNotFound")
+            return
+        }
+        val requestBody = RequestBody.create(MediaType.parse(file.getMimeType()?:"video/mp4"), file)
+        val filePart = MultipartBody.Part.createFormData("media", file.name, requestBody)
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.createVideoPostAsync(
+                filePart,
+                text.toRequestBody()
+            ).makeRequest(onComplete)
+        }
+    }
+
     fun likePost(businessId: String, onComplete: (LikeUnlikeResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.likePostAsync(businessId)
@@ -77,4 +99,10 @@ class PostManager {
         }
     }
 
+}
+
+private fun File.getMimeType(): String? {
+    val uri = Uri.fromFile(this)
+    val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+    return  MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
 }

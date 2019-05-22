@@ -5,6 +5,7 @@
         <variable name="post" type="com.feedbacktower.data.models.Post"/>
         <variable name="likeClickListener" type="android.view.View.OnClickListener"/>
         <variable name="openProfileListener" type="android.view.View.OnClickListener"/>
+        <variable name="videoClick" type="android.view.View.OnClickListener"/>
     </data>
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -48,13 +49,23 @@
                     android:layout_marginTop="@dimen/marginItemSubVertical"
                     app:layout_constraintTop_toBottomOf="@+id/businessProfileImage"
                     app:postImage="@{post.media}"/>
+            <ImageView
+                    android:onClick="@{videoClick}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_play"
+                    app:layout_constraintTop_toTopOf="@id/postImageView"
+                    app:layout_constraintBottom_toBottomOf="@id/postImageView"
+                    app:layout_constraintEnd_toEndOf="@id/postImageView"
+                    app:layout_constraintStart_toStartOf="@id/postImageView"
+                    app:isGone="@{post.isPhoto}"/>
             <TextView
                     android:id="@+id/postCaption"
                     style="@style/MediumText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/postImageView"
-                    app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="@dimen/marginItemSubVertical"
                     android:layout_marginStart="@dimen/marginItemHorizontal"
@@ -93,7 +104,7 @@
                     app:layout_constraintStart_toEndOf="@id/likeImageButton"
                     app:layout_constraintTop_toTopOf="@id/likeImageButton"
                     app:layout_constraintBottom_toBottomOf="@id/likeImageButton"
-                    android:text="@{post.totalLikes + ` likes`}"/>
+                    android:text="@{post.likeText}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

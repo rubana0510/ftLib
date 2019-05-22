@@ -5,6 +5,7 @@
         <variable name="suggestion" type="com.feedbacktower.data.models.Suggestion"/>
         <variable name="replyClickListener" type="android.view.View.OnClickListener"/>
         <variable name="openProfileListener" type="android.view.View.OnClickListener"/>
+        <variable name="hideReplyButton" type="Boolean"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
@@ -63,7 +64,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/suggestionMessage"
                 android:onClick="@{replyClickListener}"
-                app:isGone="@{suggestion.isReplied}"/>
+                app:isGone="@{suggestion.isReplied || hideReplyButton}"/>
         <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

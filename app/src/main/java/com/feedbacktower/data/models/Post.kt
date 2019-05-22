@@ -33,5 +33,15 @@ data class Post(
 
     val isLiked: Boolean
         get() = liked == 1
+    val likeText: String
+        get() {
+            return when (totalLikes) {
+                0 -> "Like"
+                1 -> "$totalLikes like"
+                else -> "$totalLikes likes"
+            }
+        }
+    val isPhoto: Boolean
+        get() = type == "PHOTO"
 
 }

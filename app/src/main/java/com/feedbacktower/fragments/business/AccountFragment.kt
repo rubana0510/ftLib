@@ -66,7 +66,7 @@ class AccountFragment : Fragment() {
 
         binding.user = AppPrefs.getInstance(requireContext()).user!!
         binding.editProfileButtonClicked = View.OnClickListener {
-            val dir = AccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment2()
+            val dir = AccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
             dir.onboarding = false
             findNavController().navigate(dir)
         }

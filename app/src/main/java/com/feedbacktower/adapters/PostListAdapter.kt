@@ -10,23 +10,26 @@ import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemPostTextBinding
 import com.feedbacktower.databinding.ItemPostMediaBinding
 import com.feedbacktower.fragments.HomeFragmentDirections
+import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import java.lang.IllegalStateException
 
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter(private val listener: LikeListener?) :
+class PostListAdapter(private val listener: Listener?) :
     ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
             is TextPostViewHolder -> holder.bind(
                 createLikeClickListener(item, position),
+                null,
                 createProfileClickListener(item, position),
                 item
             )
             is MediaPostViewHolder -> holder.bind(
                 createLikeClickListener(item, position),
+                createVideoClickListener(item, position),
                 createProfileClickListener(item, position),
                 item
             )
@@ -76,13 +79,17 @@ class PostListAdapter(private val listener: LikeListener?) :
     }
 
     private fun createLikeClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener {
-        listener?.onClick(item, pos)
+        listener?.onLikeClick(item, pos)
     }
 
-    private fun createProfileClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener {view->
-        HomeFragmentDirections.actionNavigationHomeToBusinessDetailsActivity2(item.businessId).let {
+    private fun createProfileClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->
+        HomeFragmentDirections.actionNavigationHomeToBusinessDetailsActivity(item.businessId).let {
             view.findNavController().navigate(it)
         }
+    }
+
+    private fun createVideoClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->
+        listener?.onVideoClick(item, pos)
     }
 
     fun getItemAtPos(position: Int): Post = getItem(position)
@@ -101,9 +108,15 @@ class PostListAdapter(private val listener: LikeListener?) :
     class MediaPostViewHolder(
         val binding: ItemPostMediaBinding
     ) : BaseViewHolder<Post>(binding.root) {
-        override fun bind(listener: View.OnClickListener, profileListener: View.OnClickListener, item: Post) {
+        override fun bind(
+            listener: View.OnClickListener,
+            videoClickListener: View.OnClickListener?,
+            profileListener: View.OnClickListener,
+            item: Post
+        ) {
             binding.apply {
                 post = item
+                videoClick = videoClickListener
                 likeClickListener = listener
                 openProfileListener = profileListener
                 executePendingBindings()
@@ -114,7 +127,12 @@ class PostListAdapter(private val listener: LikeListener?) :
     class TextPostViewHolder(
         val binding: ItemPostTextBinding
     ) : BaseViewHolder<Post>(binding.root) {
-        override fun bind(listener: View.OnClickListener, profileListener: View.OnClickListener, item: Post) {
+        override fun bind(
+            listener: View.OnClickListener,
+            videoClickListener: View.OnClickListener?,
+            profileListener: View.OnClickListener,
+            item: Post
+        ) {
             binding.apply {
                 post = item
                 likeClickListener = listener
@@ -124,7 +142,8 @@ class PostListAdapter(private val listener: LikeListener?) :
         }
     }
 
-    interface LikeListener {
-        fun onClick(item: Post, position: Int)
+    interface Listener {
+        fun onLikeClick(item: Post, position: Int)
+        fun onVideoClick(item: Post, position: Int)
     }
 }

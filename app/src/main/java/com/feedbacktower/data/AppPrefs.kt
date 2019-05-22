@@ -8,6 +8,7 @@ import com.google.gson.Gson
 
 class AppPrefs private constructor() {
 
+    val currentUser by lazy { user }
     companion object {
 
         @Volatile
@@ -19,6 +20,7 @@ class AppPrefs private constructor() {
                 appPrefs ?: AppPrefs().also {
                     appPrefs = it
                     sharedPrefs = context.getSharedPreferences("ft_prefs", Context.MODE_PRIVATE)
+
                 }
             }
     }

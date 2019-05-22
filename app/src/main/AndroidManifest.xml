@@ -18,6 +18,19 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:replace="android:allowBackup,android:usesCleartextTraffic">
+        <activity android:name=".ui.videoplayer.VideoPlayerScreen">
+        </activity>
+
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="com.feedbacktower.utilities.filepicker"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths"/>
+        </provider>
+
         <activity android:name=".ui.VideoTrimmerScreen">
         </activity>
         <activity android:name=".ui.myplan.MyPlanScreen">
@@ -81,6 +94,8 @@
         <activity android:name=".utilities.cropper.MyCropperActivity"/>
         <activity android:name=".utilities.cropper.CropImageActivity"/>
         <activity android:name=".ui.qrtransfer.ReceiverActivity"/>
+        <activity android:name=".utilities.filepicker.MediaDetailsActivity"/>
+        <activity android:name=".utilities.filepicker.FilePickerActivity"/>
 
         <receiver
                 android:name=".network.utils.ConnectivityReceiver"

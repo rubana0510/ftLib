@@ -5,6 +5,13 @@
              android:layout_height="match_parent"
              tools:context=".fragments.business.SenderQrFragment">
 
+    <TextView
+            style="@style/LargeBoldText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Show QR code to send"
+            android:layout_marginTop="@dimen/dimen_50dp"/>
 
     <ImageView
             android:id="@+id/qrImage"

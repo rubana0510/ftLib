@@ -1,6 +1,7 @@
 package com.feedbacktower.fragments
 
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -23,23 +24,25 @@ import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.ui.PostTextScreen
-import com.feedbacktower.util.launchActivity
-import com.feedbacktower.util.setVertical
 import java.text.FieldPosition
 import com.zhihu.matisse.engine.impl.GlideEngine
 import android.content.pm.ActivityInfo
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.core.content.PermissionChecker
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.ui.VideoTrimmerScreen
-import com.feedbacktower.util.PERMISSION_CODE
-import com.feedbacktower.util.PermissionManager
+import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
+import com.feedbacktower.util.*
 import com.feedbacktower.utilities.Glide4Engine
 import com.feedbacktower.utilities.cropper.ImagePreviewActivity
+import com.feedbacktower.utilities.filepicker.FilePickerBuilder
+import com.feedbacktower.utilities.filepicker.FilePickerConst
 import org.jetbrains.anko.toast
+import java.io.File
 
 
 class HomeFragment : Fragment() {
@@ -71,10 +74,10 @@ class HomeFragment : Fragment() {
         message = binding.message
         val appPrefs by lazy { AppPrefs.getInstance(requireContext()) }
         binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
-        binding.currentCity = appPrefs.getValue("CITY")?:"Select City"
+        binding.currentCity = appPrefs.getValue("CITY") ?: "Select City"
         //setup list
         feedListView.setVertical(requireContext())
-        postAdapter = PostListAdapter(likeListener)
+        postAdapter = PostListAdapter(listener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
@@ -82,8 +85,8 @@ class HomeFragment : Fragment() {
             fetchPostList()
         }
 
-        binding.selectCityListener =View.OnClickListener {
-            val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment3()
+        binding.selectCityListener = View.OnClickListener {
+            val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment()
             dir.onboarding = false
             findNavController().navigate(dir)
         }
@@ -131,20 +134,28 @@ class HomeFragment : Fragment() {
     }
 
     private fun pickImage() {
-        Matisse.from(this)
-            .choose(MimeType.ofImage())
-            .countable(true)
-            .maxSelectable(1)
-            .gridExpectedSize(resources.getDimensionPixelSize(com.feedbacktower.R.dimen.grid_expected_size))
-            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            .thumbnailScale(0.85f)
-            .imageEngine(Glide4Engine())
-            .forResult(REQUEST_CODE_CHOOSE_IMAGE)
+        /* Matisse.from(this)
+             .choose(MimeType.ofImage())
+             .countable(true)
+             .maxSelectable(1)
+             .gridExpectedSize(resources.getDimensionPixelSize(com.feedbacktower.R.dimen.grid_expected_size))
+             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+             .thumbnailScale(0.85f)
+             .imageEngine(Glide4Engine())
+             .forResult(REQUEST_CODE_CHOOSE_IMAGE)*/
+        FilePickerBuilder.instance.setMaxCount(1)
+            .setActivityTheme(R.style.AppTheme_NoActionBar)
+            .pickPhoto(this)
     }
 
-    private val likeListener = object : PostListAdapter.LikeListener {
-        override fun onClick(item: Post, position: Int) {
+    private val listener = object : PostListAdapter.Listener {
+        override fun onLikeClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
+        }
+        override fun onVideoClick(item: Post, position: Int) {
+           requireActivity().launchActivity<VideoPlayerScreen>{
+               putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/post/${item.media}" +"mp4")
+           }
         }
     }
 
@@ -190,7 +201,20 @@ class HomeFragment : Fragment() {
             requireActivity().launchActivity<VideoTrimmerScreen> {
                 putExtra("URI", mSelected[0])
             }
+        } else if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                var paths: ArrayList<String> = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
+                if (paths.size < 1) {
+                    requireContext().toast("No image selected")
+                    return
+
+                }
+                requireActivity().launchActivity<ImagePreviewActivity> {
+                    putExtra("URI", Uri.fromFile(File(paths[0])))
+                }
+            }
         }
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

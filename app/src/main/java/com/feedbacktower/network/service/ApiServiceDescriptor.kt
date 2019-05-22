@@ -82,6 +82,13 @@ interface ApiServiceDescriptor {
         @Part("text") name: RequestBody
     ): Deferred<ApiResponse<EmptyResponse?>>
 
+    @Multipart
+    @POST("/post/video")
+    fun createVideoPostAsync(
+        @Part file: MultipartBody.Part,
+        @Part("text") name: RequestBody
+    ): Deferred<ApiResponse<EmptyResponse?>>
+
     @GET("/post/")
     fun getPostsAsync(
         @Query("timestamp") timestamp: String,

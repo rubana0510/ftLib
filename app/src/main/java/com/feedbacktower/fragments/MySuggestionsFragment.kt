@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
-import com.feedbacktower.adapters.SuggestionListAdapter
+import com.feedbacktower.adapters.MySuggestionListAdapter
 import com.feedbacktower.databinding.FragmentMySuggestionsBinding
 import com.feedbacktower.network.manager.SuggestionsManager
 import org.jetbrains.anko.toast
@@ -23,7 +23,7 @@ class MySuggestionsFragment : Fragment() {
     private lateinit var suggestionListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
-    private lateinit var suggestionAdapter: SuggestionListAdapter
+    private lateinit var suggestionAdapter: MySuggestionListAdapter
     private var isListEmpty: Boolean? = false
     private var isLoading: Boolean? = true
     override fun onCreateView(
@@ -49,7 +49,7 @@ class MySuggestionsFragment : Fragment() {
         //setup list
         suggestionListView.layoutManager = LinearLayoutManager(requireContext())
         suggestionListView.itemAnimator = DefaultItemAnimator()
-        suggestionAdapter = SuggestionListAdapter(null)
+        suggestionAdapter = MySuggestionListAdapter(null)
         suggestionListView.adapter = suggestionAdapter
         swipeRefresh.setOnRefreshListener {
             fetchSuggestionList()

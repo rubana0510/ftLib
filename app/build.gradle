@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 7
-        versionName "0.3"
+        versionCode 8
+        versionName "0.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -103,8 +103,10 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.2'
 
     //videotrimmer
-
     implementation 'com.googlecode.mp4parser:isoparser:1.1.20'
+
+    //exoplayer
+    implementation "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

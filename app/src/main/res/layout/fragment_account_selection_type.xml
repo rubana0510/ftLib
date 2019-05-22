@@ -23,7 +23,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="100dp"
-                android:background="@drawable/bg_count_ring"/>
+                android:background="@drawable/bg_count_ring"
+                app:toProfileRound="@{user.id}"/>
                 <!--app:loadRoundImage="@{user.profile}"/>-->
         <TextView
                 android:id="@+id/userName"

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.PostListAdapter
+import com.feedbacktower.adapters.ProfilePostListAdapter
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
@@ -25,7 +26,7 @@ class BusinessDetailFragment : Fragment() {
     private lateinit var reviewListView: RecyclerView
     private lateinit var postListView: RecyclerView
     private lateinit var reviewAdapter: ReviewListAdapter
-    private lateinit var postAdapter: PostListAdapter
+    private lateinit var postAdapter: ProfilePostListAdapter
     private lateinit var businessId: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,7 +76,7 @@ class BusinessDetailFragment : Fragment() {
         reviewListView.adapter = reviewAdapter
 
         postListView.setVertical(requireContext())
-        postAdapter = PostListAdapter(likeListener)
+        postAdapter = ProfilePostListAdapter(listener)
         postListView.adapter = postAdapter
 
         fetchReviews()
@@ -112,8 +113,11 @@ class BusinessDetailFragment : Fragment() {
         }
     }
 
-    private val likeListener = object : PostListAdapter.LikeListener {
-        override fun onClick(item: Post, position: Int) {
+    private val listener = object : ProfilePostListAdapter.Listener {
+        override fun onLikeClick(item: Post, position: Int) {
+            likeUnlikePost(item, position)
+        }
+        override fun onVideoClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
     }

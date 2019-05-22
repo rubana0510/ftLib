@@ -40,8 +40,7 @@
                         android:layout_height="@dimen/businessSearchProfileImage"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:background="#CE93D8"
-                        app:toProfileRound="@{business.id}"/>
+                        app:toProfileRound="@{business.userId}"/>
                 <TextView
                         android:id="@+id/businessName"
                         style="@style/businessNameStyle"
@@ -141,6 +140,12 @@
                     android:layout_height="wrap_content"
                     android:text="ACCEPT REQUEST"
             android:onClick="@{onRequestConfirmClick}"/>
+            <Button
+                    style="@style/ButtonFilledStyle.Big"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{onGoBackClick}"
+                    android:text="CANCEL"/>
         </LinearLayout>
         <LinearLayout
                 android:layout_width="match_parent"

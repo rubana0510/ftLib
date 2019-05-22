@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
-import com.feedbacktower.adapters.ReviewListAdapter
+import com.feedbacktower.adapters.MyReviewListAdapter
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentMyReviewsBinding
 import com.feedbacktower.network.manager.ReviewsManager
@@ -23,7 +23,7 @@ class MyReviewsFragment : Fragment() {
     private lateinit var reviewListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
-    private lateinit var reviewAdapter: ReviewListAdapter
+    private lateinit var reviewAdapter: MyReviewListAdapter
     private var isListEmpty: Boolean? = false
     private var isLoading: Boolean? = true
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,7 +46,7 @@ class MyReviewsFragment : Fragment() {
 
         //setup list
         reviewListView.setVertical(requireContext())
-        reviewAdapter = ReviewListAdapter()
+        reviewAdapter = MyReviewListAdapter()
         reviewListView.adapter = reviewAdapter
 
         swipeRefresh.setOnRefreshListener {

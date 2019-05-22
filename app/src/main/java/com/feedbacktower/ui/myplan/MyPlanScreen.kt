@@ -54,12 +54,15 @@ class MyPlanScreen : AppCompatActivity() {
         if (plan.durationType == DurationType.UNKNOWN) {
             return "Unknown"
         }
+        val expiryDate: DateTime? =
         if (plan.durationType == DurationType.YEAR) {
             startDate.plusYears(period)
         } else if (plan.durationType == DurationType.MONTH) {
             startDate.plusMonths(period)
+        }else{
+            startDate.plusYears(period)
         }
-        startDate.toDateTime(DateTimeZone.forID(DateTimeZone.getDefault().id))
-        return toFormat.format(startDate.toDate())
+        expiryDate?.toDateTime(DateTimeZone.forID(DateTimeZone.getDefault().id))
+        return toFormat.format(expiryDate?.toDate())
     }
 }

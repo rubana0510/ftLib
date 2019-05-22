@@ -24,7 +24,6 @@
                     android:layout_height="@dimen/businessSearchProfileImage"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:background="#CE93D8"
                     app:toProfileRound="@{business.userId}"/>
             <TextView
                     android:id="@+id/businessName"

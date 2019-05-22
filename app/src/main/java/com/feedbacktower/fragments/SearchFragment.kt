@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -35,6 +39,7 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
     private lateinit var searchBusinessAdapter: SearchBusinessAdapter
     private var isListEmpty: Boolean? = false
     private var isLoading: Boolean? = false
+    private lateinit var clearButton: ImageButton
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,6 +60,8 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
         searchListView.adapter = searchBusinessAdapter
         isLoading = binding.isLoading
         isListEmpty = binding.isListEmpty
+        clearButton = binding.clearButton
+        binding.onClearClick = View.OnClickListener { binding.queryInput.text = null }
         binding.queryInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -63,13 +70,27 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
                 val query: String? = s?.toString()
+                clearButton.isVisible = !query.isNullOrEmpty()
+
                 if (query.isNullOrEmpty()) return
 
                 search(s.toString())
             }
 
         })
+        binding.queryInput.setOnEditorActionListener { textView, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH
+                || actionId == EditorInfo.IME_ACTION_DONE
+                || event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+            ) {
+                binding.queryInput.clearFocus()
+                true
+            }
+            false
+        }
         //fetchBusinessList()
     }
 

@@ -45,10 +45,11 @@ class CustomerAccountFragment : Fragment() {
         accountOptionsAdapter = AccountOptionsAdapter(onItemSelected)
         accountOptionsView.adapter = accountOptionsAdapter
         submitOptions()
-
-        binding.userFullName = AppPrefs.getInstance(requireContext()).user?.firstName +" " +AppPrefs.getInstance(requireContext()).user?.lastName
+        binding.user = AppPrefs.getInstance(requireContext()).currentUser
         binding.editProfileButtonClicked = View.OnClickListener {
-            requireActivity().launchActivity<ProfileSetupScreen>()
+            val dir = CustomerAccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
+            dir.onboarding = false
+            findNavController().navigate(dir)
         }
     }
 
@@ -69,11 +70,11 @@ class CustomerAccountFragment : Fragment() {
 
             }
             2 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMyReviewsFragment2()
+                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMyReviewsFragment()
                 findNavController().navigate(d)
             }
             3 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMySuggestionsFragment2()
+                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMySuggestionsFragment()
                 findNavController().navigate(d)
             }
             4 -> {

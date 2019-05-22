@@ -16,6 +16,7 @@ import com.feedbacktower.R
 import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
+import com.feedbacktower.network.manager.PostManager
 
 
 class TimelineFragment : Fragment() {
@@ -45,53 +46,25 @@ class TimelineFragment : Fragment() {
         feedListView.layoutManager = LinearLayoutManager(requireContext())
         feedListView.itemAnimator = DefaultItemAnimator()
         feedListView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
-        postAdapter = PostListAdapter(null)
+        postAdapter = PostListAdapter(listener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
        // fetchPostList()
     }
-
- /*   private fun fetchPostList() {
-        val posts = listOf(
-            Post(
-                "1",
-                "2",
-                "Magic Muncheez",
-                "https://via.placeholder.com/150",
-                "Try This, its super amazing!",
-                "https://via.placeholder.com/500",
-                PostListAdapter.POST_PHOTO,
-                "today",
-                5
-            ),
-            Post(
-                "1",
-                "2",
-                "Magic Muncheez",
-                "https://via.placeholder.com/150",
-                "Try This, its super amazing!",
-                "https://via.placeholder.com/500",
-                PostListAdapter.POST_TEXT,
-                "yesterday",
-                10
-            ),
-            Post(
-                "1",
-                "2",
-                "Magic Muncheez",
-                "https://via.placeholder.com/150",
-                "Try This, its super amazing!",
-                "https://via.placeholder.com/500",
-                PostListAdapter.POST_VIDEO,
-                "now",
-                102
-            )
-        )
-        isLoading = false
-        noPosts = posts.isEmpty()
-        postAdapter.submitList(posts)
-    }*/
-
-
+    private val listener = object : PostListAdapter.Listener {
+        override fun onLikeClick(item: Post, position: Int) {
+            likeUnlikePost(item, position)
+        }
+        override fun onVideoClick(item: Post, position: Int) {
+            likeUnlikePost(item, position)
+        }
+    }
+    private fun likeUnlikePost(item: Post, position: Int) {
+        PostManager.getInstance()
+            .likePost(item.id) { response, _ ->
+                if (response?.liked != null)
+                    postAdapter.updateLike(position, response.liked)
+            }
+    }
 }

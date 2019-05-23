@@ -154,7 +154,7 @@ class HomeFragment : Fragment() {
         }
         override fun onVideoClick(item: Post, position: Int) {
            requireActivity().launchActivity<VideoPlayerScreen>{
-               putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/post/${item.media}" +"mp4")
+               putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/posts/${item.media}" )
            }
         }
     }

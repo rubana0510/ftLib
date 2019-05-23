@@ -22,21 +22,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
+import java.lang.IllegalArgumentException
 
 class AccountTypeSelectionFragment : Fragment() {
-    private val apiService by lazy { ApiService.create() }
+    private var onboarding = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         val binding = FragmentAccountSelectionTypeBinding.inflate(inflater, container, false)
+        onboarding = arguments?.getBoolean(BusinessProfileSetupScreen.ONBOARDING_KEY, true)
+            ?: throw  IllegalArgumentException("Invalid args")
         initUi(binding)
         return binding.root
     }
 
     private fun initUi(binding: FragmentAccountSelectionTypeBinding) {
-        binding.onCutomerContinue = View.OnClickListener { continueAsCustomer() }
+        binding.onCutomerContinue = View.OnClickListener {
+            if (!onboarding)
+                requireActivity().finish()
+            else
+                continueAsCustomer()
+        }
         binding.onBusinessContinue = View.OnClickListener { registerAsBusiness() }
         binding.user = AppPrefs.getInstance(requireContext()).user
     }
@@ -47,9 +55,10 @@ class AccountTypeSelectionFragment : Fragment() {
                 if (error != null) {
                     requireActivity().toast(error.message ?: getString(R.string.default_err_message))
                 } else {
-                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragmentToBusinessSetup1Fragment().let {
-                        findNavController().navigate(it)
-                    }
+                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragment2ToBusinessSetup1Fragment()
+                        .let {
+                            findNavController().navigate(it)
+                        }
                 }
             }
     }

@@ -46,6 +46,16 @@ class AuthManager {
         }
     }
 
+    fun requestOtp(
+        phone: String,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.requestOtpAsync(hashMapOf("phone" to phone))
+                .makeRequest(onComplete)
+        }
+    }
+
     fun verifyOtpRegister(
         phone: String,
         otp: String,
@@ -64,6 +74,17 @@ class AuthManager {
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.registerPhoneAsync(hashMapOf("phone" to phone, "password" to password))
+                .makeRequest(onComplete)
+        }
+    }
+
+    fun resetPassword(
+        phone: String,
+        password: String,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.resetPasswordAsync(hashMapOf("phone" to phone, "password" to password))
                 .makeRequest(onComplete)
         }
     }

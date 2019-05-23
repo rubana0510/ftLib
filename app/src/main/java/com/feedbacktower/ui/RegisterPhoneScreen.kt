@@ -17,16 +17,21 @@ import org.jetbrains.anko.toast
 import android.content.Intent
 
 
-
 class RegisterPhoneScreen : AppCompatActivity() {
-    private enum class State { INITIAL, OTP_SENT, OTP_VERIFIED, REGISTERED }
+    companion object {
+        const val SCREEN_TYPE_KEY = "SCREEN_TYPE_KEY"
+    }
+
+    private enum class State { INITIAL, OTP_SENT, OTP_VERIFIED, REGISTERED, RESET }
+    enum class ScreenFunction { FORGOT_PASSWORD, REGISTER }
 
     private var state = State.INITIAL
-    // TODO : Remove below line!!
-    private lateinit var OTP_RECEIVED: String
+    private lateinit var screenFunction: ScreenFunction
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        screenFunction = intent?.getSerializableExtra(SCREEN_TYPE_KEY) as? ScreenFunction
+            ?: throw IllegalArgumentException("No type args passed")
         val binding: ActivityRegisterPhoneScreenBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_register_phone_screen)
         initUi(binding)
@@ -34,6 +39,8 @@ class RegisterPhoneScreen : AppCompatActivity() {
 
     private fun initUi(binding: ActivityRegisterPhoneScreenBinding) {
         binding.onSignUpClicked = onSignUpClicked
+        binding.pageTitle = if (screenFunction == ScreenFunction.FORGOT_PASSWORD) "FORGOT PASSWORD" else "SIGN UP"
+        binding.textInputPassword.hint = "New Password"
         updateUi()
     }
 
@@ -42,7 +49,10 @@ class RegisterPhoneScreen : AppCompatActivity() {
             State.INITIAL -> {
                 val phone = mobileInput.text.toString().trim()
                 if (phoneValid(phone)) {
-                    sentOtp(phone)
+                    if (screenFunction == ScreenFunction.REGISTER)
+                        preRegister(phone)
+                    else
+                        requestOtp(phone)
                 }
             }
             State.OTP_SENT -> {
@@ -56,14 +66,18 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 val password = passwordInput.text.toString().trim()
                 val phone = mobileInput.text.toString().trim()
                 if (passwordValid(password)) {
-                    registerPhone(phone, password)
+                    if (screenFunction == ScreenFunction.REGISTER)
+                        registerPhone(phone, password)
+                    else
+                        resetPassword(phone, password)
                 }
             }
             else -> {
-
+                finish()
             }
         }
     }
+
 
     private fun updateUi() {
         when (state) {
@@ -107,17 +121,38 @@ class RegisterPhoneScreen : AppCompatActivity() {
         }
     }
 
-    private fun sentOtp(phone: String) {
+    private fun preRegister(phone: String) {
         showLoading()
         AuthManager.getInstance().preRegister(phone)
-        { response, error ->
+        preReg@{ response, error ->
             if (error != null) {
                 toast(error.message ?: getString(R.string.default_err_message))
                 hideLoading()
-                return@preRegister
+                return@preReg
             }
             if (response != null) {
-              //  OTP_RECEIVED = response.user.otp
+                //  OTP_RECEIVED = response.user.otp
+                state = State.OTP_SENT
+                toast("OTP sent to your Phone")
+            } else {
+                toast("Unknown error occurred")
+            }
+            hideLoading()
+            updateUi()
+        }
+    }
+
+    private fun requestOtp(phone: String) {
+        showLoading()
+        AuthManager.getInstance().requestOtp(phone)
+        reqOtp@{ response, error ->
+            if (error != null) {
+                toast(error.message ?: getString(R.string.default_err_message))
+                hideLoading()
+                return@reqOtp
+            }
+            if (response != null) {
+                //  OTP_RECEIVED = response.user.otp
                 state = State.OTP_SENT
                 toast("OTP sent to your Phone")
             } else {
@@ -158,17 +193,38 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 hideLoading()
                 return@rp
             }
-
             if (response != null) {
                 state = State.REGISTERED
                 AppPrefs.getInstance(this).apply {
                     user = response.user
                     authToken = response.token
                 }
-                launchActivity<ProfileSetupScreen>{
+                launchActivity<ProfileSetupScreen> {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
                 toast("Registered")
+            } else {
+                toast("Unknown error occurred")
+            }
+            hideLoading()
+            updateUi()
+        }
+    }
+
+    private fun resetPassword(phone: String, password: String) {
+        showLoading()
+        AuthManager.getInstance().resetPassword(phone, password)
+        rp@{ response, error ->
+            if (error != null) {
+                toast(error.message ?: getString(R.string.default_err_message))
+                hideLoading()
+                return@rp
+            }
+
+            if (response != null) {
+                state = State.RESET
+                toast("Password has been set,  please login")
+                finish()
             } else {
                 toast("Unknown error occurred")
             }
@@ -191,8 +247,11 @@ class RegisterPhoneScreen : AppCompatActivity() {
         return when (state) {
             State.INITIAL -> getString(R.string.send_otp)
             State.OTP_SENT -> getString(R.string.verify_otp)
-            State.OTP_VERIFIED -> getString(R.string.register)
-            State.REGISTERED -> getString(R.string.register)
+            State.OTP_VERIFIED -> if (screenFunction == ScreenFunction.REGISTER) getString(R.string.register) else getString(
+                R.string.reset
+            )
+            State.REGISTERED -> getString(R.string.go_back)
+            State.RESET -> getString(R.string.go_back)
         }
     }
 

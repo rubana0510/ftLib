@@ -14,6 +14,8 @@ import com.feedbacktower.adapters.AccountOptionsAdapter
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.databinding.FragmentCustomerAccountBinding
+import com.feedbacktower.ui.BusinessProfileSetupScreen
+import com.feedbacktower.ui.BusinessProfileSetupScreen.Companion.ONBOARDING_KEY
 import com.feedbacktower.ui.ProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
 import com.feedbacktower.util.launchActivity
@@ -51,6 +53,12 @@ class CustomerAccountFragment : Fragment() {
             dir.onboarding = false
             findNavController().navigate(dir)
         }
+        binding.registerButtonClicked = View.OnClickListener {
+           requireActivity().launchActivity<BusinessProfileSetupScreen> {
+               putExtra(ONBOARDING_KEY, false)
+           }
+        }
+
     }
 
     private fun submitOptions() {

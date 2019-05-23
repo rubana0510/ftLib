@@ -5,6 +5,7 @@
     <data>
         <variable name="user" type="com.feedbacktower.data.models.User"/>
         <variable name="editProfileButtonClicked" type="android.view.View.OnClickListener"/>
+        <variable name="registerButtonClicked" type="android.view.View.OnClickListener"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +54,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintStart_toEndOf="@id/businessProfileImage"
                             app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="24dp"
                             android:layout_marginTop="16dp"
                             tools:text="Sai Photo Studio"
                             android:text="@{user.firstName + ` ` + user.lastName}"/>
@@ -64,12 +65,26 @@
                             android:layout_width="0dp"
                             android:layout_height="48dp"
                             app:layout_constraintTop_toBottomOf="@+id/businessName"
-                            app:layout_constraintStart_toStartOf="@id/businessName"
+                            app:layout_constraintStart_toEndOf="@id/businessProfileImage"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             android:onClick="@{editProfileButtonClicked}"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginEnd="24dp"
                             android:text="@string/edit_profile"/>
+                    <com.google.android.material.button.MaterialButton
+                            android:id="@+id/resgisterBusiness"
+                            style="@style/ButtonFilledStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            app:layout_constraintTop_toBottomOf="@+id/editProfileButton"
+                            app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginEnd="24dp"
+                            android:onClick="@{registerButtonClicked}"
+                            android:text="@string/register_businsess"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <include layout="@layout/layout_divider"/>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -77,6 +92,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never"
+                        android:paddingBottom="@dimen/dimen_80dp"
+                        android:clipToPadding="false"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/item_account_option"/>
             </LinearLayout>

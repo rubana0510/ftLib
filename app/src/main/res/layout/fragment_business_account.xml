@@ -118,6 +118,8 @@
                         android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:paddingBottom="@dimen/dimen_80dp"
+                        android:clipToPadding="false"
                         tools:listitem="@layout/item_account_option"/>
             </LinearLayout>
         </ScrollView>

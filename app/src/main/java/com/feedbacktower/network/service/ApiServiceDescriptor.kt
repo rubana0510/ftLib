@@ -23,6 +23,11 @@ interface ApiServiceDescriptor {
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
+    @POST("/auth/request-otp")
+    fun requestOtpAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<EmptyResponse?>>
+
     @POST("/auth/verify-otp")
     fun verifyOtpRegisterAsync(
         @Body map: HashMap<String, Any?>
@@ -32,6 +37,11 @@ interface ApiServiceDescriptor {
     fun registerPhoneAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<AuthResponse?>>
+
+    @POST("/auth/reset-password")
+    fun resetPasswordAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<EmptyResponse?>>
 
     @POST("/profile/update")
     fun updatePersonalDetailsAsync(

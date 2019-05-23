@@ -1,12 +1,10 @@
 package com.feedbacktower.ui
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.feedbacktower.BusinessMainActivity
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.ActivityLoginScreenBinding
@@ -20,8 +18,9 @@ import org.jetbrains.anko.toast
 
 class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
-
-    private val TAG = "LoginScreen"
+    companion object {
+        private const val TAG = "LoginScreen"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityLoginScreenBinding =
@@ -36,7 +35,12 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
 
     private fun initUi(binding: ActivityLoginScreenBinding) {
         with(binding) {
-            onSignUpClicked = View.OnClickListener { launchActivity<RegisterPhoneScreen>() }
+            onSignUpClicked = View.OnClickListener { launchActivity<RegisterPhoneScreen>{
+                putExtra(RegisterPhoneScreen.SCREEN_TYPE_KEY, RegisterPhoneScreen.ScreenFunction.REGISTER)
+            } }
+            onForgotClicked = View.OnClickListener { launchActivity<RegisterPhoneScreen>{
+                putExtra(RegisterPhoneScreen.SCREEN_TYPE_KEY, RegisterPhoneScreen.ScreenFunction.FORGOT_PASSWORD)
+            } }
             onLoginClicked = View.OnClickListener {
                 val phone = mobileInput.text.toString().trim()
                 val password = passwordInput.text.toString().trim()

@@ -107,6 +107,7 @@ dependencies {
 
     //exoplayer
     implementation "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
+
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

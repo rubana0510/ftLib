@@ -74,9 +74,12 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
                 val query: String? = s?.toString()
                 clearButton.isVisible = !query.isNullOrEmpty()
 
-                if (query.isNullOrEmpty()) return
+                if (query.isNullOrEmpty()){
+                    searchBusinessAdapter.submitList(null)
+                    return
+                }
 
-                search(s.toString())
+                search(s.toString().trim())
             }
 
         })

@@ -58,6 +58,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/postImageView"
                     app:layout_constraintEnd_toEndOf="@id/postImageView"
                     app:layout_constraintStart_toStartOf="@id/postImageView"
+                    android:visibility="gone"
                     app:isGone="@{post.isPhoto}"/>
             <TextView
                     android:id="@+id/postCaption"

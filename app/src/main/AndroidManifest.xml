@@ -18,7 +18,8 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:replace="android:allowBackup,android:usesCleartextTraffic">
-        <activity android:name=".ui.videoplayer.VideoPlayerScreen">
+        <activity android:name=".ui.videoplayer.VideoPlayerScreen"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <provider
@@ -51,7 +52,8 @@
         </activity>
         <activity
                 android:name=".ui.CustomerMainActivity"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
                 android:name=".ui.BusinessDetailsActivity"
@@ -60,7 +62,8 @@
         <activity
                 android:name=".BusinessMainActivity"
                 android:label="@string/title_activity_business_main"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/AppTheme.NoActionBar"
+                android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
                 android:name=".ui.SplashScreen"

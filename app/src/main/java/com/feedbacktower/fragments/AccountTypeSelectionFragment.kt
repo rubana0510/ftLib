@@ -12,17 +12,10 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentAccountSelectionTypeBinding
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.network.service.ApiService
-import com.feedbacktower.network.service.ApiServiceDescriptor
-import com.feedbacktower.network.utils.makeRequest
 import com.feedbacktower.ui.BusinessProfileSetupScreen
 import com.feedbacktower.ui.CustomerMainActivity
 import com.feedbacktower.util.launchActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
-import java.lang.IllegalArgumentException
 
 class AccountTypeSelectionFragment : Fragment() {
     private var onboarding = true
@@ -55,7 +48,7 @@ class AccountTypeSelectionFragment : Fragment() {
                 if (error != null) {
                     requireActivity().toast(error.message ?: getString(R.string.default_err_message))
                 } else {
-                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragment2ToBusinessSetup1Fragment()
+                    AccountTypeSelectionFragmentDirections.actionAccountTypeSelectionFragmentToBusinessSetup1Fragment()
                         .let {
                             findNavController().navigate(it)
                         }

@@ -38,7 +38,7 @@ class MySuggestionsFragment : Fragment() {
     }
 
     private fun initUI(binding: FragmentMySuggestionsBinding) {
-        binding.toolbar.title = "My Suggestions"
+
 
         suggestionListView = binding.suggestionListView
         swipeRefresh = binding.swipeRefresh

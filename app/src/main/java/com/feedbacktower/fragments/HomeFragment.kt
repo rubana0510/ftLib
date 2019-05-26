@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initUi(binding: FragmentHomeBinding) {
-        binding.toolbar.title = getString(R.string.app_name)
+       // binding.toolbar.title = getString(R.string.app_name)
         binding.addPostListener = addPostClickListener
         feedListView = binding.feedListView
         swipeRefresh = binding.swipeRefresh

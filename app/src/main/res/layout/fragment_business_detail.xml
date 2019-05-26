@@ -9,6 +9,7 @@
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onViewReviewsClicked" type="android.view.View.OnClickListener"/>
+        <variable name="onViewPostsClicked" type="android.view.View.OnClickListener"/>
         <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
         <variable name="sendReviewButtonClicked" type="android.view.View.OnClickListener"/>
     </data>
@@ -211,7 +212,7 @@
                         android:layout_below="@id/postListView"
                         android:background="@color/white"
                         android:clickable="true"
-                        android:onClick="@{onViewReviewsClicked}"
+                        android:onClick="@{onViewPostsClicked}"
                         android:textColor="@color/colorPrimary"/>
                 <ProgressBar
                         android:id="@+id/progressBar"

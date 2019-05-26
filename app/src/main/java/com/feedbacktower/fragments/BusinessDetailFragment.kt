@@ -45,6 +45,10 @@ class BusinessDetailFragment : Fragment() {
             val d = BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationReview(businessId)
             findNavController().navigate(d)
         }
+        binding.onViewPostsClicked = View.OnClickListener {
+            val d = BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationTimeline(businessId)
+            findNavController().navigate(d)
+        }
         binding.onSendSuggestionClicked = View.OnClickListener {
             if(isCurrentBusiness(businessId, requireContext())){
                 requireContext().toast("You cannot Send suggestion to yourself!")

@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
+    <!--    <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AppBarOverlay">
@@ -42,7 +42,7 @@
                         android:text="@{currentCity}"
                         tools:text="Select City"/>
             </FrameLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>-->
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefresh"

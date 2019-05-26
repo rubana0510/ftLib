@@ -62,7 +62,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     private fun getPlanList(binding: ActivitySubscriptionPlanScreenBinding) {
         var categoryId = AppPrefs.getInstance(this).getValue("MASTER_CAT_ID")
         if (categoryId == null)
-            categoryId = AppPrefs.getInstance(this).business?.businessCategory?.masterBusinessCategoryId
+            categoryId = AppPrefs.getInstance(this).user?.business?.businessCategory?.masterBusinessCategoryId
         if (categoryId == null) {
             toast("Select category")
             finish()

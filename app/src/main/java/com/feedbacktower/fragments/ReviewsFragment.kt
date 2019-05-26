@@ -44,7 +44,7 @@ class ReviewsFragment : Fragment() {
     }
 
     private fun initUI(binding: FragmentReviewsBinding) {
-        binding.toolbar.title = "Reviews"
+      //  binding.toolbar.title = "Reviews"
         reviewListView = binding.reviewListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message

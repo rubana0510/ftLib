@@ -3,9 +3,17 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.feedbacktower">
 
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <application
             android:name=".App"
@@ -18,8 +26,26 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:replace="android:allowBackup,android:usesCleartextTraffic">
-        <activity android:name=".ui.videoplayer.VideoPlayerScreen"
-                  android:theme="@style/AppTheme.NoActionBar">
+
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="@string/google_maps_key"/>
+
+        <activity
+                android:name=".ui.map.MapScreen"
+                android:label="@string/title_activity_map_screen">
+        </activity>
+        <activity
+                android:name=".ui.videoplayer.VideoPlayerScreen"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <provider
@@ -99,6 +125,7 @@
         <activity android:name=".ui.qrtransfer.ReceiverActivity"/>
         <activity android:name=".utilities.filepicker.MediaDetailsActivity"/>
         <activity android:name=".utilities.filepicker.FilePickerActivity"/>
+        <activity android:name=".ui.BusinessProfileEditScreen"/>
 
         <receiver
                 android:name=".network.utils.ConnectivityReceiver"
@@ -108,7 +135,12 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".notifications.MyFirebaseMessagingService"/>
+        <service android:name=".notifications.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".utilities.tracker.TrackerService"/>
 
         <meta-data
                 android:name="preloaded_fonts"

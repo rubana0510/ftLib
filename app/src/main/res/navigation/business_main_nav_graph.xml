@@ -49,6 +49,11 @@
                 app:destination="@id/myReviewsFragment"/>
         <action android:id="@+id/action_navigation_account_to_mySuggestionsFragment"
                 app:destination="@id/mySuggestionsFragment"/>
+        <action android:id="@+id/action_navigation_account_to_businessSettingsFragment"
+                app:destination="@id/businessSettingsFragment"/>
+        <action
+                android:id="@+id/action_navigation_account_to_profile_edit_nav_graph"
+                app:destination="@id/profile_edit_nav_graph"/>
         <action android:id="@+id/action_navigation_account_to_personalDetailsFragment"
                 app:destination="@id/personalDetailsFragment"/>
     </fragment>
@@ -57,22 +62,54 @@
         <argument android:name="businessId" app:argType="string"/>
     </activity>
     <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.fragments.MyReviewsFragment"
-              android:label="fragment_my_reviews" tools:layout="@layout/fragment_my_reviews">
+              android:label="My  Reviews" tools:layout="@layout/fragment_my_reviews">
         <action android:id="@+id/action_navigation_my_review_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
     <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.fragments.MySuggestionsFragment"
-              android:label="fragment_my_suggestions" tools:layout="@layout/fragment_my_suggestions">
+              android:label="My Suggestions" tools:layout="@layout/fragment_my_suggestions">
         <action android:id="@+id/action_navigation_my_suggestion_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
-    <fragment android:id="@+id/personalDetailsFragment"
-              android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
-              android:label="PersonalDetailsFragment">
-        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
-    </fragment>
     <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
               android:label="SelectCityFragment">
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
+    <fragment android:id="@+id/businessSettingsFragment"
+              android:name="com.feedbacktower.fragments.business.BusinessSettingsFragment"
+              android:label="Settings"/>
+
+    <fragment android:id="@+id/selectCityFragmentEdit" android:name="com.feedbacktower.fragments.SelectCityFragment"
+              android:label="Select your City" tools:layout="@layout/fragment_select_city">
+
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+        <action android:id="@+id/action_selectCityFragmentEdit_to_businessSetup1Fragment"
+                app:destination="@id/businessSetup1Fragment"/>
+    </fragment>
+    <fragment android:id="@+id/businessSetup1Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
+              android:label="Basic Details">
+        <action android:id="@+id/action_businessSetup1Fragment_to_pointOnMapFragment"
+                app:destination="@id/pointOnMapFragment"/>
+    </fragment>
+    <fragment android:id="@+id/businessSetup2Fragment" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
+              android:label="Address Details">
+        <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
+        <action android:id="@+id/action_businessSetup2Fragment_to_navigation_account"
+                app:destination="@id/navigation_account" app:popUpTo="@+id/navigation_account"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment android:id="@+id/pointOnMapFragment" android:name="com.feedbacktower.fragments.PointOnMapFragment"
+              android:label="PointOnMapFragment">
+        <action android:id="@+id/action_pointOnMapFragment_to_businessSetup2Fragment"
+                app:destination="@id/businessSetup2Fragment"/>
+    </fragment>
+    <fragment android:id="@+id/personalDetailsFragment"
+              android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
+              android:label="Personal Details" tools:layout="@layout/fragment_personal_details">
+
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+        <action android:id="@+id/action_personalDetailsFragment_to_selectCityFragmentEdit"
+                app:destination="@id/selectCityFragmentEdit"/>
     </fragment>
 </navigation>

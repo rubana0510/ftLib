@@ -138,4 +138,6 @@ fun bindShowIfScanned(view: View, value: QrTxStatus?) {
     } else {
         View.VISIBLE
     }
+
+
 }

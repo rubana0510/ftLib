@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.ui.SplashScreen
 import java.net.HttpURLConnection
 import java.net.URL

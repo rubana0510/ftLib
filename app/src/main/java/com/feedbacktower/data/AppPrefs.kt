@@ -52,13 +52,4 @@ class AppPrefs private constructor() {
         set(value) {
             sharedPrefs.edit().putString("USER", Gson().toJson(value)).apply()
         }
-
-    var business: MyBusiness?
-        get() {
-            return Gson().fromJson(sharedPrefs.getString("BUSINESS", null), MyBusiness::class.java)
-        }
-        set(value) {
-            sharedPrefs.edit().putString("BUSINESS", Gson().toJson(value)).apply()
-        }
-
 }

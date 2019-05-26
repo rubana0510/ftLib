@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentBusinessSetup2Binding
@@ -103,7 +105,14 @@ class BusinessSetup2Fragment : Fragment() {
 
 
     private fun navigateNext() {
-        requireActivity().launchActivity<SubscriptionPlansScreen>()
+        val args: BusinessSetup2FragmentArgs by navArgs()
+        if(args.edit){
+            BusinessSetup2FragmentDirections.actionBusinessSetup2FragmentToNavigationAccount().let {
+                findNavController().navigate(it)
+            }
+        }else{
+            requireActivity().launchActivity<SubscriptionPlansScreen>()
+        }
     }
 
     private fun updateDetails(

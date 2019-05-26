@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
 import com.feedbacktower.network.manager.PostManager
+import org.jetbrains.anko.toast
 
 
 class TimelineFragment : Fragment() {
@@ -26,12 +28,16 @@ class TimelineFragment : Fragment() {
     private lateinit var postAdapter: PostListAdapter
     private var isLoading: Boolean? = false
     private var noPosts: Boolean? = false
+    private lateinit var businessId: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentTimelineBinding.inflate(inflater, container, false)
+        val args: TimelineFragmentArgs? by navArgs()
+        businessId = args?.businessId ?: throw IllegalArgumentException("Invalid business")
+
         initUi(binding)
         return binding.root
     }
@@ -50,8 +56,19 @@ class TimelineFragment : Fragment() {
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
-       // fetchPostList()
+        fetchPosts()
     }
+
+    private fun fetchPosts() {
+        PostManager.getInstance().getBusinessPosts(businessId, "", "OLD") { response, error ->
+            if (error == null) {
+                postAdapter.submitList(response?.posts!!)
+            } else {
+                requireContext().toast("Failed to load posts")
+            }
+        }
+    }
+
     private val listener = object : PostListAdapter.Listener {
         override fun onLikeClick(item: Post, position: Int) {
             likeUnlikePost(item, position)

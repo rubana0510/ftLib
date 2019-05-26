@@ -3,6 +3,7 @@ package com.feedbacktower.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
@@ -23,6 +24,7 @@ import java.text.ParseException
 import android.net.Uri
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.google.android.gms.maps.model.LatLng
 import org.joda.time.DateTimeZone
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -59,7 +61,7 @@ fun Float.toRemarkText(): String {
         3f -> "Good"
         4f -> "Very Good"
         5f -> "Excellent"
-        else ->  this.toString()
+        else -> this.toString()
     }
 }
 
@@ -218,8 +220,17 @@ fun Activity.uriToFile(_uri: Uri): File {
 }
 
 fun isCurrentBusiness(businessId: String, context: Context): Boolean {
-    if(AppPrefs.getInstance(context).user?.userType == "CUSTOMER") return false
+    if (AppPrefs.getInstance(context).user?.userType == "CUSTOMER") return false
     val currentBusinessId =
         AppPrefs.getInstance(context).user?.business?.id ?: throw IllegalArgumentException("Invalid user")
     return currentBusinessId == businessId
+}
+
+fun LatLng.toLatLngArray(): String {
+    return "[$latitude,$longitude]"
+}
+fun Location?.toLatLng(): LatLng? {
+    if (this == null) return null
+
+    return LatLng(latitude, longitude)
 }

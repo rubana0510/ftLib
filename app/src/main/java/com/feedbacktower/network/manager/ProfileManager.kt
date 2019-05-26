@@ -49,6 +49,19 @@ class ProfileManager {
         }
     }
 
+    fun updateFcmToken(
+        token: String,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updatePersonalDetailsAsync(
+                hashMapOf(
+                    "fcmToken" to token
+                )
+            ).makeRequest(onComplete)
+        }
+    }
+
 
     fun updateBusinessBasicDetails(
         name: String,
@@ -179,6 +192,14 @@ class ProfileManager {
     fun getMyBusiness(onComplete: (MyBusinessResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getMyBusinessAsync().makeRequest(onComplete)
+        }
+    }
+
+    fun changeBusinessAvailability(available: Boolean, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updateBusinessDetailsAsync(
+                hashMapOf("visible" to available)
+            ).makeRequest(onComplete)
         }
     }
 

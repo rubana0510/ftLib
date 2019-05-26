@@ -107,4 +107,63 @@
     <string name="all_videos">All Videos</string>
     <string name="all_files">All Files</string>
     <string name="reset">Reset</string>
+
+    //keys
+    <string name="map_key">AIzaSyBV_LfIjQ5Q2KbqeCdoL2PUk0SB8KA2_AA</string>
+    <string name="title_activity_map_screen">Find Nearby</string>
+    <string name="available">Available</string>
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">User</string>
+
+
+    <string-array name="pref_time_interval">
+        <item>15 mins</item>
+        <item>30 mins</item>
+        <item>1 hr</item>
+        <item>1.5 hrs</item>
+        <item>2 hrs</item>
+        <item>3 hrs</item>
+    </string-array>
+    <string-array name="pref_time_interval_values">
+        <item>0.25</item>
+        <item>0.5</item>
+        <item>1</item>
+        <item>1.5</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="pref_half_day_type">
+        <item>Odd Saturdays</item>
+        <item>Even Saturdays</item>
+    </string-array>
+    <string-array name="pref_half_day_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="pref_app_theme_entries">
+        <item>Light Theme</item>
+        <item>Dark Theme</item>
+    </string-array>
+    <string-array name="pref_app_theme_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="settings_title">Settings</string>
+    <string name="pref_description_enable_reminders">Get reminders in notification and write entries in line</string>
+    <string name="pref_title_enable_reminders">Enable reminders</string>
+    <string name="pref_title_interval_list">Select reminder interval</string>
+    <string name="pref_title_half_day_type">Half-Day type</string>
+    <string name="pref_title_app_theme">Select theme</string>
+    <string name="pref_description_enable_trackme">Your live location will be shown to your customers</string>
+    <string name="pref_title_enable_trackme">Track Me</string>
+    <string name="pref_description_enable_notifications">Receive reviews, suggestion related notifications</string>
+    <string name="pref_title_enable_notifications">Enable Notification</string>
+
 </resources>

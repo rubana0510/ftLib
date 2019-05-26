@@ -4,6 +4,8 @@ import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
+import com.feedbacktower.util.toLatLngArray
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,7 +19,7 @@ class LocationManager {
     companion object {
         @Volatile
         private var instance: LocationManager? = null
-
+        @JvmStatic
         fun getInstance(): LocationManager =
             instance ?: synchronized(this) {
                 instance ?: LocationManager().also { instance = it }
@@ -29,6 +31,25 @@ class LocationManager {
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getCitiesAsync().makeRequest(onComplete)
+        }
+    }
+
+    fun saveBusinessLocation(
+        location: LatLng,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ){
+        val map = hashMapOf<String, Any?>("location" to arrayOf(location.latitude, location.longitude))
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updateBusinessDetailsAsync(map).makeRequest(onComplete)
+        }
+    }
+    fun saveCurrentLocation(
+        location: LatLng,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ){
+        val map = hashMapOf<String, Any?>("currentLocation" to arrayOf(location.latitude, location.longitude))
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updateBusinessDetailsAsync(map).makeRequest(onComplete)
         }
     }
 }

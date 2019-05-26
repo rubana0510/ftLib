@@ -25,6 +25,8 @@ import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.noZero
+import kotlinx.android.synthetic.main.fragment_business_account.*
+import org.jetbrains.anko.toast
 
 
 class AccountFragment : Fragment() {
@@ -63,11 +65,30 @@ class AccountFragment : Fragment() {
         accountOptionsView.adapter = accountOptionsAdapter
         submitOptions()
 
-
-        binding.user = AppPrefs.getInstance(requireContext()).user!!
+        binding.availabilitySwitch.setOnClickListener {
+            val state = binding.availabilitySwitch.isChecked
+            binding.updatingStatus = true
+            ProfileManager.getInstance()
+                .changeBusinessAvailability(state) { _, error ->
+                    binding.updatingStatus = false
+                    if (error != null) {
+                        requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                        binding.availabilitySwitch.isChecked = !state
+                        return@changeBusinessAvailability
+                    }
+                    binding.availabilitySwitch.isChecked = state
+                    AppPrefs.getInstance(requireContext()).apply {
+                        user?.apply {
+                            business = business?.apply {
+                                visible = state
+                            }
+                        }
+                    }
+                }
+        }
+        binding.business = AppPrefs.getInstance(requireContext()).user?.business!!
         binding.editProfileButtonClicked = View.OnClickListener {
             val dir = AccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
-            dir.onboarding = false
             findNavController().navigate(dir)
         }
         binding.onScanClicked = View.OnClickListener {
@@ -85,7 +106,11 @@ class AccountFragment : Fragment() {
         ProfileManager.getInstance()
             .getMyBusiness { response, error ->
                 if (error == null) {
-                    AppPrefs.getInstance(requireContext()).business = response?.business
+                    AppPrefs.getInstance(requireContext()).apply {
+                        user = user?.apply {
+                            business = response?.business
+                        }
+                    }
                     submitOptions()
                     Log.d(TAG, "Details updated")
                 }
@@ -93,13 +118,14 @@ class AccountFragment : Fragment() {
     }
 
     private fun submitOptions() {
-        val business = AppPrefs.getInstance(requireContext()).business!!
+        val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val options = listOf(
             AccountOption(6, "My Wallet", "Your balance is ₹${business.walletAmount}", R.drawable.ic_post_like_filled),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
+            AccountOption(7, "Settings", "Notifications, Location", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
@@ -130,7 +156,11 @@ class AccountFragment : Fragment() {
                 }
             }
             6 -> {
-                //show current plan details
+                //show transactions
+            }
+            7 -> {
+                val d = AccountFragmentDirections.actionNavigationAccountToBusinessSettingsFragment()
+                findNavController().navigate(d)
             }
         }
     }

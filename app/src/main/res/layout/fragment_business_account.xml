@@ -3,9 +3,10 @@
         xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.business.AccountFragment">
     <data>
-        <variable name="user" type="com.feedbacktower.data.models.User"/>
+        <variable name="business" type="com.feedbacktower.data.models.MyBusiness"/>
         <variable name="editProfileButtonClicked" type="android.view.View.OnClickListener"/>
         <variable name="onScanClicked" type="android.view.View.OnClickListener"/>
+        <variable name="updatingStatus" type="Boolean"/>
 
     </data>
     <LinearLayout
@@ -13,7 +14,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
+      <!--  <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppTheme.AppBarOverlay">
@@ -41,14 +42,16 @@
                         android:text="SCAN"/>
             </FrameLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>-->
         <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -61,7 +64,7 @@
                             app:layout_constraintTop_toTopOf="@id/businessName"
                             app:layout_constraintBottom_toBottomOf="@id/editProfileButton"
                             android:layout_marginStart="24dp"
-                            app:toProfileRound="@{user.id}"
+                            app:toProfileRound="@{business.userId}"
                     />
                     <TextView
                             style="@style/LargeText"
@@ -73,7 +76,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
                             tools:text="Sai Photo Studio"
-                            android:text="@{user.business.name}"/>
+                            android:text="@{business.name}"/>
                     <TextView
                             style="@style/MediumText"
                             android:id="@+id/businessCategory"
@@ -83,7 +86,7 @@
                             app:layout_constraintTop_toBottomOf="@id/businessName"
                             android:layout_marginStart="16dp"
                             tools:text="Photo Studio"
-                            android:text="@{user.business.businessCategory.name}"/>
+                            android:text="@{business.businessCategory.name}"/>
                     <com.google.android.material.button.MaterialButton
                             android:id="@+id/editProfileButton"
                             style="@style/ButtonOutlinedStyle"
@@ -111,6 +114,32 @@
                         android:overScrollMode="never"
                         android:nestedScrollingEnabled="false"/>
                 <include layout="@layout/layout_divider"/>
+                <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground">
+                    <Switch
+                            android:id="@+id/availabilitySwitch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="32dp"
+                            android:paddingEnd="32dp"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:checked="@{business.visible}"
+                            android:enabled="@{!updatingStatus}"
+                            android:text="@string/available"
+                            android:fontFamily="@font/cabin"/>
+                    <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:layout_marginEnd="32dp"
+                            app:isGone="@{!updatingStatus}"/>
+                </FrameLayout>
+                <include layout="@layout/layout_divider"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/accountOptionsView"
                         android:layout_width="match_parent"
@@ -118,7 +147,7 @@
                         android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:paddingBottom="@dimen/dimen_80dp"
+                        android:paddingBottom="150dp"
                         android:clipToPadding="false"
                         tools:listitem="@layout/item_account_option"/>
             </LinearLayout>

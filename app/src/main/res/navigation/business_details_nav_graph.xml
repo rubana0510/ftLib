@@ -10,6 +10,8 @@
             tools:layout="@layout/fragment_business_detail">
         <action android:id="@+id/action_navigation_business_detail_to_navigation_review"
                 app:destination="@id/navigation_review"/>
+        <action android:id="@+id/action_navigation_business_detail_to_navigation_timeline"
+                app:destination="@id/navigation_timeline"/>
         <argument android:name="businessId" app:argType="string"/>
     </fragment>
     <fragment
@@ -17,6 +19,13 @@
             android:name="com.feedbacktower.fragments.ReviewsFragment"
             android:label="@string/title_reviews"
             tools:layout="@layout/fragment_reviews">
+        <argument android:name="businessId" app:argType="string"/>
+    </fragment>
+    <fragment
+            android:id="@+id/navigation_timeline"
+            android:name="com.feedbacktower.fragments.TimelineFragment"
+            android:label="@string/title_timeline"
+            tools:layout="@layout/fragment_timeline">
         <argument android:name="businessId" app:argType="string"/>
     </fragment>
     <argument android:name="businessId" app:argType="string"/>

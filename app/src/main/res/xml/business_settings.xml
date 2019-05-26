@@ -1,0 +1,20 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="NOTIFICATIONS">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="enable_notifications"
+            android:summary="@string/pref_description_enable_notifications"
+            android:title="@string/pref_title_enable_notifications" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="LOCATION">
+        <SwitchPreference
+                android:defaultValue="true"
+                android:key="enable_trackme"
+                android:summary="@string/pref_description_enable_trackme"
+                android:title="@string/pref_title_enable_trackme" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

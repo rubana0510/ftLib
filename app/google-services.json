@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "94278495791",
-    "firebase_url": "https://feedback-tower-test.firebaseio.com",
-    "project_id": "feedback-tower-test",
-    "storage_bucket": "feedback-tower-test.appspot.com"
+    "project_number": "489572701366",
+    "firebase_url": "https://feedback-tower-239617.firebaseio.com",
+    "project_id": "feedback-tower-239617",
+    "storage_bucket": "feedback-tower-239617.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:94278495791:android:6554eace87fc38dc",
+        "mobilesdk_app_id": "1:489572701366:android:6554eace87fc38dc",
         "android_client_info": {
           "package_name": "com.feedbacktower"
         }
       },
       "oauth_client": [
         {
-          "client_id": "94278495791-t7gak9mk13l5vcdasvt79cq3utt6t249.apps.googleusercontent.com",
+          "client_id": "489572701366-u83ntvi6sme1bs2fino144t57mrabfk4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDaUvjOpKALi2ccUhxB8Tf4hd1JaIK99JA"
+          "current_key": "AIzaSyALzMkiSN4IKg94QuCXGRNV4ViZl6u3pdc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "94278495791-t7gak9mk13l5vcdasvt79cq3utt6t249.apps.googleusercontent.com",
+              "client_id": "489572701366-u83ntvi6sme1bs2fino144t57mrabfk4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

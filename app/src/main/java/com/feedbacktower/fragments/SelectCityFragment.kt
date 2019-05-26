@@ -43,7 +43,7 @@ class SelectCityFragment : Fragment() {
                             AppPrefs.getInstance(requireContext()).setValue("USER_CITY", city.id.toString())
                             AppPrefs.getInstance(requireContext()).setValue("CITY", city.name)
                             if(args.onboarding){
-                                SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestsFragment().let {
+                                SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestFragment().let {
                                     findNavController().navigate(it)
                                 }
                             }else{

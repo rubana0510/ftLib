@@ -45,8 +45,9 @@ class BusinessSetup1Fragment : Fragment() {
 
     private fun initUi(binding: FragmentBusinessSetup1Binding) {
 
-        binding.business = AppPrefs.getInstance(requireContext()).user?.business
-
+        val business = AppPrefs.getInstance(requireContext()).user?.business
+        binding.business = business
+        selectedCatId = business?.businessCategory?.id
         nameLayout = binding.businessNameLayout
         regLayout = binding.estRegNoLayout
         categoryIdLayout = binding.businessCatLayout
@@ -56,6 +57,7 @@ class BusinessSetup1Fragment : Fragment() {
         catIdInput = binding.businessCatInput
         catIdInput.inputType = InputType.TYPE_NULL
         continueButton = binding.continueButton
+        catIdInput.setText(business?.city?.name)
 
         binding.onContinueClick = View.OnClickListener {
             if (valid(nameInput.text.toString().trim(), regNoInput.text.toString().trim(), selectedCatId)) {
@@ -111,7 +113,7 @@ class BusinessSetup1Fragment : Fragment() {
     }
 
     private fun navigateNext() {
-        BusinessSetup1FragmentDirections.actionBusinessSetup1FragmentToBusinessSetup2Fragment()
+        BusinessSetup1FragmentDirections.actionBusinessSetup1FragmentToPointOnMapFragment()
             .let {
                 findNavController().navigate(it)
             }
@@ -134,5 +136,4 @@ class BusinessSetup1Fragment : Fragment() {
                 navigateNext()
             }
     }
-
 }

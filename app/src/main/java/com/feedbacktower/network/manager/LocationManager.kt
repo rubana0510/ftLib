@@ -52,4 +52,13 @@ class LocationManager {
             apiService.updateBusinessDetailsAsync(map).makeRequest(onComplete)
         }
     }
+    fun autocomplete(
+        query: String,
+        onComplete: (AutoCompleteResponse?, Throwable?) -> Unit
+    ){
+        val url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=<API_KEY>&sessiontoken=1234567890";
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.autocompleteAsync(url).makeRequest(onComplete)
+        }
+    }
 }

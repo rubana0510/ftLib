@@ -78,6 +78,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(remoteMessage: RemoteMessage, image: Bitmap? = null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("notify_001", "Notifications", NotificationManager.IMPORTANCE_DEFAULT)
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
+        }
+
         val intent = Intent(this, SplashScreen::class.java)
         val pendingIntent = PendingIntent.getActivity(
             this,
@@ -88,11 +94,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val builder = NotificationCompat.Builder(this, "notify_001")
         builder.setContentTitle(remoteMessage.data["title"])
         builder.setContentText(remoteMessage.data["body"])
-        //builder.setSmallIcon(R.drawable.ic_stat_name)
+        builder.setSmallIcon(R.drawable.ic_notification_icon)
         builder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
         builder.setDefaults(android.app.Notification.DEFAULT_VIBRATE)
         builder.priority = NotificationCompat.PRIORITY_HIGH
         builder.setContentIntent(pendingIntent)
+        builder.setAutoCancel(true)
         if (image != null) {
             builder.setLargeIcon(image)
             builder.setStyle(NotificationCompat.BigPictureStyle().bigPicture(image))

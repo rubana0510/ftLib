@@ -68,6 +68,11 @@ interface ApiServiceDescriptor {
     @GET("/business/")
     fun getMyBusinessAsync(): Deferred<ApiResponse<MyBusinessResponse?>>
 
+    @GET
+    fun autocompleteAsync(
+        @Url url: String
+    ): Deferred<ApiResponse<AutoCompleteResponse?>>
+
 
     //PAYMENTS
     @POST("/transaction/request")

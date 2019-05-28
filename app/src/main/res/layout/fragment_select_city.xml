@@ -4,19 +4,68 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="isLoading" type="Boolean"/>
+        <variable name="onClearClick" type="android.view.View.OnClickListener"/>
+
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+        <RelativeLayout
+                android:id="@+id/searchFrame"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:stateListAnimator="@animator/raised"
+                android:elevation="8dp">
+            <ImageView
+                    android:id="@+id/searchIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_search_black_24dp"
+                    android:padding="8dp"
+                    android:layout_marginStart="@dimen/marginStartItem"
+                    android:layout_centerVertical="true"
+                    android:tint="@color/grey21"
+                    android:layout_gravity="start|center_vertical"/>
+            <EditText
+                    android:id="@+id/queryInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:background="@null"
+                    android:focusable="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/searchIcon"
+                    android:layout_toStartOf="@+id/clearButton"
+                    android:hint="@string/title_search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+            <ImageButton
+                    android:id="@+id/clearButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_close_black_24dp"
+                    android:padding="8dp"
+                    android:tint="@color/grey21"
+                    android:layout_marginEnd="@dimen/marginEndItem"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_alignParentEnd="true"
+                    android:visibility="gone"
+                    android:onClick="@{onClearClick}"/>
+        </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cityList"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFrame"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:padding="@dimen/activity_horizontal_margin"
                 app:isGone="@{isLoading}"/>

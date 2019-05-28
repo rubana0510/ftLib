@@ -1,6 +1,9 @@
 package com.feedbacktower.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +17,7 @@ import com.feedbacktower.databinding.FragmentSelectCityBinding
 import com.feedbacktower.network.manager.LocationManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.setVertical
+import kotlinx.android.synthetic.main.fragment_select_city.*
 import org.jetbrains.anko.toast
 
 class SelectCityFragment : Fragment() {
@@ -54,6 +58,30 @@ class SelectCityFragment : Fragment() {
                         }
                     }
 
+            }
+
+        })
+        queryInput.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(text: Editable?) {
+                if(text.isNullOrEmpty()) return
+
+                val input = text.toString().trim()
+                LocationManager.getInstance()
+                    .autocomplete(input){response, throwable ->
+                        Log.d("Search city",response.toString())
+                        val list = ArrayList<City>()
+                        response?.predictions?.forEach {
+                            list.add(City(0, it.reference, 0,it.description))
+                        }
+                        adapter.submitList(list)
+                    }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
         })

@@ -11,9 +11,27 @@ suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, Throwable?
         val response = this.await()
         if (response.error != null)
             onComplete(null, Throwable(response.error.msg))
-        else{
+        else {
             Log.d(TAG, "Payload: ${response.payload}")
             onComplete(response.payload, null)
+        }
+    } catch (e: HttpException) {
+        e.printStackTrace()
+        onComplete(null, Throwable("Network error occurred"))
+    } catch (e: Throwable) {
+        e.printStackTrace()
+        onComplete(null, Throwable("Some error occurred"))
+    }
+}
+
+
+suspend fun <T> Deferred<T>.makeRequestThirdParty(onComplete: (T?, Throwable?) -> Unit) {
+    try {
+        val response = this.await()
+        if (response != null)
+            onComplete(null, Throwable("Some error"))
+        else {
+            onComplete(response, null)
         }
     } catch (e: HttpException) {
         e.printStackTrace()

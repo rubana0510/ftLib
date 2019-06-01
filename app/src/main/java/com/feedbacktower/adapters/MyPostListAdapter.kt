@@ -7,16 +7,15 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
-import com.feedbacktower.databinding.ItemPostTextBinding
-import com.feedbacktower.databinding.ItemPostMediaBinding
+import com.feedbacktower.databinding.ItemMyPostMediaBinding
+import com.feedbacktower.databinding.ItemMyPostTextBinding
 import com.feedbacktower.fragments.HomeFragmentDirections
-import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import java.lang.IllegalStateException
 
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter(private val listener: Listener?) :
+class MyPostListAdapter(private val listener: Listener?) :
     ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
@@ -25,14 +24,14 @@ class PostListAdapter(private val listener: Listener?) :
                 createLikeClickListener(item, position),
                 null,
                 createProfileClickListener(item, position),
-                null,
+                createMoreClickListener(item, position),
                 item
             )
             is MediaPostViewHolder -> holder.bind(
                 createLikeClickListener(item, position),
                 createVideoClickListener(item, position),
                 createProfileClickListener(item, position),
-                null,
+                createMoreClickListener(item, position),
                 item
             )
             else -> throw IllegalArgumentException()
@@ -50,7 +49,7 @@ class PostListAdapter(private val listener: Listener?) :
         when (viewType) {
             0 -> {
                 return TextPostViewHolder(
-                    ItemPostTextBinding.inflate(
+                    ItemMyPostTextBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -59,7 +58,7 @@ class PostListAdapter(private val listener: Listener?) :
             }
             1 -> {
                 return MediaPostViewHolder(
-                    ItemPostMediaBinding.inflate(
+                    ItemMyPostMediaBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -94,6 +93,12 @@ class PostListAdapter(private val listener: Listener?) :
         listener?.onVideoClick(item, pos)
     }
 
+    private fun createMoreClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->
+        listener?.onMoreClick(item, pos)
+    }
+
+
+
     fun getItemAtPos(position: Int): Post = getItem(position)
 
     fun updateLike(position: Int, liked: Boolean) {
@@ -108,7 +113,7 @@ class PostListAdapter(private val listener: Listener?) :
     }
 
     class MediaPostViewHolder(
-        val binding: ItemPostMediaBinding
+        val binding: ItemMyPostMediaBinding
     ) : BaseViewHolder<Post>(binding.root) {
         override fun bind(
             listener: View.OnClickListener,
@@ -122,13 +127,14 @@ class PostListAdapter(private val listener: Listener?) :
                 videoClick = videoClickListener
                 likeClickListener = listener
                 openProfileListener = profileListener
+                moreClickListener = moreListener
                 executePendingBindings()
             }
         }
     }
 
     class TextPostViewHolder(
-        val binding: ItemPostTextBinding
+        val binding: ItemMyPostTextBinding
     ) : BaseViewHolder<Post>(binding.root) {
         override fun bind(
             listener: View.OnClickListener,
@@ -141,6 +147,7 @@ class PostListAdapter(private val listener: Listener?) :
                 post = item
                 likeClickListener = listener
                 openProfileListener = profileListener
+                moreClickListener = moreListener
                 executePendingBindings()
             }
         }
@@ -149,5 +156,6 @@ class PostListAdapter(private val listener: Listener?) :
     interface Listener {
         fun onLikeClick(item: Post, position: Int)
         fun onVideoClick(item: Post, position: Int)
+        fun onMoreClick(item: Post, position: Int)
     }
 }

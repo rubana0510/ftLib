@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.feedbacktower.R
@@ -32,6 +33,7 @@ class BusinessSetup2Fragment : Fragment() {
     private lateinit var websiteInput: TextInputEditText
     private lateinit var addressInput: TextInputEditText
 
+    private val args: BusinessSetup2FragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,7 +59,7 @@ class BusinessSetup2Fragment : Fragment() {
 
         continueButton = binding.continueButton
 
-        binding.onContinueClick =  View.OnClickListener {
+        binding.onContinueClick = View.OnClickListener {
             if (valid(
                     addressInput.text.toString().trim(),
                     contactInput.text.toString().trim(),
@@ -106,13 +108,11 @@ class BusinessSetup2Fragment : Fragment() {
 
     private fun navigateNext() {
         val args: BusinessSetup2FragmentArgs by navArgs()
-        if(args.edit){
-            BusinessSetup2FragmentDirections.actionBusinessSetup2FragmentToNavigationAccount().let {
-                findNavController().navigate(it)
-            }
-        }else{
+        if (!args.edit) {
             requireActivity().launchActivity<SubscriptionPlansScreen>()
+            return
         }
+        findNavController().navigateUp()
     }
 
     private fun updateDetails(

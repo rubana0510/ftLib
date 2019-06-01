@@ -1,13 +1,9 @@
 package com.feedbacktower.network.service
 
-import com.feedbacktower.data.models.BusinessCategory
-import com.feedbacktower.data.models.SubscriptionPlan
-import com.feedbacktower.data.models.User
 import com.feedbacktower.network.models.*
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiServiceDescriptor {
@@ -68,6 +64,9 @@ interface ApiServiceDescriptor {
     @GET("/business/")
     fun getMyBusinessAsync(): Deferred<ApiResponse<MyBusinessResponse?>>
 
+    @GET("/profile/")
+    fun findCustomerAsync(): Deferred<ApiResponse<FindCustomerResponse?>>
+
     @GET
     fun autocompleteAsync(
         @Url url: String
@@ -123,6 +122,12 @@ interface ApiServiceDescriptor {
     @PUT("/post/unlike/{postId}")
     fun unLikePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
 
+    @DELETE("/post/{postId}")
+    fun deletePost(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
+
+    @PUT("/post/{postId}")
+    fun editTextPostAsync(@Path("postId") postId: String, @Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
 
     //REVIEW
     @POST("/review/")
@@ -175,17 +180,12 @@ interface ApiServiceDescriptor {
         @Query("search") search: String = ""
     ): Deferred<ApiResponse<SearchBusinessResponse?>>
 
-    @POST("/business/register")
-    fun updateBusinessAddressAsync(
+    @PUT("/business/")
+    fun updateBusinessAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/business/register")
-    fun updateBusinessDetailsAsync(
-        @Body map: HashMap<String, Any?>
-    ): Deferred<ApiResponse<EmptyResponse?>>
-
-    @POST("/business/register")
+    @POST("/business/")
     fun registerAsBusinessAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
     @GET("/business/{businessId}")

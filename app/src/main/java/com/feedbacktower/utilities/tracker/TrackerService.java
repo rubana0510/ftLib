@@ -1,6 +1,9 @@
 package com.feedbacktower.utilities.tracker;
 
-import android.app.*;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -13,15 +16,15 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import com.google.android.gms.maps.model.LatLng;
 
+
 public class TrackerService extends Service {
     private final LocationServiceBinder binder = new LocationServiceBinder();
-    private final String TAG = "TrackerService";
+    private final String TAG = "BackgroundService";
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
-    private NotificationManager notificationManager;
 
-    private final int LOCATION_INTERVAL = 500;
-    private final int LOCATION_DISTANCE = 1;
+    private final int LOCATION_INTERVAL = 10000;
+    private final int LOCATION_DISTANCE = 1000;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -41,12 +44,17 @@ public class TrackerService extends Service {
         public void onLocationChanged(Location location) {
             mLastLocation = location;
             com.feedbacktower.network.manager.LocationManager.getInstance()
-                    .saveCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()), (emptyResponse, throwable) -> {
-                        Log.e(TAG, "Location Saved: " + throwable.getMessage());
-                            return null;
-                            }
-                    );
+                    .saveCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()),
+                            (emptyResponse, error) -> {
+                                if (error != null) {
+                                    Log.e(TAG, "Error saving location: " + error.getMessage());
+                                } else {
+                                    Log.i(TAG, "LocationSaved to Server ");
+                                }
+                                return null;
+                            });
             Log.i(TAG, "LocationChanged: " + location);
+
         }
 
         @Override
@@ -74,9 +82,8 @@ public class TrackerService extends Service {
     @Override
     public void onCreate() {
         Log.i(TAG, "onCreate");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
             startForeground(12345678, getNotification());
-        }
     }
 
     @Override
@@ -113,18 +120,14 @@ public class TrackerService extends Service {
     }
 
     public void stopTracking() {
-        NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nMgr.cancel(12345678);
         this.onDestroy();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private Notification getNotification() {
         NotificationChannel channel = new NotificationChannel("channel_01", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
-
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
-
         Notification.Builder builder = new Notification.Builder(getApplicationContext(), "channel_01").setAutoCancel(true);
         return builder.build();
     }

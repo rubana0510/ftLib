@@ -5,7 +5,7 @@ import com.feedbacktower.data.local.models.AccountOption
 
 class OptionsDiffCallback : DiffUtil.ItemCallback<AccountOption>() {
     override fun areItemsTheSame(oldItem: AccountOption, newItem: AccountOption): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.summary == newItem.summary
     }
 
     override fun areContentsTheSame(oldItem: AccountOption, newItem: AccountOption): Boolean {

@@ -14,10 +14,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.network.models.QrTxStatus
-import com.feedbacktower.util.Constants
-import com.feedbacktower.util.gone
-import com.feedbacktower.util.toRelativeTime
-import com.feedbacktower.util.visible
+import com.feedbacktower.util.*
 
 @BindingAdapter("isGone")
 fun bindIsGone(view: View, isGone: Boolean) {
@@ -97,11 +94,7 @@ fun bindToDate(view: TextView, text: String?) {
 @BindingAdapter("toProfileRound")
 fun bindToProfileRound(view: ImageView, userId: String?) {
     if (!userId.isNullOrEmpty()) {
-        Glide.with(view.context)
-            .load("${Constants.Service.Secrets.BASE_URL}/user/$userId.jpg")
-            .apply(RequestOptions().circleCrop())
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(view)
+        view.toProfileRound(userId)
     }
 }
 

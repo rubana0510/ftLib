@@ -8,6 +8,7 @@ abstract class BaseViewHolder<in T>(itemView: View) : RecyclerView.ViewHolder(it
         listener: View.OnClickListener,
         videoClickListener: View.OnClickListener?,
         profileListener: View.OnClickListener,
+        moreListener: View.OnClickListener?,
         item: T
     )
 }

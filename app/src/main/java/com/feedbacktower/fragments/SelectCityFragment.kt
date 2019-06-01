@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,7 +23,9 @@ import org.jetbrains.anko.toast
 
 class SelectCityFragment : Fragment() {
     private lateinit var adapter: CityListAdapter
+    private lateinit var queryInput: EditText
     private val args: SelectCityFragmentArgs by navArgs()
+
     companion object {
         fun getInstance(): SelectCityFragment {
             val fragment = SelectCityFragment()
@@ -46,14 +49,13 @@ class SelectCityFragment : Fragment() {
 
                             AppPrefs.getInstance(requireContext()).setValue("USER_CITY", city.id.toString())
                             AppPrefs.getInstance(requireContext()).setValue("CITY", city.name)
-                            if(args.onboarding){
-                                SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestFragment().let {
-                                    findNavController().navigate(it)
+                            AppPrefs.getInstance(requireContext()).apply {
+                                user = user?.apply {
+                                    this.city = city
                                 }
-                            }else{
-                                findNavController().navigateUp()
                             }
-                        }else{
+                            navigateNext()
+                        } else {
                             requireContext().toast("Error saving City")
                         }
                     }
@@ -61,17 +63,17 @@ class SelectCityFragment : Fragment() {
             }
 
         })
-        queryInput.addTextChangedListener(object : TextWatcher{
+        binding.queryInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
-                if(text.isNullOrEmpty()) return
+                if (text.isNullOrEmpty()) return
 
                 val input = text.toString().trim()
                 LocationManager.getInstance()
-                    .autocomplete(input){response, throwable ->
-                        Log.d("Search city",response.toString())
+                    .autocomplete(input) { response, throwable ->
+                        Log.d("Search city", response.toString())
                         val list = ArrayList<City>()
                         response?.predictions?.forEach {
-                            list.add(City(0, it.reference, 0,it.description))
+                            list.add(City(0, it.reference, 0, it.description))
                         }
                         adapter.submitList(list)
                     }
@@ -90,6 +92,16 @@ class SelectCityFragment : Fragment() {
 
         fetchCities(binding)
         return binding.root
+    }
+
+    private fun navigateNext() {
+        if (!args.edit) {
+            SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestFragment().let {
+                findNavController().navigate(it)
+            }
+            return
+        }
+        findNavController().navigateUp()
     }
 
     private fun fetchCities(binding: FragmentSelectCityBinding) {

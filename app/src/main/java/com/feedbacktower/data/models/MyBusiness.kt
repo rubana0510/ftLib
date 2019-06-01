@@ -48,6 +48,8 @@ data class MyBusiness(
     var userId: String,
     @SerializedName("visible")
     var visible: Boolean,
+    @SerializedName("available")
+    var available: Boolean,
     @SerializedName("walletAmount")
     var walletAmount: Double,
     @SerializedName("website")

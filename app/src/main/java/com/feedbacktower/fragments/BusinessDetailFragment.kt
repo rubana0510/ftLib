@@ -11,12 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.adapters.ProfilePostListAdapter
 import com.feedbacktower.adapters.ReviewListAdapter
+import com.feedbacktower.data.models.Business
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.ReviewsManager
+import com.feedbacktower.ui.map.MapScreen
 import com.feedbacktower.util.isCurrentBusiness
+import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
 import java.lang.IllegalArgumentException
@@ -28,6 +31,7 @@ class BusinessDetailFragment : Fragment() {
     private lateinit var reviewAdapter: ReviewListAdapter
     private lateinit var postAdapter: ProfilePostListAdapter
     private lateinit var businessId: String
+    private var business: Business? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,7 +54,7 @@ class BusinessDetailFragment : Fragment() {
             findNavController().navigate(d)
         }
         binding.onSendSuggestionClicked = View.OnClickListener {
-            if(isCurrentBusiness(businessId, requireContext())){
+            if (isCurrentBusiness(businessId, requireContext())) {
                 requireContext().toast("You cannot Send suggestion to yourself!")
                 return@OnClickListener
             }
@@ -59,10 +63,22 @@ class BusinessDetailFragment : Fragment() {
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager, "suggestion")
         }
+        binding.onCurrentLocationClicked = View.OnClickListener {
+            if (business != null) {
+                business?.let {
+                    requireActivity().launchActivity<MapScreen> {
+                        putExtra("LOCATION", it.currentLocation)
+                    }
+                }
 
+            } else {
+                requireContext().toast("No location found")
+            }
+
+        }
 
         binding.sendReviewButtonClicked = View.OnClickListener {
-            if(isCurrentBusiness(businessId, requireContext())){
+            if (isCurrentBusiness(businessId, requireContext())) {
                 requireContext().toast("You cannot Rate or Review yourself!")
                 return@OnClickListener
             }
@@ -93,6 +109,7 @@ class BusinessDetailFragment : Fragment() {
             .getBusinessDetails(businessId) { response, error ->
                 if (error == null && response?.business != null) {
                     binding.business = response.business
+                    business = response.business
                 }
             }
     }
@@ -121,6 +138,7 @@ class BusinessDetailFragment : Fragment() {
         override fun onLikeClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
+
         override fun onVideoClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }

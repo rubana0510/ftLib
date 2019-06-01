@@ -25,12 +25,14 @@ class ProfilePostListAdapter(private val listener: Listener?) :
                 createLikeClickListener(item, position),
                 null,
                 createProfileClickListener(item, position),
+                null,
                 item
             )
             is MediaPostViewHolder -> holder.bind(
                 createLikeClickListener(item, position),
                 createVideoClickListener(item, position),
                 createProfileClickListener(item, position),
+                null,
                 item
             )
             else -> throw IllegalArgumentException()
@@ -110,6 +112,7 @@ class ProfilePostListAdapter(private val listener: Listener?) :
             listener: View.OnClickListener,
             videoClickListener: View.OnClickListener?,
             profileListener: View.OnClickListener,
+            moreListener: View.OnClickListener?,
             item: Post
         ) {
             binding.apply {
@@ -129,6 +132,7 @@ class ProfilePostListAdapter(private val listener: Listener?) :
             listener: View.OnClickListener,
             videoClickListener: View.OnClickListener?,
             profileListener: View.OnClickListener,
+            moreListener: View.OnClickListener?,
             item: Post
         ) {
             binding.apply {

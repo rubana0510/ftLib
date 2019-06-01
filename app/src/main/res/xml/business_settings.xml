@@ -11,7 +11,7 @@
 
     <PreferenceCategory android:title="LOCATION">
         <SwitchPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="enable_trackme"
                 android:summary="@string/pref_description_enable_trackme"
                 android:title="@string/pref_title_enable_trackme" />

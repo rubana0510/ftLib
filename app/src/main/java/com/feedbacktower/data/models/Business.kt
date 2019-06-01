@@ -1,6 +1,7 @@
 package com.feedbacktower.data.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 data class Business(
@@ -24,6 +25,8 @@ data class Business(
     var id: String,
     @SerializedName("location")
     var location: Location,
+    @SerializedName("currentLocation")
+    var currentLocation: Location,
     @SerializedName("city")
     val city: City,
     @SerializedName("name")
@@ -48,11 +51,13 @@ data class Business(
     var userId: String,
     @SerializedName("visible")
     var visible: Boolean,
+    @SerializedName("available")
+    var available: Boolean,
     @SerializedName("walletAmount")
     var walletAmount: Double,
     @SerializedName("website")
     var website: String
-) {
+): Serializable {
     val averageRatings: String
         get() {
             if (totalReviews == 0) return "-"

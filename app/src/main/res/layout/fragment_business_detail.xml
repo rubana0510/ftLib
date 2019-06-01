@@ -8,6 +8,7 @@
         <variable name="business" type="com.feedbacktower.data.models.Business"/>
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
+        <variable name="onCurrentLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onViewReviewsClicked" type="android.view.View.OnClickListener"/>
         <variable name="onViewPostsClicked" type="android.view.View.OnClickListener"/>
         <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
@@ -119,6 +120,12 @@
                                 android:onClick="@{onLocationClicked}"
                                 tools:text="Taleigao, Panaji Goa, 403524"
                                 android:text="@{business.address}"/>
+                        <include layout="@layout/layout_divider"/>
+                        <TextView
+                                style="@style/IconTextViewStyle"
+                                android:drawableStart="@drawable/ic_location_on_black_24dp"
+                                android:onClick="@{onCurrentLocationClicked}"
+                                android:text="Last Location"/>
                         <include layout="@layout/layout_divider"/>
 
 

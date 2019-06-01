@@ -13,7 +13,6 @@ import com.feedbacktower.R
 import com.feedbacktower.utilities.tracker.TrackerService
 import org.jetbrains.anko.toast
 
-
 /**
  * A simple [Fragment] subclass.
  *
@@ -53,13 +52,15 @@ class BusinessSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = Intent(requireActivity().getApplication(), TrackerService::class.java)
-        requireActivity().getApplication().startService(intent)
-//        this.getApplication().startForegroundService(intent);
-        requireActivity().getApplication().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         addPreferencesFromResource(R.xml.business_settings)
         val trackMePref: SwitchPreference = findPreference("enable_trackme") as SwitchPreference
+
+
         trackMePref.setOnPreferenceChangeListener { preference, newValue ->
             if (!trackMePref.isChecked){
+                val innntent = Intent(requireActivity().getApplication(), TrackerService::class.java)
+                requireActivity().getApplication().startService(innntent)
+                requireActivity().getApplication().bindService(innntent, serviceConnection, Context.BIND_AUTO_CREATE)
                 trackMePref.isChecked = true
                 trackinService?.startTracking()
                 requireContext().toast("Tracking is on")
@@ -93,13 +94,13 @@ class BusinessSettingsFragment : PreferenceFragmentCompat() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val name = className.className
-            if (name.endsWith("BackgroundService")) {
+            if (name.endsWith("TrackerService")) {
                 trackinService = (service as TrackerService.LocationServiceBinder).getService()
             }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
-            if (className.className == "BackgroundService") {
+            if (className.className == "TrackerService") {
                 trackinService = null
             }
         }

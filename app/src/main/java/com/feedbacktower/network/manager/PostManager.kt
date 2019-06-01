@@ -60,6 +60,13 @@ class PostManager {
         }
     }
 
+    fun editTextPost(postId: String, text: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.editTextPostAsync(postId, hashMapOf("text" to text))
+                .makeRequest(onComplete)
+        }
+    }
+
     fun createPhotoPost(text: String, file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
 
         if (!file.exists()) {
@@ -82,7 +89,7 @@ class PostManager {
             Log.e(TAG, "uploadImages: FileNotFound")
             return
         }
-        val requestBody = RequestBody.create(MediaType.parse(file.getMimeType()?:"video/mp4"), file)
+        val requestBody = RequestBody.create(MediaType.parse(file.getMimeType() ?: "video/mp4"), file)
         val filePart = MultipartBody.Part.createFormData("media", file.name, requestBody)
         GlobalScope.launch(Dispatchers.Main) {
             apiService.createVideoPostAsync(
@@ -99,10 +106,17 @@ class PostManager {
         }
     }
 
+    fun deletePost(postId: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.deletePost(postId)
+                .makeRequest(onComplete)
+        }
+    }
+
 }
 
 private fun File.getMimeType(): String? {
     val uri = Uri.fromFile(this)
     val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-    return  MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
 }

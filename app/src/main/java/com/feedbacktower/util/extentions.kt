@@ -3,6 +3,7 @@ package com.feedbacktower.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -22,17 +23,37 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.text.ParseException
 import android.net.Uri
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.qrscanner.BarcodeEncoder
 import com.google.android.gms.maps.model.LatLng
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.WriterException
 import org.joda.time.DateTimeZone
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-fun ImageView.loadImage(context: Context, url: String) {
-    Glide.with(context)
+fun ImageView.loadImage(url: String) {
+    Glide.with(this.context)
         .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
         .load(url)
+        .into(this)
+}
+
+fun ImageView.loadImage(bitmap: Bitmap) {
+    Glide.with(this.context)
+        .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
+        .load(bitmap)
+        .into(this)
+}
+
+fun ImageView.toProfileRound(userId: String) {
+    Glide.with(this.context)
+        .load("${Constants.Service.Secrets.BASE_URL}/user/$userId.jpg")
+        .apply(RequestOptions().circleCrop())
+        .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
 }
 
@@ -229,8 +250,22 @@ fun isCurrentBusiness(businessId: String, context: Context): Boolean {
 fun LatLng.toLatLngArray(): String {
     return "[$latitude,$longitude]"
 }
+
 fun Location?.toLatLng(): LatLng? {
     if (this == null) return null
 
     return LatLng(latitude, longitude)
+}
+
+
+fun String?.toQrBitmap(): Bitmap? {
+    val multiFormatWriter = MultiFormatWriter()
+    try {
+        val bitMatrix = multiFormatWriter.encode(this, BarcodeFormat.QR_CODE, 300, 300)
+        val barcodeEncoder = BarcodeEncoder()
+        return barcodeEncoder.createBitmap(bitMatrix)
+    } catch (e: WriterException) {
+        e.printStackTrace()
+        return null
+    }
 }

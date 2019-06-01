@@ -5,9 +5,6 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AlertDialog
@@ -32,6 +29,7 @@ import com.zhihu.matisse.MimeType
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.view.*
 import androidx.core.content.PermissionChecker
 import androidx.navigation.fragment.findNavController
 import com.feedbacktower.ui.VideoTrimmerScreen
@@ -56,6 +54,26 @@ class HomeFragment : Fragment() {
     private var noPosts: Boolean? = false
     private val REQUEST_CODE_CHOOSE_IMAGE = 1012
     private val REQUEST_CODE_CHOOSE_VIDEO = 1013
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.change_city_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == R.id.select_city_id){
+            HomeFragmentDirections.actionNavigationHomeToSelectCityFragment().let {
+                findNavController().navigate(it)
+            }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

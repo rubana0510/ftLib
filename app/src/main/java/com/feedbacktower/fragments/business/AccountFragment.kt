@@ -20,6 +20,7 @@ import com.feedbacktower.databinding.FragmentBusinessAccountBinding
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.ui.ProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.map.MapScreen
 import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.ui.qrtransfer.SenderActivity
@@ -88,7 +89,7 @@ class AccountFragment : Fragment() {
         }
         binding.business = AppPrefs.getInstance(requireContext()).user?.business!!
         binding.editProfileButtonClicked = View.OnClickListener {
-            val dir = AccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
+            val dir = AccountFragmentDirections.actionNavigationAccountToEditBusinessFragment()
             findNavController().navigate(dir)
         }
         binding.onScanClicked = View.OnClickListener {
@@ -120,9 +121,11 @@ class AccountFragment : Fragment() {
     private fun submitOptions() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val options = listOf(
+            AccountOption(9, "Change City", "Your current city: ${AppPrefs.getInstance(requireContext()).user?.city?.name}", R.drawable.ic_post_like_filled),
             AccountOption(6, "My Wallet", "Your balance is ₹${business.walletAmount}", R.drawable.ic_post_like_filled),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
+            AccountOption(8, "My Posts", "Manage your posts", R.drawable.ic_post_like_filled),
             AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
             AccountOption(7, "Settings", "Notifications, Location", R.drawable.ic_post_like_filled),
@@ -160,6 +163,14 @@ class AccountFragment : Fragment() {
             }
             7 -> {
                 val d = AccountFragmentDirections.actionNavigationAccountToBusinessSettingsFragment()
+                findNavController().navigate(d)
+            }
+            8 -> {
+                val d = AccountFragmentDirections.actionNavigationAccountToMyPostsFragment()
+                findNavController().navigate(d)
+            }
+            9 -> {
+                val d = AccountFragmentDirections.actionNavigationAccountToSelectCityFragment()
                 findNavController().navigate(d)
             }
         }

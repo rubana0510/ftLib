@@ -5,11 +5,13 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.feedbacktower.databinding.FragmentPointOnMapBinding
 import com.feedbacktower.network.manager.LocationManager
 import com.feedbacktower.util.LocationUtils
@@ -22,25 +24,23 @@ import com.google.android.gms.maps.model.LatLng
 import org.jetbrains.anko.toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.Location
 import com.feedbacktower.util.PermissionUtils
 
 
 class PointOnMapFragment : Fragment(), OnMapReadyCallback {
+    private val TAG = "PointOnMap"
     private var markedLocation: LatLng? = null
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var googleMap: GoogleMap? = null
+    private val args: PointOnMapFragmentArgs by navArgs()
 
     override fun onResume() {
         super.onResume()
         if (!PermissionUtils.locationPermissionsGranted(requireActivity())) {
             PermissionUtils.requestLocationPermission(requireActivity())
             return
-        }
-
-        if (LocationUtils.getInstance().isLocationEnabled(requireContext())) {
-            getLastLocation()
-        } else {
-            showLocationSettingsDialog()
         }
     }
 
@@ -54,7 +54,7 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initUi(binding: FragmentPointOnMapBinding) {
-        binding.onContinue = View.OnClickListener { navigateNext(binding) }
+        binding.onContinue = View.OnClickListener { saveLocation(binding) }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -66,6 +66,17 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
             markedLocation = googleMap?.cameraPosition?.target ?: return@setOnCameraIdleListener
         }
         enableMyLocation()
+        val oldLocation = AppPrefs.getInstance(requireContext()).user?.business?.location
+        if (oldLocation?.latitude != null && oldLocation.longitude != null) {
+            zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 20f)
+            return
+        }
+
+        if (LocationUtils.getInstance().isLocationEnabled(requireContext())) {
+            getLastLocation()
+        } else {
+            showLocationSettingsDialog()
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -88,12 +99,12 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
             }
             val currLocation = LatLng(location.latitude, location.longitude)
             LocationUtils.getInstance().lastKnownLocation = currLocation
-            zoomToLocation(currLocation)
+            zoomToLocation(currLocation, 12f)
         }
     }
 
-    private fun zoomToLocation(currLocation: LatLng) {
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currLocation, 18f))
+    private fun zoomToLocation(currLocation: LatLng, zoomLevel: Float) {
+        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currLocation, zoomLevel))
     }
 
     private fun showLocationSettingsDialog() {
@@ -107,7 +118,7 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
             .show()
     }
 
-    private fun navigateNext(binding: FragmentPointOnMapBinding) {
+    private fun saveLocation(binding: FragmentPointOnMapBinding) {
         if (markedLocation == null) {
             requireContext().toast("Mark your business location by moving map")
             return
@@ -121,11 +132,29 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
                         requireContext().toast(error.message ?: getString(R.string.default_err_message))
                         return@saveBusinessLocation
                     }
-                    PointOnMapFragmentDirections.actionPointOnMapFragmentToBusinessSetup2Fragment().let { dir ->
-                        findNavController().navigate(dir)
-                    }
+                    Log.d(TAG, "BusinessLocBefore: ${AppPrefs.getInstance(requireContext()).user?.business?.location}")
+                    AppPrefs.getInstance(requireContext())
+                        .apply {
+                            user = user?.apply {
+                                business?.apply {
+                                    location = Location(listOf(it.latitude, it.longitude), "permanent")
+                                }
+                            }
+                        }
+                    Log.d(TAG, "BusinessLocLater: ${AppPrefs.getInstance(requireContext()).user?.business?.location}")
+                    navigateNext()
                 }
         }
+    }
+
+    private fun navigateNext() {
+        if (!args.edit) {
+            PointOnMapFragmentDirections.actionPointOnMapFragmentToBusinessSetup2Fragment().let { dir ->
+                findNavController().navigate(dir)
+            }
+            return
+        }
+        findNavController().navigateUp()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

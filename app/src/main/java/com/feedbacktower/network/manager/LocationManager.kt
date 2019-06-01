@@ -40,7 +40,7 @@ class LocationManager {
     ){
         val map = hashMapOf<String, Any?>("location" to arrayOf(location.latitude, location.longitude))
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.updateBusinessDetailsAsync(map).makeRequest(onComplete)
+            apiService.updateBusinessAsync(map).makeRequest(onComplete)
         }
     }
     fun saveCurrentLocation(
@@ -49,7 +49,7 @@ class LocationManager {
     ){
         val map = hashMapOf<String, Any?>("currentLocation" to arrayOf(location.latitude, location.longitude))
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.updateBusinessDetailsAsync(map).makeRequest(onComplete)
+            apiService.updateBusinessAsync(map).makeRequest(onComplete)
         }
     }
     fun autocomplete(

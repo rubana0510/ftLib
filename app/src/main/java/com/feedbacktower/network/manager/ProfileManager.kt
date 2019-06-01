@@ -30,6 +30,16 @@ class ProfileManager {
             }
     }
 
+    fun find(
+        qrData: String,
+        onComplete: (FindCustomerResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.findCustomerAsync().makeRequest(onComplete)
+        }
+    }
+
+
     fun updatePersonalDetails(
         firstName: String,
         lastName: String,
@@ -67,16 +77,14 @@ class ProfileManager {
         name: String,
         regNo: String,
         categoryId: String,
-        cityId: String,
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.updateBusinessDetailsAsync(
+            apiService.updateBusinessAsync(
                 hashMapOf(
                     "name" to name,
                     "regNo" to regNo,
-                    "businessCategoryId" to categoryId,
-                    "cityId" to cityId
+                    "businessCategoryId" to categoryId
                 )
             ).makeRequest(onComplete)
         }
@@ -112,7 +120,7 @@ class ProfileManager {
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.updateBusinessAddressAsync(
+            apiService.updateBusinessAsync(
                 hashMapOf(
                     "address" to address,
                     "phone" to contact,
@@ -197,8 +205,8 @@ class ProfileManager {
 
     fun changeBusinessAvailability(available: Boolean, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.updateBusinessDetailsAsync(
-                hashMapOf("visible" to available)
+            apiService.updateBusinessAsync(
+                hashMapOf("available" to available)
             ).makeRequest(onComplete)
         }
     }

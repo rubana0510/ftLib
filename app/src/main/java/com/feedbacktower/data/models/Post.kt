@@ -1,6 +1,7 @@
 package com.feedbacktower.data.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Post(
     @SerializedName("id")
@@ -29,7 +30,7 @@ data class Post(
     val user: User,
     @SerializedName("business")
     val business: Business
-) : BaseModel(id) {
+) : BaseModel(id), Serializable {
 
     val isLiked: Boolean
         get() = liked == 1

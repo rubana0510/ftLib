@@ -28,6 +28,7 @@ import com.feedbacktower.databinding.FragmentSearchBinding
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.SearchBusiness
 import com.feedbacktower.ui.BusinessDetailsActivity
+import com.feedbacktower.ui.account.FindCustomerActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import kotlinx.android.synthetic.main.fragment_search.view.*
@@ -62,6 +63,10 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
         isListEmpty = binding.isListEmpty
         clearButton = binding.clearButton
         binding.onClearClick = View.OnClickListener { binding.queryInput.text = null }
+
+        binding.onScanClick = View.OnClickListener {
+            requireActivity().launchActivity<FindCustomerActivity> {  }
+        }
         binding.queryInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }

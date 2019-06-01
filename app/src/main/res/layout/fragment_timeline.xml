@@ -1,57 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="#e0e0e0"
         tools:context=".fragments.TimelineFragment">
 
     <data>
         <variable name="isLoading" type="Boolean"/>
         <variable name="noPosts" type="Boolean"/>
     </data>
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/feedListView"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/item_post_media"
+                android:nestedScrollingEnabled="false"
+                app:isGone="@{isLoading}"/>
+        <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay">
-
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:title="@string/app_name"
-                    app:titleTextColor="@color/white"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#e0e0e0">
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/feedListView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:listitem="@layout/item_post_media"
-                        android:nestedScrollingEnabled="false"
-                        app:isGone="@{isLoading}"/>
-                <TextView
-                        android:id="@+id/message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/no_feed_yet"
-                        app:isGone="@{!noPosts}"/>
-            </FrameLayout>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </LinearLayout>
+                android:layout_gravity="center"
+                android:text="@string/no_feed_yet"
+                app:isGone="@{!noPosts}"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

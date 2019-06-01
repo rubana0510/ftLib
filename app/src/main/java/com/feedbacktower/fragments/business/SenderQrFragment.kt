@@ -17,6 +17,7 @@ import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.qrscanner.BarcodeEncoder
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.gone
+import com.feedbacktower.util.toQrBitmap
 import com.feedbacktower.util.visible
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -53,7 +54,7 @@ class SenderQrFragment : Fragment() {
                 }
                 if (response == null) throw  IllegalStateException("Generate QR response cannot be null")
                 requireContext().toast("Qr code generated: ${response.txn.id}, please scan")
-                val bitmap = printQRCode(response.txn.id)
+                val bitmap = response.txn.id.toQrBitmap()
                 qrImage.setImageBitmap(bitmap)
                 qrImage.visible()
                 listenForScanned(response.txn.id)
@@ -99,19 +100,5 @@ class SenderQrFragment : Fragment() {
 
                 }
             }
-    }
-
-
-    private fun printQRCode(textToQR: String): Bitmap? {
-        val multiFormatWriter = MultiFormatWriter()
-        try {
-            val bitMatrix = multiFormatWriter.encode(textToQR, BarcodeFormat.QR_CODE, 300, 300)
-            val barcodeEncoder = BarcodeEncoder()
-            return barcodeEncoder.createBitmap(bitMatrix)
-        } catch (e: WriterException) {
-            e.printStackTrace()
-            return null
-        }
-
     }
 }

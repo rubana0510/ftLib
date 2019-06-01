@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentAccountSelectionTypeBinding
@@ -18,22 +19,20 @@ import com.feedbacktower.util.launchActivity
 import org.jetbrains.anko.toast
 
 class AccountTypeSelectionFragment : Fragment() {
-    private var onboarding = true
+    private val args: AccountTypeSelectionFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         val binding = FragmentAccountSelectionTypeBinding.inflate(inflater, container, false)
-        onboarding = arguments?.getBoolean(BusinessProfileSetupScreen.ONBOARDING_KEY, true)
-            ?: throw  IllegalArgumentException("Invalid args")
         initUi(binding)
         return binding.root
     }
 
     private fun initUi(binding: FragmentAccountSelectionTypeBinding) {
         binding.onCutomerContinue = View.OnClickListener {
-            if (!onboarding)
+            if (args.finishActivity)
                 requireActivity().finish()
             else
                 continueAsCustomer()

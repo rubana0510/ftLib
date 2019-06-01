@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.feedbacktower.util.Constants
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
 const val USER_ROW_ID = 0
 @Entity(tableName = "user")
 data class User(
@@ -27,7 +29,7 @@ data class User(
     var userType: String,
     @SerializedName("business")
     var business: MyBusiness?
-){
+): Serializable{
     @PrimaryKey(autoGenerate = false)
     val userRowId: Int = USER_ROW_ID
 }

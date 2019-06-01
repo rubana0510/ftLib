@@ -43,6 +43,7 @@
                         android:id="@+id/businessCatInput"
                         android:drawableEnd="@drawable/ic_arrow_down_24"
                         android:drawablePadding="@dimen/drawable_padding"
+                        android:text="@{business.businessCategory.name}"
                         android:inputType="none"/>
             </com.google.android.material.textfield.TextInputLayout>
             <Button

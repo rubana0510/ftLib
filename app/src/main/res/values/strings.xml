@@ -52,6 +52,7 @@
     <string name="edit_profile">EDIT PROFILE</string>
 
     <string name="likes">%d likes</string>
+    <string name="fullName">%1s %2s</string>
     <string name="write_your_reply">Write your reply...</string>
     <string name="no_search_results">No Search Results</string>
     <string name="dot_bullet">•</string>

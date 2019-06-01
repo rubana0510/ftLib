@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.BusinessCategory
@@ -33,6 +34,7 @@ class BusinessSetup1Fragment : Fragment() {
     private var selectedCatId: String? = null
     private var selectedMasterCatId: String? = null
 
+    private val args: BusinessSetup1FragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,7 +59,6 @@ class BusinessSetup1Fragment : Fragment() {
         catIdInput = binding.businessCatInput
         catIdInput.inputType = InputType.TYPE_NULL
         continueButton = binding.continueButton
-        catIdInput.setText(business?.city?.name)
 
         binding.onContinueClick = View.OnClickListener {
             if (valid(nameInput.text.toString().trim(), regNoInput.text.toString().trim(), selectedCatId)) {
@@ -75,7 +76,7 @@ class BusinessSetup1Fragment : Fragment() {
                     catIdInput.setText(category.name)
                     selectedCatId = category.id
                     selectedMasterCatId = category.masterBusinessCategoryId
-                    AppPrefs.getInstance(requireContext()).setValue("MASTER_CAT_ID", selectedMasterCatId?:"")
+                    AppPrefs.getInstance(requireContext()).setValue("MASTER_CAT_ID", selectedMasterCatId ?: "")
                 }
             }
             fragment.show(fragmentManager, "select_category")
@@ -113,10 +114,14 @@ class BusinessSetup1Fragment : Fragment() {
     }
 
     private fun navigateNext() {
-        BusinessSetup1FragmentDirections.actionBusinessSetup1FragmentToPointOnMapFragment()
-            .let {
-                findNavController().navigate(it)
-            }
+        if (!args.edit) {
+            BusinessSetup1FragmentDirections.actionBusinessSetup1FragmentToPointOnMapFragment()
+                .let {
+                    findNavController().navigate(it)
+                }
+            return
+        }
+        findNavController().navigateUp()
     }
 
     private fun updateDetails(
@@ -124,9 +129,8 @@ class BusinessSetup1Fragment : Fragment() {
         regNo: String
     ) {
         showLoading()
-        val cityId = AppPrefs.getInstance(requireContext()).getValue("USER_CITY")
         ProfileManager.getInstance()
-            .updateBusinessBasicDetails(name, regNo, selectedCatId!!, cityId?:"")
+            .updateBusinessBasicDetails(name, regNo, selectedCatId!!)
             { response, error ->
                 hideLoading()
                 if (error != null) {

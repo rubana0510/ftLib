@@ -6,6 +6,7 @@
         <variable name="isLoading" type="Boolean"/>
         <variable name="isListEmpty" type="Boolean"/>
         <variable name="onClearClick" type="android.view.View.OnClickListener"/>
+        <variable name="onScanClick" type="android.view.View.OnClickListener"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,6 +23,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:stateListAnimator="@animator/raised"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/bg_box"
                     android:elevation="8dp">
                 <ImageView
                         android:id="@+id/searchIcon"
@@ -58,9 +61,23 @@
                         android:layout_centerVertical="true"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_gravity="end|center_vertical"
-                        android:layout_alignParentEnd="true"
-                        android:visibility="gone"
+                        android:layout_toStartOf="@id/scanButton"
+                        android:visibility="visible"
                         android:onClick="@{onClearClick}"/>
+                <ImageButton
+                        android:id="@+id/scanButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_code_scanner_auto_focus_off"
+                        android:padding="8dp"
+                        android:tint="@color/grey21"
+                        android:layout_marginEnd="@dimen/marginEndItem"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_alignParentEnd="true"
+                        android:visibility="visible"
+                        android:onClick="@{onScanClick}"/>
             </RelativeLayout>
             <FrameLayout
                     android:layout_width="match_parent"

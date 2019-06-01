@@ -41,7 +41,7 @@
 
         <activity
                 android:name=".ui.map.MapScreen"
-                android:label="@string/title_activity_map_screen">
+                android:label="Last Seen At">
         </activity>
         <activity
                 android:name=".ui.videoplayer.VideoPlayerScreen"
@@ -78,6 +78,7 @@
         </activity>
         <activity
                 android:name=".ui.CustomerMainActivity"
+                android:label="@string/title_activity_business_main"
                 android:theme="@style/AppTheme.NoActionBar"
                 android:windowSoftInputMode="adjustPan">
         </activity>
@@ -126,6 +127,7 @@
         <activity android:name=".utilities.filepicker.MediaDetailsActivity"/>
         <activity android:name=".utilities.filepicker.FilePickerActivity"/>
         <activity android:name=".ui.BusinessProfileEditScreen"/>
+        <activity android:name=".ui.account.FindCustomerActivity"/>
 
         <receiver
                 android:name=".network.utils.ConnectivityReceiver"

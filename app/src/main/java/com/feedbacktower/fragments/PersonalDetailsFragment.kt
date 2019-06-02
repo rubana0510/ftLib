@@ -326,7 +326,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                 lastNameLayout.error = "Enter valid last name"
                 false
             }
-            email.isEmpty() || !isEmailValid(email) -> {
+            !isEmailValid(email) -> {
                 emailLayout.error = "Enter valid email id"
                 false
             }

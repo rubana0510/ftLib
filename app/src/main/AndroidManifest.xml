@@ -3,11 +3,6 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.feedbacktower">
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality.
-    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -50,12 +45,14 @@
 
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="com.feedbacktower.utilities.filepicker"
+                android:authorities="${applicationId}.utilities.filepicker.provider"
                 android:exported="false"
-                android:grantUriPermissions="true">
+                android:grantUriPermissions="true"
+                tools:replace="android:authorities">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths"/>
+                    android:resource="@xml/file_paths"
+                    tools:replace="android:resource"/>
         </provider>
 
         <activity android:name=".ui.VideoTrimmerScreen">

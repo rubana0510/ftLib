@@ -26,7 +26,7 @@ data class Business(
     @SerializedName("location")
     var location: Location,
     @SerializedName("currentLocation")
-    var currentLocation: Location,
+    var currentLocation: Location?,
     @SerializedName("city")
     val city: City,
     @SerializedName("name")

@@ -28,7 +28,7 @@
         <argument android:name="edit" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
     <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.fragments.PointOnMapFragment"
-              android:label="fragment_point_on_map" tools:layout="@layout/fragment_point_on_map">
+              android:label="Mark Your Business Location" tools:layout="@layout/fragment_point_on_map">
         <action android:id="@+id/action_pointOnMapFragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2FragmentOnB"/>
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>

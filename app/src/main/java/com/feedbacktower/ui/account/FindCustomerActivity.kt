@@ -76,8 +76,9 @@ class FindCustomerActivity : AppCompatActivity() {
         alertDialog.setView(view)
         view.apply {
             userName.text = getString(R.string.fullName, response.user.firstName, response.user.lastName)
-            profileImage.toProfileRound(response.user.id)
-            closeButton.setOnClickListener { alertDialog.dismiss() }
+            city.text = response.user.city?.name
+            profileImage.toProfileRound(response.user.firstName)
+            close1.setOnClickListener { alertDialog.dismiss() }
         }
         alertDialog.show()
     }
@@ -95,6 +96,7 @@ class FindCustomerActivity : AppCompatActivity() {
             myQr?.let {
                 qrImage.loadImage(it)
             }
+            close2.setOnClickListener { alertDialog.dismiss() }
         }
         alertDialog.show()
     }

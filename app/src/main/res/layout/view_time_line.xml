@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:animateLayoutChanges="true">
 
     <RelativeLayout
             android:id="@+id/layout_surface_view"
@@ -27,7 +28,12 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/ic_vector_play_gray"/>
-
+        <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:visibility="gone"
+                android:layout_centerInParent="true"/>
     </RelativeLayout>
 
 
@@ -107,29 +113,23 @@
                 android:orientation="horizontal">
 
             <Button
+                    style="@style/ButtonFilledStyle.Big"
                     android:id="@+id/btCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shape_black_button"
-                    android:text="@string/cancel"
-                    android:textColor="@android:color/white"/>
+                    android:text="@string/cancel"/>
 
-            <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/grey42"/>
 
             <Button
+                    style="@style/ButtonFilledStyle.Big"
                     android:id="@+id/btSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shape_black_button"
-                    android:text="@string/save"
-                    android:textColor="@android:color/white"/>
+                    android:text="@string/upload"/>
 
         </LinearLayout>
 

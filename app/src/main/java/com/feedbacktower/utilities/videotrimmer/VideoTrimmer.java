@@ -64,7 +64,7 @@ public class VideoTrimmer extends FrameLayout implements MediaPlayer.OnErrorList
     private OnTrimVideoListener mOnTrimVideoListener;
 
     private int mDuration = 0;
-    private int maxFileSize= 25;
+    private int maxFileSize = 25;
     private int mTimeVideo = 0;
     private int mStartPosition = 0;
     private int mEndPosition = 0;
@@ -123,12 +123,12 @@ public class VideoTrimmer extends FrameLayout implements MediaPlayer.OnErrorList
 
         mHolderTopView = findViewById(R.id.handlerTop);
         ProgressBarView progressVideoView = findViewById(R.id.timeVideoView);
-        mRangeSeekBarView =  findViewById(R.id.timeLineBar);
+        mRangeSeekBarView = findViewById(R.id.timeLineBar);
         mLinearVideo = findViewById(R.id.layout_surface_view);
         mVideoView = findViewById(R.id.video_loader);
         mPlayView = findViewById(R.id.icon_video_play);
         mTextSize = findViewById(R.id.textSize);
-        mTextTimeFrame =  findViewById(R.id.textTimeSelection);
+        mTextTimeFrame = findViewById(R.id.textTimeSelection);
         mTextTime = findViewById(R.id.textTime);
         mTimeLineView = findViewById(R.id.timeLineView);
         View viewButtonCancel = findViewById(R.id.btCancel);
@@ -148,7 +148,10 @@ public class VideoTrimmer extends FrameLayout implements MediaPlayer.OnErrorList
             viewButtonSave.setOnClickListener(new OnClickListener() {
                                                   @Override
                                                   public void onClick(View view) {
-
+                                                      findViewById(R.id.progress).setVisibility(View.VISIBLE);
+                                                      viewButtonSave.setEnabled(false);
+                                                      if (viewButtonCancel != null)
+                                                          viewButtonCancel.setEnabled(false);
                                                       if (letUserProceed) {
                                                           if (mStartPosition <= 0 && mEndPosition >= mDuration) {
                                                               mOnTrimVideoListener.getResult(mSrc);

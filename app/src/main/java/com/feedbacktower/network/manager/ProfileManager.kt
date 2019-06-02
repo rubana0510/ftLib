@@ -35,7 +35,7 @@ class ProfileManager {
         onComplete: (FindCustomerResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.findCustomerAsync().makeRequest(onComplete)
+            apiService.findCustomerAsync(qrData).makeRequest(onComplete)
         }
     }
 

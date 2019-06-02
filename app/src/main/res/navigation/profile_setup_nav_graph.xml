@@ -33,6 +33,8 @@
               android:label="Basic Details">
         <action android:id="@+id/action_businessSetup1Fragment_to_pointOnMapFragment"
                 app:destination="@id/pointOnMapFragmentOnB"/>
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="edit" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
     <fragment android:id="@+id/businessSetup2FragmentOnB" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
               android:label="Address Details">
@@ -46,8 +48,10 @@
                 app:destination="@id/accountTypeSelectionFragmentOnB"/>
     </fragment>
     <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.fragments.PointOnMapFragment"
-              android:label="PointOnMapFragment">
+              android:label="Mark Your Business Location">
         <action android:id="@+id/action_pointOnMapFragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2FragmentOnB"/>
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="edit" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
 </navigation>

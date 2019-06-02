@@ -166,5 +166,6 @@
     <string name="pref_title_enable_trackme">Track Me</string>
     <string name="pref_description_enable_notifications">Receive reviews, suggestion related notifications</string>
     <string name="pref_title_enable_notifications">Enable Notification</string>
+    <string name="upload">UPLOAD</string>
 
 </resources>

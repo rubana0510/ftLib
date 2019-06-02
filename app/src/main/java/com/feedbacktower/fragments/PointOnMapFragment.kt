@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Location
 import com.feedbacktower.util.PermissionUtils
+import com.feedbacktower.util.zoomToLocation
 
 
 class PointOnMapFragment : Fragment(), OnMapReadyCallback {
@@ -35,6 +37,7 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var googleMap: GoogleMap? = null
     private val args: PointOnMapFragmentArgs by navArgs()
+    private var MAX_GET_LOCATION_RETRY = 2
 
     override fun onResume() {
         super.onResume()
@@ -68,7 +71,7 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
         enableMyLocation()
         val oldLocation = AppPrefs.getInstance(requireContext()).user?.business?.location
         if (oldLocation?.latitude != null && oldLocation.longitude != null) {
-            zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 20f)
+            googleMap?.zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 20f)
             return
         }
 
@@ -92,19 +95,23 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
+        Log.d(TAG, "Fetching location...")
         fusedLocationClient?.lastLocation?.addOnSuccessListener { location ->
             if (location == null) {
-                requireContext().toast("Could not detect location")
+                if (MAX_GET_LOCATION_RETRY > 0) {
+                    Handler().postDelayed({
+                        getLastLocation()
+                        MAX_GET_LOCATION_RETRY--
+                    }, 1000)
+                } else {
+                    requireContext().toast("Could not detect location")
+                }
                 return@addOnSuccessListener
             }
             val currLocation = LatLng(location.latitude, location.longitude)
             LocationUtils.getInstance().lastKnownLocation = currLocation
-            zoomToLocation(currLocation, 12f)
+            googleMap?.zoomToLocation(currLocation, 12f)
         }
-    }
-
-    private fun zoomToLocation(currLocation: LatLng, zoomLevel: Float) {
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currLocation, zoomLevel))
     }
 
     private fun showLocationSettingsDialog() {

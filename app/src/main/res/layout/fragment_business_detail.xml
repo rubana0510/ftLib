@@ -6,6 +6,9 @@
         tools:context=".fragments.BusinessDetailFragment">
     <data>
         <variable name="business" type="com.feedbacktower.data.models.Business"/>
+        <variable name="detailsLoading" type="Boolean"/>
+        <variable name="reviewsLoading" type="Boolean"/>
+        <variable name="timelineLoading" type="Boolean"/>
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onCurrentLocationClicked" type="android.view.View.OnClickListener"/>
@@ -13,31 +16,16 @@
         <variable name="onViewPostsClicked" type="android.view.View.OnClickListener"/>
         <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
         <variable name="sendReviewButtonClicked" type="android.view.View.OnClickListener"/>
+
     </data>
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/appbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay">
 
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:titleTextColor="@color/white"
-                    app:title="@string/title_details"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
         <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/appbar">
+                android:layout_height="match_parent">
             <RelativeLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -47,7 +35,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/detailsCl"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:isGone="@{detailsLoading}">
                     <ImageView
                             android:id="@+id/businessProfileImage"
                             android:layout_width="100dp"
@@ -93,8 +82,20 @@
                             android:layout_marginEnd="@dimen/marginEndItem"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintBaseline_toBaselineOf="@id/businessName"
-                            android:text="@{business.averageRatings}"
-                    />
+                            android:text="@{business.averageRatings}"/>
+
+                    <TextView
+                            android:id="@+id/unavailable"
+                            style="@style/businessCityStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="@id/businessCategory"
+                            app:layout_constraintTop_toBottomOf="@id/businessCategory"
+                            android:textColor="@color/red"
+                            android:textStyle="bold"
+                            app:isGone="@{business.available}"
+                            android:visibility="gone"
+                            android:text="Unavailable"/>
 
                     <LinearLayout
                             android:id="@+id/ll1"
@@ -128,34 +129,33 @@
                                 android:text="Last Location"/>
                         <include layout="@layout/layout_divider"/>
 
-
+                        <LinearLayout
+                                android:id="@+id/buttonLay"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/detailsCl">
+                            <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/sendReviewButton"
+                                    style="@style/ButtonFilledStyle"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_margin="4dp"
+                                    android:onClick="@{sendReviewButtonClicked}"
+                                    android:text="@string/send_review"/>
+                            <Button
+                                    android:id="@+id/sendSuggestionButton"
+                                    style="@style/ButtonFilledStyle"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_margin="4dp"
+                                    android:onClick="@{onSendSuggestionClicked}"
+                                    android:text="@string/send_suggestion"/>
+                        </LinearLayout>
                     </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
-              <LinearLayout
-                      android:id="@+id/buttonLay"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-              android:layout_below="@id/detailsCl">
-                  <com.google.android.material.button.MaterialButton
-                          android:id="@+id/sendReviewButton"
-                          style="@style/ButtonFilledStyle"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"
-                          android:layout_margin="4dp"
-                          android:onClick="@{sendReviewButtonClicked}"
-                          android:text="@string/send_review"/>
-                  <Button
-                          android:id="@+id/sendSuggestionButton"
-                          style="@style/ButtonFilledStyle"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="1"
-                          android:layout_margin="4dp"
-                          android:onClick="@{onSendSuggestionClicked}"
-                          android:text="@string/send_suggestion"/>
-              </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <TextView
@@ -165,8 +165,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/layoutMarginStart"
                         android:layout_marginTop="@dimen/layoutMarginTop"
-                        android:layout_below="@id/buttonLay"
-                      android:textColor="@color/colorPrimary"
+                        android:layout_below="@id/detailsCl"
+                        android:textColor="@color/colorPrimary"
+                        app:isGone="@{reviewsLoading}"
                         android:text="@string/title_reviews"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/reviewListView"
@@ -174,6 +175,7 @@
                         android:layout_height="200dp"
                         android:layout_below="@id/tvTitle2"
                         android:layout_marginTop="@dimen/marginTopItem"
+                        app:isGone="@{reviewsLoading}"
                         android:nestedScrollingEnabled="false"/>
                 <TextView
                         android:id="@+id/viewAllReviews"
@@ -186,6 +188,7 @@
                         android:textStyle="bold"
                         android:layout_below="@id/reviewListView"
                         android:clickable="true"
+                        app:isGone="@{reviewsLoading}"
                         android:onClick="@{onViewReviewsClicked}"
                         android:background="@color/white"
                         android:textColor="@color/colorPrimary"/>
@@ -199,6 +202,7 @@
                         android:layout_below="@id/viewAllReviews"
                         android:textColor="@color/colorPrimary"
                         android:visibility="visible"
+                        app:isGone="@{timelineLoading}"
                         android:text="@string/timeline"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/postListView"
@@ -206,6 +210,7 @@
                         android:layout_height="500dp"
                         android:layout_below="@id/tvTitle1"
                         android:nestedScrollingEnabled="false"
+                        app:isGone="@{timelineLoading}"
                         android:visibility="visible"/>
                 <TextView
                         android:id="@+id/viewAllPosts"
@@ -218,6 +223,7 @@
                         android:textStyle="bold"
                         android:layout_below="@id/postListView"
                         android:background="@color/white"
+                        app:isGone="@{timelineLoading}"
                         android:clickable="true"
                         android:onClick="@{onViewPostsClicked}"
                         android:textColor="@color/colorPrimary"/>
@@ -231,7 +237,9 @@
                         android:id="@+id/mainProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        app:isGone="@{!detailsLoading}"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible"/>
 
             </RelativeLayout>
         </ScrollView>

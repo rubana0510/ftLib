@@ -24,6 +24,7 @@
                     android:layout_height="@dimen/businessSearchProfileImage"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:layout_margin="@dimen/dimen_8dp"
                     app:toProfileRound="@{business.userId}"/>
             <TextView
                     android:id="@+id/businessName"
@@ -80,6 +81,18 @@
                     tools:text="Panaji"
                     android:textColor="@color/grey21"
                     android:text="@{business.city.name}"/>
+            <TextView
+                    android:id="@+id/unavailable"
+                    style="@style/businessCityStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/businessCategory"
+                    app:layout_constraintTop_toBottomOf="@id/businessCategory"
+                    android:textColor="@color/red"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:isGone="@{business.available}"
+                    android:text="Unavailable"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.BuildConfig
@@ -23,13 +24,15 @@ import com.feedbacktower.network.models.PlanListResponse
 import com.feedbacktower.payment.models.PayUResponseSuccess
 import com.feedbacktower.payment.models.PayUResponseFailure
 import com.feedbacktower.ui.LoginScreen
-import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.*
 import com.google.gson.Gson
 import com.payumoney.core.PayUmoneySdkInitializer
 import com.payumoney.core.entity.TransactionResponse
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager
 import org.jetbrains.anko.toast
 import com.payumoney.sdkui.ui.utils.ResultModel
+import kotlinx.android.synthetic.main.activity_subscription_plan_screen.*
+import org.jetbrains.anko.alert
 
 
 class SubscriptionPlansScreen : AppCompatActivity() {
@@ -87,10 +90,12 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     private val onContinueClick = View.OnClickListener {
         if (plan == null)
             toast("Select plan")
+
         generateHashForPayment(plan!!)
     }
 
     private fun generateHashForPayment(plan: Plan) {
+        showLoading()
         val txId = "TXID${System.currentTimeMillis()}"
         val requestParams: GenerateHashRequest = GenerateHashRequest(
             plan.id,
@@ -108,10 +113,23 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .generateHash(requestParams) { response, error ->
                 if (error != null || response == null) {
                     toast(getString(R.string.default_err_message))
+                    hideLoading()
                     return@generateHash
                 }
                 initiatePayment(requestParams, response, plan)
             }
+    }
+
+    private fun showLoading() {
+        continueButton.disable()
+        continueButton.text = "Please wait..."
+        progress.visible()
+    }
+
+    private fun hideLoading() {
+        continueButton.enable()
+        continueButton.text = "CONTINUE"
+        progress.gone()
     }
 
     private fun initiatePayment(
@@ -145,7 +163,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             paymentParams,
             this,
             com.feedbacktower.R.style.AppTheme_NoActionBar,
-            false
+            true
         )
         hashResponse = response
     }
@@ -201,25 +219,45 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     }
 
     private fun saveTransactionStatus(tXresponse: com.feedbacktower.network.models.TransactionResponse) {
+        showLoading()
         TransactionManager.getInstance()
             .saveResponse(
                 tXresponse
             ) { response, error ->
+                hideLoading()
                 if (error == null) {
                     if (tXresponse.status.equals("success")) {
-                        launchActivity<LoginScreen> {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                        AppPrefs.getInstance(this).apply {
-                            authToken = null
-                            user = null
-                        }
-                        toast("Please login again")
+                        showSuccessDialog()
+
                     }
                 } else {
                     toast(error.message ?: getString(R.string.default_err_message))
                     Log.e(TAG, "Error: ${error.message}")
                 }
             }
+    }
+
+    private fun showSuccessDialog() {
+        if (isFinishing) return
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Payment Success!")
+        builder.setMessage("Your payment for selected plan is successful")
+        builder.setPositiveButton("OKAY") { _, _ -> navigateToLogin() }
+        builder.setOnDismissListener { navigateToLogin() }
+        builder.setCancelable(false)
+        val alertDialog = builder.create()
+        alertDialog.setCanceledOnTouchOutside(false)
+        alertDialog.show()
+    }
+
+    private fun navigateToLogin() {
+        launchActivity<LoginScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        AppPrefs.getInstance(this).apply {
+            authToken = null
+            user = null
+        }
+        toast("Please login again")
     }
 }

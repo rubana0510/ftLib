@@ -18,6 +18,8 @@ import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.ui.map.MapScreen
+import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
+import com.feedbacktower.util.Constants
 import com.feedbacktower.util.isCurrentBusiness
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
@@ -64,18 +66,18 @@ class BusinessDetailFragment : Fragment() {
             d.show(fragmentManager, "suggestion")
         }
         binding.onCurrentLocationClicked = View.OnClickListener {
-            if (business != null) {
-                business?.let {
-                    requireActivity().launchActivity<MapScreen> {
-                        putExtra("LOCATION", it.currentLocation)
-                    }
-                }
-
-            } else {
+            if (business == null || business?.currentLocation == null) {
                 requireContext().toast("No location found")
+                return@OnClickListener
+            }
+            business?.let {
+                requireActivity().launchActivity<MapScreen> {
+                    putExtra("LOCATION", it.currentLocation)
+                }
             }
 
         }
+
 
         binding.sendReviewButtonClicked = View.OnClickListener {
             if (isCurrentBusiness(businessId, requireContext())) {
@@ -99,35 +101,43 @@ class BusinessDetailFragment : Fragment() {
         postAdapter = ProfilePostListAdapter(listener)
         postListView.adapter = postAdapter
 
-        fetchReviews()
-        fetchPosts()
+        fetchReviews(binding)
+        fetchPosts(binding)
         fetchBusinessDetails(binding)
     }
 
     private fun fetchBusinessDetails(binding: FragmentBusinessDetailBinding) {
+        binding.detailsLoading = true
         ProfileManager.getInstance()
             .getBusinessDetails(businessId) { response, error ->
                 if (error == null && response?.business != null) {
                     binding.business = response.business
                     business = response.business
+                    binding.detailsLoading = false
                 }
             }
     }
 
-    private fun fetchReviews() {
+    private fun fetchReviews(binding: FragmentBusinessDetailBinding) {
+        binding.reviewsLoading = true
         ReviewsManager.getInstance().getBusinessReviews(businessId, "") { response, error ->
             if (error == null) {
-                reviewAdapter.submitList(response?.review!!)
+                reviewAdapter.submitList(response?.review)
+                if (response?.review == null || response.review.isEmpty()) return@getBusinessReviews
+                binding.reviewsLoading = false
             } else {
                 requireContext().toast("Failed to load reviews")
             }
         }
     }
 
-    private fun fetchPosts() {
+    private fun fetchPosts(binding: FragmentBusinessDetailBinding) {
+        binding.timelineLoading = true
         PostManager.getInstance().getBusinessPosts(businessId, "", "OLD") { response, error ->
             if (error == null) {
-                postAdapter.submitList(response?.posts!!)
+                postAdapter.submitList(response?.posts)
+                if (response?.posts == null || response.posts.isEmpty()) return@getBusinessPosts
+                binding.timelineLoading = false
             } else {
                 requireContext().toast("Failed to load posts")
             }
@@ -140,7 +150,9 @@ class BusinessDetailFragment : Fragment() {
         }
 
         override fun onVideoClick(item: Post, position: Int) {
-            likeUnlikePost(item, position)
+            requireActivity().launchActivity<VideoPlayerScreen> {
+                putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/posts/${item.media}")
+            }
         }
     }
 

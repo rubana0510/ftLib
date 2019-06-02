@@ -17,6 +17,8 @@ data class SearchBusiness(
     var businessId: String,
     @SerializedName("name")
     val name: String,
+    @SerializedName("available")
+    var available: Boolean,
     @SerializedName("totalRating")
     val totalRating: Int,
     @SerializedName("totalReview")

@@ -6,7 +6,7 @@
     <fragment
             android:id="@+id/navigation_business_detail"
             android:name="com.feedbacktower.fragments.BusinessDetailFragment"
-            android:label="Detail"
+            android:label="Business Details"
             tools:layout="@layout/fragment_business_detail">
         <action android:id="@+id/action_navigation_business_detail_to_navigation_review"
                 app:destination="@id/navigation_review"/>

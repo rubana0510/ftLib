@@ -26,12 +26,12 @@ class VideoTrimmerScreen : AppCompatActivity() {
         videoTrimmer.maxFileSize = Constants.Media.MAX_VIDEO_SIZE
         videoTrimmer.setOnTrimVideoListener(object : OnTrimVideoListener {
             override fun getResult(uri: Uri?) {
-                toast("Trimmed video: $uri")
+               // toast("Trimmed video: $uri")
                 uploadVideoPost("", uri)
             }
 
             override fun cancelAction() {
-
+                finish()
             }
         })
     }

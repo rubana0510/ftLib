@@ -11,6 +11,7 @@ import android.provider.Settings
 import androidx.core.content.FileProvider
 import android.text.TextUtils
 import android.util.Log
+import com.feedbacktower.BuildConfig
 
 import java.io.File
 import java.io.FileNotFoundException
@@ -63,10 +64,10 @@ class ImageCaptureManager(private val mContext: Context) {
                 val newFile = createImageFile()
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                PickerManager.providerAuthorities?.let {
-                    val photoURI = FileProvider.getUriForFile(mContext, it, newFile)
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                }
+                val photoURI =
+                    FileProvider.getUriForFile(mContext, "${BuildConfig.APPLICATION_ID}.utilities.filepicker.provider", newFile)
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+
             } else {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(createImageFile()))
             }

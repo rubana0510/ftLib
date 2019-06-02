@@ -23,10 +23,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.text.ParseException
 import android.net.Uri
+import android.text.TextUtils
+import android.util.Patterns
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.qrscanner.BarcodeEncoder
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -108,7 +112,7 @@ fun isNameValid(name: String): Boolean {
 }
 
 fun isEmailValid(email: String): Boolean {
-    return email.isNotEmpty()
+    return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches())
 }
 
 fun String.noValidWebsite(): Boolean {
@@ -268,4 +272,8 @@ fun String?.toQrBitmap(): Bitmap? {
         e.printStackTrace()
         return null
     }
+}
+
+fun GoogleMap?.zoomToLocation(currLocation: LatLng, zoomLevel: Float = 13f) {
+    this?.moveCamera(CameraUpdateFactory.newLatLngZoom(currLocation, zoomLevel))
 }

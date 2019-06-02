@@ -152,15 +152,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun pickImage() {
-        /* Matisse.from(this)
-             .choose(MimeType.ofImage())
-             .countable(true)
-             .maxSelectable(1)
-             .gridExpectedSize(resources.getDimensionPixelSize(com.feedbacktower.R.dimen.grid_expected_size))
-             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-             .thumbnailScale(0.85f)
-             .imageEngine(Glide4Engine())
-             .forResult(REQUEST_CODE_CHOOSE_IMAGE)*/
+
         FilePickerBuilder.instance.setMaxCount(1)
             .setActivityTheme(R.style.AppTheme_NoActionBar)
             .pickPhoto(this)

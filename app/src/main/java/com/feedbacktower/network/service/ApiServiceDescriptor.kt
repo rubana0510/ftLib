@@ -64,8 +64,10 @@ interface ApiServiceDescriptor {
     @GET("/business/")
     fun getMyBusinessAsync(): Deferred<ApiResponse<MyBusinessResponse?>>
 
-    @GET("/profile/")
-    fun findCustomerAsync(): Deferred<ApiResponse<FindCustomerResponse?>>
+    @GET("/profile/{qrData}")
+    fun findCustomerAsync(
+        @Path("qrData") qrData: String
+    ): Deferred<ApiResponse<FindCustomerResponse?>>
 
     @GET
     fun autocompleteAsync(

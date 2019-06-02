@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.feedbacktower.R
 import com.feedbacktower.data.models.Location
+import com.feedbacktower.util.zoomToLocation
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,8 +34,9 @@ class MapScreen : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         val loc = LatLng(location.latitude!!, location.longitude!!)
-        mMap.addMarker(MarkerOptions().position(loc).title("Current location"))
+        mMap.addMarker(MarkerOptions().position(loc).title("Last location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc))
+        mMap.zoomToLocation(loc, 20f)
 
     }
 }

@@ -3,7 +3,9 @@ package com.feedbacktower.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.feedbacktower.R
+import kotlinx.android.synthetic.main.activity_business_details.*
 
 class BusinessDetailsActivity : AppCompatActivity() {
 
@@ -17,5 +19,7 @@ class BusinessDetailsActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString("businessId",intent.getStringExtra("businessId"))
         navController.setGraph(navController.graph,bundle)
+        NavigationUI.setupWithNavController(toolbar, navController)
+
     }
 }

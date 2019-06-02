@@ -19,13 +19,14 @@
             android:layout_marginTop="24dp"
             tools:text="John Doe"/>
     <TextView
+            android:id="@+id/city"
             style="@style/SmallText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Panaji"/>
 
     <Button
-            android:id="@+id/closeButton"
+            android:id="@+id/close1"
             style="@style/ButtonFilledStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

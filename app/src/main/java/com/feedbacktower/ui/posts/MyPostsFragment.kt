@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,6 +23,7 @@ import com.feedbacktower.databinding.FragmentTimelineBinding
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.ui.PostTextScreen
 import com.feedbacktower.util.launchActivity
+import kotlinx.android.synthetic.main.dialog_edit_caption.view.*
 import org.jetbrains.anko.toast
 
 
@@ -73,20 +76,24 @@ class MyPostsFragment : Fragment() {
             AlertDialog.Builder(requireContext())
                 .setTitle("Manage Post")
                 .setItems(arrayOf("EDIT", "DELETE")) { _, index ->
-                    when(index){
-                        0->{
-                            if(item.type == "TEXT"){
+                    when (index) {
+                        0 -> {
+                            if (item.type == "TEXT") {
                                 requireActivity().launchActivity<PostTextScreen> {
                                     putExtra("TEXT", item.text)
                                     putExtra("POST_ID", item.id)
                                 }
+                            } else if (item.type == "PHOTO" || item.type == "VIDEO") {
+                                editMediaCaption(item)
                             }
                         }
-                        1->{
-                           PostManager.getInstance()
-                               .deletePost(item.id){_,_->
-                                   fetchPosts()
-                               }
+                        1 -> {
+                            AlertDialog.Builder(requireContext())
+                                .setTitle("Delete post?")
+                                .setMessage("Are you sure you want to delete post?")
+                                .setPositiveButton("DELETE", { _, _ -> deletePost(item.id) })
+                                .setNegativeButton("CANCEL", null)
+                                .show()
                         }
                     }
                 }.show()
@@ -95,10 +102,52 @@ class MyPostsFragment : Fragment() {
         override fun onLikeClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
+
         override fun onVideoClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
     }
+
+    private fun editMediaCaption(post: Post) {
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_caption, null)
+        val alert = AlertDialog.Builder(requireContext())
+            .setTitle("Edit Post Caption")
+            .setView(view)
+            .show()
+
+        val caption: EditText = view.editText
+        val edit: Button = view.actionButton
+
+        caption.setText(post.text)
+        edit.setOnClickListener {
+            val captionText = caption.text.toString().trim()
+            if (!captionText.isEmpty()) {
+                editPost(post.id, captionText)
+                alert.dismiss()
+            }
+        }
+    }
+
+    private fun deletePost(postId: String) {
+        PostManager.getInstance()
+            .deletePost(postId) { _, _ ->
+                fetchPosts()
+                requireContext().toast("Post deleted")
+            }
+    }
+
+    private fun editPost(postId: String, text: String) {
+        PostManager.getInstance()
+            .editTextPost(postId, text) { response, error ->
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                    return@editTextPost
+                }
+                requireContext().toast("Post updated")
+                fetchPosts()
+            }
+    }
+
     private fun likeUnlikePost(item: Post, position: Int) {
         PostManager.getInstance()
             .likePost(item.id) { response, _ ->

@@ -31,7 +31,8 @@ class ReviewListAdapter : ListAdapter<Review, ReviewListAdapter.ViewHolder>(Diff
     }
 
     private fun createProfileClickListener(item: Review): View.OnClickListener = View.OnClickListener {view->
-        ReviewsFragmentDirections.actionNavigationReviewToBusinessDetailsActivity(item.businessId).let {
+        val businessId = item.user?.business?.id?:return@OnClickListener
+        ReviewsFragmentDirections.actionNavigationReviewToBusinessDetailsActivity(businessId).let {
             view.findNavController().navigate(it)
         }
     }

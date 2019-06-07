@@ -22,6 +22,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.5"
                 app:isGone="@{isLoading}">
 
             <FrameLayout
@@ -94,14 +95,26 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:isGone="@{!isLoading}"/>
+
         <TextView
+                android:id="@+id/hint"
+                style="@style/MediumBoldText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/planView"
                 android:layout_marginTop="24dp"
-                tools:text="Pay Rs.500 and get Rs.1000 in wallet"
-                android:text="@{`Pay Rs.`+ plan.fee + ` and get Rs.` + plan.maxWalletCashback + ` in wallet`}"
-                android:gravity="center_horizontal"/>
+                tools:text="Get Rs.1000 in wallet"
+                android:text="@{`Get Rs.` + plan.maxWalletCashback + ` in wallet`}"
+                android:gravity="center_horizontal"
+                app:isGone="@{isLoading}"/>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/hint"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal">
+        </LinearLayout>
         <Button
                 android:id="@id/continueButton"
                 style="@style/ButtonFilledStyle.Big"

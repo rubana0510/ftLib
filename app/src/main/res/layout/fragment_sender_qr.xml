@@ -10,9 +10,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Show QR code to send"
+            android:text="Show QR code"
             android:layout_marginTop="@dimen/dimen_50dp"/>
-
+    <TextView
+            style="@style/MediumBoldText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Avail discounts for Payments to Business"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="@dimen/dimen_80dp"/>
     <ImageView
             android:id="@+id/qrImage"
             android:layout_width="300dp"

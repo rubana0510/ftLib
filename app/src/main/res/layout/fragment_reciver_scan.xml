@@ -15,8 +15,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Scan to receive"
+            android:text="Scan QR Code"
             android:layout_marginTop="@dimen/dimen_50dp"
+            android:textColor="@color/white"/>
+    <TextView
+            style="@style/MediumBoldText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Apply discount to customer's bill"
+            android:layout_marginTop="@dimen/dimen_80dp"
             android:textColor="@color/white"/>
     <Button
             style="@style/ButtonFilledStyle.Big"
@@ -25,5 +33,5 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="50dp"
-            android:text="SHOW MY CODE"/>
+            android:text="SHOW MY QR CODE"/>
 </FrameLayout>

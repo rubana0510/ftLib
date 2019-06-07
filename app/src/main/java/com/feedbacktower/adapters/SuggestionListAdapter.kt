@@ -38,7 +38,8 @@ class SuggestionListAdapter(private val listener: ReplyListener?) :
     }
 
     private fun createProfileClickListener(item: Suggestion): View.OnClickListener = View.OnClickListener { view ->
-        SuggestionsFragmentDirections.actionNavigationSuggestionToBusinessDetailsActivity(item.businessId).let {
+        val businessId = item.user?.business?.id?:return@OnClickListener
+        SuggestionsFragmentDirections.actionNavigationSuggestionToBusinessDetailsActivity(businessId).let {
             view.findNavController().navigate(it)
         }
     }

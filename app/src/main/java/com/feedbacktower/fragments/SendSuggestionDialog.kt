@@ -13,6 +13,7 @@ import com.feedbacktower.R
 import com.feedbacktower.callbacks.BottomSheetOnStateChanged
 import com.feedbacktower.network.manager.SuggestionsManager
 import kotlinx.android.synthetic.main.dialog_send_suggestion.view.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 
@@ -70,9 +71,18 @@ class SendSuggestionDialog : BottomSheetDialogFragment() {
                 isCancelable = true
                 if (error == null) {
                     dialog.dismiss()
-                    ctx.toast("Sending suggestion..\"$suggestionMessage\"")
+                    ctx.toast("Suggestion sent")
+                } else if (error.message != null && (error.message?.contains("Limit") == true || error.message?.contains(
+                        "reached"
+                    ) == true)
+                ) {
+                    requireContext().alert(
+                        "You have already sent Suggestion for this business in this month",
+                        "Limit reached!",
+                        {}
+                    ).show()
                 } else {
-                    requireContext().toast("Some error occurred")
+                    ctx.toast(error.message ?: getString(R.string.default_err_message))
                 }
             }
     }

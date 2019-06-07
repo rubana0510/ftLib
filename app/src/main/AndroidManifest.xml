@@ -61,9 +61,11 @@
         </activity>
         <activity android:name=".utilities.cropper.ImagePreviewActivity">
         </activity>
-        <activity android:name=".ui.qrtransfer.SenderActivity">
+        <activity android:name=".ui.qrtransfer.SenderActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".ui.ScannerScreen">
+        <activity android:name=".ui.ScannerScreen"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".ui.PostTextScreen"
@@ -120,7 +122,8 @@
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".utilities.cropper.MyCropperActivity"/>
         <activity android:name=".utilities.cropper.CropImageActivity"/>
-        <activity android:name=".ui.qrtransfer.ReceiverActivity"/>
+        <activity android:name=".ui.qrtransfer.ReceiverActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".utilities.filepicker.MediaDetailsActivity"/>
         <activity android:name=".utilities.filepicker.FilePickerActivity"/>
         <activity android:name=".ui.BusinessProfileEditScreen"/>

@@ -14,11 +14,15 @@ import org.jetbrains.anko.toast
 import java.lang.IllegalArgumentException
 
 class ImagePreviewActivity : AppCompatActivity() {
-
+private var postId: String? = null
+private var mediaUrl: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_preview)
+        postId = intent?.getStringExtra("POST_ID")
+        mediaUrl = intent?.getStringExtra("MEDIA_URL")
         val uri: Uri = intent?.getParcelableExtra("URI") ?: throw IllegalArgumentException("Invalid args")
+
         imageView.setImageURI(uri)
         postButton.setOnClickListener {
             val caption = postCaption.text.toString().trim()

@@ -27,6 +27,7 @@ class MapScreen : AppCompatActivity(), OnMapReadyCallback {
 
         location = intent?.getSerializableExtra("LOCATION") as? Location
             ?: throw  IllegalArgumentException("Location cannot be null")
+        title = intent?.getStringExtra("TITLE")
 
     }
 

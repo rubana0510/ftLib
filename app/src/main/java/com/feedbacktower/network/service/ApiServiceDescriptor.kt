@@ -1,5 +1,6 @@
 package com.feedbacktower.network.service
 
+import com.feedbacktower.network.models.PlaceDetailsResponse
 import com.feedbacktower.network.models.*
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
@@ -9,62 +10,72 @@ import retrofit2.http.*
 interface ApiServiceDescriptor {
 
     //PROFILE
-    @POST("/auth/login")
+    @POST("/api/auth/login")
     fun loginAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<AuthResponse?>>
 
-    @POST("/auth/pre-register")
+    @POST("/api/auth/pre-register")
     fun preRegisterAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/auth/request-otp")
+    @POST("/api/auth/request-otp")
     fun requestOtpAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/auth/verify-otp")
+    @POST("/api/auth/verify-otp")
     fun verifyOtpRegisterAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<TokenRes?>>
 
-    @POST("/auth/register")
+    @POST("/api/auth/register")
     fun registerPhoneAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<AuthResponse?>>
 
-    @POST("/auth/reset-password")
+
+    @POST("/api/auth/reset-password")
     fun resetPasswordAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/profile/update")
+    @GET("/api/auth/")
+    fun refreshTokenAsync(): Deferred<ApiResponse<AuthResponse?>>
+
+    //profile
+    @POST("/api/profile/update")
     fun updatePersonalDetailsAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
     @Multipart
-    @POST("/profile/upload")
+    @POST("/api/profile/upload")
     fun uploadProfileAsync(
         @Part file: MultipartBody.Part
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/location/city/")
+    @GET("/api/location/city/")
     fun getCitiesAsync(
         @Query("search") search: String = ""
     ): Deferred<ApiResponse<GetCitiesResponse?>>
 
+    @POST("/api/location/city/")
+    fun addCity(
+        @Body map: HashMap<String, Any?>
+    ):Deferred<ApiResponse<AddCityResponse?>>
+
     @POST("profile/continue-as-customer")
     fun continueAsCustomerAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/profile/set-business-interest")
+    @POST("/api/profile/set-business-interest")
     fun setBusinessCategoryInterestAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/business/")
+    @GET("/api/business/")
     fun getMyBusinessAsync(): Deferred<ApiResponse<MyBusinessResponse?>>
 
-    @GET("/profile/{qrData}")
+    @GET("/api/profile/{qrData}")
     fun findCustomerAsync(
         @Path("qrData") qrData: String
     ): Deferred<ApiResponse<FindCustomerResponse?>>
@@ -72,75 +83,79 @@ interface ApiServiceDescriptor {
     @GET
     fun autocompleteAsync(
         @Url url: String
-    ): Deferred<ApiResponse<AutoCompleteResponse?>>
+    ): Deferred<AutoCompleteResponse>
 
+    @GET
+    fun placeDetailsAsync(
+        @Url url: String
+    ): Deferred<PlaceDetailsResponse>
 
     //PAYMENTS
-    @POST("/transaction/request")
+    @POST("/api/transaction/request")
     fun generateHashAsync(@Body params: GenerateHashRequest): Deferred<ApiResponse<GenerateHashResponse?>>
 
-    @POST("/transaction/response")
+    @POST("/api/transaction/response")
     fun saveTransactionResponseAsync(@Body params: TransactionResponse): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/transaction/")
+    @GET("/api/transaction/")
     fun getTransactionsAsync(): Deferred<ApiResponse<PlanTransactionsResponse?>>
 
 
 
     //POST
-    @POST("/post/")
+    @POST("/api/post/")
     fun createTextPostAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
     @Multipart
-    @POST("/post/image")
+    @POST("/api/post/image")
     fun createPhotoPostAsync(
         @Part file: MultipartBody.Part,
         @Part("text") name: RequestBody
     ): Deferred<ApiResponse<EmptyResponse?>>
 
     @Multipart
-    @POST("/post/video")
+    @POST("/api/post/video")
     fun createVideoPostAsync(
         @Part file: MultipartBody.Part,
         @Part("text") name: RequestBody
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/post/")
+    @GET("/api/post/")
     fun getPostsAsync(
         @Query("timestamp") timestamp: String,
         @Query("type") type: String
     ): Deferred<ApiResponse<GetPostsResponse?>>
 
-    @GET("/post/business/{businessId}/")
+    @GET("/api/post/business/{businessId}/")
     fun getBusinessPostsAsync(
         @Path("businessId") businessId: String?,
         @Query("timestamp") timestamp: String,
         @Query("type") type: String
     ): Deferred<ApiResponse<GetPostsResponse?>>
 
-    @PUT("/post/like/{postId}")
+    @PUT("/api/post/like/{postId}")
     fun likePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<LikeUnlikeResponse?>>
 
-    @PUT("/post/unlike/{postId}")
+    @PUT("/api/post/unlike/{postId}")
     fun unLikePostAsync(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
 
-    @DELETE("/post/{postId}")
+    @DELETE("/api/post/{postId}")
     fun deletePost(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
 
-    @PUT("/post/{postId}")
+    @PUT("/api/post/{postId}")
     fun editTextPostAsync(@Path("postId") postId: String, @Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
 
     //REVIEW
-    @POST("/review/")
+    @POST("/api/review/")
     fun addReviewAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/profile/my-reviews")
+    @GET("/api/profile/my-reviews")
     fun getMyReviewsAsync(
         @Query("timestamp") timestamp: String = ""
     ): Deferred<ApiResponse<GetReviewsResponse?>>
 
-    @GET("/review/{businessId}/")
+    @GET("/api/review/{businessId}/")
     fun getBusinessReviewsAsync(
         @Path("businessId") businessId: String?,
         @Query("timestamp") timestamp: String = ""
@@ -148,79 +163,81 @@ interface ApiServiceDescriptor {
 
 
     //SUGGESTION
-    @POST("/suggestion/")
+    @POST("/api/suggestion/")
     fun addSuggestionAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/profile/my-suggestions/")
+    @GET("/api/profile/my-suggestions/")
     fun getMySuggestionsAsync(
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>
 
-    @GET("/suggestion/")
+    @GET("/api/suggestion/")
     fun getSuggestionsAsync(
         @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetSuggestionsResponse?>>
 
-    @PUT("/suggestion/reply")
+    @PUT("/api/suggestion/reply")
     fun replySuggestionAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
 
-    @GET("/subscription-plan/")
+    @GET("/api/subscription-plan/")
     fun getSubscriptionPlansAsync(
         @Query("category") categoryId: String
     ): Deferred<ApiResponse<PlanListResponse?>>
 
 
     //BUSINESS
-    @GET("/business-category/")
+    @GET("/api/business-category/")
     fun getCategoriesAsync(): Deferred<ApiResponse<GetCategoriesResponse?>>
 
-    @GET("/business/list/")
+    @GET("/api/business/list/")
     fun searchBusinessAsync(
         @Query("search") search: String = ""
     ): Deferred<ApiResponse<SearchBusinessResponse?>>
 
-    @PUT("/business/")
+    @PUT("/api/business/")
     fun updateBusinessAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
 
-    @POST("/business/")
+    @POST("/api/business/")
     fun registerAsBusinessAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
-    @GET("/business/{businessId}")
+    @GET("/api/business/{businessId}")
     fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>
 
 
     //QR Transaction
-    @POST("/qr-transfer/generate")
+    @POST("/api/qr-transfer/generate")
     fun generateQrCodeAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
 
-    @POST("/qr-transfer/scan")
+    @POST("/api/qr-transfer/scan")
     fun scanQrCodeAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<ScanQrResponse?>>
 
-    @POST("/qr-transfer/sender")
+    @POST("/api/qr-transfer/sender")
     fun checkQrTransferStatusSenderAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrStatusSenderResponse?>>
 
-    @POST("/qr-transfer/receiver")
+    @POST("/api/qr-transfer/receiver")
     fun checkQrTransferStatusReceiverAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrStatusRecieverResponse?>>
 
-    @POST("/qr-transfer/payment-request")
+    @POST("/api/qr-transfer/payment-request")
     fun requestPaymentAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
-    @POST("/qr-transfer/payment-confirm")
+    @POST("/api/qr-transfer/payment-confirm")
     fun confirmPaymentAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
+    @GET("/api/qr-transfer/")
+    fun getQrTransactionsAsync(): Deferred<ApiResponse<QrTransactionsResponse?>>
 }

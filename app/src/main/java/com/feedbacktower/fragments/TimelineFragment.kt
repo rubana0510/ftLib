@@ -51,7 +51,7 @@ class TimelineFragment : Fragment() {
         feedListView.layoutManager = LinearLayoutManager(requireContext())
         feedListView.itemAnimator = DefaultItemAnimator()
         feedListView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
-        postAdapter = PostListAdapter(listener)
+        postAdapter = PostListAdapter(requireActivity(), listener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
@@ -72,10 +72,12 @@ class TimelineFragment : Fragment() {
         override fun onLikeClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
+
         override fun onVideoClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
     }
+
     private fun likeUnlikePost(item: Post, position: Int) {
         PostManager.getInstance()
             .likePost(item.id) { response, _ ->

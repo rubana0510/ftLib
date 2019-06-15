@@ -105,7 +105,14 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/timeLineBar"
                 android:background="@color/grey42"/>
-
+        <EditText
+                android:id="@+id/caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:hint="Write something..."
+                android:textColor="@color/white"
+                android:textColorHint="#80ffffff"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

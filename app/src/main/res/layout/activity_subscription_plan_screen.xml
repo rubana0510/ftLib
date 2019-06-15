@@ -22,7 +22,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintVertical_bias="0.2"
                 app:isGone="@{isLoading}">
 
             <FrameLayout
@@ -45,7 +45,7 @@
                             android:textColor="@color/grey21"
                             android:textSize="50sp"
                             tools:text="1"
-                            android:text="@{plan.period}"/>
+                            android:text="@{``+plan.period}"/>
                     <TextView
                             style="@style/LargeBoldText"
                             android:layout_width="wrap_content"
@@ -103,10 +103,11 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/planView"
                 android:layout_marginTop="24dp"
-                tools:text="Get Rs.1000 in wallet"
-                android:text="@{`Get Rs.` + plan.maxWalletCashback + ` in wallet`}"
+                tools:text="Get Rs.1000 in wallet\n100 Text posts\n5 Photo Posts\n3 Video Posts"
+                android:text="@{`Get ₹`+ plan.maxWalletCashback + ` in wallet\n` + plan.maxTextPost +` Text posts\n` + plan.maxPhotoPost +`Photo posts\n`+ plan.maxVideoPost +` Video posts`}"
                 android:gravity="center_horizontal"
                 app:isGone="@{isLoading}"/>
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,7 +125,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="16dp"
-                android:text="@string/continue_"
+                android:text="@{`Pay ₹`  + plan.payableAmount}"
                 app:isGone="@{isLoading}"
                 android:onClick="@{onContinueClick}"/>
         <ProgressBar

@@ -4,6 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="isLoading" type="Boolean"/>
+        <variable name="noResults" type="Boolean"/>
         <variable name="onClearClick" type="android.view.View.OnClickListener"/>
 
     </data>
@@ -65,18 +66,30 @@
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchFrame"
+                app:layout_constraintTop_toBottomOf="@+id/progress"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:padding="@dimen/activity_horizontal_margin"
                 app:isGone="@{isLoading}"/>
+
         <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchFrame"
+                app:isGone="@{!isLoading}"/>
+
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:isGone="@{!isLoading}"/>
+                android:text="No results found"
+                android:visibility="gone"
+                app:isGone="@{!noResults}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

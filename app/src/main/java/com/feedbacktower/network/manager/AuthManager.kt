@@ -78,6 +78,15 @@ class AuthManager {
         }
     }
 
+    fun refreshToken(
+        onComplete: (AuthResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.refreshTokenAsync()
+                .makeRequest(onComplete)
+        }
+    }
+
     fun resetPassword(
         phone: String,
         password: String,

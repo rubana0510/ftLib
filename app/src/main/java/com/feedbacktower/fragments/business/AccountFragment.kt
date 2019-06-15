@@ -121,8 +121,18 @@ class AccountFragment : Fragment() {
     private fun submitOptions() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val options = listOf(
-            AccountOption(9, "Change City", "Your current city: ${AppPrefs.getInstance(requireContext()).user?.city?.name}", R.drawable.ic_post_like_filled),
-            AccountOption(6, "My Wallet", "Your balance is ₹${business.walletAmount}", R.drawable.ic_post_like_filled),
+            AccountOption(
+                9,
+                "Change City",
+                "Your current city: ${AppPrefs.getInstance(requireContext()).user?.city?.name}",
+                R.drawable.ic_post_like_filled
+            ),
+            AccountOption(
+                6,
+                "Wallet Transactions",
+                "Wallet balance ₹${business.walletAmount}, Discount Amount: ₹${business.discountAmount}",
+                R.drawable.ic_post_like_filled
+            ),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(8, "My Posts", "Manage your posts", R.drawable.ic_post_like_filled),
@@ -155,11 +165,13 @@ class AccountFragment : Fragment() {
                 AppPrefs.getInstance(requireContext()).authToken = null
                 AppPrefs.getInstance(requireContext()).user = null
                 requireActivity().launchActivity<SplashScreen> {
+
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
             }
             6 -> {
-                //show transactions
+                val d = AccountFragmentDirections.actionNavigationAccountToWalletTransactionFragment()
+                findNavController().navigate(d)
             }
             7 -> {
                 val d = AccountFragmentDirections.actionNavigationAccountToBusinessSettingsFragment()

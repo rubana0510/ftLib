@@ -3,15 +3,18 @@ package com.feedbacktower.fragments
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
+import android.view.*
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.content.PermissionChecker
+import androidx.core.net.toUri
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
@@ -21,30 +24,23 @@ import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.ui.PostTextScreen
-import java.text.FieldPosition
-import com.zhihu.matisse.engine.impl.GlideEngine
-import android.content.pm.ActivityInfo
-import com.zhihu.matisse.Matisse
-import com.zhihu.matisse.MimeType
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import android.view.*
-import androidx.core.content.PermissionChecker
-import androidx.navigation.fragment.findNavController
 import com.feedbacktower.ui.VideoTrimmerScreen
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.*
 import com.feedbacktower.utilities.Glide4Engine
+import com.feedbacktower.utilities.cropper.CropImage
 import com.feedbacktower.utilities.cropper.ImagePreviewActivity
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
+import com.yalantis.ucrop.UCrop
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
 import org.jetbrains.anko.toast
 import java.io.File
 
 
 class HomeFragment : Fragment() {
-
+    private val TAG = "HomeFragment"
     private lateinit var feedListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -66,7 +62,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item?.itemId == R.id.select_city_id){
+        if (item?.itemId == R.id.select_city_id) {
             HomeFragmentDirections.actionNavigationHomeToSelectCityFragment().let {
                 findNavController().navigate(it)
             }
@@ -74,6 +70,7 @@ class HomeFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -85,7 +82,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initUi(binding: FragmentHomeBinding) {
-       // binding.toolbar.title = getString(R.string.app_name)
+        // binding.toolbar.title = getString(R.string.app_name)
         binding.addPostListener = addPostClickListener
         feedListView = binding.feedListView
         swipeRefresh = binding.swipeRefresh
@@ -95,7 +92,7 @@ class HomeFragment : Fragment() {
         binding.currentCity = appPrefs.getValue("CITY") ?: "Select City"
         //setup list
         feedListView.setVertical(requireContext())
-        postAdapter = PostListAdapter(listener)
+        postAdapter = PostListAdapter(requireActivity(), listener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts
@@ -162,10 +159,11 @@ class HomeFragment : Fragment() {
         override fun onLikeClick(item: Post, position: Int) {
             likeUnlikePost(item, position)
         }
+
         override fun onVideoClick(item: Post, position: Int) {
-           requireActivity().launchActivity<VideoPlayerScreen>{
-               putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/posts/${item.media}" )
-           }
+            requireActivity().launchActivity<VideoPlayerScreen> {
+                putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/posts/${item.media}")
+            }
         }
     }
 
@@ -196,11 +194,8 @@ class HomeFragment : Fragment() {
             if (mSelected.size < 1) {
                 requireContext().toast("No image selected")
                 return
-
             }
-            requireActivity().launchActivity<ImagePreviewActivity> {
-                putExtra("URI", mSelected[0])
-            }
+            CropImage.activity(mSelected[0]).start(requireActivity())
         } else if (requestCode == REQUEST_CODE_CHOOSE_VIDEO && resultCode == RESULT_OK) {
             var mSelected = Matisse.obtainResult(data!!)
             if (mSelected.size < 1) {
@@ -217,14 +212,32 @@ class HomeFragment : Fragment() {
                 if (paths.size < 1) {
                     requireContext().toast("No image selected")
                     return
-
                 }
+                Log.d(TAG, "Uri: ${File(paths[0]).toUri()}")
+                //ImageEditHelper.openCropper(requireContext(), this, File(paths[0]).toUri())
+                //requireActivity().launchActivity<CropImageActivity> {  }
+                    requireActivity().launchActivity<ImagePreviewActivity> {
+                        putExtra("URI", File(paths[0]).toUri())
+                    }
+                //openImageCropper(File(paths[0]).toUri())
+            }
+        } else if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            Log.d(TAG, "Crop result")
+            data?.let {
+
+                val uri = UCrop.getOutput(it)
+                Log.d(TAG, "Crop result Uri: $uri")
                 requireActivity().launchActivity<ImagePreviewActivity> {
-                    putExtra("URI", Uri.fromFile(File(paths[0])))
+                    putExtra("URI", uri)
                 }
             }
         }
+    }
 
+    private fun openImageCropper(uri: Uri) {
+        val path: File = requireContext().filesDir
+        UCrop.of(uri, path.toUri())
+            .start(requireContext(), this, UCrop.REQUEST_CROP)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

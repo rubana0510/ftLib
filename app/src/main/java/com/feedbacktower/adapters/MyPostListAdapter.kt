@@ -1,21 +1,24 @@
 package com.feedbacktower.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
+import com.ablanco.zoomy.Zoomy
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemMyPostMediaBinding
 import com.feedbacktower.databinding.ItemMyPostTextBinding
+import com.feedbacktower.databinding.ItemPostMediaBinding
 import com.feedbacktower.fragments.HomeFragmentDirections
 import java.lang.IllegalStateException
 
 /**
  * Created by sanket on 12-02-2019.
  */
-class MyPostListAdapter(private val listener: Listener?) :
+class MyPostListAdapter(private val activity: Activity, private val listener: Listener?) :
     ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
@@ -57,13 +60,15 @@ class MyPostListAdapter(private val listener: Listener?) :
                 )
             }
             1 -> {
-                return MediaPostViewHolder(
-                    ItemMyPostMediaBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
+                    return MediaPostViewHolder(
+                        activity,
+                        ItemMyPostMediaBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                        )
                     )
-                )
+
             }
             else -> throw  IllegalStateException()
         }
@@ -98,7 +103,6 @@ class MyPostListAdapter(private val listener: Listener?) :
     }
 
 
-
     fun getItemAtPos(position: Int): Post = getItem(position)
 
     fun updateLike(position: Int, liked: Boolean) {
@@ -113,6 +117,7 @@ class MyPostListAdapter(private val listener: Listener?) :
     }
 
     class MediaPostViewHolder(
+        private val ctx: Activity,
         val binding: ItemMyPostMediaBinding
     ) : BaseViewHolder<Post>(binding.root) {
         override fun bind(
@@ -123,6 +128,11 @@ class MyPostListAdapter(private val listener: Listener?) :
             item: Post
         ) {
             binding.apply {
+                val builder = Zoomy.Builder(ctx).target(postImageView)
+                if (item.isPhoto)
+                    builder.register()
+                else
+                    Zoomy.unregister(postImageView)
                 post = item
                 videoClick = videoClickListener
                 likeClickListener = listener

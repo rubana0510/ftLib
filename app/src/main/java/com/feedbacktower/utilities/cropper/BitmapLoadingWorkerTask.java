@@ -21,7 +21,6 @@ import android.util.DisplayMetrics;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-
 /** Task to load bitmap asynchronously from the UI thread. */
 final class BitmapLoadingWorkerTask extends AsyncTask<Void, Void, BitmapLoadingWorkerTask.Result> {
 

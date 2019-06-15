@@ -79,4 +79,13 @@ class QRTransactionManager {
         }
     }
 
+    fun getTransactions(
+        onComplete: (QrTransactionsResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getQrTransactionsAsync(
+            ).makeRequest(onComplete)
+        }
+    }
+
 }

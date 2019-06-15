@@ -53,7 +53,7 @@ class MyPostsFragment : Fragment() {
         feedListView.layoutManager = LinearLayoutManager(requireContext())
         feedListView.itemAnimator = DefaultItemAnimator()
         feedListView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
-        postAdapter = MyPostListAdapter(listener)
+        postAdapter = MyPostListAdapter(requireActivity(), listener)
         feedListView.adapter = postAdapter
         isLoading = binding.isLoading
         noPosts = binding.noPosts

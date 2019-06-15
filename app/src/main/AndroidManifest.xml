@@ -120,7 +120,6 @@
         <activity
                 android:name=".ui.BusinessProfileSetupScreen"
                 android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".utilities.cropper.MyCropperActivity"/>
         <activity android:name=".utilities.cropper.CropImageActivity"/>
         <activity android:name=".ui.qrtransfer.ReceiverActivity"
                   android:theme="@style/AppTheme.NoActionBar"/>
@@ -128,7 +127,10 @@
         <activity android:name=".utilities.filepicker.FilePickerActivity"/>
         <activity android:name=".ui.BusinessProfileEditScreen"/>
         <activity android:name=".ui.account.FindCustomerActivity"/>
-
+        <activity
+                android:name="com.yalantis.ucrop.UCropActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.NoActionBar"/>
         <receiver
                 android:name=".network.utils.ConnectivityReceiver"
                 android:enabled="true">

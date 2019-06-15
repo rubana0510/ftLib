@@ -1,3 +1,15 @@
+// "Therefore those skilled at the unorthodox
+// are infinite as heaven and earth,
+// inexhaustible as the great rivers.
+// When they come to an end,
+// they begin again,
+// like the days and months;
+// they die and are reborn,
+// like the four seasons."
+//
+// - Sun Tsu,
+// "The Art of War"
+
 package com.feedbacktower.utilities.cropper;
 
 import android.Manifest;
@@ -6,15 +18,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import com.feedbacktower.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.feedbacktower.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,11 +64,11 @@ public class CropImageActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crop_image_activity);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+       /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        overridePendingTransition(0, 0);
-        mCropImageView = findViewById(R.id.cropImageView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+       // overridePendingTransition(0, 0);
+      /*  mCropImageView = findViewById(R.id.cropImageView);
 
         Bundle bundle = getIntent().getBundleExtra(CropImage.CROP_IMAGE_EXTRA_BUNDLE);
         mCropImageUri = bundle.getParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE);
@@ -88,7 +105,7 @@ public class CropImageActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        setClickHandlers();
+        setClickHandlers();*/
 
     }
 

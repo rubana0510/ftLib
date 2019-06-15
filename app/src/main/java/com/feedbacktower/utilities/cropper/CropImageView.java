@@ -17,7 +17,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.*;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import androidx.exifinterface.media.ExifInterface;
 import com.feedbacktower.R;
 
 import java.lang.ref.WeakReference;
@@ -314,7 +314,7 @@ public class CropImageView extends FrameLayout {
 
     mScaleType = options.scaleType;
     mAutoZoomEnabled = options.autoZoomEnabled;
-    mMaxZoom = options.maxZoom; 
+    mMaxZoom = options.maxZoom;
     mShowCropOverlay = options.showCropOverlay;
     mShowProgressBar = options.showProgressBar;
     mFlipHorizontally = options.flipHorizontally;

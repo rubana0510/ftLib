@@ -33,7 +33,7 @@
                         android:textColor="@color/grey21"
                         android:textSize="50sp"
                         tools:text="1"
-                        android:text="@{plan.period}"/>
+                        android:text="@{``+plan.period}"/>
                 <TextView
                         style="@style/LargeBoldText"
                         android:layout_width="wrap_content"

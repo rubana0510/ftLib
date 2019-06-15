@@ -1,10 +1,14 @@
 package com.feedbacktower.adapters
 
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
+import com.ablanco.zoomy.Zoomy
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemPostTextBinding
@@ -16,7 +20,7 @@ import java.lang.IllegalStateException
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter(private val listener: Listener?) :
+class PostListAdapter(val activity: Activity, private val listener: Listener?) :
     ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
@@ -59,6 +63,7 @@ class PostListAdapter(private val listener: Listener?) :
             }
             1 -> {
                 return MediaPostViewHolder(
+                    activity,
                     ItemPostMediaBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
@@ -108,6 +113,7 @@ class PostListAdapter(private val listener: Listener?) :
     }
 
     class MediaPostViewHolder(
+        val ctx: Activity,
         val binding: ItemPostMediaBinding
     ) : BaseViewHolder<Post>(binding.root) {
         override fun bind(
@@ -118,6 +124,11 @@ class PostListAdapter(private val listener: Listener?) :
             item: Post
         ) {
             binding.apply {
+                val builder = Zoomy.Builder(ctx).target(postImageView)
+                if (item.isPhoto)
+                    builder.register()
+                else
+                    Zoomy.unregister(postImageView)
                 post = item
                 videoClick = videoClickListener
                 likeClickListener = listener

@@ -15,6 +15,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.*
+import com.ablanco.zoomy.Zoomy
+import com.feedbacktower.BuildConfig
+
 
 @BindingAdapter("isGone")
 fun bindIsGone(view: View, isGone: Boolean) {
@@ -39,7 +42,7 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
 fun bindPostImage(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(view.context)
-            .load("${Constants.Service.Secrets.BASE_URL}/posts/$imageUrl")
+            .load("${BuildConfig.S3_BASE_URL}/posts/$imageUrl")
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(view)
     }
@@ -98,7 +101,6 @@ fun bindToProfileRound(view: ImageView, userId: String?) {
     }
 }
 
-
 @BindingAdapter("checkedIfOne")
 fun bindCheckedIfOne(view: ImageButton, value: Int) {
     view.isSelected = value == 1
@@ -117,7 +119,7 @@ fun bindShowIfApproved(view: View, value: QrTxStatus?) {
 
 @BindingAdapter("showIfRequested")
 fun bindShowIfRequested(view: View, value: QrTxStatus?) {
-    view.visibility = if (value ==  QrTxStatus.REQUESTED) {
+    view.visibility = if (value == QrTxStatus.REQUESTED) {
         View.GONE
     } else {
         View.VISIBLE

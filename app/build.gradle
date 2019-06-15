@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 13
-        versionName "0.8"
+        versionCode 16
+        versionName "0.9.6"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -26,6 +26,10 @@ android {
             it.buildConfigField 'String', "SERVER_BASE_URL", serverBaseUrl
             it.resValue 'string', "server_base_url", serverBaseUrl
 
+            def s3BaseUrl = properties.getProperty("s3_base_url", "")
+            it.buildConfigField 'String', "S3_BASE_URL", s3BaseUrl
+            it.resValue 'string', "s3_base_url", s3BaseUrl
+
             def merchantKey = properties.getProperty("merchant_key", "")
             it.buildConfigField 'String', "MERCHANT_KEY", merchantKey
             it.resValue 'string', "merchant_key", merchantKey
@@ -33,6 +37,10 @@ android {
             def merchantId = properties.getProperty("merchant_id", "")
             it.buildConfigField 'String', "MERCHANT_ID", merchantId
             it.resValue 'string', "merchant_id", merchantId
+
+            def placesApiKey = properties.getProperty("places_api_key", "")
+            it.buildConfigField 'String', "PLACES_API_KEY", placesApiKey
+            it.resValue 'string', "places_api_key", placesApiKey
         }
     }
     buildTypes {
@@ -114,6 +122,13 @@ dependencies {
     //location
     implementation 'com.google.android.gms:play-services-location:16.0.0'
 
+    implementation "androidx.exifinterface:exifinterface:1.0.0"
+
+    //cropper
+    implementation 'com.github.yalantis:ucrop:2.2.3'
+
+    //zoomy: for image zoom
+    implementation 'com.ablanco.zoomy:zoomy:1.1.0'
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

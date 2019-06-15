@@ -26,7 +26,8 @@ class ApiService {
                 connectTimeout(Constants.Service.Timeout.CONNECT, TimeUnit.MILLISECONDS)
                 readTimeout(Constants.Service.Timeout.READ, TimeUnit.MILLISECONDS)
                 writeTimeout(Constants.Service.Timeout.WRITE, TimeUnit.MILLISECONDS)
-                addInterceptor(HttpLoggingInterceptor().apply {
+                addInterceptor(HttpLoggingInterceptor().apply w@{
+                    if(!BuildConfig.DEBUG) return@w
                    level = HttpLoggingInterceptor.Level.BODY
                    // level = HttpLoggingInterceptor.Level.HEADERS
                 })

@@ -14,14 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import com.feedbacktower.R;
 import com.feedbacktower.utilities.videotrimmer.interfaces.OnProgressVideoListener;
@@ -133,6 +126,7 @@ public class VideoTrimmer extends FrameLayout implements MediaPlayer.OnErrorList
         mTimeLineView = findViewById(R.id.timeLineView);
         View viewButtonCancel = findViewById(R.id.btCancel);
         View viewButtonSave = findViewById(R.id.btSave);
+        EditText caption = findViewById(R.id.caption);
 
         if (viewButtonCancel != null) {
             viewButtonCancel.setOnClickListener(new OnClickListener() {
@@ -154,7 +148,7 @@ public class VideoTrimmer extends FrameLayout implements MediaPlayer.OnErrorList
                                                           viewButtonCancel.setEnabled(false);
                                                       if (letUserProceed) {
                                                           if (mStartPosition <= 0 && mEndPosition >= mDuration) {
-                                                              mOnTrimVideoListener.getResult(mSrc);
+                                                              mOnTrimVideoListener.getResult(caption.getText().toString().trim(), mSrc);
                                                           } else {
                                                               mPlayView.setVisibility(View.VISIBLE);
                                                               mVideoView.pause();

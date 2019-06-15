@@ -12,13 +12,13 @@ data class Location(
     val latitude: Double?
         get() {
             if (coordinates != null && coordinates.size > 1)
-                return coordinates[0]
+                return coordinates[1]
             return null
         }
     val longitude: Double?
         get() {
             if (coordinates != null && coordinates.size > 1)
-                return coordinates[1]
+                return coordinates[0]
             return null
         }
 }

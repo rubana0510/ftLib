@@ -136,7 +136,7 @@ public class TrimVideoUtils {
 
         fc.close();
         fos.close();
-        callback.getResult(Uri.parse(dst.toString()));
+        callback.getResult("", Uri.parse(dst.toString()));
     }
 
     private static double correctTimeToSyncSample(@NonNull Track track, double cutHere, boolean next) {

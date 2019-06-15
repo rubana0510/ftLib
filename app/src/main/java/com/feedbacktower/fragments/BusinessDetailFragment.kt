@@ -1,6 +1,8 @@
 package com.feedbacktower.fragments
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.adapters.ProfilePostListAdapter
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Business
@@ -24,7 +25,6 @@ import com.feedbacktower.util.isCurrentBusiness
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
-import java.lang.IllegalArgumentException
 
 
 class BusinessDetailFragment : Fragment() {
@@ -73,6 +73,7 @@ class BusinessDetailFragment : Fragment() {
             business?.let {
                 requireActivity().launchActivity<MapScreen> {
                     putExtra("LOCATION", it.currentLocation)
+                    putExtra("TITLE", "Last Seen At")
                 }
             }
 
@@ -88,6 +89,17 @@ class BusinessDetailFragment : Fragment() {
             val d = RateReviewDialog()
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager, "review")
+        }
+
+        binding.onCallClicked = View.OnClickListener {
+            val phone = business?.phone ?: return@OnClickListener
+            startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null)))
+        }
+        binding.onLocationClicked = View.OnClickListener {
+            requireActivity().launchActivity<MapScreen> {
+                putExtra("LOCATION", business?.location)
+                putExtra("TITLE", "Permanent Location")
+            }
         }
         postListView = binding.postListView
         reviewListView = binding.reviewListView

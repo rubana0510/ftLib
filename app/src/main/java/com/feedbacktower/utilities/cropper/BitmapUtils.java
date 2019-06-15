@@ -15,10 +15,10 @@ package com.feedbacktower.utilities.cropper;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.*;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
+import androidx.exifinterface.media.ExifInterface;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;

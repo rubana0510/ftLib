@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -25,11 +24,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.loader.content.CursorLoader
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.R
@@ -39,14 +36,10 @@ import com.feedbacktower.fragments.utils.SpinnerDatePickerDialog
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.*
 import com.feedbacktower.utilities.Glide4Engine
-import com.feedbacktower.utilities.ImageEditHelper
-import com.feedbacktower.utilities.cropper.CropImage
-import com.feedbacktower.utilities.cropper.CropImageActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
-import com.zhihu.matisse.internal.entity.CaptureStrategy
 import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException

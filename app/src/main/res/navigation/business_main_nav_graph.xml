@@ -60,6 +60,8 @@
                 app:destination="@id/editBusinessFragment"/>
         <action android:id="@+id/action_navigation_account_to_selectCityFragment"
                 app:destination="@id/selectCityFragment"/>
+        <action android:id="@+id/action_navigation_account_to_walletTransactionFragment"
+                app:destination="@id/walletTransactionFragment"/>
     </fragment>
     <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
@@ -118,5 +120,9 @@
                 app:destination="@id/personalDetailsFragment"/>
         <action android:id="@+id/action_editBusinessFragment_to_businessSetup1FragmentOnB"
                 app:destination="@id/businessSetup1FragmentOnB"/>
+    </fragment>
+    <fragment android:id="@+id/walletTransactionFragment"
+              android:name="com.feedbacktower.ui.transactions.WalletTransactionsFragment"
+              android:label="Wallet Transactions" tools:layout="@layout/fragment_transaction">
     </fragment>
 </navigation>

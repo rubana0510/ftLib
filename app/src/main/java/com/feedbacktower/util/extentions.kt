@@ -26,6 +26,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Patterns
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.qrscanner.BarcodeEncoder
@@ -55,7 +56,7 @@ fun ImageView.loadImage(bitmap: Bitmap) {
 
 fun ImageView.toProfileRound(userId: String) {
     Glide.with(this.context)
-        .load("${Constants.Service.Secrets.BASE_URL}/user/$userId.jpg")
+        .load("${BuildConfig.S3_BASE_URL}/user/$userId.jpg")
         .apply(RequestOptions().circleCrop())
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)

@@ -15,6 +15,8 @@ import androidx.core.content.PermissionChecker
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
@@ -22,16 +24,17 @@ import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
+import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.ui.PostTextScreen
 import com.feedbacktower.ui.VideoTrimmerScreen
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.*
 import com.feedbacktower.utilities.Glide4Engine
-import com.feedbacktower.utilities.cropper.CropImage
-import com.feedbacktower.utilities.cropper.ImagePreviewActivity
+import com.feedbacktower.ui.ImagePreviewActivity
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
+import com.theartofdev.edmodo.cropper.CropImage
 import com.yalantis.ucrop.UCrop
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -50,6 +53,10 @@ class HomeFragment : Fragment() {
     private var noPosts: Boolean? = false
     private val REQUEST_CODE_CHOOSE_IMAGE = 1012
     private val REQUEST_CODE_CHOOSE_VIDEO = 1013
+    private val posts: ArrayList<Post> = ArrayList()
+    private val postsOver: Boolean = false
+    private var isPostsLoading: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,13 +98,30 @@ class HomeFragment : Fragment() {
         binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
         binding.currentCity = appPrefs.getValue("CITY") ?: "Select City"
         //setup list
-        feedListView.setVertical(requireContext())
+        val layoutManager = LinearLayoutManager(context)
+        feedListView.layoutManager = layoutManager
+        feedListView.itemAnimator = DefaultItemAnimator()
         postAdapter = PostListAdapter(requireActivity(), listener)
         feedListView.adapter = postAdapter
+        feedListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (postsOver) return
+
+                val lastPostPosition = layoutManager.findLastVisibleItemPosition()
+                if (posts.size == lastPostPosition + 1) {
+                    if (lastPostPosition < posts.size) {
+                        val post = posts[lastPostPosition]
+                        fetchPostList(post.createdAt, "OLD")
+                    }
+                }
+            }
+        })
         isLoading = binding.isLoading
         noPosts = binding.noPosts
         swipeRefresh.setOnRefreshListener {
-            fetchPostList()
+            posts.clear()
+            fetchPostList("", "OLD")
         }
 
         binding.selectCityListener = View.OnClickListener {
@@ -110,7 +134,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        fetchPostList()
+        fetchPostList("", "OLD")
     }
 
     private val addPostClickListener = View.OnClickListener {
@@ -162,7 +186,7 @@ class HomeFragment : Fragment() {
 
         override fun onVideoClick(item: Post, position: Int) {
             requireActivity().launchActivity<VideoPlayerScreen> {
-                putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/posts/${item.media}")
+                putExtra(VideoPlayerScreen.URI_KEY, Environment.S3_BASE_URL + "${item.media}")
             }
         }
     }
@@ -176,18 +200,31 @@ class HomeFragment : Fragment() {
             }
     }
 
-    private fun fetchPostList() {
+    private fun fetchPostList(timestamp: String, type: String) {
+        if (isPostsLoading) return
         swipeRefresh.isRefreshing = true
+        isPostsLoading = true
         PostManager.getInstance()
-            .getPosts("", "OLD") { response, error ->
+            .getPosts(timestamp, type) { response, error ->
                 swipeRefresh.isRefreshing = false
-                noPosts = response?.posts?.isEmpty()
-                postAdapter.submitList(response?.posts)
+                isPostsLoading = false
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                    return@getPosts
+                }
+                response?.posts?.let {
+                    Log.d(TAG, "Fetched posts: ${it.size}")
+                    posts.addAll(it)
+                    Log.d(TAG, "Total posts: ${posts.size}")
+                    noPosts = posts.isEmpty()
+                    postAdapter.submitList(posts)
+                }
             }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d(TAG, "requestCode: $requestCode, resultCode: $resultCode")
         if (requestCode == REQUEST_CODE_CHOOSE_IMAGE && resultCode == RESULT_OK) {
             var mSelected = Matisse.obtainResult(data!!)
             Log.d("Matisse", "mSelected Image: $mSelected")
@@ -216,20 +253,27 @@ class HomeFragment : Fragment() {
                 Log.d(TAG, "Uri: ${File(paths[0]).toUri()}")
                 //ImageEditHelper.openCropper(requireContext(), this, File(paths[0]).toUri())
                 //requireActivity().launchActivity<CropImageActivity> {  }
-                    requireActivity().launchActivity<ImagePreviewActivity> {
-                        putExtra("URI", File(paths[0]).toUri())
-                    }
+               /* requireActivity().launchActivity<ImagePreviewActivity> {
+                    putExtra("URI", File(paths[0]).toUri())
+                }*/
                 //openImageCropper(File(paths[0]).toUri())
+                CropImage.activity(File(paths[0]).toUri())
+                    .start(context!!, this)
+
             }
-        } else if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             Log.d(TAG, "Crop result")
             data?.let {
-
-                val uri = UCrop.getOutput(it)
-                Log.d(TAG, "Crop result Uri: $uri")
-                requireActivity().launchActivity<ImagePreviewActivity> {
-                    putExtra("URI", uri)
+                val result = CropImage.getActivityResult(data)
+                if (resultCode == RESULT_OK) {
+                    val resultUri = result.getUri();
+                    requireActivity().launchActivity<ImagePreviewActivity> {
+                        putExtra("URI", resultUri)
+                    }
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    val error = result.getError();
                 }
+
             }
         }
     }

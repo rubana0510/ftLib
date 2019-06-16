@@ -11,7 +11,7 @@ import com.feedbacktower.databinding.ItemCountViewBinding
 /**
  * Created by sanket on 16-04-2019.
  */
-class CountAdapter : ListAdapter<Count, CountAdapter.ViewHolder>(CountDiffCallback()) {
+class CountAdapter(private val onCountClick: (count: Count) -> Unit) : ListAdapter<Count, CountAdapter.ViewHolder>(CountDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemCountViewBinding.inflate(
@@ -28,7 +28,7 @@ class CountAdapter : ListAdapter<Count, CountAdapter.ViewHolder>(CountDiffCallba
     }
 
     private fun createClickListener(item: Count): View.OnClickListener = View.OnClickListener {
-
+        onCountClick(item)
     }
 
 
@@ -39,6 +39,7 @@ class CountAdapter : ListAdapter<Count, CountAdapter.ViewHolder>(CountDiffCallba
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: Count) {
             binding.apply {
+                clickListener = listener
                 count = item
                 executePendingBindings()
             }

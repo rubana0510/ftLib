@@ -26,12 +26,12 @@
                 app:isGone="@{isLoading}">
 
             <FrameLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
                 <LinearLayout
                         android:orientation="vertical"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
@@ -45,7 +45,7 @@
                             android:textColor="@color/grey21"
                             android:textSize="50sp"
                             tools:text="1"
-                            android:text="@{``+plan.period}"/>
+                            app:textDouble="@{plan.period}"/>
                     <TextView
                             style="@style/LargeBoldText"
                             android:layout_width="wrap_content"
@@ -74,9 +74,37 @@
                             android:maxLines="1"
                             android:layout_marginTop="8dp"
                             android:textColor="@color/grey42"
-                            android:text="@{`₹` + plan.fee}"
+                            app:textPrice="@{plan.fee}"
                             tools:text="200"
                     />
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintTop_toBottomOf="@+id/hint"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_horizontal">
+                        <TextView
+                                style="@style/SmallText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:maxLines="1"
+                                android:layout_marginTop="8dp"
+                                android:textColor="@color/grey42"
+                                tools:text="+ GST(18%)"
+                                android:text="@{`+ GST(`+plan.totalGst+`%)`}"/>
+                        <TextView
+                                style="@style/SmallText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:maxLines="1"
+                                android:layout_marginStart="8dp"
+                                android:textColor="@color/grey42"
+                                app:textPrice="@{plan.gstAmount}"
+                        tools:text="Rs. 180"/>
+                    </LinearLayout>
                 </LinearLayout>
                 <ImageView
                         android:layout_width="wrap_content"
@@ -104,18 +132,11 @@
                 app:layout_constraintTop_toBottomOf="@id/planView"
                 android:layout_marginTop="24dp"
                 tools:text="Get Rs.1000 in wallet\n100 Text posts\n5 Photo Posts\n3 Video Posts"
-                android:text="@{`Get ₹`+ plan.maxWalletCashback + ` in wallet\n` + plan.maxTextPost +` Text posts\n` + plan.maxPhotoPost +`Photo posts\n`+ plan.maxVideoPost +` Video posts`}"
+                android:text="@{`Get ₹`+ plan.maxWalletCashback + ` in wallet\n` + plan.maxTextPost +` Text posts\n` + plan.maxPhotoPost +` Photo posts\n`+ plan.maxVideoPost +` Video posts`}"
                 android:gravity="center_horizontal"
                 app:isGone="@{isLoading}"/>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@+id/hint"
-                android:layout_marginTop="16dp"
-                android:gravity="center_horizontal">
-        </LinearLayout>
+
         <Button
                 android:id="@id/continueButton"
                 style="@style/ButtonFilledStyle.Big"
@@ -125,7 +146,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="16dp"
-                android:text="@{`Pay ₹`  + plan.payableAmount}"
+                android:text="@{`Pay `  + plan.payableAmountDisplay}"
                 app:isGone="@{isLoading}"
                 android:onClick="@{onContinueClick}"/>
         <ProgressBar

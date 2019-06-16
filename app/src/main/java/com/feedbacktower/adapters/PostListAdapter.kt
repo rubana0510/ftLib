@@ -1,27 +1,23 @@
 package com.feedbacktower.adapters
 
 import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import com.ablanco.zoomy.Zoomy
-import com.feedbacktower.adapters.diffcallbacks.DiffCallback
+import com.feedbacktower.adapters.diffcallbacks.PostDiffCallback
 import com.feedbacktower.data.models.Post
-import com.feedbacktower.databinding.ItemPostTextBinding
 import com.feedbacktower.databinding.ItemPostMediaBinding
+import com.feedbacktower.databinding.ItemPostTextBinding
 import com.feedbacktower.fragments.HomeFragmentDirections
-import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
-import java.lang.IllegalStateException
 
 /**
  * Created by sanket on 12-02-2019.
  */
 class PostListAdapter(val activity: Activity, private val listener: Listener?) :
-    ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
+    ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback()) {
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {

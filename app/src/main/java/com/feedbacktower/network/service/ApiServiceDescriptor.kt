@@ -66,7 +66,7 @@ interface ApiServiceDescriptor {
         @Body map: HashMap<String, Any?>
     ):Deferred<ApiResponse<AddCityResponse?>>
 
-    @POST("profile/continue-as-customer")
+    @POST("/api/profile/continue-as-customer")
     fun continueAsCustomerAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
     @POST("/api/profile/set-business-interest")
@@ -189,12 +189,20 @@ interface ApiServiceDescriptor {
 
 
     //BUSINESS
-    @GET("/api/business-category/")
-    fun getCategoriesAsync(): Deferred<ApiResponse<GetCategoriesResponse?>>
+    @GET("/api/business-category/search")
+    fun getCategoriesAsync(
+        @Query("search") keyword: String = ""
+    ): Deferred<ApiResponse<GetCategoriesResponse?>>
 
-    @GET("/api/business/list/")
+    @GET("/api/business-category/featured")
+    fun getFeaturedCategoriesAsync(
+        @Query("search") keyword: String = ""
+    ): Deferred<ApiResponse<GetCategoriesResponse?>>
+
+
+    @GET("/api/business/search/")
     fun searchBusinessAsync(
-        @Query("search") search: String = ""
+        @Query("search") keyword: String = ""
     ): Deferred<ApiResponse<SearchBusinessResponse?>>
 
     @PUT("/api/business/")

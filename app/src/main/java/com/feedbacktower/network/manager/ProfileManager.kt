@@ -103,6 +103,19 @@ class ProfileManager {
         }
     }
 
+    fun updateBusinessCity(
+        cityId: String,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.updateBusinessAsync(
+                hashMapOf(
+                    "cityId" to cityId
+                )
+            ).makeRequest(onComplete)
+        }
+    }
+
     fun continueAsCustomer(
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
@@ -133,10 +146,21 @@ class ProfileManager {
     }
 
     fun getAllCategories(
+        keyword: String = "",
         onComplete: (GetCategoriesResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getCategoriesAsync().makeRequest(onComplete)
+            apiService.getCategoriesAsync(
+                keyword
+            ).makeRequest(onComplete)
+        }
+    }
+
+    fun getFetauredCategories(
+        onComplete: (GetCategoriesResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getFeaturedCategoriesAsync().makeRequest(onComplete)
         }
     }
 

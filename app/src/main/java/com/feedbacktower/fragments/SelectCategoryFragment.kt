@@ -1,9 +1,13 @@
 package com.feedbacktower.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
@@ -25,6 +29,8 @@ class SelectCategoryFragment : DialogFragment() {
     private lateinit var adapter: CategoryListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var categoryList: RecyclerView
+    private lateinit var queryInput: EditText
+    private lateinit var clearButton: ImageButton
     var listener: CategorySelectListener? = null
 
     companion object {
@@ -48,11 +54,38 @@ class SelectCategoryFragment : DialogFragment() {
         toolbar.title = "Select Your Category"
         adapter = CategoryListAdapter(toggleListener)
         categoryList = view.categoryGridView
+        queryInput = view.queryInput
+        clearButton = view.clearButton
         progressBar = view.progressBar
         categoryList.setVertical(requireContext())
         categoryList.adapter = adapter
-        getInterests()
+        setTextChangeListener()
+        getCategories()
         return view
+    }
+
+    private fun setTextChangeListener() {
+        queryInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(text: Editable?) {
+                if (text.isNullOrEmpty()) {
+                    getCategories()
+                    return
+                }
+
+                val keyword = text.toString().trim()
+
+                getCategories(keyword)
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
     }
 
     override fun onStart() {
@@ -72,10 +105,10 @@ class SelectCategoryFragment : DialogFragment() {
         }
     }
 
-    private fun getInterests() {
+    private fun getCategories(keyword: String = "") {
         progressBar.visible()
         ProfileManager.getInstance()
-            .getAllCategories { CategoriesResponse, error ->
+            .getAllCategories(keyword) { CategoriesResponse, error ->
                 progressBar.gone()
                 if (error != null) {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))

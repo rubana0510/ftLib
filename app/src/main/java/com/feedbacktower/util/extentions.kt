@@ -29,6 +29,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.network.env.Environment
 import com.feedbacktower.qrscanner.BarcodeEncoder
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -56,7 +57,7 @@ fun ImageView.loadImage(bitmap: Bitmap) {
 
 fun ImageView.toProfileRound(userId: String) {
     Glide.with(this.context)
-        .load("${BuildConfig.S3_BASE_URL}/user/$userId.jpg")
+        .load("${Environment.S3_BASE_URL}user/$userId.jpg")
         .apply(RequestOptions().circleCrop())
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
@@ -195,6 +196,35 @@ internal fun Int.noZero(): String {
     else this.toString()
 }
 
+
+internal fun Double.toPrice(): String {
+    return "₹" + String.format("%.2f", this)
+}
+
+internal fun Int.toPrice(): String {
+    return "₹" + String.format("%.2f", this)
+}
+
+internal fun String.toDate(): String {
+    try {
+        val dt = DateTime(this, DateTimeZone.UTC)
+        val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
+        return toFormat.format(Date(dt.millis / 1000))
+    } catch (e: ParseException) {
+        return "";
+    }
+
+}
+
+internal fun Activity.showAppInStore() {
+    startActivity(
+        Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID)
+        )
+    )
+}
+
 internal fun String.toRelativeTime(): String {
     try {
         val dt = DateTime(this, DateTimeZone.UTC)
@@ -252,10 +282,12 @@ fun isCurrentBusiness(businessId: String, context: Context): Boolean {
     return currentBusinessId == businessId
 }
 
-fun LatLng.toLatLngArray(): String {
-    return "[$latitude,$longitude]"
+fun LatLng.toArray(): List<Double> {
+    return arrayListOf(this.longitude, this.latitude)
 }
-
+fun LatLng.toLocation():  com.feedbacktower.data.models.Location{
+    return com.feedbacktower.data.models.Location(this.toArray(), "")
+}
 fun Location?.toLatLng(): LatLng? {
     if (this == null) return null
 

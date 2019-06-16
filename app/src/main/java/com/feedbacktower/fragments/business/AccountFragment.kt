@@ -26,6 +26,7 @@ import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.noZero
+import com.feedbacktower.util.showAppInStore
 import kotlinx.android.synthetic.main.fragment_business_account.*
 import org.jetbrains.anko.toast
 
@@ -56,7 +57,7 @@ class AccountFragment : Fragment() {
 
         //setup counter grid list
         counterGridView.setHasFixedSize(true)
-        countAdapter = CountAdapter()
+        countAdapter = CountAdapter(onCountClick)
         counterGridView.adapter = countAdapter
         submitCounts()
 
@@ -136,12 +137,23 @@ class AccountFragment : Fragment() {
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(8, "My Posts", "Manage your posts", R.drawable.ic_post_like_filled),
-            AccountOption(1, "Subscription", "365 days left", R.drawable.ic_post_like_filled),
+            AccountOption(1, "Subscription", "Current plan", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
+            AccountOption(10, "Rate and Review", "Review app on Play Store", R.drawable.ic_post_like_filled),
             AccountOption(7, "Settings", "Notifications, Location", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
+    }
+
+    private val onCountClick = { count: Count ->
+        if (count.id == 3) {
+            val d = AccountFragmentDirections.actionNavigationAccountToNavigationReviewFragment()
+            findNavController().navigate(d)
+        } else if (count.id == 4) {
+            val d = AccountFragmentDirections.actionNavigationAccountToNavigationSuggestionFragment()
+            findNavController().navigate(d)
+        }
     }
 
     private val onItemSelected = { option: AccountOption ->
@@ -159,7 +171,8 @@ class AccountFragment : Fragment() {
                 findNavController().navigate(d)
             }
             4 -> {
-
+                val d = AccountFragmentDirections.actionNavigationAccountToHelpFragment()
+                findNavController().navigate(d)
             }
             5 -> {
                 AppPrefs.getInstance(requireContext()).authToken = null
@@ -185,6 +198,9 @@ class AccountFragment : Fragment() {
                 val d = AccountFragmentDirections.actionNavigationAccountToSelectCityFragment()
                 findNavController().navigate(d)
             }
+            10 -> {
+                requireActivity().showAppInStore()
+            }
         }
     }
 
@@ -192,7 +208,7 @@ class AccountFragment : Fragment() {
         val business = AppPrefs.getInstance(requireContext()).user?.business!!
         val counts = listOf(
             Count(1, business.rank.noZero(), "Rank"),
-            Count(2, business.averageRatings, "Ratings"),
+            Count(2, "${business.avgRating}", "Ratings"),
             Count(3, "${business.totalReviews}", "Reviews"),
             Count(4, "${business.totalSuggestions}", "Suggestions")
         )

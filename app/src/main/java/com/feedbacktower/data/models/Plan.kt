@@ -1,5 +1,6 @@
 package com.feedbacktower.data.models
 
+import com.feedbacktower.util.toPrice
 import com.google.gson.annotations.SerializedName
 
 data class Plan(
@@ -8,7 +9,7 @@ data class Plan(
     @SerializedName("name")
     val name: String,
     @SerializedName("businessCategoryId")
-    val businessCategoryId: Any?,
+    val businessCategoryId: String,
     @SerializedName("masterBusinessCategoryId")
     val masterBusinessCategoryId: Int,
     @SerializedName("fee")
@@ -22,7 +23,7 @@ data class Plan(
     @SerializedName("maxVideoPost")
     val maxVideoPost: Int,
     @SerializedName("period")
-    val period: Double,
+    val period: Int,
     @SerializedName("periodType")
     val periodType: String,
     @SerializedName("createdAt")
@@ -36,7 +37,24 @@ data class Plan(
     @SerializedName("sgst")
     val sgst: Double
 ) {
-    val payableAmount: Double
-        get() = fee + igst + sgst + cgst
+
+    val totalGst: Double
+        get() = igst + cgst + sgst
+    val gstAmount: Double
+        get() = (fee * (igst / 100 + sgst / 100 + cgst / 100)).toNextInt()
+    private val payableAmount: Double
+        get() = (fee + gstAmount).toNextInt()
+
+    val payableAmountDisplay: String
+        get() = payableAmount.toPrice()
     var isSelected: Boolean = false
+
+    private fun Double.toNextInt(): Double {
+        val diff = this - this.toInt()
+        return if (diff > 0.0)
+            (this.toInt() + 1).toDouble()
+        else
+            this
+    }
+
 }

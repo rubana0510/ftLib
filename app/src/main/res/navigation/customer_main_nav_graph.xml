@@ -33,6 +33,8 @@
                 app:destination="@id/personalDetailsFragment"/>
         <action android:id="@+id/action_navigation_account_to_selectCityFragment"
                 app:destination="@id/selectCityFragment"/>
+        <action android:id="@+id/action_navigation_account_to_helpFragment"
+                app:destination="@id/helpFragment"/>
     </fragment>
     <activity
             android:id="@+id/businessDetailsActivity"
@@ -52,13 +54,17 @@
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
     <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
-              android:label="SelectCityFragment">
+              android:label="Select City">
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
     <fragment android:id="@+id/personalDetailsFragment"
               android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
-              android:label="PersonalDetailsFragment">
+              android:label="Edit Personal Details">
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
+    </fragment>
+    <fragment android:id="@+id/helpFragment"
+              android:name="com.feedbacktower.ui.support.HelpFragment"
+              android:label="Help and FAQs" tools:layout="@layout/fragment_help">
     </fragment>
 </navigation>

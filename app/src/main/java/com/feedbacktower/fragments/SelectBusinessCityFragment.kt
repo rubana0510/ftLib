@@ -26,7 +26,7 @@ import com.feedbacktower.network.models.AutoCompleteResponse
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
 
-class SelectCityFragment : Fragment() {
+class SelectBusinessCityFragment : Fragment() {
     private lateinit var adapter: CityListAdapter
     private lateinit var autoCompleteAdapter: AutoCompleteAdapter
     private lateinit var queryInput: EditText
@@ -35,8 +35,8 @@ class SelectCityFragment : Fragment() {
     private val args: SelectCityFragmentArgs by navArgs()
 
     companion object {
-        fun getInstance(): SelectCityFragment {
-            val fragment = SelectCityFragment()
+        fun getInstance(): SelectBusinessCityFragment {
+            val fragment = SelectBusinessCityFragment()
             return fragment
         }
     }
@@ -98,14 +98,14 @@ class SelectCityFragment : Fragment() {
         requireContext().toast("Please wait, saving city")
         binding.isLoading = true
         ProfileManager.getInstance()
-            .updateCity(city.id.toString()) { response, error ->
+            .updateBusinessCity(city.id.toString()) { response, error ->
                 binding.isLoading = false
                 if (error == null) {
-                    AppPrefs.getInstance(requireContext()).setValue("USER_CITY", city.id.toString())
-                    AppPrefs.getInstance(requireContext()).setValue("CITY", city.name)
                     AppPrefs.getInstance(requireContext()).apply {
                         user = user?.apply {
-                            this.city = city
+                            this.business = business?.apply {
+                                this.city = city
+                            }
                         }
                     }
                     navigateNext()
@@ -246,12 +246,12 @@ class SelectCityFragment : Fragment() {
 
 
     private fun navigateNext() {
-        if (!args.edit) {
+        /*if (!args.edit) {
             SelectCityFragmentDirections.actionSelectCityFragmentToSelectInterestFragment().let {
                 findNavController().navigate(it)
             }
             return
-        }
+        }*/
         findNavController().navigateUp()
     }
 

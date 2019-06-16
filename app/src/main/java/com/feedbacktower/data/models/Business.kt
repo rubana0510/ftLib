@@ -45,6 +45,8 @@ data class Business(
     var totalSuggestions: Int,
     @SerializedName("totalRating")
     var totalRating: Double,
+    @SerializedName("avgRating")
+    var avgRating: Double,
     @SerializedName("updatedAt")
     var updatedAt: String,
     @SerializedName("userId")
@@ -57,11 +59,4 @@ data class Business(
     var walletAmount: Double,
     @SerializedName("website")
     var website: String
-): Serializable {
-    val averageRatings: String
-        get() {
-            if (totalReviews == 0) return "-"
-            else if (totalRating == 0.0) return "-"
-            else return String.format("%.1f", (totalRating / totalReviews))
-        }
-}
+): Serializable

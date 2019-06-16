@@ -2,11 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <variable name="clickListener" type="android.view.View.OnClickListener"/>
         <variable name="count" type="com.feedbacktower.data.local.models.Count"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{clickListener}"
             android:padding="@dimen/dimen_8dp">
         <com.feedbacktower.views.SquareImageView
                 android:layout_width="match_parent"

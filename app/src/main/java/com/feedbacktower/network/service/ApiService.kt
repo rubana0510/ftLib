@@ -1,15 +1,12 @@
 package com.feedbacktower.network.service
 
-import android.util.Log
 import com.feedbacktower.App
 import com.feedbacktower.BuildConfig
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.network.env.Environment
 import com.feedbacktower.util.Constants
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -33,14 +30,18 @@ class ApiService {
                 })
                 addNetworkInterceptor ani@{ chain ->
                     val request = chain.request().newBuilder()
-                        .addHeader(Constants.AUTHORIZATION, "Bearer ${App.getInstance().getToken()}").build()
+                        .addHeader(Constants.AUTHORIZATION, "Bearer ${App.getInstance().getToken()}")
+                        .addHeader("Platform", "android")
+                        .addHeader("VersionCode", BuildConfig.VERSION_CODE.toString())
+                        .addHeader("VersionName", BuildConfig.VERSION_NAME)
+                        .build()
                     return@ani chain.proceed(request);
                 }
             }
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .baseUrl(Constants.Service.Secrets.BASE_URL)
+                .baseUrl(Environment.SERVER_BASE_URL)
                 .client(clientBuilder.build())
                 .build()
             return retrofit.create(ApiServiceDescriptor::class.java)

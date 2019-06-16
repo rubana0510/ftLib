@@ -6,6 +6,7 @@ import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
+import com.feedbacktower.util.toArray
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,19 +30,11 @@ class LocationManager {
             }
     }
 
-    fun getCities(
-        onComplete: (GetCitiesResponse?, Throwable?) -> Unit
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            apiService.getCitiesAsync().makeRequest(onComplete)
-        }
-    }
-
     fun saveBusinessLocation(
         location: LatLng,
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
-        val map = hashMapOf<String, Any?>("location" to arrayOf(location.latitude, location.longitude))
+        val map = hashMapOf<String, Any?>("location" to location.toArray())
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updateBusinessAsync(map).makeRequest(onComplete)
         }
@@ -51,7 +44,7 @@ class LocationManager {
         location: LatLng,
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
-        val map = hashMapOf<String, Any?>("currentLocation" to arrayOf(location.latitude, location.longitude))
+        val map = hashMapOf<String, Any?>("currentLocation" to location.toArray())
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updateBusinessAsync(map).makeRequest(onComplete)
         }
@@ -68,6 +61,14 @@ class LocationManager {
         }
     }
 
+    fun getCities(
+        keyword: String,
+        onComplete: (GetCitiesResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.getCitiesAsync(keyword).makeRequest(onComplete)
+        }
+    }
     fun autocomplete(
         query: String,
         onComplete: (AutoCompleteResponse?, Throwable?) -> Unit

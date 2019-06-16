@@ -28,6 +28,7 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Location
 import com.feedbacktower.util.PermissionUtils
+import com.feedbacktower.util.toLocation
 import com.feedbacktower.util.zoomToLocation
 
 
@@ -144,7 +145,7 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
                         .apply {
                             user = user?.apply {
                                 business?.apply {
-                                    location = Location(listOf(it.latitude, it.longitude), "permanent")
+                                    location = it.toLocation()
                                 }
                             }
                         }

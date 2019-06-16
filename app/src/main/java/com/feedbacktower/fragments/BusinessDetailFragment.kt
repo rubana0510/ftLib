@@ -15,12 +15,12 @@ import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Business
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
+import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.ui.map.MapScreen
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
-import com.feedbacktower.util.Constants
 import com.feedbacktower.util.isCurrentBusiness
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
@@ -163,7 +163,7 @@ class BusinessDetailFragment : Fragment() {
 
         override fun onVideoClick(item: Post, position: Int) {
             requireActivity().launchActivity<VideoPlayerScreen> {
-                putExtra(VideoPlayerScreen.URI_KEY, Constants.Service.Secrets.BASE_URL + "/posts/${item.media}")
+                putExtra(VideoPlayerScreen.URI_KEY, Environment.S3_BASE_URL+ "${item.media}")
             }
         }
     }

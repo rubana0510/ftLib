@@ -25,7 +25,7 @@ data class MyBusiness(
     @SerializedName("location")
     var location: Location,
     @SerializedName("city")
-    val city: City,
+    var city: City,
     @SerializedName("name")
     var name: String?,
     @SerializedName("phone")
@@ -42,6 +42,8 @@ data class MyBusiness(
     var totalSuggestions: Int,
     @SerializedName("totalRating")
     var totalRating: Double,
+    @SerializedName("avgRating")
+    var avgRating: Double,
     @SerializedName("updatedAt")
     var updatedAt: String,
     @SerializedName("userId")
@@ -54,11 +56,4 @@ data class MyBusiness(
     var walletAmount: Double,
     @SerializedName("website")
     var website: String
-) {
-    val averageRatings: String
-        get() {
-            if (totalReviews == 0) return "-"
-            else if (totalRating == 0.0) return "-"
-            else return String.format("%.1f", (totalRating / totalReviews))
-        }
-}
+)

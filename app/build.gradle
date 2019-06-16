@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 16
-        versionName "0.9.6"
+        versionCode 17
+        versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -22,21 +22,38 @@ android {
             Properties properties = new Properties()
             properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
-            def serverBaseUrl = properties.getProperty("server_base_url", "")
-            it.buildConfigField 'String', "SERVER_BASE_URL", serverBaseUrl
-            it.resValue 'string', "server_base_url", serverBaseUrl
+            def liveServerBaseUrl = properties.getProperty("live_server_base_url", "")
+            it.buildConfigField 'String', "LIVE_SERVER_BASE_URL", liveServerBaseUrl
+            it.resValue 'string', "live_server_base_url", liveServerBaseUrl
 
-            def s3BaseUrl = properties.getProperty("s3_base_url", "")
-            it.buildConfigField 'String', "S3_BASE_URL", s3BaseUrl
-            it.resValue 'string', "s3_base_url", s3BaseUrl
+            def liveS3BaseUrl = properties.getProperty("live_s3_base_url", "")
+            it.buildConfigField 'String', "LIVE_S3_BASE_URL", liveS3BaseUrl
+            it.resValue 'string', "live_s3_base_url", liveS3BaseUrl
 
-            def merchantKey = properties.getProperty("merchant_key", "")
-            it.buildConfigField 'String', "MERCHANT_KEY", merchantKey
-            it.resValue 'string', "merchant_key", merchantKey
+            def liveMerchantKey = properties.getProperty("live_merchant_key", "")
+            it.buildConfigField 'String', "LIVE_MERCHANT_KEY", liveMerchantKey
+            it.resValue 'string', "live_merchant_key", liveMerchantKey
 
-            def merchantId = properties.getProperty("merchant_id", "")
-            it.buildConfigField 'String', "MERCHANT_ID", merchantId
-            it.resValue 'string', "merchant_id", merchantId
+            def liveMerchantId = properties.getProperty("live_merchant_id", "")
+            it.buildConfigField 'String', "LIVE_MERCHANT_ID", liveMerchantId
+            it.resValue 'string', "live_merchant_id", liveMerchantId
+
+            def testServerBaseUrl = properties.getProperty("test_server_base_url", "")
+            it.buildConfigField 'String', "TEST_SERVER_BASE_URL", testServerBaseUrl
+            it.resValue 'string', "test_server_base_url", testServerBaseUrl
+
+            def testS3BaseUrl = properties.getProperty("test_s3_base_url", "")
+            it.buildConfigField 'String', "TEST_S3_BASE_URL", testS3BaseUrl
+            it.resValue 'string', "test_s3_base_url", testS3BaseUrl
+
+            def testMerchantKey = properties.getProperty("test_merchant_key", "")
+            it.buildConfigField 'String', "TEST_MERCHANT_KEY", testMerchantKey
+            it.resValue 'string', "test_merchant_key", testMerchantKey
+
+            def testMerchantId = properties.getProperty("test_merchant_id", "")
+            it.buildConfigField 'String', "TEST_MERCHANT_ID", testMerchantId
+            it.resValue 'string', "test_merchant_id", testMerchantId
+
 
             def placesApiKey = properties.getProperty("places_api_key", "")
             it.buildConfigField 'String', "PLACES_API_KEY", placesApiKey
@@ -126,7 +143,7 @@ dependencies {
 
     //cropper
     implementation 'com.github.yalantis:ucrop:2.2.3'
-
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     //zoomy: for image zoom
     implementation 'com.ablanco.zoomy:zoomy:1.1.0'
     //test

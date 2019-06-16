@@ -30,10 +30,10 @@ data class QrTransaction(
     @SerializedName("receiver")
     val receiver: User,
     @SerializedName("isDebit")
-    val isDebit: Boolean
+    val isDebit: Int
 ) : BaseModel(id) {
     val user: User
-        get() = if (isDebit) receiver else sender
+        get() = if (isDebit == 1) receiver else sender
     val displayAmount: String
-        get() = if (isDebit) "- Rs.$amount" else "+ Rs.$amount"
+        get() = if (isDebit == 1) "- Rs.$amount" else "+ Rs.$amount"
 }

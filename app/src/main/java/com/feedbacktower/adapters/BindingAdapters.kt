@@ -1,22 +1,16 @@
 package com.feedbacktower.adapters
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.*
-import com.ablanco.zoomy.Zoomy
-import com.feedbacktower.BuildConfig
+import com.feedbacktower.network.env.Environment
 
 
 @BindingAdapter("isGone")
@@ -42,7 +36,7 @@ fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
 fun bindPostImage(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(view.context)
-            .load("${BuildConfig.S3_BASE_URL}/posts/$imageUrl")
+            .load("${Environment.S3_BASE_URL}$imageUrl")
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(view)
     }
@@ -87,6 +81,14 @@ fun bindTextSafe(view: TextView, text: Any) {
     view.text = text.toString()
 }
 
+@BindingAdapter("textDouble")
+fun bindTextDouble(view: TextView, text: Any) {
+    view.text = text.toString()
+}
+@BindingAdapter("textPrice")
+fun bindTextPrice(view: TextView, text: Double) {
+        view.text = text.toPrice()
+}
 @BindingAdapter("toDate")
 fun bindToDate(view: TextView, text: String?) {
     text?.let {

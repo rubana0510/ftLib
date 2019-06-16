@@ -91,6 +91,11 @@ public class TrackerService extends Service {
         super.onDestroy();
         if (mLocationManager != null) {
             try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(true);
+
+                }
+                stopSelf();
                 mLocationManager.removeUpdates(mLocationListener);
             } catch (Exception ex) {
                 Log.i(TAG, "fail to remove location listners, ignore", ex);

@@ -8,5 +8,6 @@ data class TransactionResponse(
     @SerializedName("status")
     val status: String,
     @SerializedName("id")
-    val txnid: String
+    val txnid: String,
+    val txnNo: String?
 )

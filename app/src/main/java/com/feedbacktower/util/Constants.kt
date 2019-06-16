@@ -1,13 +1,9 @@
 package com.feedbacktower.util
 
-import com.feedbacktower.BuildConfig
+import com.feedbacktower.network.env.Environment
 
 object Constants {
     object Service {
-        object Secrets {
-            const val BASE_URL = BuildConfig.SERVER_BASE_URL
-        }
-
         object Timeout {
             const val CONNECT: Long = 30 * 1000
             const val READ: Long = 30 * 1000
@@ -36,4 +32,5 @@ object Constants {
     const val DB_NAME: String = "feedbacktower"
     const val QR_STATUS_CHECK_INTERVAL: Long = 3000L
     const val IMAGE_COMPRESSION_QUALITY: Int = 75
+    const val HELP_PAGE_URL = "${Environment.SERVER_BASE_URL}help.html"
 }

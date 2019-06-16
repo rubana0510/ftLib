@@ -17,6 +17,7 @@ import com.feedbacktower.databinding.FragmentCustomerAccountBinding
 import com.feedbacktower.ui.BusinessProfileSetupScreen
 import com.feedbacktower.ui.SplashScreen
 import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.showAppInStore
 
 
 class CustomerAccountFragment : Fragment() {
@@ -63,6 +64,7 @@ class CustomerAccountFragment : Fragment() {
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
+            AccountOption(10, "Rate and Review", "Review app on Play Store", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
@@ -84,7 +86,8 @@ class CustomerAccountFragment : Fragment() {
                 findNavController().navigate(d)
             }
             4 -> {
-
+                val d = CustomerAccountFragmentDirections.actionNavigationAccountToHelpFragment()
+                findNavController().navigate(d)
             }
             5 -> {
                 AppPrefs.getInstance(requireContext()).authToken = null
@@ -92,6 +95,9 @@ class CustomerAccountFragment : Fragment() {
                 requireActivity().launchActivity<SplashScreen> {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
+            }
+            10 -> {
+                requireActivity().showAppInStore()
             }
         }
     }

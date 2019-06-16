@@ -62,6 +62,12 @@
                 app:destination="@id/selectCityFragment"/>
         <action android:id="@+id/action_navigation_account_to_walletTransactionFragment"
                 app:destination="@id/walletTransactionFragment"/>
+        <action android:id="@+id/action_navigation_account_to_helpFragment"
+                app:destination="@id/helpFragment"/>
+        <action android:id="@+id/action_navigation_account_to_navigationReviewFragment"
+                app:destination="@id/navigation_review"/>
+        <action android:id="@+id/action_navigation_account_to_navigationSuggestionFragment"
+                app:destination="@id/navigation_suggestion"/>
     </fragment>
     <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
@@ -78,7 +84,7 @@
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
     <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
-              android:label="SelectCityFragment">
+              android:label="Select City">
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
@@ -86,11 +92,13 @@
               android:name="com.feedbacktower.fragments.business.BusinessSettingsFragment"
               android:label="Settings"/>
 
-    <fragment android:id="@+id/businessSetup1FragmentOnB" android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
+    <fragment android:id="@+id/businessSetup1FragmentOnB"
+              android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
               android:label="Basic Details">
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
-    <fragment android:id="@+id/businessSetup2FragmentOnB" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
+    <fragment android:id="@+id/businessSetup2FragmentOnB"
+              android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
               android:label="Address Details">
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
@@ -120,9 +128,19 @@
                 app:destination="@id/personalDetailsFragment"/>
         <action android:id="@+id/action_editBusinessFragment_to_businessSetup1FragmentOnB"
                 app:destination="@id/businessSetup1FragmentOnB"/>
+        <action android:id="@+id/action_editBusinessFragment_to_selectBusinessCityFragment"
+                app:destination="@id/selectBusinessCityFragment">
+        </action>
     </fragment>
     <fragment android:id="@+id/walletTransactionFragment"
               android:name="com.feedbacktower.ui.transactions.WalletTransactionsFragment"
               android:label="Wallet Transactions" tools:layout="@layout/fragment_transaction">
     </fragment>
+    <fragment android:id="@+id/helpFragment"
+              android:name="com.feedbacktower.ui.support.HelpFragment"
+              android:label="Help and FAQs" tools:layout="@layout/fragment_help">
+    </fragment>
+    <fragment android:id="@+id/selectBusinessCityFragment"
+              android:name="com.feedbacktower.fragments.SelectBusinessCityFragment"
+              android:label="Select Business City"/>
 </navigation>

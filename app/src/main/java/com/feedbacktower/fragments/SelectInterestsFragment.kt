@@ -64,11 +64,11 @@ class SelectInterestsFragment : Fragment() {
     private fun getInterests(binding: FragmentSelectInterestsBinding) {
         binding.isLoading = true
         ProfileManager.getInstance()
-            .getAllCategories { CategoriesResponse, error ->
+            .getFetauredCategories { CategoriesResponse, error ->
                 binding.isLoading = false
                 if (error != null) {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
-                    return@getAllCategories
+                    return@getFetauredCategories
                 }
                 adapter.submitList(CategoriesResponse?.featured)
             }

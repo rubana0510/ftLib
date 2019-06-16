@@ -22,7 +22,7 @@ class MyPlanScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding: ActivityMyPlanScreenBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_my_plan_screen)
-
+        title = "Subscription Plan"
         binding.renewPlan.setOnClickListener {
             launchActivity<SubscriptionPlansScreen> { }
         }
@@ -30,10 +30,12 @@ class MyPlanScreen : AppCompatActivity() {
     }
 
     private fun getPlanTransactions(binding: ActivityMyPlanScreenBinding) {
+        binding.isLoading = true
         TransactionManager.getInstance()
             .getTransactions { response, error ->
                 if (error == null && response?.transactions != null) {
-                    if (!response.transactions.isEmpty()) {
+                    if (response.transactions.isNotEmpty()) {
+                        binding.isLoading = false
                         val latestPlanTaken = response.transactions[0].subscriptionPlan
                         binding.plan = latestPlanTaken
                         binding.expiryDate = getExpiry(latestPlanTaken)

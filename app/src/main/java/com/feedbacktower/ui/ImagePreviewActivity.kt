@@ -1,4 +1,4 @@
-package com.feedbacktower.utilities.cropper
+package com.feedbacktower.ui
 
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity

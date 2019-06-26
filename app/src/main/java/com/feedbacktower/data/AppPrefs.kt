@@ -2,13 +2,11 @@ package com.feedbacktower.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.feedbacktower.data.models.MyBusiness
 import com.feedbacktower.data.models.User
 import com.google.gson.Gson
 
 class AppPrefs private constructor() {
 
-    val currentUser by lazy { user }
     companion object {
 
         @Volatile

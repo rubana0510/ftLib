@@ -1,8 +1,8 @@
-package com.feedbacktower.payment.models
+package com.feedbacktower.data.models
 
 import com.google.gson.annotations.SerializedName
 
-data class PayUResponseFailure(
+data class PayUResponse(
     @SerializedName("errorCode")
     val errorCode: Any?,
     @SerializedName("message")

@@ -1,5 +1,6 @@
 package com.feedbacktower.network.manager
 
+import com.feedbacktower.data.models.PlanTransaction
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.service.ApiServiceDescriptor
@@ -42,6 +43,15 @@ class TransactionManager {
         }
     }
 
+
+    fun checkPaymentStatus(
+        transactionId: String,
+        onComplete: (PaymentTxnResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.checkPaymentStatusAsync(transactionId).makeRequest(onComplete)
+        }
+    }
     fun getTransactions(
         onComplete: (PlanTransactionsResponse?, Throwable?) -> Unit
     ) {

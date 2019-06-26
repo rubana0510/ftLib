@@ -68,6 +68,8 @@
                 app:destination="@id/navigation_review"/>
         <action android:id="@+id/action_navigation_account_to_navigationSuggestionFragment"
                 app:destination="@id/navigation_suggestion"/>
+        <action android:id="@+id/action_navigation_account_to_mapTrackingFragment"
+                app:destination="@id/mapTrackingFragment"/>
     </fragment>
     <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
@@ -143,4 +145,7 @@
     <fragment android:id="@+id/selectBusinessCityFragment"
               android:name="com.feedbacktower.fragments.SelectBusinessCityFragment"
               android:label="Select Business City"/>
+    <fragment android:id="@+id/mapTrackingFragment"
+              android:name="com.feedbacktower.ui.location.MapTrackingFragment"
+              android:label="Live location"/>
 </navigation>

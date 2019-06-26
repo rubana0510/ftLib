@@ -8,9 +8,12 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.feedbacktower.data.models.Plan
 import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.*
 import com.feedbacktower.network.env.Environment
+
+
 
 
 @BindingAdapter("isGone")
@@ -76,6 +79,16 @@ fun bindGoneIfNull(view: View, gone: String?) {
     }
 }
 
+@BindingAdapter("goneIfZero")
+fun bindGoneIfZero(view: View, value: Any?) {
+    view.visibility = if (value == null || value == 0) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
+}
+
+
 @BindingAdapter("textSafe")
 fun bindTextSafe(view: TextView, text: Any) {
     view.text = text.toString()
@@ -85,10 +98,28 @@ fun bindTextSafe(view: TextView, text: Any) {
 fun bindTextDouble(view: TextView, text: Any) {
     view.text = text.toString()
 }
+
 @BindingAdapter("textPrice")
 fun bindTextPrice(view: TextView, text: Double) {
-        view.text = text.toPrice()
+    view.text = text.toPrice()
 }
+
+@BindingAdapter("planBenefits")
+fun bindPlanBenefits(view: TextView, plan: Plan?) {
+    plan?.let {
+        view.text = "• Get ₹${plan.maxWalletCashback} in wallet" +
+                "\n• ${plan.maxTextPost.unlimitedCheck} Text posts" +
+                "\n• ${plan.maxPhotoPost.unlimitedCheck} Photo posts" +
+                "\n• ${plan.maxVideoPost.unlimitedCheck} Video posts"
+
+    }
+}
+
+private val Int.unlimitedCheck: String
+    get() {
+        return if (this == -1) return "Unlimited" else this.toString()
+    }
+
 @BindingAdapter("toDate")
 fun bindToDate(view: TextView, text: String?) {
     text?.let {

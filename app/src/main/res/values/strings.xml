@@ -168,5 +168,6 @@
     <string name="pref_title_enable_notifications">Enable Notification</string>
     <string name="upload">UPLOAD</string>
     <string name="no_transactions">No transactions yet</string>
+    <string name="location_tracking_hint">It allows customers to see your last location</string>
 
 </resources>

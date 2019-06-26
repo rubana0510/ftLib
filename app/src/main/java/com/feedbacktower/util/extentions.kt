@@ -1,7 +1,9 @@
 package com.feedbacktower.util
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Location
@@ -31,6 +33,7 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.qrscanner.BarcodeEncoder
+import com.feedbacktower.ui.SplashScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -209,11 +212,10 @@ internal fun String.toDate(): String {
     try {
         val dt = DateTime(this, DateTimeZone.UTC)
         val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
-        return toFormat.format(Date(dt.millis / 1000))
+        return toFormat.format(Date(dt.millis))
     } catch (e: ParseException) {
         return "";
     }
-
 }
 
 internal fun Activity.showAppInStore() {
@@ -223,6 +225,20 @@ internal fun Activity.showAppInStore() {
             Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID)
         )
     )
+}
+
+@Suppress("DEPRECATION")
+fun <T> Context.isServiceRunning(service: Class<T>): Boolean {
+    return (getSystemService(ACTIVITY_SERVICE) as ActivityManager)
+        .getRunningServices(Integer.MAX_VALUE)
+        .any { it -> it.service.className == service.name }
+}
+internal fun Activity.logOut(){
+    AppPrefs.getInstance(this).authToken = null
+    AppPrefs.getInstance(this).user = null
+    this.launchActivity<SplashScreen> {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
 }
 
 internal fun String.toRelativeTime(): String {
@@ -251,6 +267,31 @@ internal fun String.toRelativeTime(): String {
     }
 
 }
+
+internal fun Long.toRelativeTime(): String {
+    try {
+        val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
+        val currentTime: Long = System.currentTimeMillis() / 1000
+        val oldTime: Long = this / 1000
+        val diff = currentTime - oldTime
+        val secs = diff.toInt()
+        val mins = diff.toInt() / 60
+        val hours = diff.toInt() / (60 * 60)
+
+        return if (secs < 60)
+            "Just now"
+        else if (mins < 60)
+            "$mins min${if (mins == 1) "" else "s"} ago"
+        else if (hours < 24)
+            "$hours hour${if (hours == 1) "" else "s"} ago"
+        else
+            toFormat.format(Date(oldTime * 1000))
+    } catch (e: ParseException) {
+        return this.toString()
+    }
+
+}
+
 
 fun String.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this)
 

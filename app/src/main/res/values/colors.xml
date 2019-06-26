@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FF37649B</color>
     <color name="colorPrimaryDark">#2D578D</color>
     <color name="colorAccent">#FFCC66</color>
+    <color name="colorLogo">#2EA6CF</color>
 
     //greys
     <color name="grey42">#424242</color>
@@ -41,7 +42,9 @@
         <color name="checkbox_color">#FB4846</color>
         <color name="checkbox_unchecked_color">#DFDFDF</color>
         <color name="search_icon_color">@android:color/white</color>
+    <color name="colorActivated">#43A047</color>
+    <color name="colorDeactivated">#626262</color>
 
-        <drawable name="tab_gray">@color/bg_gray</drawable>
+    <drawable name="tab_gray">@color/bg_gray</drawable>
         <drawable name="tab_white">@android:color/white</drawable>
 </resources>

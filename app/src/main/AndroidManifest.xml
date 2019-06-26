@@ -22,7 +22,7 @@
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning"
             tools:replace="android:allowBackup,android:usesCleartextTraffic">
-        <activity android:name=".ui.payment.PlanPaymentSuccessScreen">
+        <activity android:name=".ui.payment.PlanPaymentResultScreen">
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -143,6 +143,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".broadcast.LocationBroadcastReceiver"/>
+        <receiver android:name=".ui.location.MapTrackingFragment$LocationBroadcastReceiver"/>
 
         <service android:name=".notifications.MyFirebaseMessagingService">
             <intent-filter>

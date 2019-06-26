@@ -13,8 +13,8 @@
             android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
                 android:id="@+id/planView"
-                android:layout_width="250dp"
-                android:layout_height="300dp"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
                 app:cardCornerRadius="24dp"
                 app:cardUseCompatPadding="true"
                 app:cardElevation="8dp"
@@ -28,14 +28,18 @@
             <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
+                    android:layout_gravity="center"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp">
                 <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:layout_margin="24dp">
                     <TextView
                             style="@style/LargeBoldText"
                             android:layout_width="wrap_content"
@@ -103,7 +107,7 @@
                                 android:layout_marginStart="8dp"
                                 android:textColor="@color/grey42"
                                 app:textPrice="@{plan.gstAmount}"
-                        tools:text="Rs. 180"/>
+                                android:text="Rs. 180"/>
                     </LinearLayout>
                 </LinearLayout>
                 <ImageView
@@ -132,9 +136,9 @@
                 app:layout_constraintTop_toBottomOf="@id/planView"
                 android:layout_marginTop="24dp"
                 tools:text="Get Rs.1000 in wallet\n100 Text posts\n5 Photo Posts\n3 Video Posts"
-                android:text="@{`Get ₹`+ plan.maxWalletCashback + ` in wallet\n` + plan.maxTextPost +` Text posts\n` + plan.maxPhotoPost +` Photo posts\n`+ plan.maxVideoPost +` Video posts`}"
-                android:gravity="center_horizontal"
-                app:isGone="@{isLoading}"/>
+                android:gravity="center"
+                app:isGone="@{isLoading}"
+                app:planBenefits="@{plan}"/>
 
 
         <Button

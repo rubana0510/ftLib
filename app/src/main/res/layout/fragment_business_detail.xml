@@ -53,7 +53,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/layoutMarginStart"
                             android:layout_marginEnd="@dimen/layoutMarginEnd"
-                            android:layout_marginTop="@dimen/layoutMarginTop"
+                            android:layout_marginTop="@dimen/dimen_8dp"
                             app:layout_constraintStart_toEndOf="@id/businessProfileImage"
                             app:layout_constraintEnd_toStartOf="@id/averageRatings"
                             app:layout_constraintTop_toTopOf="@id/businessProfileImage"
@@ -61,7 +61,7 @@
                             android:text="@{business.name}"/>
                     <TextView
                             android:id="@+id/businessCategory"
-                            style="@style/businessCategoryStyle"
+                            style="@style/MediumText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/layoutMarginStart"
@@ -72,6 +72,23 @@
                             tools:text="Car Garage"
                             android:text="@{business.businessCategory.name}"/>
                     <TextView
+                            android:id="@+id/businessCity"
+                            style="@style/SmallText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/layoutMarginStart"
+                            android:layout_marginEnd="@dimen/layoutMarginEnd"
+                            app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/businessCategory"
+                            tools:text="Ranks 1 in Panjim"
+                            android:gravity="center_vertical"
+                            app:goneIfZero ="@{business.rank}"
+                            android:drawableStart="@drawable/ic_timeline"
+                            android:drawableTint="@color/colorPrimaryDark"
+                            android:drawablePadding="@dimen/dimen_8dp"
+                            android:text="@{`Ranks ` + business.rank + ` in ` + business.city.name}"/>
+                    <TextView
                             android:id="@+id/averageRatings"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -81,6 +98,7 @@
                             android:layout_marginStart="@dimen/marginItemSubVertical"
                             android:layout_marginEnd="@dimen/marginEndItem"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:goneIfZero="@{business.avgRating}"
                             app:layout_constraintBaseline_toBaselineOf="@id/businessName"
                             android:text="@{``+business.avgRating}"/>
 
@@ -90,11 +108,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:layout_constraintStart_toStartOf="@id/businessCategory"
-                            app:layout_constraintTop_toBottomOf="@id/businessCategory"
+                            app:layout_constraintTop_toBottomOf="@id/businessCity"
                             android:textColor="@color/red"
                             android:textStyle="bold"
                             app:isGone="@{business.available}"
-                            android:visibility="gone"
                             android:text="Unavailable"/>
 
                     <LinearLayout
@@ -103,7 +120,7 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_marginTop="@dimen/layoutMarginTop"
-                            app:layout_constraintTop_toBottomOf="@id/businessProfileImage">
+                            app:layout_constraintTop_toBottomOf="@id/unavailable">
 
                         <include layout="@layout/layout_divider"/>
 
@@ -133,6 +150,8 @@
                                 android:id="@+id/buttonLay"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="@dimen/dimen_16dp"
+                                android:paddingEnd="@dimen/dimen_16dp"
                                 android:layout_below="@id/detailsCl">
                             <com.google.android.material.button.MaterialButton
                                     android:id="@+id/sendReviewButton"

@@ -56,7 +56,7 @@ class WalletTransactionsFragment : Fragment() {
                 adapter.submitList(response?.transactions)
                 isListEmpty = response?.transactions?.size == 0
             } else {
-                requireContext().toast("Failed to load transactions")
+                requireContext().toast(error.message?:return@getTransactions)
             }
         }
     }

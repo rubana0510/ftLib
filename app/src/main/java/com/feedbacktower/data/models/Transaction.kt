@@ -1,6 +1,7 @@
 package com.feedbacktower.data.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Transaction(
     @SerializedName("id")
@@ -33,4 +34,4 @@ data class Transaction(
     val updatedAt: String,
     @SerializedName("createdAt")
     val createdAt: String
-)
+): Serializable

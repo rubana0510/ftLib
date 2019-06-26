@@ -14,17 +14,20 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import com.feedbacktower.BuildConfig;
 import com.google.android.gms.maps.model.LatLng;
 
 
 public class TrackerService extends Service {
     private final LocationServiceBinder binder = new LocationServiceBinder();
-    private final String TAG = "BackgroundService";
+    private final String TAG = "TrackingService";
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
 
     private final int LOCATION_INTERVAL = 10000;
     private final int LOCATION_DISTANCE = 1000;
+    public static String INTENT_FILTER = BuildConfig.APPLICATION_ID + ".LOC_RX";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,9 +38,11 @@ public class TrackerService extends Service {
         private Location lastLocation = null;
         private final String TAG = "LocationListener";
         private Location mLastLocation;
+        private Context context;
 
-        public LocationListener(String provider) {
+        public LocationListener(Context context, String provider) {
             mLastLocation = new Location(provider);
+            this.context = context;
         }
 
         @Override
@@ -53,8 +58,18 @@ public class TrackerService extends Service {
                                 }
                                 return null;
                             });
+
+            Intent intent = getIntent(location.getLatitude(), location.getLongitude());
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             Log.i(TAG, "LocationChanged: " + location);
 
+        }
+
+        private Intent getIntent(double latitude, double longitude) {
+            Intent intent = new Intent(TrackerService.INTENT_FILTER);
+            intent.putExtra("LAT", latitude);
+            intent.putExtra("LONG", longitude);
+            return intent;
         }
 
         @Override
@@ -111,15 +126,15 @@ public class TrackerService extends Service {
 
     public void startTracking() {
         initializeLocationManager();
-        mLocationListener = new LocationListener(LocationManager.GPS_PROVIDER);
+        mLocationListener = new LocationListener(this, LocationManager.GPS_PROVIDER);
 
         try {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
-
+            Log.d(TAG, "Updates requested");
         } catch (java.lang.SecurityException ex) {
-            // Log.i(TAG, "fail to request location update, ignore", ex);
+            Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
-            // Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
 
     }

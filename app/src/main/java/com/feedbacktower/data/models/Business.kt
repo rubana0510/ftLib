@@ -58,5 +58,7 @@ data class Business(
     @SerializedName("walletAmount")
     var walletAmount: Double,
     @SerializedName("website")
-    var website: String
-): Serializable
+    var website: String,
+    @SerializedName("currLocUpdatedAt")
+    var currLocUpdatedAt: String
+) : Serializable

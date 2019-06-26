@@ -1,5 +1,6 @@
 package com.feedbacktower.network.service
 
+import com.feedbacktower.data.models.PlanTransaction
 import com.feedbacktower.network.models.PlaceDetailsResponse
 import com.feedbacktower.network.models.*
 import kotlinx.coroutines.Deferred
@@ -100,6 +101,11 @@ interface ApiServiceDescriptor {
     @GET("/api/transaction/")
     fun getTransactionsAsync(): Deferred<ApiResponse<PlanTransactionsResponse?>>
 
+
+    @GET("/api/transaction/{transactionId}")
+    fun checkPaymentStatusAsync(
+        @Path("transactionId") transactionId: String
+    ): Deferred<ApiResponse<PaymentTxnResponse?>>
 
 
     //POST
@@ -216,36 +222,39 @@ interface ApiServiceDescriptor {
     @GET("/api/business/{businessId}")
     fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>
 
+    @POST("/api/business/referral")
+    fun applyReferralCodeAsync( @Body map: HashMap<String, String>): Deferred<ApiResponse<EmptyResponse?>>
 
     //QR Transaction
-    @POST("/api/qr-transfer/generate")
+    @POST("/api/wallet-amt-transfer/generate")
     fun generateQrCodeAsync(): Deferred<ApiResponse<QrPaymentStatus?>>
 
-    @POST("/api/qr-transfer/scan")
+    @POST("/api/wallet-amt-transfer/scan")
     fun scanQrCodeAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<ScanQrResponse?>>
 
-    @POST("/api/qr-transfer/sender")
+    @POST("/api/wallet-amt-transfer/sender")
     fun checkQrTransferStatusSenderAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrStatusSenderResponse?>>
 
-    @POST("/api/qr-transfer/receiver")
+    @POST("/api/wallet-amt-transfer/receiver")
     fun checkQrTransferStatusReceiverAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrStatusRecieverResponse?>>
 
-    @POST("/api/qr-transfer/payment-request")
+    @POST("/api/wallet-amt-transfer/payment-request")
     fun requestPaymentAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
-    @POST("/api/qr-transfer/payment-confirm")
+    @POST("/api/wallet-amt-transfer/payment-confirm")
     fun confirmPaymentAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
-    @GET("/api/qr-transfer/")
+    @GET("/api/wallet-amt-transfer/")
     fun getQrTransactionsAsync(): Deferred<ApiResponse<QrTransactionsResponse?>>
+
 }

@@ -64,6 +64,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
     private val args: PersonalDetailsFragmentArgs by navArgs()
     private var lastImagePath: String? = null
     private lateinit var profileImage: ImageView
+    private var dateSelected: String? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -112,9 +113,12 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
             }
         }
         PermissionManager.getInstance().requestMediaPermission(requireActivity())
-        binding.user = AppPrefs.getInstance(requireContext()).user
-        if (binding.user?.dob == null) {
+        val user = AppPrefs.getInstance(requireContext()).user
+        binding.user = user
+        if (user?.dob == null) {
             dobInput.setText("Select Date")
+        } else {
+            setDateText(user.dob)
         }
     }
 
@@ -271,7 +275,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
     private fun updateDetails(firstName: String, lastName: String, email: String, dob: String) {
         showLoading()
         ProfileManager.getInstance()
-            .updatePersonalDetails(firstName, lastName, email, dob)
+            .updatePersonalDetails(firstName, lastName, email, dateSelected ?: "")
             { response, error ->
                 hideLoading()
                 if (error != null) {
@@ -284,7 +288,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                         this.firstName = firstName
                         this.lastName = lastName
                         this.emailId = email
-                        this.dob = dob
+                        this.dob = dateSelected ?: ""
                     }
                 }
                 if (!args.onboarding) {
@@ -323,7 +327,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
                 emailLayout.error = "Enter valid email id"
                 false
             }
-            dob.isEmpty() || dob.equals("Select Date") -> {
+            dateSelected == null -> {
                 dobLayout.error = "Enter valid DOB"
                 false
             }
@@ -344,8 +348,17 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         cal.set(Calendar.MONTH, month)
         cal.set(Calendar.YEAR, year)
-        val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
-        val date = sdf.format(cal.time)
-        dobInput.setText(date)
+        // val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+        val sqldf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        //val date = sdf.format(cal.time)
+        dateSelected = sqldf.format(cal.time)
+        Log.d(TAG, "Selected Date: $dateSelected")
+        dobInput.setText(dateSelected)
+    }
+
+    private fun setDateText(date: String) {
+        val sqldf = SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH)
+        //val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
+        dateSelected = date//sdf.format(sqldf.parse(date).time)
     }
 }

@@ -58,7 +58,7 @@ class SpinnerDatePickerDialog : BottomSheetDialogFragment() {
         selectDateButton = contentView.selectDateButton
         datePicker = contentView.datePicker
         datePicker.maxDate = getMaxDob()
-        datePicker.updateDate(1990, 0, 1)
+        //datePicker.updateDate(1990, 0, 1)
         selectDateButton.setOnClickListener {
             listener?.onDateSelect(datePicker.dayOfMonth, datePicker.month, datePicker.year)
             dismiss()

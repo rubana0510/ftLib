@@ -1,11 +1,10 @@
 package com.feedbacktower.ui.plans
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.BuildConfig
@@ -20,18 +19,15 @@ import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
 import com.feedbacktower.network.models.GenerateHashRequest
 import com.feedbacktower.network.models.GenerateHashResponse
-import com.feedbacktower.payment.models.PayUResponseSuccess
-import com.feedbacktower.payment.models.PayUResponseFailure
-import com.feedbacktower.ui.LoginScreen
-import com.feedbacktower.ui.payment.PlanPaymentSuccessScreen
+import com.feedbacktower.ui.payment.PlanPaymentResultScreen
 import com.feedbacktower.util.*
-import com.google.gson.Gson
 import com.payumoney.core.PayUmoneySdkInitializer
 import com.payumoney.core.entity.TransactionResponse
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager
-import org.jetbrains.anko.toast
 import com.payumoney.sdkui.ui.utils.ResultModel
 import kotlinx.android.synthetic.main.activity_subscription_plan_screen.*
+import org.jetbrains.anko.toast
+import java.util.*
 
 
 class SubscriptionPlansScreen : AppCompatActivity() {
@@ -73,7 +69,6 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         binding.isLoading = true
         ProfileManager.getInstance()
             .getSubscriptionPlans(categoryId) { planListResponse, error ->
-                binding.isLoading = false
                 if (error != null) {
                     toast(error.message ?: getString(R.string.default_err_message))
                     return@getSubscriptionPlans
@@ -82,6 +77,10 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                     // planAdapter.submitList(planListResponse.list)
                     plan = planListResponse.list[0]
                     binding.plan = plan
+                    binding.isLoading = false
+                } else {
+                    toast("No plans found")
+                    finish()
                 }
             }
     }
@@ -95,7 +94,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
     private fun generateHashForPayment(plan: Plan) {
         showLoading()
-        val txId = "TXID${System.currentTimeMillis()}"
+        val txId = generateTransactionID()
         val requestParams: GenerateHashRequest = GenerateHashRequest(
             plan.id,
             user.emailId,
@@ -117,6 +116,11 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                 }
                 initiatePayment(requestParams, response, plan)
             }
+    }
+
+    private fun generateTransactionID(): String {
+        // val user: User = AppPrefs.getInstance(this).user ?: throw IllegalStateException("User cannot be null")
+        return "${System.currentTimeMillis()}${Random().nextInt(999999) + 100000}"
     }
 
     private fun showLoading() {
@@ -167,7 +171,9 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.d(TAG, "onActivityResult: requestCode = $requestCode, resultCode = $resultCode")
+        continueButton.enable()
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+
             val transactionResponse: TransactionResponse? =
                 data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE)
             val resultModel: ResultModel? = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT)
@@ -175,95 +181,18 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             Log.d(TAG, "transactionResponse: $transactionResponse")
             Log.d(TAG, "resultModel : $resultModel")
             if (transactionResponse?.getPayuResponse() != null) {
-
-                val payuResponse = transactionResponse.getPayuResponse()
-                val merchantResponse = transactionResponse.transactionDetails
-                Log.d(TAG, "payuResponse: $payuResponse")
-                Log.d(TAG, "merchantResponse : $merchantResponse")
-
-                if (transactionResponse.transactionStatus == TransactionResponse.TransactionStatus.SUCCESSFUL) {
-                    //Success Transaction
-                    val payUResponseSuccess: PayUResponseSuccess? =
-                        Gson().fromJson(payuResponse, PayUResponseSuccess::class.java)
-                    toast("Payment Successful: Updating status")
-                    saveTransactionStatus(
-                        com.feedbacktower.network.models.TransactionResponse(
-                            payUResponseSuccess?.result?.mihpayid,
-                            "success",
-                            hashResponse?.txn?.id!!,
-                            hashResponse?.txn?.txnid
-                        )
-                    )
-
-                } else {
-                    //Failure Transaction
-
-                    hashResponse = null
-                    val payUResponseFailure: PayUResponseFailure? =
-                        Gson().fromJson(payuResponse, PayUResponseFailure::class.java)
-                    saveTransactionStatus(
-                        com.feedbacktower.network.models.TransactionResponse(
-                            null,
-                            "failure",
-                            hashResponse?.txn?.id!!,
-                            hashResponse?.txn?.txnid
-                        )
-                    )
-                    toast("Payment is unsuccessful, Please try again.")
+                launchActivity<PlanPaymentResultScreen> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    putExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE, transactionResponse)
+                    putExtra(PlanPaymentResultScreen.TRANSACTION, hashResponse)
                 }
-
+                finish()
             } else if (resultModel?.error != null) {
                 Log.d(TAG, "Error response : " + resultModel.error.transactionResponse)
             } else {
                 Log.d(TAG, "Both objects are null!")
             }
         }
-    }
 
-    private fun saveTransactionStatus(tXresponse: com.feedbacktower.network.models.TransactionResponse) {
-        showLoading()
-        TransactionManager.getInstance()
-            .saveResponse(
-                tXresponse
-            ) { response, error ->
-                hideLoading()
-                if (error == null) {
-                    if (tXresponse.status.equals("success")) {
-                        //showSuccessDialog()
-                        launchActivity<PlanPaymentSuccessScreen> {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            putExtra("TX_ID", tXresponse.txnNo)
-                        }
-                        finish()
-                    }
-                } else {
-                    toast(error.message ?: getString(R.string.default_err_message))
-                    Log.e(TAG, "Error: ${error.message}")
-                }
-            }
-    }
-
-    private fun showSuccessDialog() {
-        if (isFinishing) return
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Payment Success!")
-        builder.setMessage("Your payment for selected plan is successful")
-        builder.setPositiveButton("OKAY") { _, _ -> navigateToLogin() }
-        builder.setOnDismissListener { navigateToLogin() }
-        builder.setCancelable(false)
-        val alertDialog = builder.create()
-        alertDialog.setCanceledOnTouchOutside(false)
-        alertDialog.show()
-    }
-
-    private fun navigateToLogin() {
-        launchActivity<LoginScreen> {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        AppPrefs.getInstance(this).apply {
-            authToken = null
-            user = null
-        }
-        toast("Please login again")
     }
 }

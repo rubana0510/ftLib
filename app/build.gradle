@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
-
+apply plugin: 'io.fabric'
 android {
     dataBinding {
         enabled = true
@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 17
-        versionName "1.0"
+        versionCode 24
+        versionName "1.0.5.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -123,6 +123,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     //filepicker
     implementation 'com.zhihu.android:matisse:0.5.1'

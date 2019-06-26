@@ -25,6 +25,7 @@ import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.logOut
 import com.feedbacktower.util.noZero
 import com.feedbacktower.util.showAppInStore
 import kotlinx.android.synthetic.main.fragment_business_account.*
@@ -139,8 +140,8 @@ class AccountFragment : Fragment() {
             AccountOption(8, "My Posts", "Manage your posts", R.drawable.ic_post_like_filled),
             AccountOption(1, "Subscription", "Current plan", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
-            AccountOption(10, "Rate and Review", "Review app on Play Store", R.drawable.ic_post_like_filled),
-            AccountOption(7, "Settings", "Notifications, Location", R.drawable.ic_post_like_filled),
+            AccountOption(10, "Rate this app", "Review app on Play Store", R.drawable.ic_post_like_filled),
+            AccountOption(7, "Location tracking", "Update your location automatically", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
@@ -175,19 +176,14 @@ class AccountFragment : Fragment() {
                 findNavController().navigate(d)
             }
             5 -> {
-                AppPrefs.getInstance(requireContext()).authToken = null
-                AppPrefs.getInstance(requireContext()).user = null
-                requireActivity().launchActivity<SplashScreen> {
-
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
+              requireActivity().logOut()
             }
             6 -> {
                 val d = AccountFragmentDirections.actionNavigationAccountToWalletTransactionFragment()
                 findNavController().navigate(d)
             }
             7 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToBusinessSettingsFragment()
+                val d = AccountFragmentDirections.actionNavigationAccountToMapTrackingFragment()
                 findNavController().navigate(d)
             }
             8 -> {

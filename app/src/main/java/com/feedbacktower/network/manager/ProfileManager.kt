@@ -235,4 +235,12 @@ class ProfileManager {
         }
     }
 
+    fun applyReferralCode(code: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.applyReferralCodeAsync(
+                hashMapOf("code" to code)
+            ).makeRequest(onComplete)
+        }
+    }
+
 }

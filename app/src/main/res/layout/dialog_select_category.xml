@@ -28,7 +28,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:stateListAnimator="@animator/raised"
                 android:layout_margin="8dp"
                 android:background="@drawable/bg_box"
                 android:elevation="8dp">
@@ -53,6 +52,7 @@
                     android:layout_toEndOf="@+id/searchIcon"
                     android:layout_toStartOf="@+id/clearButton"
                     android:hint="@string/title_search"
+                    android:textColor="@color/grey21"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:focusedByDefault="true"

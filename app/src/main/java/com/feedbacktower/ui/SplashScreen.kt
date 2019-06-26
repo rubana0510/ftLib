@@ -12,6 +12,7 @@ import com.feedbacktower.data.models.AppVersion
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.logOut
 import com.feedbacktower.util.navigateUser
 import com.feedbacktower.util.showAppInStore
 
@@ -57,6 +58,15 @@ class SplashScreen : AppCompatActivity() {
         { response, error ->
             if (error != null) {
                 //toast(error.message ?: getString(R.string.default_err_message))
+                //TODO: Must be handled using the error code  propagated from make request
+                if (
+                    error.message?.contains("user") == true
+                    && error.message?.contains("not") == true
+                    && error.message?.contains("found") == true
+                ) {
+                    logOut()
+                    return@refreshToken
+                }
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Error occurred")
                 builder.setMessage(error.message ?: getString(R.string.default_err_message))

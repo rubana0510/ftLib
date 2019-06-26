@@ -1,16 +1,20 @@
 package com.feedbacktower.fragments.business
 
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import androidx.fragment.app.Fragment
 import androidx.preference.*
 import com.feedbacktower.R
 import com.feedbacktower.utilities.tracker.TrackerService
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
 import org.jetbrains.anko.toast
 
 /**
@@ -54,7 +58,7 @@ class BusinessSettingsFragment : PreferenceFragmentCompat() {
         val intent = Intent(requireActivity().getApplication(), TrackerService::class.java)
         addPreferencesFromResource(R.xml.business_settings)
         val trackMePref: SwitchPreference = findPreference("enable_trackme") as SwitchPreference
-
+        //checkGps()
 
         trackMePref.setOnPreferenceChangeListener { preference, newValue ->
             if (!trackMePref.isChecked){
@@ -72,7 +76,35 @@ class BusinessSettingsFragment : PreferenceFragmentCompat() {
             return@setOnPreferenceChangeListener false
         }
     }
+    private fun checkGps() {
+        val googleApiClient = GoogleApiClient.Builder(requireContext())
+            .addApi(LocationServices.API)
+            .build()
+        googleApiClient.connect()
+        val locationRequest = LocationRequest.create()
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        locationRequest.setInterval(50000)
+        locationRequest.setFastestInterval(10000 / 2)
+        val settingsBuilder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        settingsBuilder.setAlwaysShow(true)
+        val pendingResult =
+            LocationServices.getSettingsClient(requireContext()).checkLocationSettings(settingsBuilder.build())
+        pendingResult.addOnCompleteListener { task ->
+            try{
+                val response = task.getResult(ApiException::class.java)
+            }catch (e: ApiException){
+                when(e.statusCode){
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                        try{
+                            (e as ResolvableApiException).startResolutionForResult(requireActivity(), 2999)
+                        }catch (e2: IntentSender.SendIntentException){
 
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     }

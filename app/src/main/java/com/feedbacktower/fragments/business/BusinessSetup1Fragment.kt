@@ -60,6 +60,9 @@ class BusinessSetup1Fragment : Fragment() {
         catIdInput.inputType = InputType.TYPE_NULL
         continueButton = binding.continueButton
 
+
+        categoryIdLayout.isEnabled = !args.edit
+
         binding.onContinueClick = View.OnClickListener {
             if (valid(nameInput.text.toString().trim(), regNoInput.text.toString().trim(), selectedCatId)) {
                 updateDetails(

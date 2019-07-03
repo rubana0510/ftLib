@@ -55,5 +55,9 @@ data class MyBusiness(
     @SerializedName("walletAmount")
     var walletAmount: Double,
     @SerializedName("website")
-    var website: String
+    var website: String,
+    @SerializedName("planStatus")
+    var planStatus: String,
+    @SerializedName("planExpiry")
+    var planExpiry: String
 )

@@ -1,5 +1,7 @@
 package com.feedbacktower.network.service
 
+import com.feedbacktower.data.models.PayUResponse
+import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.PlanTransaction
 import com.feedbacktower.network.models.PlaceDetailsResponse
 import com.feedbacktower.network.models.*
@@ -65,7 +67,7 @@ interface ApiServiceDescriptor {
     @POST("/api/location/city/")
     fun addCity(
         @Body map: HashMap<String, Any?>
-    ):Deferred<ApiResponse<AddCityResponse?>>
+    ): Deferred<ApiResponse<AddCityResponse?>>
 
     @POST("/api/profile/continue-as-customer")
     fun continueAsCustomerAsync(): Deferred<ApiResponse<EmptyResponse?>>
@@ -96,7 +98,7 @@ interface ApiServiceDescriptor {
     fun generateHashAsync(@Body params: GenerateHashRequest): Deferred<ApiResponse<GenerateHashResponse?>>
 
     @POST("/api/transaction/response")
-    fun saveTransactionResponseAsync(@Body params: TransactionResponse): Deferred<ApiResponse<EmptyResponse?>>
+    fun saveTransactionResponseAsync(@Body summary: PaymentSummary): Deferred<ApiResponse<EmptyResponse?>>
 
     @GET("/api/transaction/")
     fun getTransactionsAsync(): Deferred<ApiResponse<PlanTransactionsResponse?>>
@@ -223,7 +225,7 @@ interface ApiServiceDescriptor {
     fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>
 
     @POST("/api/business/referral")
-    fun applyReferralCodeAsync( @Body map: HashMap<String, String>): Deferred<ApiResponse<EmptyResponse?>>
+    fun applyReferralCodeAsync(@Body map: HashMap<String, String>): Deferred<ApiResponse<EmptyResponse?>>
 
     //QR Transaction
     @POST("/api/wallet-amt-transfer/generate")

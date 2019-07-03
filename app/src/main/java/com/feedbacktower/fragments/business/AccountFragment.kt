@@ -115,7 +115,11 @@ class AccountFragment : Fragment() {
                         }
                     }
                     submitOptions()
-                    Log.d(TAG, "Details updated")
+                    val expired = response?.business?.planStatus == "EXPIRED"
+                    if (expired) {
+                        //requireActivity().launchActivity<MyPlanScreen>()
+                        requireContext().toast("Your plan expired!")
+                    }
                 }
             }
     }
@@ -139,9 +143,9 @@ class AccountFragment : Fragment() {
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(8, "My Posts", "Manage your posts", R.drawable.ic_post_like_filled),
             AccountOption(1, "Subscription", "Current plan", R.drawable.ic_post_like_filled),
+            AccountOption(7, "Location tracking", "Update your location automatically", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
             AccountOption(10, "Rate this app", "Review app on Play Store", R.drawable.ic_post_like_filled),
-            AccountOption(7, "Location tracking", "Update your location automatically", R.drawable.ic_post_like_filled),
             AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
         )
         accountOptionsAdapter.submitList(options)
@@ -176,7 +180,7 @@ class AccountFragment : Fragment() {
                 findNavController().navigate(d)
             }
             5 -> {
-              requireActivity().logOut()
+                requireActivity().logOut()
             }
             6 -> {
                 val d = AccountFragmentDirections.actionNavigationAccountToWalletTransactionFragment()

@@ -32,13 +32,4 @@ class OtpManager {
             apiService.generateHashAsync(params).makeRequest(onComplete)
         }
     }
-
-    fun saveResponse(
-        params: TransactionResponse,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            apiService.saveTransactionResponseAsync(params).makeRequest(onComplete)
-        }
-    }
 }

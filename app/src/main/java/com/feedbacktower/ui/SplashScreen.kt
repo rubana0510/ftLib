@@ -60,9 +60,9 @@ class SplashScreen : AppCompatActivity() {
                 //toast(error.message ?: getString(R.string.default_err_message))
                 //TODO: Must be handled using the error code  propagated from make request
                 if (
-                    error.message?.contains("user") == true
-                    && error.message?.contains("not") == true
-                    && error.message?.contains("found") == true
+                    error.message?.contains("USER") == true
+                    && error.message?.contains("NOT") == true
+                    && error.message?.contains("FOUND") == true
                 ) {
                     logOut()
                     return@refreshToken

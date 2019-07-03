@@ -1,5 +1,7 @@
 package com.feedbacktower.network.manager
 
+import com.feedbacktower.data.models.PayUResponse
+import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.PlanTransaction
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
@@ -35,11 +37,11 @@ class TransactionManager {
     }
 
     fun saveResponse(
-        params: TransactionResponse,
+        summary: PaymentSummary,
         onComplete: (EmptyResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.saveTransactionResponseAsync(params).makeRequest(onComplete)
+            apiService.saveTransactionResponseAsync(summary).makeRequest(onComplete)
         }
     }
 

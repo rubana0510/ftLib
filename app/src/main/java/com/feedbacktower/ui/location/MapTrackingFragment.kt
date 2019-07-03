@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.feedbacktower.R
+import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentMapTrackingBinding
 import com.feedbacktower.util.*
 import com.feedbacktower.util.toRelativeTime
@@ -35,6 +36,10 @@ import org.jetbrains.anko.toast
 
 
 class MapTrackingFragment : Fragment(), OnMapReadyCallback {
+
+    companion object {
+        const val TRACKING_ON_KEY = "tracking_on"
+    }
 
     private val TAG = "MapTracking"
     private var fusedLocationClient: FusedLocationProviderClient? = null
@@ -57,16 +62,22 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
         requireActivity().application.startService(intent)
         requireActivity().application.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
 
-     /*   if(requireContext().isServiceRunning(TrackerService::class.java)){
-            turnOnTracking()
-        }else{
-            turnOffTracking()
-        }*/
-        binding.trackingSwitch.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                turnOnTracking()
+        if (AppPrefs.getInstance(requireContext()).getValue(TRACKING_ON_KEY, false)) {
+            showTrackingOn()
+            binding.trackingSwitch.isChecked = true
+        } else {
+            showTrackingOff()
+            binding.trackingSwitch.isChecked = false
+        }
+        binding.trackingSwitch.setOnClickListener {
+            if (binding.trackingSwitch.isChecked) {
+                AppPrefs.getInstance(requireContext()).setValue(TRACKING_ON_KEY, true)
+                showTrackingOn()
+                trackingService?.startTracking()
             } else {
-                turnOffTracking()
+                AppPrefs.getInstance(requireContext()).setValue(TRACKING_ON_KEY, false)
+                showTrackingOff()
+                trackingService?.stopTracking()
             }
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -168,18 +179,16 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun turnOnTracking() {
+    private fun showTrackingOn() {
         binding.title.text = "Location tracking is ON"
         binding.message.text = getString(R.string.location_tracking_hint)
         binding.box.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorActivated))
-        trackingService?.startTracking()
     }
 
-    private fun turnOffTracking() {
+    private fun showTrackingOff() {
         binding.title.text = "Location tracking is OFF"
         binding.message.text = getString(R.string.location_tracking_hint)
         binding.box.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorDeactivated))
-        trackingService?.stopTracking()
     }
 
     inner class LocationBroadcastReceiver : BroadcastReceiver() {

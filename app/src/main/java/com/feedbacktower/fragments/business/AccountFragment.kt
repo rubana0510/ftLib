@@ -1,13 +1,12 @@
 package com.feedbacktower.fragments.business
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
@@ -18,17 +17,12 @@ import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
 import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.ui.ProfileSetupScreen
-import com.feedbacktower.ui.SplashScreen
-import com.feedbacktower.ui.map.MapScreen
 import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.ReceiverActivity
-import com.feedbacktower.ui.qrtransfer.SenderActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.noZero
 import com.feedbacktower.util.showAppInStore
-import kotlinx.android.synthetic.main.fragment_business_account.*
 import org.jetbrains.anko.toast
 
 

@@ -120,7 +120,7 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_marginTop="@dimen/layoutMarginTop"
-                            app:layout_constraintTop_toBottomOf="@id/unavailable">
+                            app:layout_constraintTop_toBottomOf="@id/businessProfileImage">
 
                         <include layout="@layout/layout_divider"/>
 

@@ -15,7 +15,11 @@ import com.feedbacktower.fragments.ReviewsFragmentDirections
 /**
  * Created by sanket on 16-04-2019.
  */
-class MyReviewListAdapter : ListAdapter<Review, MyReviewListAdapter.ViewHolder>(DiffCallback<Review>()) {
+class MyReviewListAdapter(val list: List<Review>) : RecyclerView.Adapter<MyReviewListAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemReviewBinding.inflate(
@@ -31,8 +35,11 @@ class MyReviewListAdapter : ListAdapter<Review, MyReviewListAdapter.ViewHolder>(
         holder.bind(createProfileClickListener(item), item)
     }
 
-    private fun createProfileClickListener(item: Review): View.OnClickListener = View.OnClickListener {view->
+    private fun getItem(position: Int): Review {
+        return list[position]
+    }
 
+    private fun createProfileClickListener(item: Review): View.OnClickListener = View.OnClickListener { view ->
         MyReviewsFragmentDirections.actionNavigationMyReviewToBusinessDetailsActivity(item.businessId).let {
             view.findNavController().navigate(it)
         }
@@ -45,7 +52,7 @@ class MyReviewListAdapter : ListAdapter<Review, MyReviewListAdapter.ViewHolder>(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: Review) {
             binding.apply {
-                openProfileListener= listener
+                openProfileListener = listener
                 review = item
                 executePendingBindings()
             }

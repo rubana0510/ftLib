@@ -113,32 +113,18 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     }
 
     private fun saveTransactionCancelled() {
+        val id = hashResponse?.txn?.id
+        if (id == null) {
+            toast("Could not save transaction status")
+            return
+        }
         showLoading()
-        val summary = PaymentSummary(
-            hashResponse!!.txn.id,
-            hashResponse!!.txn.txnid,
-            null,
-            "CANCELLED",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            hashResponse?.txn?.createdAt!!
-        )
         TransactionManager.getInstance()
-            .saveResponse(summary) { _, error ->
+            .cancel(id) { _, error ->
                 hideLoading()
                 if (error == null) {
                     AppPrefs.getInstance(this).summary = null
+                    hashResponse = null
                 } else {
                     Log.e(TAG, "Could not save status")
                 }

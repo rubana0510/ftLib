@@ -34,6 +34,8 @@ import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.util.Constants
 
 
 class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
@@ -44,6 +46,8 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
     private var isLoading: Boolean? = false
     private lateinit var clearButton: ImageButton
     private lateinit var queryInput: EditText
+    private var list: ArrayList<SearchBusiness> = ArrayList()
+    private var fetching = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,7 +65,12 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
 
         //setup list
         searchListView.setVertical(requireContext())
-        searchBusinessAdapter = SearchBusinessAdapter(this)
+
+        val layoutManager = LinearLayoutManager(context)
+        searchListView.layoutManager = layoutManager
+        searchListView.itemAnimator = DefaultItemAnimator()
+        searchListView.setHasFixedSize(true)
+        searchBusinessAdapter = SearchBusinessAdapter(list, this)
         searchListView.adapter = searchBusinessAdapter
         isLoading = binding.isLoading
         isListEmpty = binding.isListEmpty
@@ -83,8 +92,9 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
                 val query: String? = s?.toString()
                 clearButton.isVisible = !query.isNullOrEmpty()
 
-                if (query.isNullOrEmpty()) {
-                    searchBusinessAdapter.submitList(null)
+                if (query.isNullOrEmpty() || query.length < 2) {
+                    list.clear()
+                    searchBusinessAdapter.notifyDataSetChanged()
                     return
                 }
 
@@ -124,15 +134,18 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
     }
 
     private fun search(s: String) {
+        if (fetching) return
         isLoading = true
-        if (s.length < 2) return
-
+        fetching = true
         ProfileManager.getInstance()
             .searchBusiness(s) { response, error ->
-                if (error == null) {
-                    isLoading = false
-                    isListEmpty = response?.businesses?.isEmpty()
-                    searchBusinessAdapter.submitList(response?.businesses)
+                isLoading = false
+                fetching = false
+                response?.businesses?.let {
+                    isListEmpty = it.isEmpty()
+                    list.clear()
+                    list.addAll(it)
+                    searchBusinessAdapter.notifyDataSetChanged()
                 }
             }
     }

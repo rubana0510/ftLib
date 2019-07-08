@@ -12,8 +12,12 @@ import com.feedbacktower.network.models.SearchBusiness
 /**
  * Created by sanket on 16-04-2019.
  */
-class SearchBusinessAdapter(val listener: Listener) :
-    ListAdapter<SearchBusiness, SearchBusinessAdapter.ViewHolder>(DiffCallback<SearchBusiness>()) {
+class SearchBusinessAdapter(val list: List<SearchBusiness>, val listener: Listener) :
+    RecyclerView.Adapter<SearchBusinessAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSearchBusinessBinding.inflate(
@@ -27,6 +31,10 @@ class SearchBusinessAdapter(val listener: Listener) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(createClickListener(item), item)
+    }
+
+    private fun getItem(position: Int): SearchBusiness {
+        return list[position]
     }
 
     private fun createClickListener(item: SearchBusiness): View.OnClickListener = View.OnClickListener {

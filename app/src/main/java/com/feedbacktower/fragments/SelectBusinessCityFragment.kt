@@ -33,7 +33,8 @@ class SelectBusinessCityFragment : Fragment() {
     private lateinit var listView: RecyclerView
     private lateinit var binding: FragmentSelectCityBinding
     private val args: SelectCityFragmentArgs by navArgs()
-
+    private val cityList: ArrayList<City> = ArrayList()
+    private val placeList: ArrayList<Place> = ArrayList()
     companion object {
         fun getInstance(): SelectBusinessCityFragment {
             val fragment = SelectBusinessCityFragment()
@@ -49,14 +50,14 @@ class SelectBusinessCityFragment : Fragment() {
         binding = FragmentSelectCityBinding.inflate(inflater, container, false)
         val context = context ?: return binding.root
 
-        adapter = CityListAdapter(object : CityListAdapter.Listener {
+        adapter = CityListAdapter(cityList, object : CityListAdapter.Listener {
             override fun onCityClick(city: City) {
                 saveCityToProfile(city)
             }
 
         })
 
-        autoCompleteAdapter = AutoCompleteAdapter(object : AutoCompleteAdapter.Listener {
+        autoCompleteAdapter = AutoCompleteAdapter(placeList, object : AutoCompleteAdapter.Listener {
             override fun onAutoCompleteClick(place: Place) {
                 getPlaceDetails(place.placeId)
                 //requireContext().toast("Selected ${place.description}")
@@ -235,13 +236,19 @@ class SelectBusinessCityFragment : Fragment() {
     }
 
     private fun submitToCityAdapter(list: List<City>?) {
-        adapter.submitList(list)
-        listView.adapter = adapter
+        list?.let {
+            cityList.clear()
+            cityList.addAll(it)
+            listView.adapter = adapter
+        }
     }
 
     private fun submitToAutoCompleteAdapter(list: List<Place>?) {
-        autoCompleteAdapter.submitList(list)
-        listView.adapter = autoCompleteAdapter
+        list?.let {
+            placeList.clear()
+            placeList.addAll(it)
+            listView.adapter = autoCompleteAdapter
+        }
     }
 
 

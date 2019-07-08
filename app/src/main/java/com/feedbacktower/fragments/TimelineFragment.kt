@@ -18,6 +18,7 @@ import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
 import com.feedbacktower.network.manager.PostManager
+import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 
 
@@ -29,6 +30,9 @@ class TimelineFragment : Fragment() {
     private var isLoading: Boolean? = false
     private var noPosts: Boolean? = false
     private lateinit var businessId: String
+    private val posts: ArrayList<Post> = ArrayList()
+    private var postsOver: Boolean = false
+    private var isPostsLoading: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,24 +52,51 @@ class TimelineFragment : Fragment() {
         message = binding.message
 
         //setup list
-        feedListView.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        feedListView.layoutManager = layoutManager
         feedListView.itemAnimator = DefaultItemAnimator()
         feedListView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
-        postAdapter = PostListAdapter(requireActivity(), listener)
+        postAdapter = PostListAdapter(posts, requireActivity(), listener)
         feedListView.adapter = postAdapter
+        feedListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (postsOver) return
+
+                val lastPostPosition = layoutManager.findLastVisibleItemPosition()
+                if (posts.size == lastPostPosition + 1) {
+                    if (lastPostPosition < posts.size) {
+                        val post = posts[posts.size - 1]
+                        fetchPosts(post.createdAt)
+                    }
+                }
+            }
+        })
         isLoading = binding.isLoading
         noPosts = binding.noPosts
         fetchPosts()
     }
 
-    private fun fetchPosts() {
-        PostManager.getInstance().getBusinessPosts(businessId, "", "OLD") { response, error ->
-            if (error == null) {
-                postAdapter.submitList(response?.posts!!)
-            } else {
-                requireContext().toast("Failed to load posts")
+    private fun fetchPosts(timestamp: String = "") {
+        if (isPostsLoading) return
+        swipeRefresh.isRefreshing = true
+        isPostsLoading = true
+        PostManager.getInstance()
+            .getBusinessPosts(businessId, timestamp) { response, error ->
+                swipeRefresh.isRefreshing = false
+                isPostsLoading = false
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                    return@getBusinessPosts
+                }
+                response?.posts?.let {
+                    postsOver = it.size < Constants.PAGE_SIZE
+                    val oldCount = posts.size
+                    posts.addAll(it)
+                    //postAdapter.notifyItemRangeInserted(oldCount - 1, posts.size)
+                    postAdapter.notifyDataSetChanged()
+                }
             }
-        }
     }
 
     private val listener = object : PostListAdapter.Listener {

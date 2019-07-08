@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.ablanco.zoomy.Zoomy
 import com.feedbacktower.adapters.diffcallbacks.PostDiffCallback
 import com.feedbacktower.data.models.Post
@@ -16,8 +17,10 @@ import com.feedbacktower.fragments.HomeFragmentDirections
 /**
  * Created by sanket on 12-02-2019.
  */
-class PostListAdapter(val activity: Activity, private val listener: Listener?) :
-    ListAdapter<Post, BaseViewHolder<*>>(PostDiffCallback()) {
+class PostListAdapter(val list: List<Post>, val activity: Activity, private val listener: Listener?) :
+    RecyclerView.Adapter<BaseViewHolder<*>>() {
+    override fun getItemCount(): Int = list.size
+
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -38,6 +41,8 @@ class PostListAdapter(val activity: Activity, private val listener: Listener?) :
             else -> throw IllegalArgumentException()
         }
     }
+
+    private fun getItem(position: Int): Post = list[position]
 
     companion object {
         const val POST_TEXT = "TEXT" //0

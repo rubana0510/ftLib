@@ -12,11 +12,12 @@ object Constants {
 
     }
 
-    object Media{
-        const val MAX_VIDEO_LENGTH = 3*60 //secs
+    object Media {
+        const val MAX_VIDEO_LENGTH = 3 * 60 //secs
         const val MAX_VIDEO_SIZE = 20 //mb
     }
 
+    const val PAGE_SIZE = 10
     const val CAT_GRID_SIZE = 3
     const val CAT_MAX_HOME = 6
     const val KEY_LISTTYPE = "LIST_TYPE"

@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
     private val REQUEST_CODE_CHOOSE_IMAGE = 1012
     private val REQUEST_CODE_CHOOSE_VIDEO = 1013
     private val posts: ArrayList<Post> = ArrayList()
-    private val postsOver: Boolean = false
+    private var postsOver: Boolean = false
     private var isPostsLoading: Boolean = false
 
 
@@ -101,19 +101,17 @@ class HomeFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         feedListView.layoutManager = layoutManager
         feedListView.itemAnimator = DefaultItemAnimator()
-        postAdapter = PostListAdapter(requireActivity(), listener)
+        postAdapter = PostListAdapter(posts, requireActivity(), listener)
         feedListView.adapter = postAdapter
         feedListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (postsOver) return
+                if (postsOver || posts.isEmpty()) return
 
                 val lastPostPosition = layoutManager.findLastVisibleItemPosition()
                 if (posts.size == lastPostPosition + 1) {
-                    if (lastPostPosition < posts.size) {
-                        val post = posts[lastPostPosition]
-                        fetchPostList(post.createdAt, "OLD")
-                    }
+                    val post = posts[posts.size - 1]
+                    fetchPostList(post.createdAt)
                 }
             }
         })
@@ -121,7 +119,7 @@ class HomeFragment : Fragment() {
         noPosts = binding.noPosts
         swipeRefresh.setOnRefreshListener {
             posts.clear()
-            fetchPostList("", "OLD")
+            fetchPostList()
         }
 
         binding.selectCityListener = View.OnClickListener {
@@ -134,7 +132,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        fetchPostList("", "OLD")
+        fetchPostList()
     }
 
     private val addPostClickListener = View.OnClickListener {
@@ -200,12 +198,13 @@ class HomeFragment : Fragment() {
             }
     }
 
-    private fun fetchPostList(timestamp: String, type: String) {
+    private fun fetchPostList(timestamp: String = "") {
         if (isPostsLoading) return
+
         swipeRefresh.isRefreshing = true
         isPostsLoading = true
         PostManager.getInstance()
-            .getPosts(timestamp, type) { response, error ->
+            .getPosts(timestamp) { response, error ->
                 swipeRefresh.isRefreshing = false
                 isPostsLoading = false
                 if (error != null) {
@@ -213,11 +212,11 @@ class HomeFragment : Fragment() {
                     return@getPosts
                 }
                 response?.posts?.let {
-                    Log.d(TAG, "Fetched posts: ${it.size}")
+                    if (timestamp.isEmpty())
+                        posts.clear()
+                    postsOver = it.size < Constants.PAGE_SIZE
                     posts.addAll(it)
-                    Log.d(TAG, "Total posts: ${posts.size}")
-                    noPosts = posts.isEmpty()
-                    postAdapter.submitList(posts)
+                    postAdapter.notifyDataSetChanged()
                 }
             }
     }
@@ -253,9 +252,9 @@ class HomeFragment : Fragment() {
                 Log.d(TAG, "Uri: ${File(paths[0]).toUri()}")
                 //ImageEditHelper.openCropper(requireContext(), this, File(paths[0]).toUri())
                 //requireActivity().launchActivity<CropImageActivity> {  }
-               /* requireActivity().launchActivity<ImagePreviewActivity> {
-                    putExtra("URI", File(paths[0]).toUri())
-                }*/
+                /* requireActivity().launchActivity<ImagePreviewActivity> {
+                     putExtra("URI", File(paths[0]).toUri())
+                 }*/
                 //openImageCropper(File(paths[0]).toUri())
                 CropImage.activity(File(paths[0]).toUri())
                     .start(context!!, this)

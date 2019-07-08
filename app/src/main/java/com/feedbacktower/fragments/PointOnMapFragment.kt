@@ -72,7 +72,7 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
         enableMyLocation()
         val oldLocation = AppPrefs.getInstance(requireContext()).user?.business?.location
         if (oldLocation?.latitude != null && oldLocation.longitude != null) {
-            googleMap?.zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 20f)
+            googleMap?.zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 15f)
             return
         }
 
@@ -167,5 +167,8 @@ class PointOnMapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (PermissionUtils.locationPermissionsGranted(requireActivity())) {
+            enableMyLocation()
+        }
     }
 }

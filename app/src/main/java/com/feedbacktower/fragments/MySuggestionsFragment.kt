@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
 import com.feedbacktower.adapters.MySuggestionListAdapter
+import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentMySuggestionsBinding
 import com.feedbacktower.network.manager.SuggestionsManager
+import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 
 
@@ -26,6 +29,9 @@ class MySuggestionsFragment : Fragment() {
     private lateinit var suggestionAdapter: MySuggestionListAdapter
     private var isListEmpty: Boolean? = false
     private var isLoading: Boolean? = true
+    private val list: ArrayList<Suggestion> = ArrayList()
+    private var listOver = false
+    private var fetching = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,27 +53,47 @@ class MySuggestionsFragment : Fragment() {
         isLoading = binding.isLoading
 
         //setup list
-        suggestionListView.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(requireContext())
+        suggestionListView.layoutManager = layoutManager
         suggestionListView.itemAnimator = DefaultItemAnimator()
-        suggestionAdapter = MySuggestionListAdapter(null)
+        suggestionAdapter = MySuggestionListAdapter(list, null)
         suggestionListView.adapter = suggestionAdapter
+        suggestionListView.addOnScrollListener(ScrollListener {
+            if (listOver) return@ScrollListener
+
+            val lastItemPosition = layoutManager.findLastVisibleItemPosition()
+            if (list.size == lastItemPosition + 1) {
+                if (lastItemPosition < list.size) {
+                    val item = list[list.size - 1]
+                    fetchSuggestionList(item.createdAt)
+                }
+            }
+        })
         swipeRefresh.setOnRefreshListener {
-            fetchSuggestionList()
+            fetchSuggestionList(initial = true)
         }
-        fetchSuggestionList()
+        fetchSuggestionList(initial = true)
     }
 
-    private fun fetchSuggestionList(timestamp: String = "") {
+    private fun fetchSuggestionList(timestamp: String = "", initial: Boolean = false) {
         swipeRefresh.isRefreshing = true
+        fetching = true
         SuggestionsManager.getInstance()
             .getMySuggestions(timestamp) { response, error ->
-                if(error != null){
-                    requireContext().toast(error.message?:getString(R.string.default_err_message))
+                swipeRefresh.isRefreshing = false
+                fetching = false
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@getMySuggestions
                 }
-                swipeRefresh.isRefreshing = false
-                isListEmpty = response?.suggestions?.isEmpty()
-                suggestionAdapter.submitList(response?.suggestions)
+                response?.suggestions?.let {
+                    listOver = it.size < Constants.PAGE_SIZE
+                    isListEmpty = it.isEmpty()
+                    if (initial)
+                        list.clear()
+                    list.addAll(it)
+                    suggestionAdapter.notifyDataSetChanged()
+                }
             }
     }
 }

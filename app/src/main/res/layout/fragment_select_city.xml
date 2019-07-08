@@ -16,11 +16,11 @@
                 android:id="@+id/searchFrame"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/bg_box"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:stateListAnimator="@animator/raised"
-                android:elevation="8dp">
+                android:layout_margin="8dp">
             <ImageView
                     android:id="@+id/searchIcon"
                     android:layout_width="wrap_content"
@@ -60,25 +60,25 @@
                     android:visibility="gone"
                     android:onClick="@{onClearClick}"/>
         </RelativeLayout>
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/cityList"
-                android:layout_width="0dp"
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/progress"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:padding="@dimen/activity_horizontal_margin"
-                app:isGone="@{isLoading}"/>
-
-        <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/searchFrame"
-                app:isGone="@{!isLoading}"/>
+                app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cityList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:isGone="@{isLoading}"/>
+
+            <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:isGone="@{!isLoading}"
+                    android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
 
         <TextView
                 android:layout_width="wrap_content"

@@ -45,6 +45,15 @@ class TransactionManager {
         }
     }
 
+    fun cancel(
+        transactionId: String,
+        onComplete: (EmptyResponse?, Throwable?) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            apiService.cancelTransactionAsync(hashMapOf("id" to transactionId)).makeRequest(onComplete)
+        }
+    }
+
 
     fun checkPaymentStatus(
         transactionId: String,

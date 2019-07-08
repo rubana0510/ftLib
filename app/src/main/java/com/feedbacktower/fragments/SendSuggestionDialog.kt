@@ -17,7 +17,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 
-class SendSuggestionDialog : BottomSheetDialogFragment() {
+class SendSuggestionDialog(val listener: BusinessDetailFragment.UpdateListener?) : BottomSheetDialogFragment() {
 
     private val onStateChangedCallback = BottomSheetOnStateChanged { _, newState ->
         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
@@ -71,6 +71,7 @@ class SendSuggestionDialog : BottomSheetDialogFragment() {
                 isCancelable = true
                 if (error == null) {
                     dialog.dismiss()
+                    //listener?.update()
                     ctx.toast("Suggestion sent")
                 } else if (error.message != null && (error.message?.contains("Limit") == true || error.message?.contains(
                         "reached"

@@ -31,6 +31,7 @@ class SelectCategoryFragment : DialogFragment() {
     private lateinit var categoryList: RecyclerView
     private lateinit var queryInput: EditText
     private lateinit var clearButton: ImageButton
+    private var list: ArrayList<BusinessCategory> = ArrayList()
     var listener: CategorySelectListener? = null
 
     companion object {
@@ -52,7 +53,7 @@ class SelectCategoryFragment : DialogFragment() {
         toolbar.setNavigationIcon(R.drawable.ic_close_black_24dp)
         toolbar.setNavigationOnClickListener { dismiss() }
         toolbar.title = "Select Your Category"
-        adapter = CategoryListAdapter(toggleListener)
+        adapter = CategoryListAdapter(list, toggleListener)
         categoryList = view.categoryGridView
         queryInput = view.queryInput
         clearButton = view.clearButton
@@ -114,7 +115,11 @@ class SelectCategoryFragment : DialogFragment() {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@getAllCategories
                 }
-                adapter.submitList(CategoriesResponse?.featured)
+                CategoriesResponse?.featured?.let {
+                    list.clear()
+                    list.addAll(it)
+                    adapter.notifyDataSetChanged()
+                }
             }
     }
 

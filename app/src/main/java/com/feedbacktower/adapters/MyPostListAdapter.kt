@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.ablanco.zoomy.Zoomy
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
@@ -18,8 +19,12 @@ import java.lang.IllegalStateException
 /**
  * Created by sanket on 12-02-2019.
  */
-class MyPostListAdapter(private val activity: Activity, private val listener: Listener?) :
-    ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
+class MyPostListAdapter(private val list: List<Post>, private val activity: Activity, private val listener: Listener?) :
+    RecyclerView.Adapter<BaseViewHolder<*>>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -41,6 +46,10 @@ class MyPostListAdapter(private val activity: Activity, private val listener: Li
         }
     }
 
+    private fun getItem(position: Int): Post {
+        return list[position]
+    }
+
     companion object {
         const val POST_TEXT = "TEXT" //0
         const val POST_PHOTO = "PHOTO" //1
@@ -60,14 +69,14 @@ class MyPostListAdapter(private val activity: Activity, private val listener: Li
                 )
             }
             1 -> {
-                    return MediaPostViewHolder(
-                        activity,
-                        ItemMyPostMediaBinding.inflate(
-                            LayoutInflater.from(parent.context),
-                            parent,
-                            false
-                        )
+                return MediaPostViewHolder(
+                    activity,
+                    ItemMyPostMediaBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
                     )
+                )
 
             }
             else -> throw  IllegalStateException()

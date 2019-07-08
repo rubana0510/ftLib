@@ -2,11 +2,13 @@ package com.feedbacktower.data.db
 
 import android.content.Context
 import androidx.room.*
+import com.feedbacktower.data.db.dao.UserDao
 import com.feedbacktower.data.models.User
 import com.feedbacktower.util.Constants
 
 @Database(entities = [User::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
+    abstract var userDao: UserDao
 
     companion object {
 

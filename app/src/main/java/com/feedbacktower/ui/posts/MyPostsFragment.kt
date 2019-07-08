@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.R
 import com.feedbacktower.adapters.MyPostListAdapter
+import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.ui.PostTextScreen
+import com.feedbacktower.util.Constants.PAGE_SIZE
 import com.feedbacktower.util.launchActivity
 import kotlinx.android.synthetic.main.dialog_edit_caption.view.*
 import org.jetbrains.anko.toast
@@ -34,6 +36,8 @@ class MyPostsFragment : Fragment() {
     private lateinit var postAdapter: MyPostListAdapter
     private var isLoading: Boolean? = false
     private var noPosts: Boolean? = false
+    private val list: ArrayList<Post> = ArrayList()
+    private var listOver = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,23 +54,39 @@ class MyPostsFragment : Fragment() {
         message = binding.message
 
         //setup list
-        feedListView.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = LinearLayoutManager(context)
+        feedListView.layoutManager = layoutManager
         feedListView.itemAnimator = DefaultItemAnimator()
         feedListView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL))
-        postAdapter = MyPostListAdapter(requireActivity(), listener)
+        postAdapter = MyPostListAdapter(list, requireActivity(), listener)
         feedListView.adapter = postAdapter
+        feedListView.addOnScrollListener(ScrollListener {
+            if (listOver) return@ScrollListener
+
+            val lastItemPosition = layoutManager.findLastVisibleItemPosition()
+            if (list.size == lastItemPosition + 1) {
+                if (lastItemPosition < list.size) {
+                    val item = list[list.size - 1]
+                    fetchPosts(item.createdAt)
+                }
+            }
+        })
         isLoading = binding.isLoading
         noPosts = binding.noPosts
         fetchPosts()
     }
 
-    private fun fetchPosts() {
+    private fun fetchPosts(timestamp: String = "") {
         val businessId = AppPrefs.getInstance(requireContext()).user?.business?.id!!
-        PostManager.getInstance().getBusinessPosts(businessId, "", "OLD") { response, error ->
-            if (error == null) {
-                postAdapter.submitList(response?.posts!!)
-            } else {
+        PostManager.getInstance().getBusinessPosts(businessId, timestamp) { response, error ->
+            if (error != null) {
                 requireContext().toast("Failed to load posts")
+                return@getBusinessPosts
+            }
+            response?.posts?.let {
+                listOver = it.size < PAGE_SIZE
+                list.addAll(it)
+                postAdapter.notifyDataSetChanged()
             }
         }
     }

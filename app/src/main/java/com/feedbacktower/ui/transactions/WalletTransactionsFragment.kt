@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.TransactionAdapter
+import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.data.models.QrTransaction
 import com.feedbacktower.databinding.FragmentTransactionBinding
 import com.feedbacktower.network.manager.QRTransactionManager
+import com.feedbacktower.util.Constants
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
 
@@ -23,6 +28,8 @@ class WalletTransactionsFragment : Fragment() {
     private lateinit var adapter: TransactionAdapter
     private var isLoading: Boolean? = false
     private var isListEmpty: Boolean? = false
+    private var list: ArrayList<QrTransaction> = ArrayList()
+    private var listOver  = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,8 +46,22 @@ class WalletTransactionsFragment : Fragment() {
         message = binding.message
 
         //setup list
-        listView.setVertical(requireContext())
-        adapter = TransactionAdapter()
+        val layoutManager = LinearLayoutManager(context)
+        listView.layoutManager = layoutManager
+        listView.itemAnimator = DefaultItemAnimator()
+        listView.setHasFixedSize(true)
+        adapter = TransactionAdapter(list)
+        listView.addOnScrollListener(ScrollListener {
+            if (listOver ) return@ScrollListener
+
+            val lastItemPosition = layoutManager.findLastVisibleItemPosition()
+            if (list.size == lastItemPosition + 1) {
+                if (lastItemPosition < list.size) {
+                    val item = list[list.size - 1]
+                    fetchTransactions(item.createdAt)
+                }
+            }
+        })
         listView.adapter = adapter
         isLoading = binding.isLoading
         isListEmpty = binding.isListEmpty
@@ -48,15 +69,20 @@ class WalletTransactionsFragment : Fragment() {
         fetchTransactions()
     }
 
-    private fun fetchTransactions() {
+    private fun fetchTransactions(timestamp: String = "") {
+        if(isLoading == true) return
         swipeRefresh.isRefreshing = true
-        QRTransactionManager.getInstance().getTransactions() { response, error ->
+        QRTransactionManager.getInstance().getTransactions(timestamp) { response, error ->
             swipeRefresh.isRefreshing = false
             if (error == null) {
-                adapter.submitList(response?.transactions)
-                isListEmpty = response?.transactions?.size == 0
-            } else {
-                requireContext().toast(error.message?:return@getTransactions)
+                requireContext().toast(error?.message ?: return@getTransactions)
+                return@getTransactions
+            }
+            response?.transactions?.let {
+                listOver = it.size < Constants.PAGE_SIZE
+                isListEmpty = it.isEmpty()
+                list.addAll(it)
+                adapter.notifyDataSetChanged()
             }
         }
     }

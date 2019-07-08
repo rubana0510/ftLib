@@ -7,6 +7,7 @@
         <variable name="transaction" type="com.feedbacktower.network.models.QrTransaction"/>
         <variable name="onRequestConfirmClick" type="android.view.View.OnClickListener"/>
         <variable name="onGoBackClick" type="android.view.View.OnClickListener"/>
+        <variable name="onCancelClick" type="android.view.View.OnClickListener"/>
         <variable name="scanned" type="Boolean"/>
         <variable name="approved" type="Boolean"/>
         <variable name="requested" type="Boolean"/>
@@ -144,7 +145,7 @@
                     style="@style/ButtonFilledStyle.Big"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="@{onGoBackClick}"
+                    android:onClick="@{onCancelClick}"
                     android:text="CANCEL"/>
         </LinearLayout>
         <LinearLayout

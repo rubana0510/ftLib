@@ -14,8 +14,12 @@ import com.feedbacktower.databinding.ItemListCategoryBinding
  * Created by sanket on 12-02-2019.
  */
 class CategoryInterestAdapter(
+    private val list: List<BusinessCategory>,
     private val listener: ToggleListener
-) : ListAdapter<BusinessCategory, CategoryInterestAdapter.ViewHolder>(CategoryDiffCallback()) {
+) : RecyclerView.Adapter<CategoryInterestAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -31,6 +35,9 @@ class CategoryInterestAdapter(
         val item = getItem(position)
         holder.bind(createClickListener(item, position), item)
     }
+
+    fun getItem(position: Int): BusinessCategory = list[position]
+
 
     private fun createClickListener(item: BusinessCategory, position: Int): View.OnClickListener =
         View.OnClickListener {

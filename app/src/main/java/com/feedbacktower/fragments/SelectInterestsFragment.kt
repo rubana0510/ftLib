@@ -16,6 +16,7 @@ import org.jetbrains.anko.toast
 
 class SelectInterestsFragment : Fragment() {
     private lateinit var adapter: CategoryInterestAdapter
+    private var list: ArrayList<BusinessCategory> = ArrayList()
 
     companion object {
         fun getInstance(): SelectInterestsFragment {
@@ -31,7 +32,7 @@ class SelectInterestsFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentSelectInterestsBinding.inflate(inflater, container, false)
         val context = context ?: return binding.root
-        adapter = CategoryInterestAdapter(toggleListener)
+        adapter = CategoryInterestAdapter(list, toggleListener)
         binding.categoryGridView.setGrid(requireContext(), 2)
         binding.categoryGridView.adapter = adapter
         binding.saveSelectionButton.setOnClickListener { navigateNext() }
@@ -70,7 +71,11 @@ class SelectInterestsFragment : Fragment() {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))
                     return@getFetauredCategories
                 }
-                adapter.submitList(CategoriesResponse?.featured)
+                CategoriesResponse?.featured?.let {
+                    list.clear()
+                    list.addAll(it)
+                    adapter.notifyDataSetChanged()
+                }
             }
     }
 }

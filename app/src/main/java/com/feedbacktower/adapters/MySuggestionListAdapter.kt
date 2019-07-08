@@ -15,10 +15,12 @@ import com.feedbacktower.fragments.SuggestionsFragmentDirections
 /**
  * Created by sanket on 16-04-2019.
  */
-class MySuggestionListAdapter(private val listener: ReplyListener?) :
-    ListAdapter<Suggestion, MySuggestionListAdapter.ViewHolder>(
-        DiffCallback<Suggestion>()
-    ) {
+class MySuggestionListAdapter(private val list: List<Suggestion>, private val listener: ReplyListener?) :
+    RecyclerView.Adapter<MySuggestionListAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemSuggestionBinding.inflate(
@@ -32,6 +34,10 @@ class MySuggestionListAdapter(private val listener: ReplyListener?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(createClickListener(item), createProfileClickListener(item), item)
+    }
+
+    private fun getItem(position: Int): Suggestion {
+        return list[position]
     }
 
     private fun createClickListener(item: Suggestion): View.OnClickListener = View.OnClickListener {

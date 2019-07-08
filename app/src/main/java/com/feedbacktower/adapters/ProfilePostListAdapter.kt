@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemPostTextBinding
@@ -16,8 +17,12 @@ import java.lang.IllegalStateException
 /**
  * Created by sanket on 12-02-2019.
  */
-class ProfilePostListAdapter(private val listener: Listener?) :
-    ListAdapter<Post, BaseViewHolder<*>>(DiffCallback<Post>()) {
+class ProfilePostListAdapter(private val list: List<Post>, private val listener: Listener?) :
+    RecyclerView.Adapter<BaseViewHolder<*>>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
         when (holder) {
@@ -37,6 +42,10 @@ class ProfilePostListAdapter(private val listener: Listener?) :
             )
             else -> throw IllegalArgumentException()
         }
+    }
+
+    private fun getItem(position: Int): Post {
+        return list[position]
     }
 
     companion object {
@@ -85,7 +94,7 @@ class ProfilePostListAdapter(private val listener: Listener?) :
     }
 
     private fun createProfileClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->
-      
+
     }
 
     private fun createVideoClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->

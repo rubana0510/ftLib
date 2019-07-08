@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.dialog_rate_review.view.*
 import org.jetbrains.anko.toast
 
 
-class RateReviewDialog : BottomSheetDialogFragment() {
+class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : BottomSheetDialogFragment() {
 
     private val onStateChangedCallback = BottomSheetOnStateChanged { _, newState ->
         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
@@ -78,7 +78,9 @@ class RateReviewDialog : BottomSheetDialogFragment() {
                 )
             ){_,_->
 
+                listener?.update()
                 dialog.dismiss()
+
             }
 
     }

@@ -16,6 +16,7 @@ import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
 import com.feedbacktower.network.models.GenerateHashResponse
 import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.plans.SubscriptionPlansScreen
 import com.feedbacktower.util.*
 import com.feedbacktower.util.toDate
 import com.google.gson.Gson
@@ -31,7 +32,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
 
     private lateinit var paymentSummary: PaymentSummary
     private var statusCallCount = 0
-    private lateinit var paymentStatus: PlanPaymentTransaction.Status
+    private var paymentStatus: PlanPaymentTransaction.Status? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_payment_success_screen)
@@ -46,6 +47,14 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         }
 
         button.setOnClickListener {
+            if(paymentStatus == null){
+                launchActivity<SubscriptionPlansScreen> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                finish()
+                return@setOnClickListener
+            }
+
             if (paymentStatus == PlanPaymentTransaction.Status.SUCCESS) {
                 launchActivity<SplashScreen> {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

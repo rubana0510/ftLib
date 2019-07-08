@@ -34,6 +34,7 @@ class SenderWaitFragment : Fragment() {
         binding = FragmentSenderWaitBinding.inflate(inflater, container, false)
         listenForScanned(args.txid)
         binding.onRequestConfirmClick = View.OnClickListener { acceptRequest() }
+        binding.onCancelClick = View.OnClickListener { cancelTransfer() }
         binding.onGoBackClick = View.OnClickListener { requireActivity().finish() }
         return binding.root
     }
@@ -54,7 +55,7 @@ class SenderWaitFragment : Fragment() {
                     binding.requested = it.txn.txStatus == QrTxStatus.REQUESTED
                     binding.approved = it.txn.txStatus == QrTxStatus.APPROVED
                     binding.isLoading = it.txn.txStatus == QrTxStatus.SCANNED
-                    if(it.txn.txStatus == QrTxStatus.APPROVED){
+                    if (it.txn.txStatus == QrTxStatus.APPROVED) {
                         requireContext().toast("Transfer success")
                         Handler().postDelayed({
                             activity?.finish()
@@ -82,7 +83,6 @@ class SenderWaitFragment : Fragment() {
     }
 
     private fun acceptRequest() {
-
         Log.d(TAG, "Checking Status...")
         QRTransactionManager.getInstance()
             .confirmPayment(args.txid, true) { response, error ->
@@ -94,6 +94,19 @@ class SenderWaitFragment : Fragment() {
 
                     binding.transaction = it.txn
                 }
+            }
+    }
+
+    private fun cancelTransfer() {
+        Log.d(TAG, "Checking Status...")
+        QRTransactionManager.getInstance()
+            .cancel(args.txid) { response, error ->
+                if (error != null) {
+                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
+                    return@cancel
+                }
+                requireContext().toast("Transfer cancelled")
+                requireActivity().finish()
             }
     }
 }

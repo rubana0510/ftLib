@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.QrTransaction
 import com.feedbacktower.data.models.Review
+import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.ItemReviewBinding
 import com.feedbacktower.databinding.ItemWalletTransactionBinding
 import com.feedbacktower.fragments.ReviewsFragmentDirections
@@ -16,7 +17,11 @@ import com.feedbacktower.fragments.ReviewsFragmentDirections
 /**
  * Created by sanket on 16-04-2019.
  */
-class TransactionAdapter : ListAdapter<QrTransaction, TransactionAdapter.ViewHolder>(DiffCallback<QrTransaction>()) {
+class TransactionAdapter(private val list: List<QrTransaction>) : RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemWalletTransactionBinding.inflate(
@@ -34,6 +39,9 @@ class TransactionAdapter : ListAdapter<QrTransaction, TransactionAdapter.ViewHol
         }, item)
     }
 
+    private fun getItem(position: Int): QrTransaction {
+        return list[position]
+    }
 
     fun getItemAtPos(position: Int): QrTransaction = getItem(position)
 

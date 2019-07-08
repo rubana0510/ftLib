@@ -38,8 +38,6 @@ class ReviewsManager {
 
     }
 
-
-
     fun getMyReviews(timestamp: String, onComplete: (GetReviewsResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getMyReviewsAsync(

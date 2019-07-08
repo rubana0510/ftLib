@@ -100,6 +100,9 @@ interface ApiServiceDescriptor {
     @POST("/api/transaction/response")
     fun saveTransactionResponseAsync(@Body summary: PaymentSummary): Deferred<ApiResponse<EmptyResponse?>>
 
+    @POST("/api/transaction/cancel")
+    fun cancelTransactionAsync(@Body body: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+
     @GET("/api/transaction/")
     fun getTransactionsAsync(): Deferred<ApiResponse<PlanTransactionsResponse?>>
 
@@ -130,15 +133,13 @@ interface ApiServiceDescriptor {
 
     @GET("/api/post/")
     fun getPostsAsync(
-        @Query("timestamp") timestamp: String,
-        @Query("type") type: String
+        @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetPostsResponse?>>
 
     @GET("/api/post/business/{businessId}/")
     fun getBusinessPostsAsync(
         @Path("businessId") businessId: String?,
-        @Query("timestamp") timestamp: String,
-        @Query("type") type: String
+        @Query("timestamp") timestamp: String
     ): Deferred<ApiResponse<GetPostsResponse?>>
 
     @PUT("/api/post/like/{postId}")
@@ -247,16 +248,24 @@ interface ApiServiceDescriptor {
     ): Deferred<ApiResponse<QrStatusRecieverResponse?>>
 
     @POST("/api/wallet-amt-transfer/payment-request")
-    fun requestPaymentAsync(
+    fun requestWalletPaymentAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
     @POST("/api/wallet-amt-transfer/payment-confirm")
-    fun confirmPaymentAsync(
+    fun confirmWalletPaymentAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<QrPaymentStatus?>>
 
+    @POST("/api/wallet-amt-transfer/payment-cancel")
+    fun cancelWalletPaymentAsync(
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<EmptyResponse
+    ?>>
+
     @GET("/api/wallet-amt-transfer/")
-    fun getQrTransactionsAsync(): Deferred<ApiResponse<QrTransactionsResponse?>>
+    fun getQrTransactionsAsync(
+        @Query("timestamp") timestamp: String
+    ): Deferred<ApiResponse<QrTransactionsResponse?>>
 
 }

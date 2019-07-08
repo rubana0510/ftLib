@@ -14,6 +14,7 @@ import com.feedbacktower.adapters.ProfilePostListAdapter
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Business
 import com.feedbacktower.data.models.Post
+import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
@@ -34,12 +35,15 @@ class BusinessDetailFragment : Fragment() {
     private lateinit var postAdapter: ProfilePostListAdapter
     private lateinit var businessId: String
     private var business: Business? = null
+    private val list: ArrayList<Review> = ArrayList()
+    private val postList: ArrayList<Post> = ArrayList()
+    private lateinit var binding: FragmentBusinessDetailBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentBusinessDetailBinding.inflate(inflater, container, false)
+        binding = FragmentBusinessDetailBinding.inflate(inflater, container, false)
         businessId = arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid args")
         initUi(binding, businessId)
         return binding.root
@@ -61,7 +65,7 @@ class BusinessDetailFragment : Fragment() {
                 return@OnClickListener
             }
 
-            val d = SendSuggestionDialog()
+            val d = SendSuggestionDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager, "suggestion")
         }
@@ -86,7 +90,7 @@ class BusinessDetailFragment : Fragment() {
                 return@OnClickListener
             }
 
-            val d = RateReviewDialog()
+            val d = RateReviewDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager, "review")
         }
@@ -106,19 +110,22 @@ class BusinessDetailFragment : Fragment() {
 
         //setup list
         reviewListView.setVertical(requireContext())
-        reviewAdapter = ReviewListAdapter()
+        reviewAdapter = ReviewListAdapter(list)
         reviewListView.adapter = reviewAdapter
 
         postListView.setVertical(requireContext())
-        postAdapter = ProfilePostListAdapter(listener)
+        postAdapter = ProfilePostListAdapter(postList, listener)
         postListView.adapter = postAdapter
-
-        fetchReviews(binding)
-        fetchPosts(binding)
-        fetchBusinessDetails(binding)
     }
 
-    private fun fetchBusinessDetails(binding: FragmentBusinessDetailBinding) {
+    override fun onResume() {
+        super.onResume()
+        fetchReviews()
+        fetchPosts()
+        fetchBusinessDetails()
+    }
+
+    private fun fetchBusinessDetails() {
         binding.detailsLoading = true
         ProfileManager.getInstance()
             .getBusinessDetails(businessId) { response, error ->
@@ -130,28 +137,37 @@ class BusinessDetailFragment : Fragment() {
             }
     }
 
-    private fun fetchReviews(binding: FragmentBusinessDetailBinding) {
+    private fun fetchReviews() {
         binding.reviewsLoading = true
         ReviewsManager.getInstance().getBusinessReviews(businessId, "") { response, error ->
-            if (error == null) {
-                reviewAdapter.submitList(response?.review)
-                if (response?.review == null || response.review.isEmpty()) return@getBusinessReviews
-                binding.reviewsLoading = false
-            } else {
+            if (error != null) {
                 requireContext().toast("Failed to load reviews")
+                return@getBusinessReviews
+            }
+            response?.review?.let {
+                if (it.isEmpty()) return@getBusinessReviews
+                list.clear()
+                list.addAll(it)
+                reviewAdapter.notifyDataSetChanged()
+                binding.reviewsLoading = false
             }
         }
     }
 
-    private fun fetchPosts(binding: FragmentBusinessDetailBinding) {
+    private fun fetchPosts(timestamp: String = "") {
         binding.timelineLoading = true
-        PostManager.getInstance().getBusinessPosts(businessId, "", "OLD") { response, error ->
-            if (error == null) {
-                postAdapter.submitList(response?.posts)
-                if (response?.posts == null || response.posts.isEmpty()) return@getBusinessPosts
-                binding.timelineLoading = false
-            } else {
+        PostManager.getInstance().getBusinessPosts(businessId, timestamp) { response, error ->
+            if (error != null) {
                 requireContext().toast("Failed to load posts")
+                return@getBusinessPosts
+            }
+
+            response?.posts?.let {
+                if (it.isEmpty()) return@getBusinessPosts
+                list.clear()
+                postList.addAll(it)
+                postAdapter.notifyDataSetChanged()
+                binding.timelineLoading = false
             }
         }
     }
@@ -163,7 +179,7 @@ class BusinessDetailFragment : Fragment() {
 
         override fun onVideoClick(item: Post, position: Int) {
             requireActivity().launchActivity<VideoPlayerScreen> {
-                putExtra(VideoPlayerScreen.URI_KEY, Environment.S3_BASE_URL+ "${item.media}")
+                putExtra(VideoPlayerScreen.URI_KEY, Environment.S3_BASE_URL + "${item.media}")
             }
         }
     }
@@ -176,4 +192,13 @@ class BusinessDetailFragment : Fragment() {
             }
     }
 
+    private val updateListener = object: UpdateListener{
+        override fun update() {
+            fetchReviews()
+        }
+    }
+
+    interface UpdateListener {
+        fun update()
+    }
 }

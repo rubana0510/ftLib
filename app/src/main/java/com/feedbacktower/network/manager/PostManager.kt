@@ -33,9 +33,9 @@ class PostManager {
             }
     }
 
-    fun getPosts(timestamp: String, type: String, onComplete: (GetPostsResponse?, Throwable?) -> Unit) {
+    fun getPosts(timestamp: String, onComplete: (GetPostsResponse?, Throwable?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getPostsAsync(timestamp, type)
+            apiService.getPostsAsync(timestamp)
                 .makeRequest(onComplete)
         }
     }
@@ -43,11 +43,10 @@ class PostManager {
     fun getBusinessPosts(
         businessId: String,
         timestamp: String,
-        type: String,
         onComplete: (GetPostsResponse?, Throwable?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getBusinessPostsAsync(businessId, timestamp, type)
+            apiService.getBusinessPostsAsync(businessId, timestamp)
                 .makeRequest(onComplete)
         }
     }

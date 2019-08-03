@@ -19,24 +19,12 @@ class BusinessMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business_main)
+        //setSupportActionBar(toolbar)
         val navController = Navigation.findNavController(this, R.id.main_nav_fragment)
         navigation.setupWithNavController(navController)
         NavigationUI.setupWithNavController(toolbar, navController)
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.change_city_menu, menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.select_city_id) {
-            /*  HomeFragmentDirections.actionNavigationHomeToSelectCityFragment().let {
-                  findNavController().navigate(it)
-              }*/
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
 }

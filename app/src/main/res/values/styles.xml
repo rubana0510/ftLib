@@ -151,6 +151,8 @@
     </style>
 
 
+
+
     <style name="LargeBoldText" parent="LargeText">
         <item name="android:textStyle">bold</item>
     </style>
@@ -163,6 +165,11 @@
     <style name="businessNameStyle" parent="SmallText">
 
     </style>
+
+    <style name="SmallBoldText.P8">
+        <item name="android:padding">8dp</item>
+    </style>
+
     <style name="businessCategoryStyle"></style>
     <style name="businessCityStyle"></style>
     <style name="businessNameBigStyle" parent="LargeText">

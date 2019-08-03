@@ -14,7 +14,7 @@ object Constants {
 
     object Media {
         const val MAX_VIDEO_LENGTH = 3 * 60 //secs
-        const val MAX_VIDEO_SIZE = 20 //mb
+        const val MAX_VIDEO_SIZE = 10 //mb
     }
 
     const val PAGE_SIZE = 10

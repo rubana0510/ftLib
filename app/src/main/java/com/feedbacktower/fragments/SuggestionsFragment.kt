@@ -80,7 +80,7 @@ class SuggestionsFragment : Fragment() {
             val dialog = ReplySuggestionDialog.getInstance(suggestion)
             dialog.listener = object : ReplySuggestionDialog.ReplyCancelListener {
                 override fun onReply(suggestion: Suggestion) {
-                    fetchSuggestionList()
+                    fetchSuggestionList(initial = true)
                 }
             }
             dialog.show(fragmentManager, ReplySuggestionDialog.TAG)

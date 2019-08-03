@@ -148,14 +148,29 @@ class HomeFragment : Fragment() {
     }
 
     private fun showPostDialog() {
-        AlertDialog.Builder(requireContext())
+     /*   AlertDialog.Builder(requireContext())
             .setItems(arrayOf("Text", "Photo", "Video")) { dialog, which ->
                 when (which) {
                     0 -> requireActivity().launchActivity<PostTextScreen>()
                     1 -> pickImage()
                     2 -> pickVideo()
                 }
-            }.show()
+            }.show()*/
+
+        UploadPostDialog(object: UploadPostDialog.Listener{
+            override fun videoClick() {
+                pickVideo()
+            }
+
+            override fun imageClick() {
+                pickImage()
+            }
+
+            override fun textClick() {
+                requireActivity().launchActivity<PostTextScreen>()
+            }
+
+        }).show(fragmentManager, "chooser")
     }
 
     private fun pickVideo() {

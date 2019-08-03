@@ -76,6 +76,7 @@ class MySuggestionsFragment : Fragment() {
     }
 
     private fun fetchSuggestionList(timestamp: String = "", initial: Boolean = false) {
+        if(fetching) return
         swipeRefresh.isRefreshing = true
         fetching = true
         SuggestionsManager.getInstance()

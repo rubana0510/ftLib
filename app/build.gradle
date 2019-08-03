@@ -13,8 +13,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 28
-        versionName "1.0.9"
+        versionCode 30
+        versionName "1.0.9.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -151,6 +151,9 @@ dependencies {
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+
+    //compile files('libs/isoparser-1.0.6.jar')
+    //compile files('libs/aspectjrt-1.7.3.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -82,7 +82,7 @@ class BusinessSetup1Fragment : Fragment() {
                     AppPrefs.getInstance(requireContext()).setValue("MASTER_CAT_ID", selectedMasterCatId ?: "")
                 }
             }
-            fragment.show(fragmentManager, "select_category")
+            fragment.show(fragmentManager!!, "select_category")
         }
     }
 

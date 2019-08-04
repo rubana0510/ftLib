@@ -12,7 +12,7 @@ import com.feedbacktower.adapters.diffcallbacks.PostDiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemPostMediaBinding
 import com.feedbacktower.databinding.ItemPostTextBinding
-import com.feedbacktower.fragments.HomeFragmentDirections
+import com.feedbacktower.ui.home.HomeFragmentDirections
 
 /**
  * Created by sanket on 12-02-2019.

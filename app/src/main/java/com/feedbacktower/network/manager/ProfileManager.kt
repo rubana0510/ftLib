@@ -3,9 +3,7 @@ package com.feedbacktower.network.manager
 import android.util.Log
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
-import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
-import com.feedbacktower.util.toRequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,7 +14,7 @@ import java.io.File
 
 class ProfileManager {
     private val TAG = "ProfileManager"
-    private val apiService: ApiServiceDescriptor by lazy {
+    private val apiService: ApiService by lazy {
         ApiService.create()
     }
 

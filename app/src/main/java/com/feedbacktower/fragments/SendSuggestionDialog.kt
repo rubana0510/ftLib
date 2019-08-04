@@ -53,7 +53,7 @@ class SendSuggestionDialog(val listener: BusinessDetailFragment.UpdateListener?)
         sendSuggestionButton = contentView.sendSuggestionButton
         suggestionMessageInput = contentView.suggestionMessageInput
 
-        closeButton.setOnClickListener { dialog.dismiss() }
+        closeButton.setOnClickListener { dismiss() }
         sendSuggestionButton.setOnClickListener { sendSuggestion() }
     }
 
@@ -70,7 +70,7 @@ class SendSuggestionDialog(val listener: BusinessDetailFragment.UpdateListener?)
             ) { _, error ->
                 isCancelable = true
                 if (error == null) {
-                    dialog.dismiss()
+                    dismiss()
                     //listener?.update()
                     ctx.toast("Suggestion sent")
                 } else if (error.message != null && (error.message?.contains("Limit") == true || error.message?.contains(

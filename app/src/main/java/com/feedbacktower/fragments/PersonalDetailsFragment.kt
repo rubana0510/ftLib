@@ -92,7 +92,7 @@ class PersonalDetailsFragment : Fragment(), SpinnerDatePickerDialog.OnDateSelect
         dobInput.setOnClickListener {
             val dialog = SpinnerDatePickerDialog.getInstance()
             dialog.setDateSelectListener(this@PersonalDetailsFragment)
-            dialog.show(fragmentManager, "date_selector")
+            dialog.show(fragmentManager!!, "date_selector")
         }
 
         continueButton.setOnClickListener {

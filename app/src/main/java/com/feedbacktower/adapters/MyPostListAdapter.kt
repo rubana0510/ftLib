@@ -5,16 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ablanco.zoomy.Zoomy
-import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemMyPostMediaBinding
 import com.feedbacktower.databinding.ItemMyPostTextBinding
-import com.feedbacktower.databinding.ItemPostMediaBinding
-import com.feedbacktower.fragments.HomeFragmentDirections
-import java.lang.IllegalStateException
+import com.feedbacktower.ui.home.HomeFragmentDirections
 
 /**
  * Created by sanket on 12-02-2019.

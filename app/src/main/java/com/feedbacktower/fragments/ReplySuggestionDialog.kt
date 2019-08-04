@@ -96,7 +96,7 @@ class ReplySuggestionDialog : BottomSheetDialogFragment() {
             ) { _, error ->
                 hideLoading()
                 if (error == null) {
-                    dialog.dismiss()
+                    dismiss()
                     listener?.onReply(suggestion)
                     ctx.toast("Sent reply")
                 } else {

@@ -22,13 +22,15 @@ class MediaPickerFragment : BaseFragment() {
     private var mListener: MediaPickerFragmentListener? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_media_picker, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is MediaPickerFragmentListener) {
             mListener = context
@@ -59,17 +61,29 @@ class MediaPickerFragment : BaseFragment() {
 
         if (PickerManager.showImages()) {
             if (PickerManager.isShowFolderView)
-                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images))
+                adapter.addFragment(
+                    MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE),
+                    getString(R.string.images)
+                )
             else
-                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE), getString(R.string.images))
+                adapter.addFragment(
+                    MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_IMAGE),
+                    getString(R.string.images)
+                )
         } else
             tabLayout.visibility = View.GONE
 
         if (PickerManager.showVideo()) {
             if (PickerManager.isShowFolderView)
-                adapter.addFragment(MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO), getString(R.string.videos))
+                adapter.addFragment(
+                    MediaFolderPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO),
+                    getString(R.string.videos)
+                )
             else
-                adapter.addFragment(MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO), getString(R.string.videos))
+                adapter.addFragment(
+                    MediaDetailPickerFragment.newInstance(FilePickerConst.MEDIA_TYPE_VIDEO),
+                    getString(R.string.videos)
+                )
         } else
             tabLayout.visibility = View.GONE
 

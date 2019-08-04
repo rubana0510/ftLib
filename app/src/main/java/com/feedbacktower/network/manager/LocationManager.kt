@@ -4,7 +4,6 @@ import com.feedbacktower.BuildConfig
 import com.feedbacktower.network.models.PlaceDetailsResponse
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
-import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
 import com.feedbacktower.util.toArray
 import com.google.android.gms.maps.model.LatLng
@@ -15,7 +14,7 @@ import retrofit2.HttpException
 
 class LocationManager {
     private val TAG = "LocationManager"
-    private val apiService: ApiServiceDescriptor by lazy {
+    private val apiService: ApiService by lazy {
         ApiService.create()
     }
 

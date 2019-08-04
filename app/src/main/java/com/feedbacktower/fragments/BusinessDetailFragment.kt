@@ -67,7 +67,7 @@ class BusinessDetailFragment : Fragment() {
 
             val d = SendSuggestionDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
-            d.show(fragmentManager, "suggestion")
+            d.show(fragmentManager!!, "suggestion")
         }
         binding.onCurrentLocationClicked = View.OnClickListener {
             if (business == null || business?.currentLocation == null) {
@@ -92,7 +92,7 @@ class BusinessDetailFragment : Fragment() {
 
             val d = RateReviewDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
-            d.show(fragmentManager, "review")
+            d.show(fragmentManager!!, "review")
         }
 
         binding.onCallClicked = View.OnClickListener {

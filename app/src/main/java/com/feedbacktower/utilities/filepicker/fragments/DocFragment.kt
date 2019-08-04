@@ -38,7 +38,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
         return inflater.inflate(R.layout.fragment_photo_picker, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is DocFragmentListener) {
             mListener = context
@@ -112,7 +112,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater?.inflate(R.menu.doc_picker_menu, menu)
         selectAllItem = menu?.findItem(R.id.action_select)
         if (PickerManager.hasSelectAll()) {
@@ -139,7 +139,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item?.itemId
         if (itemId == R.id.action_select) {
             fileListAdapter?.let { adapter->

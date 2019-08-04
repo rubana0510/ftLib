@@ -3,11 +3,10 @@ package com.feedbacktower.network.manager
 import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
-import androidx.core.net.toFile
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
-import com.feedbacktower.network.service.ApiServiceDescriptor
 import com.feedbacktower.network.utils.makeRequest
+import com.feedbacktower.util.getMimeType
 import com.feedbacktower.util.toRequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,7 +18,7 @@ import java.io.File
 
 class PostManager {
     private val TAG = "PostManager"
-    private val apiService: ApiServiceDescriptor by lazy {
+    private val apiService: ApiService by lazy {
         ApiService.create()
     }
 
@@ -112,10 +111,10 @@ class PostManager {
         }
     }
 
-}
-
-private fun File.getMimeType(): String? {
-    val uri = Uri.fromFile(this)
-    val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+    fun getAds(onComplete: (GetAdsResponse?, Throwable?) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            apiService.getAdsAsync()
+                .makeRequest(onComplete)
+        }
+    }
 }

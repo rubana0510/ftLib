@@ -1,11 +1,13 @@
 package com.feedbacktower.data.models
 
+import androidx.room.Embedded
 import com.google.gson.annotations.SerializedName
 
 
 data class MyBusiness(
     @SerializedName("address")
     var address: String,
+    @Embedded
     @SerializedName("businessCategory")
     var businessCategory: BusinessCategory,
     @SerializedName("businessCategoryId")
@@ -22,8 +24,10 @@ data class MyBusiness(
     var featured: Boolean,
     @SerializedName("id")
     var id: String,
+    @Embedded
     @SerializedName("location")
     var location: Location,
+    @Embedded
     @SerializedName("city")
     var city: City,
     @SerializedName("name")

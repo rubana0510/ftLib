@@ -4,13 +4,15 @@
             android:id="@+id/business_main_nav_graph" app:startDestination="@id/navigation_home">
     <fragment
             android:id="@+id/navigation_home"
-            android:name="com.feedbacktower.fragments.HomeFragment"
+            android:name="com.feedbacktower.ui.home.HomeFragment"
             android:label="@string/app_name"
             tools:layout="@layout/fragment_home">
         <action android:id="@+id/action_navigation_home_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
         <action android:id="@+id/action_navigation_home_to_selectCityFragment"
                 app:destination="@id/selectCityFragment"/>
+        <action android:id="@+id/action_navigation_home_to_adDetailFragment"
+                app:destination="@id/adDetailFragment"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_search"
@@ -148,4 +150,11 @@
     <fragment android:id="@+id/mapTrackingFragment"
               android:name="com.feedbacktower.ui.location.MapTrackingFragment"
               android:label="Live location"/>
+    <fragment android:id="@+id/adDetailFragment"
+              android:name="com.feedbacktower.ui.ads.AdDetailFragment"
+              android:label="Live location">
+        <argument android:name="ad" app:argType="com.feedbacktower.data.models.Ad"/>
+        <action android:id="@+id/action_adDetailFragment_to_businessDetailsActivity"
+                app:destination="@id/businessDetailsActivity"/>
+    </fragment>
 </navigation>

@@ -59,7 +59,7 @@ class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : B
         ratingBar = contentView.ratingBar
 
 
-        closeButton.setOnClickListener { dialog.dismiss() }
+        closeButton.setOnClickListener { dismiss() }
         ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
         sendRatingButton.setOnClickListener { sendRatings() }
     }
@@ -79,7 +79,7 @@ class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : B
             ){_,_->
 
                 listener?.update()
-                dialog.dismiss()
+                dismiss()
 
             }
 

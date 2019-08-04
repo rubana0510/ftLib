@@ -83,7 +83,7 @@ class SuggestionsFragment : Fragment() {
                     fetchSuggestionList(initial = true)
                 }
             }
-            dialog.show(fragmentManager, ReplySuggestionDialog.TAG)
+            dialog.show(fragmentManager!!, ReplySuggestionDialog.TAG)
 
         }
     }

@@ -1,5 +1,6 @@
 package com.feedbacktower.data.models
 
+import androidx.room.Ignore
 import com.google.gson.annotations.SerializedName
 
 
@@ -13,5 +14,6 @@ data class City(
     @SerializedName("stateName")
     val stateName: String
 ) {
+    @Ignore
     val isSelected: Boolean = false
 }

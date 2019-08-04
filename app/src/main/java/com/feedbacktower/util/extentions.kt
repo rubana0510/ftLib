@@ -27,6 +27,7 @@ import java.text.ParseException
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Patterns
+import android.webkit.MimeTypeMap
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
@@ -350,4 +351,10 @@ fun String?.toQrBitmap(): Bitmap? {
 
 fun GoogleMap?.zoomToLocation(currLocation: LatLng, zoomLevel: Float = 13f) {
     this?.moveCamera(CameraUpdateFactory.newLatLngZoom(currLocation, zoomLevel))
+}
+
+internal fun File.getMimeType(): String? {
+    val uri = Uri.fromFile(this)
+    val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
+    return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
 }

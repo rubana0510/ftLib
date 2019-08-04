@@ -1,4 +1,4 @@
-package com.feedbacktower.fragments
+package com.feedbacktower.ui.home
 
 
 import android.app.Activity
@@ -10,34 +10,41 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.PermissionChecker
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager
 import com.feedbacktower.R
+import com.feedbacktower.adapters.AdsPagerAdapter
+import com.feedbacktower.adapters.AdsPagerAdapter2
 import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.db.AppDatabase
+import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
+import com.feedbacktower.fragments.UploadPostDialog
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
+import com.feedbacktower.ui.ImagePreviewActivity
 import com.feedbacktower.ui.PostTextScreen
 import com.feedbacktower.ui.VideoTrimmerScreen
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.*
 import com.feedbacktower.utilities.Glide4Engine
-import com.feedbacktower.ui.ImagePreviewActivity
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
+import com.feedbacktower.views.ViewPagerX
 import com.theartofdev.edmodo.cropper.CropImage
 import com.yalantis.ucrop.UCrop
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import java.io.File
 
@@ -45,7 +52,7 @@ import java.io.File
 class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
     private lateinit var feedListView: RecyclerView
-    private lateinit var swipeRefresh: SwipeRefreshLayout
+    //private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
     private lateinit var postAdapter: PostListAdapter
     private var isLoading: Boolean? = false
@@ -57,19 +64,23 @@ class HomeFragment : Fragment() {
     private var postsOver: Boolean = false
     private var isPostsLoading: Boolean = false
 
+    private lateinit var adsPager: ViewPagerX
+    private lateinit var adsPagerAdapter: AdsPagerAdapter
+    private val adList = ArrayList<Ad>()
+    private var foreground: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.change_city_menu, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.change_city_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.select_city_id) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.select_city_id) {
             HomeFragmentDirections.actionNavigationHomeToSelectCityFragment().let {
                 findNavController().navigate(it)
             }
@@ -90,9 +101,13 @@ class HomeFragment : Fragment() {
 
     private fun initUi(binding: FragmentHomeBinding) {
         // binding.toolbar.title = getString(R.string.app_name)
+        adsPager = binding.adsPager
+        adsPagerAdapter = AdsPagerAdapter(requireContext(), adList, adClickListener)
+        adsPager.adapter = adsPagerAdapter
+
         binding.addPostListener = addPostClickListener
         feedListView = binding.feedListView
-        swipeRefresh = binding.swipeRefresh
+       // swipeRefresh = binding.swipeRefresh
         message = binding.message
         val appPrefs by lazy { AppPrefs.getInstance(requireContext()) }
         binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
@@ -117,17 +132,57 @@ class HomeFragment : Fragment() {
         })
         isLoading = binding.isLoading
         noPosts = binding.noPosts
-        swipeRefresh.setOnRefreshListener {
+      /*  swipeRefresh.setOnRefreshListener {
             posts.clear()
             fetchPostList()
         }
-
+*/
         binding.selectCityListener = View.OnClickListener {
             val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment()
             dir.onboarding = false
             findNavController().navigate(dir)
         }
+        fetchAds()
+    }
 
+    private fun fetchAds() {
+        AppDatabase(requireContext()).adsDao().getAll().observe(this, Observer { list ->
+            adList.clear()
+            adList.addAll(list)
+            adsPagerAdapter.notifyDataSetChanged()
+        })
+        addDummyAdList()
+        return
+        PostManager.getInstance()
+            .getAds { response, error ->
+                if(error != null){
+                    //handle error
+                    return@getAds
+                }
+                response?.ads?.let { ads->
+                    doAsync {
+                        AppDatabase(requireContext())
+                            .adsDao().save(ads)
+                    }
+                }
+            }
+    }
+
+
+
+    private fun addDummyAdList() {
+        doAsync {
+            AppDatabase(requireContext())
+                .adsDao().save(
+                    listOf(
+                        Ad("1", "name", "1","1","1","",100),
+                        Ad("2", "name", "1","1","1","",100),
+                        Ad("3", "name", "1","1","1","",100),
+                        Ad("4", "name", "1","1","1","",100),
+                        Ad("5", "name", "1","1","1","",100)
+                    )
+                )
+        }
     }
 
     override fun onResume() {
@@ -147,17 +202,25 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showPostDialog() {
-     /*   AlertDialog.Builder(requireContext())
-            .setItems(arrayOf("Text", "Photo", "Video")) { dialog, which ->
-                when (which) {
-                    0 -> requireActivity().launchActivity<PostTextScreen>()
-                    1 -> pickImage()
-                    2 -> pickVideo()
-                }
-            }.show()*/
+    private val adClickListener = object : AdsPagerAdapter.Listener {
+        override fun onClick(pos: Int) {
+            HomeFragmentDirections.actionNavigationHomeToAdDetailFragment(adList[pos]).let{
+                findNavController().navigate(it)
+            }
+        }
+    }
 
-        UploadPostDialog(object: UploadPostDialog.Listener{
+    private fun showPostDialog() {
+        /*   AlertDialog.Builder(requireContext())
+               .setItems(arrayOf("Text", "Photo", "Video")) { dialog, which ->
+                   when (which) {
+                       0 -> requireActivity().launchActivity<PostTextScreen>()
+                       1 -> pickImage()
+                       2 -> pickVideo()
+                   }
+               }.show()*/
+
+        UploadPostDialog(object : UploadPostDialog.Listener {
             override fun videoClick() {
                 pickVideo()
             }
@@ -170,7 +233,7 @@ class HomeFragment : Fragment() {
                 requireActivity().launchActivity<PostTextScreen>()
             }
 
-        }).show(fragmentManager, "chooser")
+        }).show(fragmentManager!!, "chooser")
     }
 
     private fun pickVideo() {
@@ -216,11 +279,11 @@ class HomeFragment : Fragment() {
     private fun fetchPostList(timestamp: String = "") {
         if (isPostsLoading) return
 
-        swipeRefresh.isRefreshing = true
+        //swipeRefresh.isRefreshing = true
         isPostsLoading = true
         PostManager.getInstance()
             .getPosts(timestamp) { response, error ->
-                swipeRefresh.isRefreshing = false
+              //  swipeRefresh.isRefreshing = false
                 isPostsLoading = false
                 if (error != null) {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))

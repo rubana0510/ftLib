@@ -88,7 +88,7 @@ class PostManager {
             return
         }
         val requestBody = RequestBody.create(MediaType.parse(file.getMimeType() ?: "video/mp4"), file)
-        val filePart = MultipartBody.Part.createFormData("media", file.name, requestBody)
+        val filePart = MultipartBody.Part.createFormData("media", "POST_${System.currentTimeMillis()}", requestBody)
         GlobalScope.launch(Dispatchers.Main) {
             apiService.createVideoPostAsync(
                 filePart,

@@ -67,6 +67,14 @@ fun ImageView.toProfileRound(userId: String) {
         .into(this)
 }
 
+fun ImageView.loadAdImage(path: String) {
+    Glide.with(this.context)
+        .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
+        .load("${Environment.S3_BASE_URL}$path")
+        .into(this)
+}
+
+
 fun View.visible() {
     this.visibility = View.VISIBLE
 }

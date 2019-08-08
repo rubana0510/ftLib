@@ -152,9 +152,9 @@
               android:label="Live location"/>
     <fragment android:id="@+id/adDetailFragment"
               android:name="com.feedbacktower.ui.ads.AdDetailFragment"
-              android:label="Live location">
-        <argument android:name="ad" app:argType="com.feedbacktower.data.models.Ad"/>
+              android:label="Detail">
         <action android:id="@+id/action_adDetailFragment_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
+        <argument android:name="ad" app:argType="com.feedbacktower.data.models.Ad"/>
     </fragment>
 </navigation>

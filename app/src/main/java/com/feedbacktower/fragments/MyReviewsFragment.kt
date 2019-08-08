@@ -93,8 +93,8 @@ class MyReviewsFragment : Fragment() {
                 fetching = false
                 response?.review?.let {
                     listOver = it.size < Constants.PAGE_SIZE
-                    isListEmpty = it.isEmpty()
                     if (initial) {
+                        isListEmpty = it.isEmpty()
                         list.clear()
                     }
                     list.addAll(it)

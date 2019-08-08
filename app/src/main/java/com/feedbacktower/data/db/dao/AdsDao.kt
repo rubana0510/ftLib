@@ -17,4 +17,7 @@ interface AdsDao {
 
     @Query("SELECT * FROM ads")
     fun getAll(): LiveData<List<Ad>>
+
+    @Query("DELETE  FROM ads")
+    fun deleteAll()
 }

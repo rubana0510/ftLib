@@ -42,6 +42,7 @@ class VideoTrimmerScreen : AppCompatActivity() {
                     val size = it.length() / (1024 * 1024)
                     if (size > Constants.Media.MAX_VIDEO_SIZE) {
                         toast("Video size must be less than ${Constants.Media.MAX_VIDEO_SIZE}")
+                        finish()
                     } else {
                         toast("Uploading video")
                         compressVideo(uri, caption)

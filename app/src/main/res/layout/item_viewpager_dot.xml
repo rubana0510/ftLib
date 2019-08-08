@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="selected" type="Boolean"/>
+        <variable name="clickListener" type="android.view.View.OnClickListener"/>
+    </data>
+
+    <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:background="@drawable/bg_dot"
+            android:onClick="@{clickListener}"/>
+</layout>

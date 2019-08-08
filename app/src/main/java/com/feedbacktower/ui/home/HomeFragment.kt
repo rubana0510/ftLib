@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.TextView
@@ -22,7 +23,9 @@ import androidx.viewpager.widget.ViewPager
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AdsPagerAdapter
 import com.feedbacktower.adapters.AdsPagerAdapter2
+import com.feedbacktower.adapters.DotAdapter
 import com.feedbacktower.adapters.PostListAdapter
+import com.feedbacktower.callbacks.OnPageChangeListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.db.AppDatabase
 import com.feedbacktower.data.models.Ad
@@ -44,6 +47,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.yalantis.ucrop.UCrop
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
+import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import java.io.File
@@ -55,6 +59,7 @@ class HomeFragment : Fragment() {
     //private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
     private lateinit var postAdapter: PostListAdapter
+    private lateinit var dotAdapter: DotAdapter
     private var isLoading: Boolean? = false
     private var currentCity: String? = null
     private var noPosts: Boolean? = false
@@ -68,6 +73,8 @@ class HomeFragment : Fragment() {
     private lateinit var adsPagerAdapter: AdsPagerAdapter
     private val adList = ArrayList<Ad>()
     private var foreground: Boolean = false
+
+    private val dots = ArrayList<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,10 +111,17 @@ class HomeFragment : Fragment() {
         adsPager = binding.adsPager
         adsPagerAdapter = AdsPagerAdapter(requireContext(), adList, adClickListener)
         adsPager.adapter = adsPagerAdapter
+        adsPager.addOnPageChangeListener(onPageChangeListener)
 
+        var dotList = binding.dotList
+        dotAdapter = DotAdapter(dots) { pos ->
+            selectDot(pos)
+            adsPager.setCurrentItem(pos, true)
+        }
+        dotList.adapter = dotAdapter
         binding.addPostListener = addPostClickListener
         feedListView = binding.feedListView
-       // swipeRefresh = binding.swipeRefresh
+        // swipeRefresh = binding.swipeRefresh
         message = binding.message
         val appPrefs by lazy { AppPrefs.getInstance(requireContext()) }
         binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
@@ -132,11 +146,11 @@ class HomeFragment : Fragment() {
         })
         isLoading = binding.isLoading
         noPosts = binding.noPosts
-      /*  swipeRefresh.setOnRefreshListener {
-            posts.clear()
-            fetchPostList()
-        }
-*/
+        /*  swipeRefresh.setOnRefreshListener {
+              posts.clear()
+              fetchPostList()
+          }
+  */
         binding.selectCityListener = View.OnClickListener {
             val dir = HomeFragmentDirections.actionNavigationHomeToSelectCityFragment()
             dir.onboarding = false
@@ -145,49 +159,82 @@ class HomeFragment : Fragment() {
         fetchAds()
     }
 
+    private val onPageChangeListener = OnPageChangeListener { pos ->
+       selectDot(pos)
+    }
+
+    private fun selectDot(pos: Int) {
+        dots.forEachIndexed { index, b ->
+            dots[index] = false
+        }
+        dots[pos] = true
+        dotAdapter.notifyDataSetChanged()
+    }
+
     private fun fetchAds() {
         AppDatabase(requireContext()).adsDao().getAll().observe(this, Observer { list ->
             adList.clear()
             adList.addAll(list)
             adsPagerAdapter.notifyDataSetChanged()
+            setUpDots()
+            enableAutoChange()
         })
-        addDummyAdList()
-        return
+
         PostManager.getInstance()
             .getAds { response, error ->
-                if(error != null){
+                if (error != null) {
                     //handle error
                     return@getAds
                 }
-                response?.ads?.let { ads->
+                response?.ads?.let { ads ->
                     doAsync {
                         AppDatabase(requireContext())
-                            .adsDao().save(ads)
+                            .adsDao().apply {
+                                deleteAll()
+                                save(ads)
+                            }
                     }
                 }
             }
     }
 
-
-
-    private fun addDummyAdList() {
-        doAsync {
-            AppDatabase(requireContext())
-                .adsDao().save(
-                    listOf(
-                        Ad("1", "name", "1","1","1","",100),
-                        Ad("2", "name", "1","1","1","",100),
-                        Ad("3", "name", "1","1","1","",100),
-                        Ad("4", "name", "1","1","1","",100),
-                        Ad("5", "name", "1","1","1","",100)
-                    )
-                )
+    private fun setUpDots() {
+        dots.clear()
+        adList.forEachIndexed { index, ad ->
+            dots.add(index == 0)
         }
+        dotAdapter.notifyDataSetChanged()
+    }
+
+    private fun enableAutoChange() {
+        var pos = adsPager.currentItem
+        Handler().postDelayed({
+            adList.forEachIndexed { index, ad ->
+                dots[index] = false
+            }
+            if (pos < adsPagerAdapter.count - 1) {
+                pos++
+                adsPager.setCurrentItem(pos, true)
+                dots[pos] = true
+            } else {
+                adsPager.setCurrentItem(0, false)
+                dots[0] = true
+            }
+            dotAdapter.notifyDataSetChanged()
+            if (foreground)
+                enableAutoChange()
+        }, Constants.AD_BANNER_DURATION)
     }
 
     override fun onResume() {
         super.onResume()
         fetchPostList()
+        foreground = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        foreground = false
     }
 
     private val addPostClickListener = View.OnClickListener {
@@ -204,7 +251,7 @@ class HomeFragment : Fragment() {
 
     private val adClickListener = object : AdsPagerAdapter.Listener {
         override fun onClick(pos: Int) {
-            HomeFragmentDirections.actionNavigationHomeToAdDetailFragment(adList[pos]).let{
+            HomeFragmentDirections.actionNavigationHomeToAdDetailFragment(adList[pos]).let {
                 findNavController().navigate(it)
             }
         }
@@ -283,7 +330,7 @@ class HomeFragment : Fragment() {
         isPostsLoading = true
         PostManager.getInstance()
             .getPosts(timestamp) { response, error ->
-              //  swipeRefresh.isRefreshing = false
+                //  swipeRefresh.isRefreshing = false
                 isPostsLoading = false
                 if (error != null) {
                     requireContext().toast(error.message ?: getString(R.string.default_err_message))

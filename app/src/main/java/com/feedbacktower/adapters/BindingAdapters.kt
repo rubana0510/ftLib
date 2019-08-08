@@ -8,6 +8,8 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import com.feedbacktower.BuildConfig
+import com.feedbacktower.R
 import com.feedbacktower.data.models.Plan
 import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.*
@@ -26,13 +28,11 @@ fun bindIsGone(view: View, isGone: Boolean) {
 }
 
 @BindingAdapter("loadImage")
-fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
-    if (!imageUrl.isNullOrEmpty()) {
-        Glide.with(view.context)
-            .load(imageUrl)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(view)
-    }
+fun bindImageFromUrl(view: ImageView, path: String?) {
+    Glide.with(view.context)
+        .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
+        .load("${Environment.S3_BASE_URL}$path")
+        .into(view)
 }
 
 @BindingAdapter("postImage")
@@ -44,7 +44,6 @@ fun bindPostImage(view: ImageView, imageUrl: String?) {
             .into(view)
     }
 }
-
 
 @BindingAdapter("loadRoundImage")
 fun bindImageFromDrawable(view: ImageView, imageUrl: String?) {

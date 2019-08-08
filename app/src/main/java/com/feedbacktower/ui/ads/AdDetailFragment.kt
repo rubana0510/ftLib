@@ -1,6 +1,8 @@
 package com.feedbacktower.ui.ads
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.BuildConfig
 import com.feedbacktower.databinding.FragmentAdDetailBinding
 
 
@@ -25,11 +28,18 @@ class AdDetailFragment : Fragment() {
     }
 
     private fun initUi(binding: FragmentAdDetailBinding) {
+        requireActivity().title = args.ad.business.name
         binding.ad = args.ad
-        binding.openInBrowser = View.OnClickListener {apiser
+        binding.openInBrowser = View.OnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(args.ad.link)
+                )
+            )
         }
         binding.showBusinessDetails = View.OnClickListener {
-            AdDetailFragmentDirections.actionAdDetailFragmentToBusinessDetailsActivity(args.ad.businessId).let {
+            AdDetailFragmentDirections.actionAdDetailFragmentToBusinessDetailsActivity(args.ad.business.id).let {
                 findNavController().navigate(it)
             }
         }

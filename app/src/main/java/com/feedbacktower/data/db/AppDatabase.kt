@@ -8,7 +8,7 @@ import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.User
 import com.feedbacktower.util.Constants
 
-@Database(entities = [Ad::class], version = 1, exportSchema = false)
+@Database(entities = [Ad::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun adsDao(): AdsDao
 

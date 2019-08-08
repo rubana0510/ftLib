@@ -11,6 +11,8 @@
                 app:destination="@id/selectCityFragment"/>
         <action android:id="@+id/action_navigation_home_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
+        <action android:id="@+id/action_navigation_home_to_adDetailFragment"
+                app:destination="@id/adDetailFragment"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_search"
@@ -66,5 +68,12 @@
     <fragment android:id="@+id/helpFragment"
               android:name="com.feedbacktower.ui.support.HelpFragment"
               android:label="Help and FAQs" tools:layout="@layout/fragment_help">
+    </fragment>
+    <fragment android:id="@+id/adDetailFragment"
+              android:name="com.feedbacktower.ui.ads.AdDetailFragment"
+              android:label="Detail">
+        <argument android:name="ad" app:argType="com.feedbacktower.data.models.Ad"/>
+        <action android:id="@+id/action_adDetailFragment_to_businessDetailsActivity"
+                app:destination="@id/businessDetailsActivity"/>
     </fragment>
 </navigation>

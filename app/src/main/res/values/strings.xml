@@ -169,5 +169,7 @@
     <string name="upload">UPLOAD</string>
     <string name="no_transactions">No transactions yet</string>
     <string name="location_tracking_hint">It allows customers to see your last location</string>
+    <string name="show_business_profile">SHOW BUSINESS PROFILE</string>
+    <string name="open_in_browser">OPEN IN BROWSER</string>
 
 </resources>

@@ -24,19 +24,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                 <com.feedbacktower.views.ViewPagerX
                         android:id="@+id/adsPager"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="100dp"
                         android:nestedScrollingEnabled="false"
                         app:isGone="@{isLoading}"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/dotList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginTop="@dimen/dimen_8dp"
+                        tools:listitem="@layout/item_viewpager_dot"
+                        android:layout_below="@id/adsPager"
+                        app:isGone="@{isLoading}"
+                        android:layout_centerHorizontal="true"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/feedListView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/dimen_8dp"
                         tools:listitem="@layout/item_post_media"
-                        android:layout_below="@+id/adsPager"
+                        android:layout_below="@+id/dotList"
                         android:nestedScrollingEnabled="false"
                         app:isGone="@{isLoading}"/>
             </RelativeLayout>

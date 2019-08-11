@@ -28,7 +28,7 @@
                 <com.feedbacktower.views.ViewPagerX
                         android:id="@+id/adsPager"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
+                        android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
                         app:isGone="@{isLoading}"/>
                 <androidx.recyclerview.widget.RecyclerView

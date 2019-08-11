@@ -44,6 +44,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:text="@{ad.title}"
+                    android:textAllCaps="true"
                     tools:text="50 % OFF AT \nROYS GARAGE"
                     app:layout_constraintBottom_toTopOf="@+id/smallDescription"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -90,6 +91,7 @@
                 android:text="@string/open_in_browser"
                 android:layout_above="@id/businessDetails"
                 android:layout_marginBottom="4dp"
+                app:goneIfNull="@{ad.link}"
                 android:onClick="@{openInBrowser}"/>
         <Button
                 android:id="@+id/businessDetails"

@@ -8,14 +8,7 @@
         <variable name="openProfileListener" type="android.view.View.OnClickListener"/>
         <variable name="videoClick" type="android.view.View.OnClickListener"/>
     </data>
-    <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="4dp"
-            app:contentPadding="@dimen/dimen_8dp"
-            android:layout_marginTop="4dp"
-            app:cardUseCompatPadding="true">
+
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -28,6 +21,7 @@
                     android:layout_height="@dimen/postProfilePhotoSize"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
                     app:toProfileRound="@{post.user.id}"
                     android:contentDescription="@string/cd_business_logo"/>
             <TextView
@@ -50,6 +44,7 @@
                     app:srcCompat="@drawable/ic_more"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="8dp"
+                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:onClick="@{moreClickListener}"/>
@@ -57,7 +52,7 @@
                     android:id="@+id/postImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/marginItemSubVertical"
+                    android:layout_marginTop="@dimen/marginTopItem"
                     app:layout_constraintTop_toBottomOf="@+id/businessProfileImage"
                     app:postImage="@{post.media}"/>
             <ImageView
@@ -118,5 +113,4 @@
                     app:layout_constraintBottom_toBottomOf="@id/likeImageButton"
                     android:text="@{post.likeText}"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 </layout>

@@ -1,6 +1,7 @@
 package com.feedbacktower.adapters
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -87,6 +88,11 @@ fun bindGoneIfZero(view: View, value: Any?) {
     }
 }
 
+@BindingAdapter("showLoading")
+fun bindShowLoading(button: Button, loading: Boolean) {
+    button.isEnabled = !loading
+    button.text = if(loading)  "Please wait..." else "Continue"
+}
 
 @BindingAdapter("textSafe")
 fun bindTextSafe(view: TextView, text: Any) {

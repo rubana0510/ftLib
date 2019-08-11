@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
+import androidx.fragment.app.Fragment
 
 const val PERMISSION_CODE = 1011
 
@@ -25,6 +26,13 @@ class PermissionManager private constructor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             ActivityCompat.requestPermissions(
                 activity,
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PERMISSION_CODE
+            )
+    }
+    fun requestMediaPermission(fragment: Fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            fragment.requestPermissions(
                 arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 PERMISSION_CODE
             )

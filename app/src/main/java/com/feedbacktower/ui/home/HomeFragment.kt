@@ -13,6 +13,7 @@ import android.view.*
 import android.widget.TextView
 import androidx.core.content.PermissionChecker
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -175,9 +176,17 @@ class HomeFragment : Fragment() {
         AppDatabase(requireContext()).adsDao().getAll().observe(this, Observer { list ->
             adList.clear()
             adList.addAll(list)
-            adsPagerAdapter.notifyDataSetChanged()
-            setUpDots()
-            enableAutoChange()
+            if(adList.isNotEmpty()) {
+                adsPager.isVisible = adList.isEmpty()
+                adsPagerAdapter.notifyDataSetChanged()
+                adsPager.isVisible = true
+                dotList.isVisible = true
+                setUpDots()
+                enableAutoChange()
+            }else{
+                adsPager.isVisible = false
+                dotList.isVisible = false
+            }
         })
 
         PostManager.getInstance()
@@ -244,7 +253,7 @@ class HomeFragment : Fragment() {
             ) {
                 showPostDialog()
             } else {
-                requestMediaPermission(requireActivity())
+                requestMediaPermission(this@HomeFragment)
             }
         }
     }
@@ -258,15 +267,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun showPostDialog() {
-        /*   AlertDialog.Builder(requireContext())
-               .setItems(arrayOf("Text", "Photo", "Video")) { dialog, which ->
-                   when (which) {
-                       0 -> requireActivity().launchActivity<PostTextScreen>()
-                       1 -> pickImage()
-                       2 -> pickVideo()
-                   }
-               }.show()*/
-
         UploadPostDialog(object : UploadPostDialog.Listener {
             override fun videoClick() {
                 pickVideo()
@@ -409,6 +409,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Log.d(TAG, "onRequestPermissionsResult")
         if (requestCode == PERMISSION_CODE) {
             var allGranted = true
             grantResults.forEach {

@@ -4,8 +4,8 @@ import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 
 object FcmManager {
-    fun subscribeToTopic(userType: String) {
-        val topic = userType.toLowerCase()
+    fun subscribeToTopic(_topic: String) {
+        val topic = _topic.toLowerCase()
         FirebaseMessaging.getInstance()
             .subscribeToTopic(topic).addOnFailureListener {
                 Log.d("FcmManager", "Failed to Subscribe")

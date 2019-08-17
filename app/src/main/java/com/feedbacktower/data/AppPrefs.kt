@@ -2,6 +2,7 @@ package com.feedbacktower.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.feedbacktower.BuildConfig
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.User
 import com.google.gson.Gson
@@ -68,4 +69,9 @@ class AppPrefs private constructor() {
         set(value) {
             sharedPrefs.edit().putString("PAYMENT_SUMMARY", Gson().toJson(value)).apply()
         }
+
+    var latestVersionCode: Int
+        get() = sharedPrefs.getInt("VERSION_CODE", BuildConfig.VERSION_CODE)
+        set(value) = sharedPrefs.edit().putInt("VERSION_CODE", value).apply()
+
 }

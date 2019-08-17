@@ -26,7 +26,7 @@ class TransactionManager {
 
     fun generateHash(
         params: GenerateHashRequest,
-        onComplete: (GenerateHashResponse?, Throwable?) -> Unit
+        onComplete: (GenerateHashResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.generateHashAsync(params).makeRequest(onComplete)
@@ -35,7 +35,7 @@ class TransactionManager {
 
     fun saveResponse(
         summary: PaymentSummary,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.saveTransactionResponseAsync(summary).makeRequest(onComplete)
@@ -44,7 +44,7 @@ class TransactionManager {
 
     fun cancel(
         transactionId: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.cancelTransactionAsync(hashMapOf("id" to transactionId)).makeRequest(onComplete)
@@ -54,14 +54,15 @@ class TransactionManager {
 
     fun checkPaymentStatus(
         transactionId: String,
-        onComplete: (PaymentTxnResponse?, Throwable?) -> Unit
+        onComplete: (PaymentTxnResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.checkPaymentStatusAsync(transactionId).makeRequest(onComplete)
         }
     }
+
     fun getTransactions(
-        onComplete: (PlanTransactionsResponse?, Throwable?) -> Unit
+        onComplete: (PlanTransactionsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getTransactionsAsync().makeRequest(onComplete)

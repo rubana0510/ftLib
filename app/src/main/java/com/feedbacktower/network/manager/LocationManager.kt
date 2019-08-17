@@ -5,12 +5,14 @@ import com.feedbacktower.network.models.PlaceDetailsResponse
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.makeRequest
+import com.feedbacktower.util.Constants
 import com.feedbacktower.util.toArray
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 class LocationManager {
     private val TAG = "LocationManager"
@@ -31,7 +33,7 @@ class LocationManager {
 
     fun saveBusinessLocation(
         location: LatLng,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         val map = hashMapOf<String, Any?>("location" to location.toArray())
         GlobalScope.launch(Dispatchers.Main) {
@@ -41,7 +43,7 @@ class LocationManager {
 
     fun saveCurrentLocation(
         location: LatLng,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         val map = hashMapOf<String, Any?>("currentLocation" to location.toArray())
         GlobalScope.launch(Dispatchers.Main) {
@@ -52,7 +54,7 @@ class LocationManager {
     fun addNewCity(
         city: String,
         state: String,
-        onComplete: (AddCityResponse?, Throwable?) -> Unit
+        onComplete: (AddCityResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         val map = hashMapOf<String, Any?>("cityName" to city, "stateName" to state)
         GlobalScope.launch(Dispatchers.Main) {
@@ -62,15 +64,16 @@ class LocationManager {
 
     fun getCities(
         keyword: String,
-        onComplete: (GetCitiesResponse?, Throwable?) -> Unit
+        onComplete: (GetCitiesResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getCitiesAsync(keyword).makeRequest(onComplete)
         }
     }
+
     fun autocomplete(
         query: String,
-        onComplete: (AutoCompleteResponse?, Throwable?) -> Unit
+        onComplete: (AutoCompleteResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         val url =
             "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${BuildConfig.PLACES_API_KEY}&sessiontoken=1234567890";
@@ -80,21 +83,30 @@ class LocationManager {
                 if (response.status == "OK")
                     onComplete(response, null)
                 else {
-                    onComplete(null, Throwable(response.status))
+                    onComplete(null, ApiResponse.ErrorModel(response.status, "Network error occurred"))
                 }
             } catch (e: HttpException) {
                 e.printStackTrace()
-                onComplete(null, Throwable("Network error occurred"))
-            } catch (e: Throwable) {
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE, "Network error occurred")
+                )
+            } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
-                onComplete(null, Throwable("Some error occurred"))
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
+                        "Timeout error, please try again"
+                    )
+                )
             }
         }
     }
 
     fun placeDetails(
         placeId: String,
-        onComplete: (PlaceDetailsResponse?, Throwable?) -> Unit
+        onComplete: (PlaceDetailsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         val url =
             "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=${BuildConfig.PLACES_API_KEY}"
@@ -104,14 +116,26 @@ class LocationManager {
                 if (response.status == "OK")
                     onComplete(response, null)
                 else {
-                    onComplete(null, Throwable(response.status))
+                    onComplete(null, ApiResponse.ErrorModel(response.status, "Network error occurred"))
                 }
             } catch (e: HttpException) {
                 e.printStackTrace()
-                onComplete(null, Throwable("Network error occurred"))
-            } catch (e: Throwable) {
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                        "Network error occurred"
+                    )
+                )
+            } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
-                onComplete(null, Throwable("Some error occurred"))
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
+                        "Timeout error, please try again"
+                    )
+                )
             }
         }
     }

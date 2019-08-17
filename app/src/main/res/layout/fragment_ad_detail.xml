@@ -91,7 +91,7 @@
                 android:text="@string/open_in_browser"
                 android:layout_above="@id/businessDetails"
                 android:layout_marginBottom="4dp"
-                app:goneIfNull="@{ad.link}"
+                app:goneIfInvalidLink="@{ad.link}"
                 android:onClick="@{openInBrowser}"/>
         <Button
                 android:id="@+id/businessDetails"

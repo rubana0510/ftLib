@@ -11,6 +11,9 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.AppVersion
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.AuthResponse
+import com.feedbacktower.notifications.FcmManager
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.navigateUser
@@ -23,6 +26,12 @@ class SplashScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val fcmToken = AppPrefs.getInstance(this).firebaseToken
         pushFcmToken(fcmToken)
+        subscribeToTopic()
+    }
+
+    private fun subscribeToTopic() {
+        val user = AppPrefs.getInstance(this).user ?: return
+        FcmManager.subscribeToTopic(user.userType)
     }
 
     override fun onResume() {
@@ -39,14 +48,16 @@ class SplashScreen : AppCompatActivity() {
     }
 
     private fun pushFcmToken(token: String?) {
-        Log.d("SplashScreen", "Token is $token")
         token?.let {
+            val lastToken = AppPrefs.getInstance(this).getValue("LAST_TOKEN_ON_SERVER")
+            if (lastToken == token) return
             ProfileManager.getInstance()
                 .updateFcmToken(token) { _, error ->
                     if (error != null) {
                         Log.e("SplashScreen", "Error: Token; ${error.message}")
                         return@updateFcmToken
                     }
+                    AppPrefs.getInstance(this).setValue("LAST_TOKEN_ON_SERVER", token)
                     Log.d("SplashScreen", "Token Updated")
                 }
         }
@@ -57,13 +68,7 @@ class SplashScreen : AppCompatActivity() {
         AuthManager.getInstance().refreshToken()
         { response, error ->
             if (error != null) {
-                //toast(error.message ?: getString(R.string.default_err_message))
-                //TODO: Must be handled using the error code  propagated from make request
-                if (
-                    error.message?.contains("USER") == true
-                    && error.message?.contains("NOT") == true
-                    && error.message?.contains("FOUND") == true
-                ) {
+                if (error.code == "USER_NOT_FOUND") {
                     logOut()
                     return@refreshToken
                 }
@@ -83,11 +88,11 @@ class SplashScreen : AppCompatActivity() {
                     authToken = response.token
                 }
                 Log.i("SplashScreen", "Token refreshed")
-
+                AppPrefs.getInstance(this).latestVersionCode = response.appVersion.code
                 //validate app version
-                if (response.appVersion.code > BuildConfig.VERSION_CODE) {
+                if (response.appVersion.code > BuildConfig.VERSION_CODE && response.appVersion.updateType == AppVersion.UpdateType.HARD) {
                     //user has old version
-                    showUpdateDialog(response.appVersion)
+                    showForceUpdateDialog(response.appVersion.version)
                 } else {
                     navigateUser(response.user)
                     finish()
@@ -98,16 +103,14 @@ class SplashScreen : AppCompatActivity() {
         }
     }
 
-    private fun showUpdateDialog(appVersion: AppVersion) {
+    private fun showForceUpdateDialog(versionName: String) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("New ${appVersion.version} Available!")
+        builder.setTitle("New update Available!")
         builder.setMessage("Download the latest version from play store.")
-        builder.setPositiveButton("DOWNLOAD") { _, _ -> showAppInStore() }
-        if (appVersion.updateType == AppVersion.UpdateType.HARD)
-            builder.setCancelable(false)
+        builder.setPositiveButton("UPDATE") { _, _ -> showAppInStore() }
         val alert = builder.create()
-        if (appVersion.updateType == AppVersion.UpdateType.HARD)
-            alert.setCanceledOnTouchOutside(false)
+        builder.setCancelable(false)
+        alert.setCanceledOnTouchOutside(false)
         alert.show()
     }
 

@@ -1,6 +1,7 @@
 package com.feedbacktower.adapters
 
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -78,6 +79,16 @@ fun bindGoneIfNull(view: View, gone: String?) {
         View.VISIBLE
     }
 }
+
+@BindingAdapter("goneIfInvalidLink")
+fun bindGoneIfInvalidLink(view: View, link: String?) {
+    view.visibility = if (link == null || !URLUtil.isValidUrl(link)) {
+        View.GONE
+    } else {
+        View.VISIBLE
+    }
+}
+
 
 @BindingAdapter("goneIfZero")
 fun bindGoneIfZero(view: View, value: Any?) {

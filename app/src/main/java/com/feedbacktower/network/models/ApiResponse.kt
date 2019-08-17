@@ -1,5 +1,7 @@
 package com.feedbacktower.network.models
 
+import com.google.gson.annotations.SerializedName
+
 class ApiResponse<T>(
     val error: ErrorModel?,
     val msg: String?,
@@ -7,6 +9,7 @@ class ApiResponse<T>(
 ) {
     data class ErrorModel(
         val code: String,
-        val msg: String
+        @SerializedName("msg")
+        val message: String
     )
 }

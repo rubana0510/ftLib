@@ -1,8 +1,6 @@
 package com.feedbacktower.network.manager
 
-import android.net.Uri
 import android.util.Log
-import android.webkit.MimeTypeMap
 import com.feedbacktower.network.models.*
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.makeRequest
@@ -32,7 +30,7 @@ class PostManager {
             }
     }
 
-    fun getPosts(timestamp: String, onComplete: (GetPostsResponse?, Throwable?) -> Unit) {
+    fun getPosts(timestamp: String, onComplete: (GetPostsResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getPostsAsync(timestamp)
                 .makeRequest(onComplete)
@@ -42,7 +40,7 @@ class PostManager {
     fun getBusinessPosts(
         businessId: String,
         timestamp: String,
-        onComplete: (GetPostsResponse?, Throwable?) -> Unit
+        onComplete: (GetPostsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getBusinessPostsAsync(businessId, timestamp)
@@ -51,21 +49,21 @@ class PostManager {
     }
 
 
-    fun createTextPost(text: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun createTextPost(text: String, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.createTextPostAsync(hashMapOf("text" to text))
                 .makeRequest(onComplete)
         }
     }
 
-    fun editTextPost(postId: String, text: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun editTextPost(postId: String, text: String, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.editTextPostAsync(postId, hashMapOf("text" to text))
                 .makeRequest(onComplete)
         }
     }
 
-    fun createPhotoPost(text: String, file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun createPhotoPost(text: String, file: File, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
 
         if (!file.exists()) {
             Log.e(TAG, "uploadImages: FileNotFound")
@@ -81,7 +79,7 @@ class PostManager {
         }
     }
 
-    fun createVideoPost(text: String, file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun createVideoPost(text: String, file: File, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
 
         if (!file.exists()) {
             Log.e(TAG, "uploadImages: FileNotFound")
@@ -97,21 +95,21 @@ class PostManager {
         }
     }
 
-    fun likePost(businessId: String, onComplete: (LikeUnlikeResponse?, Throwable?) -> Unit) {
+    fun likePost(businessId: String, onComplete: (LikeUnlikeResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.likePostAsync(businessId)
                 .makeRequest(onComplete)
         }
     }
 
-    fun deletePost(postId: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun deletePost(postId: String, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.deletePost(postId)
                 .makeRequest(onComplete)
         }
     }
 
-    fun getAds(onComplete: (GetAdsResponse?, Throwable?) -> Unit) {
+    fun getAds(onComplete: (GetAdsResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             apiService.getAdsAsync()
                 .makeRequest(onComplete)

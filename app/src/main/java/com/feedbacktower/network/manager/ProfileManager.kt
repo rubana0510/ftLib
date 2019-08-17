@@ -30,7 +30,7 @@ class ProfileManager {
 
     fun find(
         qrData: String,
-        onComplete: (FindCustomerResponse?, Throwable?) -> Unit
+        onComplete: (FindCustomerResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.findCustomerAsync(qrData).makeRequest(onComplete)
@@ -43,7 +43,7 @@ class ProfileManager {
         lastName: String,
         email: String,
         dob: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updatePersonalDetailsAsync(
@@ -59,7 +59,7 @@ class ProfileManager {
 
     fun updateFcmToken(
         token: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updatePersonalDetailsAsync(
@@ -75,7 +75,7 @@ class ProfileManager {
         name: String,
         regNo: String,
         categoryId: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updateBusinessAsync(
@@ -90,7 +90,7 @@ class ProfileManager {
 
     fun updateCity(
         cityId: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updatePersonalDetailsAsync(
@@ -103,7 +103,7 @@ class ProfileManager {
 
     fun updateBusinessCity(
         cityId: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updateBusinessAsync(
@@ -115,7 +115,7 @@ class ProfileManager {
     }
 
     fun continueAsCustomer(
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.continueAsCustomerAsync().makeRequest(onComplete)
@@ -128,7 +128,7 @@ class ProfileManager {
         website: String,
         lat: Double?,
         long: Double?,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updateBusinessAsync(
@@ -145,7 +145,7 @@ class ProfileManager {
 
     fun getAllCategories(
         keyword: String = "",
-        onComplete: (GetCategoriesResponse?, Throwable?) -> Unit
+        onComplete: (GetCategoriesResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getCategoriesAsync(
@@ -155,7 +155,7 @@ class ProfileManager {
     }
 
     fun getFetauredCategories(
-        onComplete: (GetCategoriesResponse?, Throwable?) -> Unit
+        onComplete: (GetCategoriesResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getFeaturedCategoriesAsync().makeRequest(onComplete)
@@ -164,7 +164,7 @@ class ProfileManager {
 
     fun getSubscriptionPlans(
         categoryId: String,
-        onComplete: (PlanListResponse?, Throwable?) -> Unit
+        onComplete: (PlanListResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getSubscriptionPlansAsync(categoryId).makeRequest(onComplete)
@@ -174,7 +174,7 @@ class ProfileManager {
     fun setUnsetCategoryInterest(
         businessCategoryId: String,
         interest: Boolean,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.setBusinessCategoryInterestAsync(
@@ -185,7 +185,7 @@ class ProfileManager {
 
     fun getBusinessDetails(
         businessId: String,
-        onComplete: (BusinessDetailsResponse?, Throwable?) -> Unit
+        onComplete: (BusinessDetailsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getBusinessDetailsAsync(
@@ -196,7 +196,7 @@ class ProfileManager {
 
     fun searchBusiness(
         search: String,
-        onComplete: (SearchBusinessResponse?, Throwable?) -> Unit
+        onComplete: (SearchBusinessResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.searchBusinessAsync(
@@ -205,7 +205,7 @@ class ProfileManager {
         }
     }
 
-    fun uploadProfile(file: File, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun uploadProfile(file: File, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         if (!file.exists()) {
             Log.e(TAG, "uploadImages: FileNotFound")
             return
@@ -219,13 +219,13 @@ class ProfileManager {
         }
     }
 
-    fun getMyBusiness(onComplete: (MyBusinessResponse?, Throwable?) -> Unit) {
+    fun getMyBusiness(onComplete: (MyBusinessResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getMyBusinessAsync().makeRequest(onComplete)
         }
     }
 
-    fun changeBusinessAvailability(available: Boolean, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun changeBusinessAvailability(available: Boolean, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.updateBusinessAsync(
                 hashMapOf("available" to available)
@@ -233,7 +233,7 @@ class ProfileManager {
         }
     }
 
-    fun applyReferralCode(code: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun applyReferralCode(code: String, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.applyReferralCodeAsync(
                 hashMapOf("code" to code)

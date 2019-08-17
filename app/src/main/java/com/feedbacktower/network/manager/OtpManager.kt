@@ -25,7 +25,7 @@ class OtpManager {
 
     fun sendOtp(
         params: GenerateHashRequest,
-        onComplete: (GenerateHashResponse?, Throwable?) -> Unit
+        onComplete: (GenerateHashResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.generateHashAsync(params).makeRequest(onComplete)

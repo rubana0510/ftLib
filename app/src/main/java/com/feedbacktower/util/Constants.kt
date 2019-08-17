@@ -10,6 +10,12 @@ object Constants {
             const val WRITE: Long = 30 * 1000
         }
 
+        object Error{
+            const val HTTP_EXCEPTION_ERROR_CODE = "NETWORK_ERROR"
+            const val SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE = "TIMEOUT_ERROR"
+            const val NO_INTERNET_ERROR_CODE = "NO_INTERNET_ERROR"
+        }
+
     }
 
     object Media {

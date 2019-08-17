@@ -1,6 +1,8 @@
 package com.feedbacktower.network.manager
 
-import com.feedbacktower.network.models.*
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.EmptyResponse
+import com.feedbacktower.network.models.GetReviewsResponse
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.makeRequest
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +28,7 @@ class ReviewsManager {
     fun getBusinessReviews(
         businessId: String,
         timestamp: String,
-        onComplete: (GetReviewsResponse?, Throwable?) -> Unit
+        onComplete: (GetReviewsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getBusinessReviewsAsync(
@@ -37,7 +39,7 @@ class ReviewsManager {
 
     }
 
-    fun getMyReviews(timestamp: String, onComplete: (GetReviewsResponse?, Throwable?) -> Unit) {
+    fun getMyReviews(timestamp: String, onComplete: (GetReviewsResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getMyReviewsAsync(
                 timestamp = timestamp
@@ -45,7 +47,7 @@ class ReviewsManager {
         }
     }
 
-    fun addReview(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+    fun addReview(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.addReviewAsync(payload)
                 .makeRequest(onComplete)

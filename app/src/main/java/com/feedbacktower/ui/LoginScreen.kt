@@ -86,7 +86,7 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
         { response, error ->
             hideLoading()
             if (error != null) {
-                toast(error.message ?: getString(R.string.default_err_message))
+                toast(error.message)
                 return@phoneLogin
             }
 

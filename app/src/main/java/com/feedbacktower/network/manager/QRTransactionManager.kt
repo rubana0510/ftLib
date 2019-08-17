@@ -24,7 +24,7 @@ class QRTransactionManager {
     }
 
     fun generate(
-        onComplete: (QrPaymentStatus?, Throwable?) -> Unit
+        onComplete: (QrPaymentStatus?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.generateQrCodeAsync().makeRequest(onComplete)
@@ -33,7 +33,7 @@ class QRTransactionManager {
 
     fun scan(
         data: String,
-        onComplete: (ScanQrResponse?, Throwable?) -> Unit
+        onComplete: (ScanQrResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.scanQrCodeAsync(hashMapOf("code" to data)).makeRequest(onComplete)
@@ -42,7 +42,7 @@ class QRTransactionManager {
 
     fun cancel(
         data: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.cancelWalletPaymentAsync(hashMapOf("code" to data)).makeRequest(onComplete)
@@ -51,7 +51,7 @@ class QRTransactionManager {
 
     fun checkStatusSender(
         data: String,
-        onComplete: (QrStatusSenderResponse?, Throwable?) -> Unit
+        onComplete: (QrStatusSenderResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.checkQrTransferStatusSenderAsync(hashMapOf("code" to data)).makeRequest(onComplete)
@@ -60,7 +60,7 @@ class QRTransactionManager {
 
     fun checkStatusReceiver(
         data: String,
-        onComplete: (QrStatusRecieverResponse?, Throwable?) -> Unit
+        onComplete: (QrStatusRecieverResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.checkQrTransferStatusReceiverAsync(hashMapOf("code" to data)).makeRequest(onComplete)
@@ -69,7 +69,7 @@ class QRTransactionManager {
 
     fun requestPayment(
         code: String, amount: Double,
-        onComplete: (QrPaymentStatus?, Throwable?) -> Unit
+        onComplete: (QrPaymentStatus?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.requestWalletPaymentAsync(hashMapOf("code" to code, "amount" to amount)).makeRequest(onComplete)
@@ -78,18 +78,18 @@ class QRTransactionManager {
 
     fun confirmPayment(
         code: String, approved: Boolean,
-        onComplete: (QrPaymentStatus?, Throwable?) -> Unit
+        onComplete: (QrPaymentStatus?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.confirmWalletPaymentAsync(
-                hashMapOf("code" to code,"approved" to approved)
+                hashMapOf("code" to code, "approved" to approved)
             ).makeRequest(onComplete)
         }
     }
 
     fun getTransactions(
         timestamp: String,
-        onComplete: (QrTransactionsResponse?, Throwable?) -> Unit
+        onComplete: (QrTransactionsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getQrTransactionsAsync(timestamp).makeRequest(onComplete)

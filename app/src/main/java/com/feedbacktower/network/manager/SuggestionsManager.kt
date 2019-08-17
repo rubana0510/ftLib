@@ -1,6 +1,8 @@
 package com.feedbacktower.network.manager
 
-import com.feedbacktower.network.models.*
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.EmptyResponse
+import com.feedbacktower.network.models.GetSuggestionsResponse
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.makeRequest
 import kotlinx.coroutines.Dispatchers
@@ -23,26 +25,28 @@ class SuggestionsManager {
             }
     }
 
-    fun getSuggestions(timestamp: String, onComplete: (GetSuggestionsResponse?, Throwable?) -> Unit) {
+    fun getSuggestions(timestamp: String, onComplete: (GetSuggestionsResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getSuggestionsAsync(timestamp)
                 .makeRequest(onComplete)
         }
     }
 
-    fun getMySuggestions(timestamp: String, onComplete: (GetSuggestionsResponse?, Throwable?) -> Unit) {
+    fun getMySuggestions(timestamp: String, onComplete: (GetSuggestionsResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getMySuggestionsAsync(timestamp)
                 .makeRequest(onComplete)
         }
     }
-    fun addSuggestion(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+
+    fun addSuggestion(payload: HashMap<String, Any?>, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.addSuggestionAsync(payload)
                 .makeRequest(onComplete)
         }
     }
-    fun replySuggestion(id: String, reply: String, onComplete: (EmptyResponse?, Throwable?) -> Unit) {
+
+    fun replySuggestion(id: String, reply: String, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.replySuggestionAsync(
                 hashMapOf("id" to id, "reply" to reply)

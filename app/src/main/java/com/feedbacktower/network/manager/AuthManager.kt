@@ -27,7 +27,7 @@ class AuthManager {
     fun phoneLogin(
         phone: String,
         password: String,
-        onComplete: (AuthResponse?, Throwable?) -> Unit
+        onComplete: (AuthResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.loginAsync(hashMapOf("phone" to phone, "password" to password))
@@ -37,7 +37,7 @@ class AuthManager {
 
     fun preRegister(
         phone: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.preRegisterAsync(hashMapOf("phone" to phone))
@@ -47,7 +47,7 @@ class AuthManager {
 
     fun requestOtp(
         phone: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.requestOtpAsync(hashMapOf("phone" to phone))
@@ -58,7 +58,7 @@ class AuthManager {
     fun verifyOtpRegister(
         phone: String,
         otp: String,
-        onComplete: (TokenRes?, Throwable?) -> Unit
+        onComplete: (TokenRes?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.verifyOtpRegisterAsync(hashMapOf("phone" to phone, "otp" to otp))
@@ -69,7 +69,7 @@ class AuthManager {
     fun registerPhone(
         phone: String,
         password: String,
-        onComplete: (AuthResponse?, Throwable?) -> Unit
+        onComplete: (AuthResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.registerPhoneAsync(hashMapOf("phone" to phone, "password" to password))
@@ -78,7 +78,7 @@ class AuthManager {
     }
 
     fun refreshToken(
-        onComplete: (AuthResponse?, Throwable?) -> Unit
+        onComplete: (AuthResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.refreshTokenAsync()
@@ -89,7 +89,7 @@ class AuthManager {
     fun resetPassword(
         phone: String,
         password: String,
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.resetPasswordAsync(hashMapOf("phone" to phone, "password" to password))
@@ -98,7 +98,7 @@ class AuthManager {
     }
 
     fun registerAsBusiness(
-        onComplete: (EmptyResponse?, Throwable?) -> Unit
+        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.registerAsBusinessAsync()

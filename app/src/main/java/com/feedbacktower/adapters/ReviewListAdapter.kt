@@ -7,7 +7,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.ItemReviewBinding
-import com.feedbacktower.fragments.ReviewsFragmentDirections
+import com.feedbacktower.ui.reviews.ReviewsFragmentDirections
 
 /**
  * Created by sanket on 16-04-2019.

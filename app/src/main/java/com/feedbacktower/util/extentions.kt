@@ -32,7 +32,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.exception.NoConnectivityException
 import com.feedbacktower.network.env.Environment
+import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.qrscanner.BarcodeEncoder
 import com.feedbacktower.ui.SplashScreen
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -44,6 +46,8 @@ import com.google.zxing.WriterException
 import org.joda.time.DateTimeZone
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
 
 fun ImageView.loadImage(url: String) {
     Glide.with(this.context)
@@ -365,4 +369,37 @@ internal fun File.getMimeType(): String? {
     val uri = Uri.fromFile(this)
     val ext = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
     return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
+}
+
+fun <T> Exception.toErrorResponse(): ApiResponse<T> {
+    return when (this) {
+
+        is NoConnectivityException ->
+            ApiResponse(
+                ApiResponse.ErrorModel("",  "You are not connected to the internet", ApiResponse.ErrorType.NO_INTERNET ),
+                null,
+                null
+            )
+
+        is HttpException ->
+            ApiResponse(
+                ApiResponse.ErrorModel("",  "Some error occurred (code${this.code()}: ${this.message()})", ApiResponse.ErrorType.HTTP_EXCEPTION ),
+                null,
+                null
+            )
+
+        is SocketTimeoutException ->
+            ApiResponse(
+                ApiResponse.ErrorModel("",  "Could not reach servers", ApiResponse.ErrorType.TIMEOUT ),
+                null,
+                null
+            )
+
+        else ->
+            ApiResponse(
+                ApiResponse.ErrorModel("",  "Unknown error occurred", ApiResponse.ErrorType.UNKNOWN ),
+                null,
+                null
+            )
+    }
 }

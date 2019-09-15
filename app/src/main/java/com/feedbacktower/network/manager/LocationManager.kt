@@ -83,13 +83,17 @@ class LocationManager {
                 if (response.status == "OK")
                     onComplete(response, null)
                 else {
-                    onComplete(null, ApiResponse.ErrorModel(response.status, "Network error occurred"))
+                    onComplete(null, ApiResponse.ErrorModel(response.status, "Network error occurred", ApiResponse.ErrorType.UNKNOWN))
                 }
             } catch (e: HttpException) {
                 e.printStackTrace()
                 onComplete(
                     null,
-                    ApiResponse.ErrorModel(Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE, "Network error occurred")
+                    ApiResponse.ErrorModel(
+                        Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                        "Network error occurred",
+                        ApiResponse.ErrorType.HTTP_EXCEPTION
+                    )
                 )
             } catch (e: SocketTimeoutException) {
                 e.printStackTrace()
@@ -97,11 +101,13 @@ class LocationManager {
                     null,
                     ApiResponse.ErrorModel(
                         Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
-                        "Timeout error, please try again"
+                        "Timeout error, please try again",
+                        ApiResponse.ErrorType.TIMEOUT
                     )
                 )
             }
         }
+
     }
 
     fun placeDetails(
@@ -116,7 +122,7 @@ class LocationManager {
                 if (response.status == "OK")
                     onComplete(response, null)
                 else {
-                    onComplete(null, ApiResponse.ErrorModel(response.status, "Network error occurred"))
+                    onComplete(null, ApiResponse.ErrorModel(response.status, "Network error occurred", ApiResponse.ErrorType.UNKNOWN))
                 }
             } catch (e: HttpException) {
                 e.printStackTrace()
@@ -124,7 +130,8 @@ class LocationManager {
                     null,
                     ApiResponse.ErrorModel(
                         Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
-                        "Network error occurred"
+                        "Network error occurred",
+                        ApiResponse.ErrorType.HTTP_EXCEPTION
                     )
                 )
             } catch (e: SocketTimeoutException) {
@@ -133,7 +140,8 @@ class LocationManager {
                     null,
                     ApiResponse.ErrorModel(
                         Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
-                        "Timeout error, please try again"
+                        "Timeout error, please try again",
+                        ApiResponse.ErrorType.TIMEOUT
                     )
                 )
             }

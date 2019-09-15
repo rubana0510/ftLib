@@ -1,4 +1,4 @@
-package com.feedbacktower.fragments
+package com.feedbacktower.ui.reviews
 
 import android.os.Bundle
 import android.util.Log
@@ -12,40 +12,43 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.feedbacktower.R
-import com.feedbacktower.adapters.MyReviewListAdapter
+import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Review
-import com.feedbacktower.databinding.FragmentMyReviewsBinding
+import com.feedbacktower.databinding.FragmentReviewsBinding
 import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.util.Constants
-import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
+import java.lang.IllegalArgumentException
 
 
-class MyReviewsFragment : Fragment() {
+class ReviewsFragment : Fragment() {
     private lateinit var reviewListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
-    private lateinit var reviewAdapter: MyReviewListAdapter
+    private lateinit var reviewAdapter: ReviewListAdapter
     private var isListEmpty: Boolean? = false
     private var isLoading: Boolean? = true
+    private lateinit var businessId: String
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentMyReviewsBinding.inflate(inflater, container, false)
+        val binding = FragmentReviewsBinding.inflate(inflater, container, false)
+        val args: ReviewsFragmentArgs? by navArgs()
+        businessId = args?.businessId ?: throw IllegalArgumentException("Invalid business")
+        if (args?.businessId == null || args?.businessId.equals("0")) {
+            businessId = AppPrefs.getInstance(requireContext()).user?.business?.id
+                ?: throw IllegalArgumentException("Invalid business")
+            Log.d("ReviewsFragment: ", "businessId: $businessId")
+        }
         initUI(binding)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    private fun initUI(binding: FragmentMyReviewsBinding) {
-
+    private fun initUI(binding: FragmentReviewsBinding) {
+        //  binding.toolbar.title = "Reviews"
         reviewListView = binding.reviewListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
@@ -53,14 +56,15 @@ class MyReviewsFragment : Fragment() {
         isLoading = binding.isLoading
 
         //setup list
-
         val layoutManager = LinearLayoutManager(context)
         reviewListView.layoutManager = layoutManager
         reviewListView.itemAnimator = DefaultItemAnimator()
         reviewListView.setHasFixedSize(true)
-        reviewAdapter = MyReviewListAdapter(list)
+        reviewAdapter = ReviewListAdapter(list)
+        reviewListView.adapter = reviewAdapter
+
         reviewListView.addOnScrollListener(ScrollListener {
-            if (listOver || list.size == 0) return@ScrollListener
+            if (listOver) return@ScrollListener
 
             val lastItemPosition = layoutManager.findLastVisibleItemPosition()
             if (list.size == lastItemPosition + 1) {
@@ -70,7 +74,6 @@ class MyReviewsFragment : Fragment() {
                 }
             }
         })
-        reviewListView.adapter = reviewAdapter
 
         swipeRefresh.setOnRefreshListener {
             fetchReviews(initial = true)
@@ -84,17 +87,17 @@ class MyReviewsFragment : Fragment() {
         swipeRefresh.isRefreshing = true
         fetching = true
         ReviewsManager.getInstance()
-            .getMyReviews(timestamp) { response, error ->
+            .getBusinessReviews(businessId, timestamp) { response, error ->
                 if (error != null) {
                     requireContext().toast("Could not get reviews")
-                    return@getMyReviews
+                    return@getBusinessReviews
                 }
                 swipeRefresh.isRefreshing = false
                 fetching = false
                 response?.review?.let {
                     listOver = it.size < Constants.PAGE_SIZE
+                    isListEmpty = it.isEmpty()
                     if (initial) {
-                        isListEmpty = it.isEmpty()
                         list.clear()
                     }
                     list.addAll(it)

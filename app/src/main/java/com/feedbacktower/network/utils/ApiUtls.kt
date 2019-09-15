@@ -20,10 +20,24 @@ suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, ApiRespons
         }
     } catch (e: HttpException) {
         e.printStackTrace()
-        onComplete(null, ApiResponse.ErrorModel(Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,"Network error occurred"))
+        onComplete(
+            null,
+            ApiResponse.ErrorModel(
+                Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                "Network error occurred",
+                ApiResponse.ErrorType.HTTP_EXCEPTION
+            )
+        )
     } catch (e: SocketTimeoutException) {
         e.printStackTrace()
-        onComplete(null, ApiResponse.ErrorModel(Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,"Timeout error, please try again"))
+        onComplete(
+            null,
+            ApiResponse.ErrorModel(
+                Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
+                "Timeout error, please try again",
+                ApiResponse.ErrorType.TIMEOUT
+            )
+        )
     }
 }
 

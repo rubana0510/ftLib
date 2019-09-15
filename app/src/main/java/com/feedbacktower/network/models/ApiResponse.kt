@@ -10,6 +10,8 @@ class ApiResponse<T>(
     data class ErrorModel(
         val code: String,
         @SerializedName("msg")
-        val message: String
+        val message: String,
+        val error: ErrorType?
     )
+    enum class ErrorType { NO_INTERNET, HTTP_EXCEPTION, TIMEOUT, UNKNOWN }
 }

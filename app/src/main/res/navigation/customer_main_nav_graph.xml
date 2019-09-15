@@ -50,7 +50,7 @@
         <action android:id="@+id/action_navigation_my_suggestion_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
-    <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.fragments.MyReviewsFragment"
+    <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.ui.reviews.MyReviewsFragment"
               android:label="My Reviews" tools:layout="@layout/fragment_my_reviews">
         <action android:id="@+id/action_navigation_my_review_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>

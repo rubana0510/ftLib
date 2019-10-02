@@ -104,10 +104,10 @@ class BusinessSetup1Fragment : Fragment() {
                 nameLayout.error = "Enter valid business name"
                 false
             }
-            regNo.isEmpty() -> {
+          /*  regNo.isEmpty() -> {
                 regLayout.error = "Enter valid registration number"
                 false
-            }
+            }*/
             category.isNullOrEmpty() -> {
                 categoryIdLayout.error = "Select valid category"
                 false

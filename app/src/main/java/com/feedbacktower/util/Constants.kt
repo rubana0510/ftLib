@@ -42,5 +42,4 @@ object Constants {
     const val PAYMENT_STATUS_CHECK_INTERVAL: Long = 2000L
     const val PAYMENT_STATUS_CHECK_MAX_WAIT_TIME: Long = 10000L
     const val IMAGE_COMPRESSION_QUALITY: Int = 75
-    const val HELP_PAGE_URL = "https://feedbacktower.com/help.html"
 }

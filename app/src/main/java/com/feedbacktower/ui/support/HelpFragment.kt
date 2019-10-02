@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.feedbacktower.databinding.FragmentHelpBinding
+import com.feedbacktower.network.env.Environment
 import com.feedbacktower.util.Constants
 
 
@@ -25,6 +26,6 @@ class HelpFragment : Fragment() {
 
     private fun initUi(binding: FragmentHelpBinding) {
         webView = binding.webView
-        webView.loadUrl(Constants.HELP_PAGE_URL)
+        webView.loadUrl("${Environment.SERVER_BASE_URL}/help")
     }
 }

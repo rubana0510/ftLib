@@ -20,7 +20,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintVertical_bias="0.35"
+                app:layout_constraintVertical_bias="0.15"
                 app:srcCompat="@drawable/ic_cancel_failure"/>
 
         <TextView
@@ -77,49 +77,94 @@
                     tools:text="23/06/2019"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <RelativeLayout
+        <LinearLayout
                 android:id="@+id/referralCodeLay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/button"
-                android:background="@drawable/bg_box"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="32dp"
-                android:visibility="gone">
-            <EditText
-                    android:id="@+id/referralCode"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/button">
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:layout_centerVertical="true"
-                    android:hint="Referral Code (Optional)"
-                    android:background="@null"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:layout_toStartOf="@id/apply"
-                    android:maxLines="1"/>
-            <Button
-                    android:id="@+id/apply"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/dimen_16dp"
+                    android:gravity="center_horizontal">
+                <TextView
+                        android:id="@+id/txWalletLabel"
+                        style="@style/MediumText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/txdateLabel"
+                        app:layout_constraintStart_toStartOf="@id/txLabel"
+                        android:text="Wallet Balance: "/>
+                <TextView
+                        android:id="@+id/walletBalance"
+                        style="@style/MediumBoldText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/txWalletLabel"
+                        app:layout_constraintStart_toStartOf="@+id/transactionId"
+                        tools:text="Rs. 499"/>
+
+            </LinearLayout>
+            <RelativeLayout
+                    android:id="@+id/referralCodeInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_box"
+                    android:visibility="visible">
+                <EditText
+                        android:id="@+id/referralCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:layout_centerVertical="true"
+                        android:hint="Referral Code (Optional)"
+                        android:background="@null"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:layout_toStartOf="@id/apply"
+                        android:maxLines="1"/>
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/apply"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/grey42"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="@dimen/dimen_2dp"
+                        android:text="APPLY"/>
+
+            </RelativeLayout>
+            <TextView
+                    android:id="@+id/referralNote"
+                    style="@style/MediumText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/grey42"
-                    android:layout_alignParentEnd="true"
-                    android:text="APPLY"/>
-
-        </RelativeLayout>
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="#4CAF50"
+                    android:layout_marginTop="8dp"
+                    tools:text="Apply Referral code and get \n Rs.500 more in wallet"/>
+        </LinearLayout>
         <Button
                 android:id="@+id/button"
-                style="@style/ButtonFilledStyle.Big"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp"
+                android:layout_margin="16dp"
                 android:text="TRY AGAIN"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -21,7 +21,6 @@ import com.feedbacktower.util.showAppInStore
 
 
 class SplashScreen : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val fcmToken = AppPrefs.getInstance(this).firebaseToken
@@ -67,20 +66,21 @@ class SplashScreen : AppCompatActivity() {
         Log.i("SplashScreen", "Refreshing token")
         AuthManager.getInstance().refreshToken()
         { response, error ->
+            Log.d("SplashScreen", "Error Occurred: $error")
             if (error != null) {
-                if (error.code == "USER_NOT_FOUND") {
+                if (error.code == "USER_NOT_FOUND" || error.code == "INVALID_AUTH_TOKEN") {
                     logOut()
                     return@refreshToken
                 }
                 val builder = AlertDialog.Builder(this)
-                builder.setTitle("Error occurred")
-                builder.setMessage(error.message ?: getString(R.string.default_err_message))
+                builder.setTitle("Some error occurred")
+                builder.setMessage(error.message)
                 builder.setPositiveButton("TRY AGAIN") { _, _ -> refreshAuthToken() }
                 builder.setCancelable(false)
                 val alert = builder.create()
                 alert.setCanceledOnTouchOutside(false)
                 alert.show()
-                return@refreshToken
+
             }
             if (response != null) {
                 AppPrefs.getInstance(this).apply {

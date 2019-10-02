@@ -63,25 +63,26 @@ class AccountFragment : Fragment() {
         submitOptions()
 
         binding.availabilitySwitch.setOnClickListener {
-            val state = binding.availabilitySwitch.isChecked
-            binding.updatingStatus = true
-            ProfileManager.getInstance()
-                .changeBusinessAvailability(state) { _, error ->
-                    binding.updatingStatus = false
-                    if (error != null) {
-                        requireContext().toast(error.message ?: getString(R.string.default_err_message))
-                        binding.availabilitySwitch.isChecked = !state
-                        return@changeBusinessAvailability
-                    }
-                    binding.availabilitySwitch.isChecked = state
-                    AppPrefs.getInstance(requireContext()).apply {
-                        user?.apply {
-                            business = business?.apply {
-                                visible = state
+            AppPrefs.getInstance(requireContext()).user?.business?.available?.let { isAvailable ->
+                val availability = !isAvailable
+                binding.updatingStatus = true
+                ProfileManager.getInstance()
+                    .changeBusinessAvailability(availability) { _, error ->
+                        binding.updatingStatus = false
+                        if (error != null) {
+                            requireContext().toast(error.message)
+                            return@changeBusinessAvailability
+                        }
+                        binding.availabilitySwitch.isChecked = availability
+                        AppPrefs.getInstance(requireContext()).apply {
+                            user = user?.apply {
+                                business = business?.apply {
+                                    available = availability
+                                }
                             }
                         }
                     }
-                }
+            }
         }
         binding.business = AppPrefs.getInstance(requireContext()).user?.business!!
         binding.editProfileButtonClicked = View.OnClickListener {
@@ -103,6 +104,7 @@ class AccountFragment : Fragment() {
         ProfileManager.getInstance()
             .getMyBusiness { response, error ->
                 if (error == null) {
+                    Log.d(TAG, "Availability:Fetched ${response?.business}")
                     AppPrefs.getInstance(requireContext()).apply {
                         user = user?.apply {
                             business = response?.business

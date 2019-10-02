@@ -97,10 +97,10 @@ class BusinessSetup2Fragment : Fragment() {
                 contactLayout.error = "Enter valid contact number"
                 false
             }
-            website.isEmpty() || website.noValidWebsite() -> {
+           /* website.isEmpty() || website.noValidWebsite() -> {
                 websiteLayout.error = "Enter valid website"
                 false
-            }
+            }*/
             else -> true
         }
     }

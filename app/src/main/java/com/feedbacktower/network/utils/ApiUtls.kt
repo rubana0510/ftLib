@@ -7,6 +7,7 @@ import com.feedbacktower.util.Constants
 import kotlinx.coroutines.Deferred
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 const val TAG = "ApiService"
 suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, ApiResponse.ErrorModel?) -> Unit) {
@@ -18,29 +19,52 @@ suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, ApiRespons
             //Log.d(TAG, "Payload: ${response.payload}")
             onComplete(response.payload, null)
         }
-    } catch (e: HttpException) {
+    } catch (e: Exception) {
         e.printStackTrace()
-        onComplete(
-            null,
-            ApiResponse.ErrorModel(
-                Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
-                "Network error occurred",
-                ApiResponse.ErrorType.HTTP_EXCEPTION
-            )
-        )
-    } catch (e: SocketTimeoutException) {
-        e.printStackTrace()
-        onComplete(
-            null,
-            ApiResponse.ErrorModel(
-                Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
-                "Timeout error, please try again",
-                ApiResponse.ErrorType.TIMEOUT
-            )
-        )
+        when (e) {
+            is HttpException -> {
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                        "Network error occurred",
+                        ApiResponse.ErrorType.HTTP_EXCEPTION
+                    )
+                )
+            }
+            is SocketTimeoutException -> {
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
+                        "Timeout error, please try again",
+                        ApiResponse.ErrorType.TIMEOUT
+                    )
+                )
+            }
+            is UnknownHostException -> {
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        "0",
+                        "Could not reach server, Check your internet",
+                        ApiResponse.ErrorType.NO_INTERNET
+                    )
+                )
+            }
+            else -> {
+                onComplete(
+                    null,
+                    ApiResponse.ErrorModel(
+                        "0",
+                        "Unknown error occurred",
+                        ApiResponse.ErrorType.UNKNOWN
+                    )
+                )
+            }
+        }
     }
 }
-
 
 suspend fun <T> Deferred<T>.makeRequestThirdParty(onComplete: (T?, Throwable?) -> Unit) {
     try {

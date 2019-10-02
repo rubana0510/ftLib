@@ -21,11 +21,11 @@
     <string name="enter_pin">Enter Pincode</string>
     <string name="enter_address">Enter Address</string>
     <string name="business_name">Business name</string>
-    <string name="est_reg">Establishment Registration No.</string>
+    <string name="est_reg">Establishment Registration No. (Optional)</string>
     <string name="business_cat">Business Category</string>
     <string name="office_address">Office Address</string>
     <string name="office_phone">Office Contact</string>
-    <string name="office_website">Business Website</string>
+    <string name="office_website">Business Website(Optional)</string>
     <string name="write_review">Write review</string>
     <string name="write_something">Write Something…</string>
     <string name="send_review">SEND REVIEW</string>

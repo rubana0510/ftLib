@@ -1,11 +1,14 @@
 package com.feedbacktower.ui.payment
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.PayUResponse
@@ -23,6 +26,7 @@ import com.google.gson.Gson
 import com.payumoney.core.entity.TransactionResponse
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager
 import kotlinx.android.synthetic.main.activity_plan_payment_success_screen.*
+import kotlinx.android.synthetic.main.dialog_referral_success.view.*
 import org.jetbrains.anko.toast
 
 class PlanPaymentResultScreen : AppCompatActivity() {
@@ -61,11 +65,9 @@ class PlanPaymentResultScreen : AppCompatActivity() {
                 }
                 finish()
             } else if (paymentStatus == PlanPaymentTransaction.Status.FAILURE) {
-                launchActivity<SplashScreen> {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
                 finish()
             } else if (paymentStatus == PlanPaymentTransaction.Status.PENDING) {
+                //TODO: needs to be handled payment pending state
                 launchActivity<SplashScreen> {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
@@ -99,7 +101,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
                         if (it.transaction.PaymentStatus == PlanPaymentTransaction.Status.SUCCESS) {
                             //Success yay!
 
-                            setPaymentSuccess()
+                            setPaymentSuccess(it.transaction)
 
                         } else if (it.transaction.PaymentStatus == PlanPaymentTransaction.Status.PENDING) {
                             statusMessage.text = "Please wait, payment status is pending"
@@ -126,12 +128,8 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         AuthManager.getInstance().refreshToken()
         { response, error ->
             if (error != null) {
-                //toast(error.message ?: getString(R.string.default_err_message))
-                //TODO: Must be handled using the error code  propagated from make request
                 if (
-                    error.message?.contains("User") == true
-                    && error.message?.contains("not") == true
-                    && error.message?.contains("found") == true
+                    error.message == "USER_NOT_FOUND"
                 ) {
                     logOut()
                     return@refreshToken
@@ -169,10 +167,12 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         content.gone()
     }
 
-    private fun setPaymentSuccess() {
+    private fun setPaymentSuccess(transaction: PlanPaymentTransaction) {
         message.text = "Payment Successful"
         image.setImageResource(R.drawable.ic_success_check)
         button.text = "GO TO DASHBOARD"
+        referralNote.text = "Apply Referral code and get \n Rs.${transaction.amount} more in wallet"
+        walletBalance.text = "Rs.${transaction.amount}"
         AppPrefs.getInstance(this).summary = null
         refreshAuthToken()
         hideLoading()
@@ -192,19 +192,46 @@ class PlanPaymentResultScreen : AppCompatActivity() {
     }
 
     private fun verifyReferralCode(code: String) {
-        referralCodeLay.disable()
+        referralCodeInput.disable()
+        button.disable()
         ProfileManager.getInstance()
             .applyReferralCode(code) { _, error ->
+                button.enable()
                 if (error == null) {
                     apply.text = "APPLIED"
                     referralCodeLay.disable()
                     apply.disable()
                     referralCode.disable()
-                    toast("Applied successfully")
+                    apply.icon = getDrawable(R.drawable.ic_check_circle_black_24dp)
+                    apply.iconSize = 16
+                    apply.iconTint = ContextCompat.getColorStateList(this, R.color.button_green)
+                    showCodeAppliedMessage()
                 } else {
                     toast("Referral code invalid")
                 }
             }
+    }
+
+    private fun showCodeAppliedMessage() {
+        val builder= AlertDialog.Builder(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_referral_success, null)
+        val alert = builder.create()
+        alert.setView(view)
+        view.actionButton.setOnClickListener {
+            alert.dismiss()
+            openSplash()
+        }
+        alert.setOnDismissListener {
+            openSplash()
+        }
+        alert.show()
+    }
+
+    private fun openSplash(){
+        launchActivity<SplashScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        finish()
     }
 
     private fun setPaymentPending() {

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.ItemSuggestionBinding
-import com.feedbacktower.fragments.MySuggestionsFragmentDirections
-import com.feedbacktower.fragments.SuggestionsFragmentDirections
+import com.feedbacktower.ui.suggestions.my.MySuggestionsFragmentDirections
+import com.feedbacktower.ui.suggestions.all.SuggestionsFragmentDirections
 
 /**
  * Created by sanket on 16-04-2019.

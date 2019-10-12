@@ -36,10 +36,10 @@ class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
-    private lateinit var presenter:ReviewsPresenter
+    private lateinit var presenter: ReviewsPresenter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentReviewsBinding.inflate(inflater, container, false)
-        presenter =ReviewsPresenter()
+        presenter = ReviewsPresenter()
         presenter.attachView(this)
         val args: ReviewsFragmentArgs? by navArgs()
         businessId = args?.businessId ?: throw IllegalArgumentException("Invalid business")

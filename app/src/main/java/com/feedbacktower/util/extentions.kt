@@ -29,6 +29,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Patterns
 import android.webkit.MimeTypeMap
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.BuildConfig
@@ -68,7 +69,30 @@ fun ImageView.loadImage(bitmap: Bitmap) {
 fun ImageView.toProfileRound(userId: String) {
     Glide.with(this.context)
         .load("${Environment.S3_BASE_URL}user/$userId.jpg")
+        .apply(
+            RequestOptions().placeholder(
+                ContextCompat.getDrawable(
+                    this.context,
+                    R.drawable.ic_business_placeholder_profile
+                )
+            ).circleCrop()
+        )
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(this)
+}
+
+fun ImageView.toUserProfileRound(userId: String) {
+    Glide.with(this.context)
+        .load("${Environment.S3_BASE_URL}user/$userId.jpg")
         .apply(RequestOptions().circleCrop())
+        .apply(
+            RequestOptions().placeholder(
+                ContextCompat.getDrawable(
+                    this.context,
+                    R.drawable.ic_person_outline_black_24dp
+                )
+            )
+        )
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
 }
@@ -248,7 +272,8 @@ fun <T> Context.isServiceRunning(service: Class<T>): Boolean {
         .getRunningServices(Integer.MAX_VALUE)
         .any { it -> it.service.className == service.name }
 }
-internal fun Activity.logOut(){
+
+internal fun Activity.logOut() {
     AppPrefs.getInstance(this).authToken = null
     AppPrefs.getInstance(this).user = null
     this.launchActivity<SplashScreen> {
@@ -341,9 +366,11 @@ fun isCurrentBusiness(businessId: String, context: Context): Boolean {
 fun LatLng.toArray(): List<Double> {
     return arrayListOf(this.longitude, this.latitude)
 }
-fun LatLng.toLocation():  com.feedbacktower.data.models.Location{
+
+fun LatLng.toLocation(): com.feedbacktower.data.models.Location {
     return com.feedbacktower.data.models.Location(this.toArray(), "")
 }
+
 fun Location?.toLatLng(): LatLng? {
     if (this == null) return null
 
@@ -378,28 +405,32 @@ fun <T> Exception.toErrorResponse(): ApiResponse<T> {
 
         is NoConnectivityException ->
             ApiResponse(
-                ApiResponse.ErrorModel("",  "You are not connected to the internet", ApiResponse.ErrorType.NO_INTERNET ),
+                ApiResponse.ErrorModel("", "You are not connected to the internet", ApiResponse.ErrorType.NO_INTERNET),
                 null,
                 null
             )
 
         is HttpException ->
             ApiResponse(
-                ApiResponse.ErrorModel("",  "Some error occurred (code${this.code()}: ${this.message()})", ApiResponse.ErrorType.HTTP_EXCEPTION ),
+                ApiResponse.ErrorModel(
+                    "",
+                    "Some error occurred (code${this.code()}: ${this.message()})",
+                    ApiResponse.ErrorType.HTTP_EXCEPTION
+                ),
                 null,
                 null
             )
 
         is SocketTimeoutException ->
             ApiResponse(
-                ApiResponse.ErrorModel("",  "Could not reach servers", ApiResponse.ErrorType.TIMEOUT ),
+                ApiResponse.ErrorModel("", "Could not reach servers", ApiResponse.ErrorType.TIMEOUT),
                 null,
                 null
             )
 
         else ->
             ApiResponse(
-                ApiResponse.ErrorModel("",  "Unknown error occurred", ApiResponse.ErrorType.UNKNOWN ),
+                ApiResponse.ErrorModel("", "Unknown error occurred", ApiResponse.ErrorType.UNKNOWN),
                 null,
                 null
             )

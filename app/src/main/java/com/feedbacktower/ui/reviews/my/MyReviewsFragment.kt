@@ -13,11 +13,9 @@ import com.feedbacktower.adapters.MyReviewListAdapter
 import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentMyReviewsBinding
-import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetReviewsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
-import com.feedbacktower.ui.reviews.all.ReviewsPresenter
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 

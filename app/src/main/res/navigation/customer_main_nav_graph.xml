@@ -45,7 +45,7 @@
             tools:layout="@layout/activity_business_details">
         <argument android:name="businessId" app:argType="string"/>
     </activity>
-    <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.fragments.MySuggestionsFragment"
+    <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.ui.suggestions.my.MySuggestionsFragment"
               android:label="My Suggestions" tools:layout="@layout/fragment_my_suggestions">
         <action android:id="@+id/action_navigation_my_suggestion_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>

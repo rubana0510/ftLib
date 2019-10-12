@@ -34,7 +34,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_suggestion"
-            android:name="com.feedbacktower.fragments.SuggestionsFragment"
+            android:name="com.feedbacktower.ui.suggestions.all.SuggestionsFragment"
             android:label="@string/title_suggestions"
             tools:layout="@layout/fragment_suggestions">
         <argument android:name="mySuggestions" app:argType="boolean" android:defaultValue="false"/>
@@ -82,7 +82,7 @@
         <action android:id="@+id/action_navigation_my_review_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
-    <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.fragments.MySuggestionsFragment"
+    <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.ui.suggestions.my.MySuggestionsFragment"
               android:label="My Suggestions" tools:layout="@layout/fragment_my_suggestions">
         <action android:id="@+id/action_navigation_my_suggestion_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>

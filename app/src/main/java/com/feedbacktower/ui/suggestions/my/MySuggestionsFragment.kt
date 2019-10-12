@@ -1,7 +1,6 @@
-package com.feedbacktower.fragments
+package com.feedbacktower.ui.suggestions.my
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +11,20 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.feedbacktower.R
 import com.feedbacktower.adapters.MySuggestionListAdapter
 import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentMySuggestionsBinding
-import com.feedbacktower.network.manager.SuggestionsManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.GetSuggestionsResponse
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
+import com.feedbacktower.ui.suggestions.all.SuggestionsFragmentArgs
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 
 
-class MySuggestionsFragment : Fragment() {
+class MySuggestionsFragment : BaseViewFragmentImpl(), MySuggestionsContract.View {
+    private lateinit var presenter: MySuggestionsPresenter
     private lateinit var suggestionListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -37,6 +39,8 @@ class MySuggestionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentMySuggestionsBinding.inflate(inflater, container, false)
+        presenter = MySuggestionsPresenter()
+        presenter.attachView(this)
         (activity as AppCompatActivity).supportActionBar?.show()
         val args: SuggestionsFragmentArgs by navArgs()
         initUI(binding)
@@ -44,8 +48,6 @@ class MySuggestionsFragment : Fragment() {
     }
 
     private fun initUI(binding: FragmentMySuggestionsBinding) {
-
-
         suggestionListView = binding.suggestionListView
         swipeRefresh = binding.swipeRefresh
         message = binding.message
@@ -75,26 +77,44 @@ class MySuggestionsFragment : Fragment() {
         fetchSuggestionList(initial = true)
     }
 
+
     private fun fetchSuggestionList(timestamp: String = "", initial: Boolean = false) {
-        if(fetching) return
+        if (fetching) return
+        presenter.fetch(timestamp, initial)
+    }
+
+
+    override fun showProgress() {
+        super.showProgress()
         swipeRefresh.isRefreshing = true
         fetching = true
-        SuggestionsManager.getInstance()
-            .getMySuggestions(timestamp) { response, error ->
-                swipeRefresh.isRefreshing = false
-                fetching = false
-                if (error != null) {
-                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
-                    return@getMySuggestions
-                }
-                response?.suggestions?.let {
-                    listOver = it.size < Constants.PAGE_SIZE
-                    isListEmpty = it.isEmpty()
-                    if (initial)
-                        list.clear()
-                    list.addAll(it)
-                    suggestionAdapter.notifyDataSetChanged()
-                }
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+        swipeRefresh.isRefreshing = false
+        fetching = false
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
+    }
+
+    override fun onFetched(response: GetSuggestionsResponse?, initial: Boolean) {
+        response?.suggestions?.let {
+            listOver = it.size < Constants.PAGE_SIZE
+            isListEmpty = it.isEmpty()
+            if (initial) {
+                list.clear()
             }
+            list.addAll(it)
+            suggestionAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

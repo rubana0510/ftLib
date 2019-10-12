@@ -1,13 +1,11 @@
-package com.feedbacktower.fragments
+package com.feedbacktower.ui.suggestions.all
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,11 +14,16 @@ import com.feedbacktower.adapters.SuggestionListAdapter
 import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentSuggestionsBinding
-import com.feedbacktower.network.manager.SuggestionsManager
+import com.feedbacktower.fragments.ReplySuggestionDialog
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.GetSuggestionsResponse
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
+import org.jetbrains.anko.toast
 
 
-class SuggestionsFragment : Fragment() {
+class SuggestionsFragment : BaseViewFragmentImpl(), SuggestionsContract.View {
+    private lateinit var presenter: SuggestionsPresenter
     private lateinit var suggestionListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -35,6 +38,8 @@ class SuggestionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentSuggestionsBinding.inflate(inflater, container, false)
+        presenter = SuggestionsPresenter()
+        presenter.attachView(this)
         (activity as AppCompatActivity).supportActionBar?.show()
         initUI(binding)
         return binding.root
@@ -89,22 +94,42 @@ class SuggestionsFragment : Fragment() {
     }
 
     private fun fetchSuggestionList(timestamp: String = "", initial: Boolean = false) {
-        if(fetching) return
+        if (fetching) return
+        presenter.fetch(timestamp, initial)
+    }
+
+
+    override fun showProgress() {
+        super.showProgress()
         swipeRefresh.isRefreshing = true
         fetching = true
-        SuggestionsManager.getInstance()
-            .getSuggestions(timestamp) { response, error ->
-                swipeRefresh.isRefreshing = false
-                fetching = false
-                response?.suggestions?.let {
-                    listOver = it.size < Constants.PAGE_SIZE
-                    isListEmpty = it.isEmpty()
-                    if(initial){
-                        list.clear()
-                    }
-                    list.addAll(it)
-                    suggestionAdapter.notifyDataSetChanged()
-                }
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+        swipeRefresh.isRefreshing = false
+        fetching = false
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
+    }
+
+    override fun onFetched(response: GetSuggestionsResponse?, initial: Boolean) {
+        response?.suggestions?.let {
+            listOver = it.size < Constants.PAGE_SIZE
+            isListEmpty = it.isEmpty()
+            if (initial) {
+                list.clear()
             }
+            list.addAll(it)
+            suggestionAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

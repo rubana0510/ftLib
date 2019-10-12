@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -28,6 +29,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Patterns
 import android.webkit.MimeTypeMap
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R

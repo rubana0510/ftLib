@@ -1,7 +1,6 @@
-package com.feedbacktower.ui.reviews
+package com.feedbacktower.ui.reviews.my
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +14,15 @@ import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentMyReviewsBinding
 import com.feedbacktower.network.manager.ReviewsManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.GetReviewsResponse
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
+import com.feedbacktower.ui.reviews.all.ReviewsPresenter
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 
 
-class MyReviewsFragment : Fragment() {
+class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
     private lateinit var reviewListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -29,8 +32,12 @@ class MyReviewsFragment : Fragment() {
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
+    private lateinit var presenter: MyReviewsPresenter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentMyReviewsBinding.inflate(inflater, container, false)
+        presenter = MyReviewsPresenter()
+        presenter.attachView(this)
         initUI(binding)
         return binding.root
     }
@@ -73,28 +80,42 @@ class MyReviewsFragment : Fragment() {
         fetchReviews(initial = true)
     }
 
-    private fun fetchReviews(timestamp: String = "", initial: Boolean = false) {
-        if (fetching) return
-
+    override fun showProgress() {
+        super.showProgress()
         swipeRefresh.isRefreshing = true
         fetching = true
-        ReviewsManager.getInstance()
-            .getMyReviews(timestamp) { response, error ->
-                if (error != null) {
-                    requireContext().toast("Could not get reviews")
-                    return@getMyReviews
-                }
-                swipeRefresh.isRefreshing = false
-                fetching = false
-                response?.review?.let {
-                    listOver = it.size < Constants.PAGE_SIZE
-                    if (initial) {
-                        isListEmpty = it.isEmpty()
-                        list.clear()
-                    }
-                    list.addAll(it)
-                    reviewAdapter.notifyDataSetChanged()
-                }
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+        swipeRefresh.isRefreshing = false
+        fetching = false
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
+    }
+
+    private fun fetchReviews(timestamp: String = "", initial: Boolean = false) {
+        if (fetching) return
+        presenter.fetchReviews(timestamp, initial)
+    }
+
+    override fun onReviewsFetched(response: GetReviewsResponse?, initial: Boolean) {
+        response?.review?.let {
+            listOver = it.size < Constants.PAGE_SIZE
+            isListEmpty = it.isEmpty()
+            if (initial) {
+                list.clear()
             }
+            list.addAll(it)
+            reviewAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

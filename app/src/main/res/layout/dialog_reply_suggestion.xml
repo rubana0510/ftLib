@@ -16,8 +16,8 @@
                 android:id="@+id/userProfileImage"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                app:layout_constraintStart_toEndOf="@id/starIm"
-                app:layout_constraintTop_toBottomOf="@id/dialogTitle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"
                 app:toProfileRound="@{suggestion.user.id}"/>
         <TextView

@@ -16,7 +16,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_review"
-            android:name="com.feedbacktower.ui.reviews.ReviewsFragment"
+            android:name="com.feedbacktower.ui.reviews.all.ReviewsFragment"
             android:label="@string/title_reviews"
             tools:layout="@layout/fragment_reviews">
         <argument android:name="businessId" app:argType="string"/>

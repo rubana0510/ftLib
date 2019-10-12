@@ -1,8 +1,7 @@
-package com.feedbacktower.ui.reviews
+package com.feedbacktower.ui.reviews.all
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +16,16 @@ import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentReviewsBinding
-import com.feedbacktower.network.manager.ReviewsManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.GetReviewsResponse
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
 import java.lang.IllegalArgumentException
 
 
-class ReviewsFragment : Fragment() {
+class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
+
     private lateinit var reviewListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -34,8 +36,11 @@ class ReviewsFragment : Fragment() {
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
+    private lateinit var presenter:ReviewsPresenter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentReviewsBinding.inflate(inflater, container, false)
+        presenter =ReviewsPresenter()
+        presenter.attachView(this)
         val args: ReviewsFragmentArgs? by navArgs()
         businessId = args?.businessId ?: throw IllegalArgumentException("Invalid business")
         if (args?.businessId == null || args?.businessId.equals("0")) {
@@ -81,28 +86,42 @@ class ReviewsFragment : Fragment() {
         fetchReviews(initial = true)
     }
 
-    private fun fetchReviews(timestamp: String = "", initial: Boolean = false) {
-        if (fetching) return
-
+    override fun showProgress() {
+        super.showProgress()
         swipeRefresh.isRefreshing = true
         fetching = true
-        ReviewsManager.getInstance()
-            .getBusinessReviews(businessId, timestamp) { response, error ->
-                if (error != null) {
-                    requireContext().toast("Could not get reviews")
-                    return@getBusinessReviews
-                }
-                swipeRefresh.isRefreshing = false
-                fetching = false
-                response?.review?.let {
-                    listOver = it.size < Constants.PAGE_SIZE
-                    isListEmpty = it.isEmpty()
-                    if (initial) {
-                        list.clear()
-                    }
-                    list.addAll(it)
-                    reviewAdapter.notifyDataSetChanged()
-                }
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+        swipeRefresh.isRefreshing = false
+        fetching = false
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
+    }
+
+    private fun fetchReviews(timestamp: String = "", initial: Boolean = false) {
+        if (fetching) return
+        presenter.fetchReviews(businessId, timestamp, initial)
+    }
+
+    override fun onReviewsFetched(response: GetReviewsResponse?, initial: Boolean) {
+        response?.review?.let {
+            listOver = it.size < Constants.PAGE_SIZE
+            isListEmpty = it.isEmpty()
+            if (initial) {
+                list.clear()
             }
+            list.addAll(it)
+            reviewAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

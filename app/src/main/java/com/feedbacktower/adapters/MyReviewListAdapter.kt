@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.ItemReviewBinding
-import com.feedbacktower.ui.reviews.MyReviewsFragmentDirections
-import com.feedbacktower.ui.reviews.ReviewsFragmentDirections
+import com.feedbacktower.ui.reviews.my.MyReviewsFragmentDirections
 
 /**
  * Created by sanket on 16-04-2019.

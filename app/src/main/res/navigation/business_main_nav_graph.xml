@@ -24,7 +24,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_review"
-            android:name="com.feedbacktower.ui.reviews.ReviewsFragment"
+            android:name="com.feedbacktower.ui.reviews.all.ReviewsFragment"
             android:label="@string/title_reviews"
             tools:layout="@layout/fragment_reviews">
         <argument android:name="forMe" app:argType="boolean" android:defaultValue="true"/>
@@ -77,7 +77,7 @@
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
         <argument android:name="businessId" app:argType="string"/>
     </activity>
-    <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.ui.reviews.MyReviewsFragment"
+    <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.ui.reviews.my.MyReviewsFragment"
               android:label="My  Reviews" tools:layout="@layout/fragment_my_reviews">
         <action android:id="@+id/action_navigation_my_review_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>

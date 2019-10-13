@@ -35,9 +35,13 @@ import com.feedbacktower.databinding.FragmentHomeBinding
 import com.feedbacktower.fragments.UploadPostDialog
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.GetAdsResponse
+import com.feedbacktower.network.models.GetPostsResponse
 import com.feedbacktower.ui.ImagePreviewActivity
 import com.feedbacktower.ui.PostTextScreen
 import com.feedbacktower.ui.VideoTrimmerScreen
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.*
 import com.feedbacktower.utilities.Glide4Engine
@@ -54,8 +58,9 @@ import org.jetbrains.anko.toast
 import java.io.File
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     private val TAG = "HomeFragment"
+    private lateinit var presenter: HomePresenter
     private lateinit var feedListView: RecyclerView
     //private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -103,6 +108,7 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
+        presenter.attachView(this)
         initUi(binding)
         return binding.root
     }
@@ -157,11 +163,10 @@ class HomeFragment : Fragment() {
             dir.onboarding = false
             findNavController().navigate(dir)
         }
-        fetchAds()
     }
 
     private val onPageChangeListener = OnPageChangeListener { pos ->
-       selectDot(pos)
+        selectDot(pos)
     }
 
     private fun selectDot(pos: Int) {
@@ -172,39 +177,23 @@ class HomeFragment : Fragment() {
         dotAdapter.notifyDataSetChanged()
     }
 
-    private fun fetchAds() {
+    private fun listenToAds() {
         AppDatabase(requireContext()).adsDao().getAll().observe(this, Observer { list ->
             adList.clear()
             adList.addAll(list)
-            if(adList.isNotEmpty()) {
+            if (adList.isNotEmpty()) {
                 adsPager.isVisible = adList.isEmpty()
                 adsPagerAdapter.notifyDataSetChanged()
                 adsPager.isVisible = true
                 dotList.isVisible = true
                 setUpDots()
                 enableAutoChange()
-            }else{
+            } else {
                 adsPager.isVisible = false
                 dotList.isVisible = false
             }
         })
-
-        PostManager.getInstance()
-            .getAds { response, error ->
-                if (error != null) {
-                    //handle error
-                    return@getAds
-                }
-                response?.ads?.let { ads ->
-                    doAsync {
-                        AppDatabase(requireContext())
-                            .adsDao().apply {
-                                deleteAll()
-                                save(ads)
-                            }
-                    }
-                }
-            }
+        presenter.fetchAds()
     }
 
     private fun setUpDots() {
@@ -323,28 +312,53 @@ class HomeFragment : Fragment() {
             }
     }
 
+
     private fun fetchPostList(timestamp: String = "") {
         if (isPostsLoading) return
 
-        //swipeRefresh.isRefreshing = true
-        isPostsLoading = true
-        PostManager.getInstance()
-            .getPosts(timestamp) { response, error ->
-                //  swipeRefresh.isRefreshing = false
-                isPostsLoading = false
-                if (error != null) {
-                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
-                    return@getPosts
-                }
-                response?.posts?.let {
-                    if (timestamp.isEmpty())
-                        posts.clear()
-                    postsOver = it.size < Constants.PAGE_SIZE
-                    posts.addAll(it)
-                    postAdapter.notifyDataSetChanged()
-                }
-            }
+
     }
+
+    override fun onAdsFetched(response: GetAdsResponse?) {
+        response?.ads?.let { ads ->
+            doAsync {
+                AppDatabase(requireContext())
+                    .adsDao().apply {
+                        deleteAll()
+                        save(ads)
+                    }
+            }
+        }
+    }
+
+    override fun showProgress() {
+        super.showProgress()
+        isPostsLoading = true
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+        isPostsLoading = false
+    }
+
+    override fun onPostsFetched(response: GetPostsResponse?, timestamp: String?) {
+        response?.posts?.let {
+            if (timestamp.isNullOrEmpty())
+                posts.clear()
+            postsOver = it.size < Constants.PAGE_SIZE
+            posts.addAll(it)
+            postAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun showPostsError(error: ApiResponse.ErrorModel) {
+        requireContext().toast(error.message)
+    }
+
+    override fun showAdsError(error: ApiResponse.ErrorModel) {
+//        requireContext().toast(error.message)
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -422,5 +436,10 @@ class HomeFragment : Fragment() {
             if (allGranted)
                 showPostDialog()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroyView()
     }
 }

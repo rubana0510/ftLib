@@ -1,6 +1,5 @@
-package com.feedbacktower.fragments.customer
+package com.feedbacktower.ui.account.customer
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,8 +13,8 @@ import com.feedbacktower.adapters.AccountOptionsAdapter
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.databinding.FragmentCustomerAccountBinding
+import com.feedbacktower.ui.account.customer.CustomerAccountFragmentDirections
 import com.feedbacktower.ui.BusinessProfileSetupScreen
-import com.feedbacktower.ui.SplashScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.showAppInStore
@@ -49,7 +48,8 @@ class CustomerAccountFragment : Fragment() {
         submitOptions()
         binding.user = AppPrefs.getInstance(requireContext()).user
         binding.editProfileButtonClicked = View.OnClickListener {
-            val dir = CustomerAccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
+            val dir =
+                CustomerAccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
             dir.onboarding = false
             findNavController().navigate(dir)
         }
@@ -75,19 +75,23 @@ class CustomerAccountFragment : Fragment() {
         Log.d(TAG, "${option.title} selected")
         when (option.id) {
             1 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationAccountToSelectCityFragment()
+                val d =
+                    CustomerAccountFragmentDirections.actionNavigationAccountToSelectCityFragment()
                 findNavController().navigate(d)
             }
             2 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMyReviewsFragment()
+                val d =
+                    CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMyReviewsFragment()
                 findNavController().navigate(d)
             }
             3 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMySuggestionsFragment()
+                val d =
+                    CustomerAccountFragmentDirections.actionNavigationCustomerAccountToMySuggestionsFragment()
                 findNavController().navigate(d)
             }
             4 -> {
-                val d = CustomerAccountFragmentDirections.actionNavigationAccountToHelpFragment()
+                val d =
+                    CustomerAccountFragmentDirections.actionNavigationAccountToHelpFragment()
                 findNavController().navigate(d)
             }
             5 -> {

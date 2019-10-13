@@ -1,4 +1,4 @@
-package com.feedbacktower.fragments.business
+package com.feedbacktower.ui.account.business
 
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +16,11 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
+import com.feedbacktower.ui.account.business.AccountFragmentDirections
 import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.MyBusinessResponse
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.ReceiverActivity
 import com.feedbacktower.util.launchActivity
@@ -26,12 +30,12 @@ import com.feedbacktower.util.showAppInStore
 import org.jetbrains.anko.toast
 
 
-class AccountFragment : Fragment() {
-
+class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private val TAG = "AccountFragment"
+    private lateinit var presenter: AccountPresenter
+    private lateinit var binding: FragmentBusinessAccountBinding
     private lateinit var counterGridView: RecyclerView
     private lateinit var accountOptionsView: RecyclerView
-
     private lateinit var accountOptionsAdapter: AccountOptionsAdapter
     private lateinit var countAdapter: CountAdapter
 
@@ -40,7 +44,9 @@ class AccountFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentBusinessAccountBinding.inflate(inflater, container, false)
+        binding = FragmentBusinessAccountBinding.inflate(inflater, container, false)
+        presenter = AccountPresenter()
+        presenter.attachView(this)
         (activity as AppCompatActivity).supportActionBar?.show()
         initUi(binding)
         return binding.root
@@ -65,28 +71,13 @@ class AccountFragment : Fragment() {
         binding.availabilitySwitch.setOnClickListener {
             AppPrefs.getInstance(requireContext()).user?.business?.available?.let { isAvailable ->
                 val availability = !isAvailable
-                binding.updatingStatus = true
-                ProfileManager.getInstance()
-                    .changeBusinessAvailability(availability) { _, error ->
-                        binding.updatingStatus = false
-                        if (error != null) {
-                            requireContext().toast(error.message)
-                            return@changeBusinessAvailability
-                        }
-                        binding.availabilitySwitch.isChecked = availability
-                        AppPrefs.getInstance(requireContext()).apply {
-                            user = user?.apply {
-                                business = business?.apply {
-                                    available = availability
-                                }
-                            }
-                        }
-                    }
+                presenter.changeAvailability(availability)
             }
         }
         binding.business = AppPrefs.getInstance(requireContext()).user?.business!!
         binding.editProfileButtonClicked = View.OnClickListener {
-            val dir = AccountFragmentDirections.actionNavigationAccountToEditBusinessFragment()
+            val dir =
+                AccountFragmentDirections.actionNavigationAccountToEditBusinessFragment()
             findNavController().navigate(dir)
         }
         binding.onScanClicked = View.OnClickListener {
@@ -95,29 +86,63 @@ class AccountFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        fetchBusinessDetails()
+
+    override fun showAvailabilityChangeProgress() {
+        binding.updatingStatus = true
     }
 
-    private fun fetchBusinessDetails() {
-        ProfileManager.getInstance()
-            .getMyBusiness { response, error ->
-                if (error == null) {
-                    Log.d(TAG, "Availability:Fetched ${response?.business}")
-                    AppPrefs.getInstance(requireContext()).apply {
-                        user = user?.apply {
-                            business = response?.business
-                        }
-                    }
-                    submitOptions()
-                    val expired = response?.business?.planStatus == "EXPIRED"
-                    if (expired) {
-                        //requireActivity().launchActivity<MyPlanScreen>()
-                        requireContext().toast("Your plan expired!")
-                    }
+    override fun dismissAvailabilityChangeProgress() {
+        binding.updatingStatus = false
+    }
+
+    override fun onAvailabilityChanged(availability: Boolean) {
+        binding.availabilitySwitch.isChecked = availability
+        AppPrefs.getInstance(requireContext()).apply {
+            user = user?.apply {
+                business = business?.apply {
+                    available = availability
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.fetch()
+    }
+
+    override fun showProgress() {
+        super.showProgress()
+
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
+    }
+
+    override fun onFetched(response: MyBusinessResponse?) {
+        AppPrefs.getInstance(requireContext()).apply {
+            user = user?.apply {
+                business = response?.business
+            }
+        }
+        submitOptions()
+        val expired = response?.business?.planStatus == "EXPIRED"
+        if (expired) {
+            //requireActivity().launchActivity<MyPlanScreen>()
+            requireContext().toast("Your plan expired!")
+        }
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 
     private fun submitOptions() {
@@ -149,10 +174,12 @@ class AccountFragment : Fragment() {
 
     private val onCountClick = { count: Count ->
         if (count.id == 3) {
-            val d = AccountFragmentDirections.actionNavigationAccountToNavigationReviewFragment()
+            val d =
+                AccountFragmentDirections.actionNavigationAccountToNavigationReviewFragment()
             findNavController().navigate(d)
         } else if (count.id == 4) {
-            val d = AccountFragmentDirections.actionNavigationAccountToNavigationSuggestionFragment()
+            val d =
+                AccountFragmentDirections.actionNavigationAccountToNavigationSuggestionFragment()
             findNavController().navigate(d)
         }
     }
@@ -164,34 +191,41 @@ class AccountFragment : Fragment() {
                 requireActivity().launchActivity<MyPlanScreen>()
             }
             2 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToMyReviewsFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToMyReviewsFragment()
                 findNavController().navigate(d)
             }
             3 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToMySuggestionsFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToMySuggestionsFragment()
                 findNavController().navigate(d)
             }
             4 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToHelpFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToHelpFragment()
                 findNavController().navigate(d)
             }
             5 -> {
                 requireActivity().logOut()
             }
             6 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToWalletTransactionFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToWalletTransactionFragment()
                 findNavController().navigate(d)
             }
             7 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToMapTrackingFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToMapTrackingFragment()
                 findNavController().navigate(d)
             }
             8 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToMyPostsFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToMyPostsFragment()
                 findNavController().navigate(d)
             }
             9 -> {
-                val d = AccountFragmentDirections.actionNavigationAccountToSelectCityFragment()
+                val d =
+                    AccountFragmentDirections.actionNavigationAccountToSelectCityFragment()
                 findNavController().navigate(d)
             }
             10 -> {

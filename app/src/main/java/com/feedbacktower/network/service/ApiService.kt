@@ -174,7 +174,7 @@ interface ApiService {
 
     @GET("/api/post/")
     fun getPostsAsync(
-        @Query("timestamp") timestamp: String
+        @Query("timestamp") timestamp: String?
     ): Deferred<ApiResponse<GetPostsResponse?>>
 
     @GET("/api/post/business/{businessId}/")

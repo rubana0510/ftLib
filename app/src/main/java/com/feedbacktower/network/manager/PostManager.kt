@@ -30,7 +30,7 @@ class PostManager {
             }
     }
 
-    fun getPosts(timestamp: String, onComplete: (GetPostsResponse?, ApiResponse.ErrorModel?) -> Unit) {
+    fun getPosts(timestamp: String?, onComplete: (GetPostsResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             apiService.getPostsAsync(timestamp)
                 .makeRequest(onComplete)

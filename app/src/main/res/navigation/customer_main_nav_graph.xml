@@ -24,7 +24,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_customer_account"
-            android:name="com.feedbacktower.fragments.customer.CustomerAccountFragment"
+            android:name="com.feedbacktower.ui.account.customer.CustomerAccountFragment"
             android:label="@string/title_my_account"
             tools:layout="@layout/fragment_customer_account">
         <action android:id="@+id/action_navigation_customer_account_to_myReviewsFragment"

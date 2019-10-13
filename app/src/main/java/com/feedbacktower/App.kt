@@ -8,7 +8,6 @@ import com.feedbacktower.data.network.HomeDataSourceImpl
 import com.feedbacktower.data.repository.HomeDataRepository
 import com.feedbacktower.data.repository.HomeDataRepositoryImpl
 import com.feedbacktower.network.utils.ConnectivityReceiver
-import com.feedbacktower.ui.home.HomeViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule

@@ -180,7 +180,7 @@ interface ApiService {
     @GET("/api/post/business/{businessId}/")
     fun getBusinessPostsAsync(
         @Path("businessId") businessId: String?,
-        @Query("timestamp") timestamp: String
+        @Query("timestamp") timestamp: String?
     ): Deferred<ApiResponse<GetPostsResponse?>>
 
     @PUT("/api/post/like/{postId}")
@@ -252,7 +252,7 @@ interface ApiService {
 
     @GET("/api/business/search/")
     fun searchBusinessAsync(
-        @Query("search") keyword: String = ""
+        @Query("search") keyword: String?
     ): Deferred<ApiResponse<SearchBusinessResponse?>>
 
     @PUT("/api/business/")

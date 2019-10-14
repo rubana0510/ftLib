@@ -195,7 +195,7 @@ class ProfileManager {
     }
 
     fun searchBusiness(
-        search: String,
+        search: String?,
         onComplete: (SearchBusinessResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {

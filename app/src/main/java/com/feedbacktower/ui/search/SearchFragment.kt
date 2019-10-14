@@ -1,44 +1,38 @@
-package com.feedbacktower.fragments
+package com.feedbacktower.ui.search
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.SearchBusinessAdapter
 import com.feedbacktower.databinding.FragmentSearchBinding
-import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.SearchBusiness
+import com.feedbacktower.network.models.SearchBusinessResponse
 import com.feedbacktower.ui.BusinessDetailsActivity
 import com.feedbacktower.ui.account.FindCustomerActivity
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import com.feedbacktower.callbacks.ScrollListener
-import com.feedbacktower.util.Constants
+import org.jetbrains.anko.toast
 
 
-class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
+class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusinessAdapter.Listener {
+    private lateinit var presenter: SearchPresenter
     private lateinit var searchListView: RecyclerView
     private lateinit var message: TextView
     private lateinit var searchBusinessAdapter: SearchBusinessAdapter
@@ -54,6 +48,8 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
+        presenter = SearchPresenter()
+        presenter.attachView(this)
         initUi(binding)
         return binding.root
     }
@@ -135,25 +131,38 @@ class SearchFragment : Fragment(), SearchBusinessAdapter.Listener {
 
     private fun search(s: String) {
         if (fetching) return
-        isLoading = true
-        fetching = true
-        ProfileManager.getInstance()
-            .searchBusiness(s) { response, error ->
-                isLoading = false
-                fetching = false
-                response?.businesses?.let {
-                    isListEmpty = it.isEmpty()
-                    list.clear()
-                    list.addAll(it)
-                    searchBusinessAdapter.notifyDataSetChanged()
-                }
-            }
+        presenter.fetch(s)
     }
 
     override fun onItemClick(item: SearchBusiness) {
-
         requireActivity().launchActivity<BusinessDetailsActivity> {
             putExtra("businessId", item.businessId)
         }
+    }
+
+    override fun showProgress() {
+        super.showProgress()
+        isLoading = true
+        fetching = true
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+        isLoading = false
+        fetching = false
+    }
+
+    override fun onFetched(response: SearchBusinessResponse?) {
+        response?.businesses?.let {
+            isListEmpty = it.isEmpty()
+            list.clear()
+            list.addAll(it)
+            searchBusinessAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
     }
 }

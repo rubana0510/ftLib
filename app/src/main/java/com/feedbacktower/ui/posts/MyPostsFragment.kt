@@ -3,7 +3,6 @@ package com.feedbacktower.ui.posts
 
 import android.app.AlertDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,15 +20,19 @@ import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
-import com.feedbacktower.network.manager.PostManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.GetPostsResponse
+import com.feedbacktower.network.models.LikeUnlikeResponse
 import com.feedbacktower.ui.PostTextScreen
+import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants.PAGE_SIZE
 import com.feedbacktower.util.launchActivity
 import kotlinx.android.synthetic.main.dialog_edit_caption.view.*
 import org.jetbrains.anko.toast
 
 
-class MyPostsFragment : Fragment() {
+class MyPostsFragment : BaseViewFragmentImpl(), PostsContract.View {
+    private lateinit var presenter: PostsPresenter
     private lateinit var feedListView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -44,6 +47,8 @@ class MyPostsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentTimelineBinding.inflate(inflater, container, false)
+        presenter = PostsPresenter()
+        presenter.attachView(this)
         initUi(binding)
         return binding.root
     }
@@ -76,20 +81,34 @@ class MyPostsFragment : Fragment() {
         fetchPosts()
     }
 
-    private fun fetchPosts(timestamp: String = "") {
+    private fun fetchPosts(timestamp: String? = null) {
         val businessId = AppPrefs.getInstance(requireContext()).user?.business?.id!!
-        PostManager.getInstance().getBusinessPosts(businessId, timestamp) { response, error ->
-            if (error != null) {
-                requireContext().toast("Failed to load posts")
-                return@getBusinessPosts
-            }
-            response?.posts?.let {
-                listOver = it.size < PAGE_SIZE
-                list.addAll(it)
-                postAdapter.notifyDataSetChanged()
-            }
+        presenter.fetchBusinessPosts(businessId, timestamp)
+    }
+
+    override fun onBusinessPostsFetched(response: GetPostsResponse?, timestamp: String?) {
+        response?.posts?.let {
+            listOver = it.size < PAGE_SIZE
+            list.addAll(it)
+            postAdapter.notifyDataSetChanged()
         }
     }
+
+    override fun showProgress() {
+        super.showProgress()
+
+    }
+
+    override fun dismissProgress() {
+        super.dismissProgress()
+
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        requireContext().toast(error.message)
+    }
+
 
     private val listener = object : MyPostListAdapter.Listener {
         override fun onMoreClick(item: Post, position: Int) {
@@ -149,30 +168,35 @@ class MyPostsFragment : Fragment() {
     }
 
     private fun deletePost(postId: String) {
-        PostManager.getInstance()
-            .deletePost(postId) { _, _ ->
-                fetchPosts()
-                requireContext().toast("Post deleted")
-            }
+        presenter.deletePost(postId)
+    }
+
+    override fun onPostDeleted(postId: String) {
+        fetchPosts()
+        requireContext().toast("Post deleted")
     }
 
     private fun editPost(postId: String, text: String) {
-        PostManager.getInstance()
-            .editTextPost(postId, text) { response, error ->
-                if (error != null) {
-                    requireContext().toast(error.message ?: getString(R.string.default_err_message))
-                    return@editTextPost
-                }
-                requireContext().toast("Post updated")
-                fetchPosts()
-            }
+        presenter.onEditPostCaption(postId, text)
+    }
+
+    override fun onPostEdited(postId: String, caption: String) {
+        requireContext().toast("Post updated")
+        fetchPosts()
     }
 
     private fun likeUnlikePost(item: Post, position: Int) {
-        PostManager.getInstance()
-            .likePost(item.id) { response, _ ->
-                if (response?.liked != null)
-                    postAdapter.updateLike(position, response.liked)
-            }
+        presenter.onLikeDislike(item.id, position)
     }
+
+    override fun onLikedDisliked(response: LikeUnlikeResponse?, position: Int) {
+        if (response?.liked != null)
+            postAdapter.updateLike(position, response.liked)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroyView()
+    }
+
 }

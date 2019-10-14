@@ -39,7 +39,7 @@ class PostManager {
 
     fun getBusinessPosts(
         businessId: String,
-        timestamp: String,
+        timestamp: String?,
         onComplete: (GetPostsResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -95,9 +95,9 @@ class PostManager {
         }
     }
 
-    fun likePost(businessId: String, onComplete: (LikeUnlikeResponse?, ApiResponse.ErrorModel?) -> Unit) {
+    fun likePost(postId: String, onComplete: (LikeUnlikeResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.likePostAsync(businessId)
+            apiService.likePostAsync(postId)
                 .makeRequest(onComplete)
         }
     }

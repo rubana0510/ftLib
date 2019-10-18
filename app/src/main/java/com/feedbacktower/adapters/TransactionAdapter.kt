@@ -3,16 +3,9 @@ package com.feedbacktower.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.QrTransaction
-import com.feedbacktower.data.models.Review
-import com.feedbacktower.data.models.Suggestion
-import com.feedbacktower.databinding.ItemReviewBinding
 import com.feedbacktower.databinding.ItemWalletTransactionBinding
-import com.feedbacktower.ui.reviews.all.ReviewsFragmentDirections
 
 /**
  * Created by sanket on 16-04-2019.

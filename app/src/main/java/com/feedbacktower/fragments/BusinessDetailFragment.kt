@@ -21,6 +21,8 @@ import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.ui.map.MapScreen
+import com.feedbacktower.ui.reviews.send.RateReviewDialog
+import com.feedbacktower.ui.suggestions.send.SendSuggestionDialog
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.isCurrentBusiness
 import com.feedbacktower.util.launchActivity

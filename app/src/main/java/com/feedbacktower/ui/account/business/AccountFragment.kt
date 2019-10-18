@@ -142,6 +142,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onDestroy() {
         presenter.destroyView()
+        Log.d("AccountFrag", "View Destroyed")
         super.onDestroy()
     }
 

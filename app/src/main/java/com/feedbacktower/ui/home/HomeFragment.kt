@@ -108,6 +108,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
+        presenter = HomePresenter()
         presenter.attachView(this)
         initUi(binding)
         return binding.root
@@ -313,9 +314,10 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     }
 
 
-    private fun fetchPostList(timestamp: String = "") {
+    private fun fetchPostList(timestamp: String? = null) {
         if (isPostsLoading) return
 
+        presenter.fetchPosts(timestamp)
 
     }
 

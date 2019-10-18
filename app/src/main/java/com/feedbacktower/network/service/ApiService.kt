@@ -246,7 +246,7 @@ interface ApiService {
 
     @GET("/api/business-category/featured")
     fun getFeaturedCategoriesAsync(
-        @Query("search") keyword: String = ""
+        @Query("search") keyword: String?
     ): Deferred<ApiResponse<GetCategoriesResponse?>>
 
 

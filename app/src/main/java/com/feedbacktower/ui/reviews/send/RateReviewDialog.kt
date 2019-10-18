@@ -1,31 +1,19 @@
-package com.feedbacktower.fragments
+package com.feedbacktower.ui.reviews.send
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.view.View
 import android.widget.*
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import com.feedbacktower.R
-import com.feedbacktower.callbacks.BottomSheetOnStateChanged
+import com.feedbacktower.fragments.BusinessDetailFragment
 import com.feedbacktower.network.manager.ReviewsManager
+import com.feedbacktower.ui.base.BaseViewBottomSheetDialogFragmentImpl
 import com.feedbacktower.util.toRemarkText
 import kotlinx.android.synthetic.main.dialog_rate_review.view.*
-import org.jetbrains.anko.toast
 
 
-class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : BottomSheetDialogFragment() {
-
-    private val onStateChangedCallback = BottomSheetOnStateChanged { _, newState ->
-        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-            dismiss()
-        }
-    }
-
+class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : BaseViewBottomSheetDialogFragmentImpl() {
     private lateinit var ctx: Context
     private lateinit var closeButton: ImageButton
     private lateinit var ratingBar: RatingBar
@@ -42,12 +30,7 @@ class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : B
 
         val contentView = View.inflate(context, R.layout.dialog_rate_review, null)
         dialog.setContentView(contentView)
-        val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior
-        if (behavior != null && behavior is BottomSheetBehavior) {
-            behavior.setBottomSheetCallback(onStateChangedCallback)
-        }
-        (contentView.parent as View).setBackgroundColor(ContextCompat.getColor(context!!, android.R.color.transparent))
+        setUpBehaviour(contentView)
         initUI(contentView)
     }
 
@@ -60,7 +43,8 @@ class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : B
 
 
         closeButton.setOnClickListener { dismiss() }
-        ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
+        ratingBar.onRatingBarChangeListener =
+            RatingBar.OnRatingBarChangeListener { _, stars, _ -> remarkText.text = stars.toRemarkText() }
         sendRatingButton.setOnClickListener { sendRatings() }
     }
 
@@ -76,7 +60,7 @@ class RateReviewDialog(val listener: BusinessDetailFragment.UpdateListener?) : B
                     "rating" to noOfStars,
                     "comment" to reviewSummary
                 )
-            ){_,_->
+            ) { _, _ ->
 
                 listener?.update()
                 dismiss()

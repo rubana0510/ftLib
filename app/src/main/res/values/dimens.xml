@@ -33,4 +33,5 @@
     <dimen name="file_icon_height">40dp</dimen>
     <dimen name="file_name_textSize">17sp</dimen>
     <dimen name="file_item_checkbox_size">22dp</dimen>
+    <dimen name="bottom_sheet_bg_radius">24dp</dimen>
 </resources>

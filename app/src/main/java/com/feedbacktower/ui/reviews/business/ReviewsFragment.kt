@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.reviews.all
+package com.feedbacktower.ui.reviews.business
 
 import android.os.Bundle
 import android.util.Log
@@ -21,24 +21,18 @@ import com.feedbacktower.network.models.GetReviewsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
-import java.lang.IllegalArgumentException
 
 
 class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
-
-    private lateinit var reviewListView: RecyclerView
-    private lateinit var swipeRefresh: SwipeRefreshLayout
-    private lateinit var message: TextView
+    private lateinit var binding: FragmentReviewsBinding
     private lateinit var reviewAdapter: ReviewListAdapter
-    private var isListEmpty: Boolean? = false
-    private var isLoading: Boolean? = true
     private lateinit var businessId: String
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
     private lateinit var presenter: ReviewsPresenter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentReviewsBinding.inflate(inflater, container, false)
+        binding = FragmentReviewsBinding.inflate(inflater, container, false)
         presenter = ReviewsPresenter()
         presenter.attachView(this)
         val args: ReviewsFragmentArgs? by navArgs()
@@ -48,27 +42,20 @@ class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
                 ?: throw IllegalArgumentException("Invalid business")
             Log.d("ReviewsFragment: ", "businessId: $businessId")
         }
-        initUI(binding)
+        initUI()
         return binding.root
     }
 
-    private fun initUI(binding: FragmentReviewsBinding) {
-        //  binding.toolbar.title = "Reviews"
-        reviewListView = binding.reviewListView
-        swipeRefresh = binding.swipeRefresh
-        message = binding.message
-        isListEmpty = binding.isListEmpty
-        isLoading = binding.isLoading
-
+    private fun initUI() {
         //setup list
         val layoutManager = LinearLayoutManager(context)
-        reviewListView.layoutManager = layoutManager
-        reviewListView.itemAnimator = DefaultItemAnimator()
-        reviewListView.setHasFixedSize(true)
+        binding.reviewListView.layoutManager = layoutManager
+        binding.reviewListView.itemAnimator = DefaultItemAnimator()
+        binding.reviewListView.setHasFixedSize(true)
         reviewAdapter = ReviewListAdapter(list)
-        reviewListView.adapter = reviewAdapter
+        binding.reviewListView.adapter = reviewAdapter
 
-        reviewListView.addOnScrollListener(ScrollListener {
+        binding.reviewListView.addOnScrollListener(ScrollListener {
             if (listOver) return@ScrollListener
 
             val lastItemPosition = layoutManager.findLastVisibleItemPosition()
@@ -80,21 +67,22 @@ class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
             }
         })
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             fetchReviews(initial = true)
         }
         fetchReviews(initial = true)
     }
 
+
     override fun showProgress() {
         super.showProgress()
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         fetching = true
     }
 
     override fun dismissProgress() {
         super.dismissProgress()
-        swipeRefresh.isRefreshing = false
+        binding.swipeRefresh.isRefreshing = false
         fetching = false
     }
 
@@ -111,9 +99,9 @@ class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
     override fun onReviewsFetched(response: GetReviewsResponse?, initial: Boolean) {
         response?.review?.let {
             listOver = it.size < Constants.PAGE_SIZE
-            isListEmpty = it.isEmpty()
             if (initial) {
                 list.clear()
+                binding.isListEmpty = it.isEmpty()
             }
             list.addAll(it)
             reviewAdapter.notifyDataSetChanged()

@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.reviews.all
+package com.feedbacktower.ui.reviews.business
 
 import com.feedbacktower.network.models.GetReviewsResponse
 import com.feedbacktower.ui.base.BasePresenter

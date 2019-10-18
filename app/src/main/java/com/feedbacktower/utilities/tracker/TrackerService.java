@@ -1,9 +1,6 @@
 package com.feedbacktower.utilities.tracker;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -15,8 +12,14 @@ import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.NavDeepLinkBuilder;
 import com.feedbacktower.BuildConfig;
+import com.feedbacktower.R;
+import com.feedbacktower.util.Constants;
 import com.google.android.gms.maps.model.LatLng;
+
+import static com.feedbacktower.util.Constants.TRACKING_NOTIFICATION_CHANNEL;
+import static com.feedbacktower.util.Constants.TRACKING_NOTIFICATION_CHANNEL_ID;
 
 
 public class TrackerService extends Service {
@@ -97,8 +100,6 @@ public class TrackerService extends Service {
     @Override
     public void onCreate() {
         Log.i(TAG, "onCreate");
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-            startForeground(12345678, getNotification());
     }
 
     @Override
@@ -125,6 +126,8 @@ public class TrackerService extends Service {
     }
 
     public void startTracking() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+            startForeground(12345678, getNotification());
         initializeLocationManager();
         mLocationListener = new LocationListener(this, LocationManager.GPS_PROVIDER);
 
@@ -138,17 +141,27 @@ public class TrackerService extends Service {
         }
 
     }
-
     public void stopTracking() {
         this.onDestroy();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private Notification getNotification() {
-        NotificationChannel channel = new NotificationChannel("channel_01", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+        Intent intentAction = new Intent(this, ActionReceiver.class);
+        intentAction.putExtra("action", "open_app");
+        // PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intentAction, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = new NavDeepLinkBuilder(this)
+                .setGraph(R.navigation.business_main_nav_graph)
+                .setDestination(R.id.mapTrackingFragment)
+                .createPendingIntent();
+        NotificationChannel channel = new NotificationChannel(TRACKING_NOTIFICATION_CHANNEL_ID, TRACKING_NOTIFICATION_CHANNEL, NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
-        Notification.Builder builder = new Notification.Builder(getApplicationContext(), "channel_01").setAutoCancel(true);
+        Notification.Builder builder = new Notification.Builder(getApplicationContext(), TRACKING_NOTIFICATION_CHANNEL_ID).setAutoCancel(true);
+        builder.setContentTitle("Location tracking is enabled");
+        builder.setSmallIcon(R.drawable.ic_notification_icon);
+        builder.setContentText("Your location is being updated as you move.");
+        builder.addAction(new Notification.Action(R.drawable.ic_notification_icon, "SHOW IN APP", pendingIntent));
         return builder.build();
     }
 

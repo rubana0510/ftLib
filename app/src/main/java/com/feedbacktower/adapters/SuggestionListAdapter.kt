@@ -4,12 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.DiffCallback
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.ItemSuggestionBinding
-import com.feedbacktower.ui.suggestions.all.SuggestionsFragmentDirections
+import com.feedbacktower.ui.suggestions.business.SuggestionsFragmentDirections
 
 /**
  * Created by sanket on 16-04-2019.

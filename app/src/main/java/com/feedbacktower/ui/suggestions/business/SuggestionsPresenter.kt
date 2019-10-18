@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.suggestions.all
+package com.feedbacktower.ui.suggestions.business
 
 import com.feedbacktower.network.manager.SuggestionsManager
 import com.feedbacktower.ui.base.BasePresenterImpl

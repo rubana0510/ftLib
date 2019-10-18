@@ -58,9 +58,6 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initUi() {
-        val intent = Intent(requireActivity().application, TrackerService::class.java)
-        requireActivity().application.startService(intent)
-        requireActivity().application.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
 
         if (AppPrefs.getInstance(requireContext()).getValue(TRACKING_ON_KEY, false)) {
             showTrackingOn()
@@ -73,11 +70,28 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
             if (binding.trackingSwitch.isChecked) {
                 AppPrefs.getInstance(requireContext()).setValue(TRACKING_ON_KEY, true)
                 showTrackingOn()
-                trackingService?.startTracking()
+                if (trackingService == null) {
+                    val intent = Intent(requireActivity().application, TrackerService::class.java)
+                    requireActivity().application.startService(intent)
+                    requireActivity().application.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+                    Handler().postDelayed({
+                        trackingService?.startTracking()
+                    }, 500)
+                }else{
+                    trackingService?.startTracking()
+                }
             } else {
                 AppPrefs.getInstance(requireContext()).setValue(TRACKING_ON_KEY, false)
                 showTrackingOff()
-                trackingService?.stopTracking()
+                if (trackingService == null) {
+                    val intent = Intent(requireActivity().application, TrackerService::class.java)
+                    requireActivity().application.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+                    Handler().postDelayed({
+                        trackingService?.stopTracking()
+                    }, 500)
+                }else{
+                    trackingService?.stopTracking()
+                }
             }
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -163,18 +177,14 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val name = className.className
-            Log.d(TAG, "serviceConnection: onServiceConnected: $name")
             if (name.endsWith("TrackerService")) {
                 trackingService = (service as TrackerService.LocationServiceBinder).service
-                Log.d(TAG, "serviceConnection: Initialized")
             }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
-            Log.d(TAG, "serviceConnection: onServiceDisconnected: $className")
             if (className.className == "TrackerService") {
                 trackingService = null
-                Log.d(TAG, "serviceConnection: Disconnected")
             }
         }
     }

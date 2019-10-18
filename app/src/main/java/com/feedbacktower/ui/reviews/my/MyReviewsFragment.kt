@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.MyReviewListAdapter
 import com.feedbacktower.callbacks.ScrollListener
 import com.feedbacktower.data.models.Review
@@ -21,45 +18,30 @@ import org.jetbrains.anko.toast
 
 
 class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
-    private lateinit var reviewListView: RecyclerView
-    private lateinit var swipeRefresh: SwipeRefreshLayout
-    private lateinit var message: TextView
-    private lateinit var reviewAdapter: MyReviewListAdapter
-    private var isListEmpty: Boolean? = false
-    private var isLoading: Boolean? = true
+    private lateinit var binding: FragmentMyReviewsBinding
+    private lateinit var adapter: MyReviewListAdapter
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
     private lateinit var presenter: MyReviewsPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentMyReviewsBinding.inflate(inflater, container, false)
+        binding = FragmentMyReviewsBinding.inflate(inflater, container, false)
         presenter = MyReviewsPresenter()
         presenter.attachView(this)
-        initUI(binding)
+        initUI()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    private fun initUI(binding: FragmentMyReviewsBinding) {
-
-        reviewListView = binding.reviewListView
-        swipeRefresh = binding.swipeRefresh
-        message = binding.message
-        isListEmpty = binding.isListEmpty
-        isLoading = binding.isLoading
-
+    private fun initUI() {
         //setup list
 
         val layoutManager = LinearLayoutManager(context)
-        reviewListView.layoutManager = layoutManager
-        reviewListView.itemAnimator = DefaultItemAnimator()
-        reviewListView.setHasFixedSize(true)
-        reviewAdapter = MyReviewListAdapter(list)
-        reviewListView.addOnScrollListener(ScrollListener {
+        binding.reviewListView.layoutManager = layoutManager
+        binding.reviewListView.itemAnimator = DefaultItemAnimator()
+        binding.reviewListView.setHasFixedSize(true)
+        adapter = MyReviewListAdapter(list)
+        binding.reviewListView.addOnScrollListener(ScrollListener {
             if (listOver || list.size == 0) return@ScrollListener
 
             val lastItemPosition = layoutManager.findLastVisibleItemPosition()
@@ -70,9 +52,9 @@ class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
                 }
             }
         })
-        reviewListView.adapter = reviewAdapter
+        binding.reviewListView.adapter = adapter
 
-        swipeRefresh.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             fetchReviews(initial = true)
         }
         fetchReviews(initial = true)
@@ -80,13 +62,13 @@ class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
 
     override fun showProgress() {
         super.showProgress()
-        swipeRefresh.isRefreshing = true
+        binding.swipeRefresh.isRefreshing = true
         fetching = true
     }
 
     override fun dismissProgress() {
         super.dismissProgress()
-        swipeRefresh.isRefreshing = false
+        binding.swipeRefresh.isRefreshing = false
         fetching = false
     }
 
@@ -103,12 +85,12 @@ class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
     override fun onReviewsFetched(response: GetReviewsResponse?, initial: Boolean) {
         response?.review?.let {
             listOver = it.size < Constants.PAGE_SIZE
-            isListEmpty = it.isEmpty()
             if (initial) {
                 list.clear()
+                binding.isListEmpty = it.isEmpty()
             }
             list.addAll(it)
-            reviewAdapter.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
         }
     }
 

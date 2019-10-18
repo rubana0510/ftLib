@@ -13,6 +13,8 @@ import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_business_main.*
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.inputmethod.InputMethodManager
+import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.util.logOut
 
 
 class BusinessMainActivity : AppCompatActivity() {
@@ -20,11 +22,14 @@ class BusinessMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_business_main)
         //setSupportActionBar(toolbar)
+        if (AppPrefs.getInstance(this).user?.business == null) {
+            finish()
+            logOut()
+        }
         val navController = Navigation.findNavController(this, R.id.main_nav_fragment)
         navigation.setupWithNavController(navController)
         NavigationUI.setupWithNavController(toolbar, navController)
     }
-
 
 
 }

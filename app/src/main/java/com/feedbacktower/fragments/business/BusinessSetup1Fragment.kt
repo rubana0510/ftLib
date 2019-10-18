@@ -14,8 +14,8 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
-import com.feedbacktower.fragments.SelectCategoryFragment
 import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.ui.category.SelectCategoryFragment
 import com.feedbacktower.util.disable
 import com.feedbacktower.util.enable
 import com.google.android.material.textfield.TextInputEditText

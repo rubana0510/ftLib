@@ -4,7 +4,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:padding="@dimen/dimen_8dp"
+        android:background="@drawable/bg_bottomsheet">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -15,6 +16,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="@string/write_review"/>
         <ImageButton
@@ -24,6 +26,7 @@
                 app:srcCompat="@drawable/ic_close_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
         <androidx.appcompat.widget.AppCompatRatingBar
                 android:id="@+id/ratingBar"
@@ -55,16 +58,16 @@
                     android:id="@+id/reviewInput"
                     android:lines="4"
                     android:maxLines="4"
-                    android:padding="@dimen/drawable_padding"
                     android:gravity="start"/>
         </com.google.android.material.textfield.TextInputLayout>
         <Button
                 android:id="@+id/sendRatingButton"
-                style="@style/ButtonFilledStyle"
+                style="@style/ButtonFilledStyle.Big"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/dimen_16dp"
                 app:layout_constraintTop_toBottomOf="@+id/reviewSummaryLayout"
                 android:text="@string/send_review"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

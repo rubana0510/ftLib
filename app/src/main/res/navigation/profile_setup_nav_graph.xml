@@ -42,7 +42,7 @@
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
     <fragment android:id="@+id/selectInterestsFragmentOnB"
-              android:name="com.feedbacktower.fragments.SelectInterestsFragment"
+              android:name="com.feedbacktower.ui.category.interests.SelectInterestsFragment"
               android:label="Select Your Interests">
         <action android:id="@+id/action_selectInterestsFragment_to_accountTypeSelectionFragment"
                 app:destination="@id/accountTypeSelectionFragmentOnB"/>

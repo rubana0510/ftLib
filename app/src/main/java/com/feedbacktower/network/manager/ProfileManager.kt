@@ -154,11 +154,12 @@ class ProfileManager {
         }
     }
 
-    fun getFetauredCategories(
+    fun getFeaturedCategories(
+        keyword: String? = null,
         onComplete: (GetCategoriesResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.getFeaturedCategoriesAsync().makeRequest(onComplete)
+            apiService.getFeaturedCategoriesAsync(keyword).makeRequest(onComplete)
         }
     }
 

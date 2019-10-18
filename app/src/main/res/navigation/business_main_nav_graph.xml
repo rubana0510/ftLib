@@ -24,7 +24,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_review"
-            android:name="com.feedbacktower.ui.reviews.all.ReviewsFragment"
+            android:name="com.feedbacktower.ui.reviews.business.ReviewsFragment"
             android:label="@string/title_reviews"
             tools:layout="@layout/fragment_reviews">
         <argument android:name="forMe" app:argType="boolean" android:defaultValue="true"/>
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_suggestion"
-            android:name="com.feedbacktower.ui.suggestions.all.SuggestionsFragment"
+            android:name="com.feedbacktower.ui.suggestions.business.SuggestionsFragment"
             android:label="@string/title_suggestions"
             tools:layout="@layout/fragment_suggestions">
         <argument android:name="mySuggestions" app:argType="boolean" android:defaultValue="false"/>

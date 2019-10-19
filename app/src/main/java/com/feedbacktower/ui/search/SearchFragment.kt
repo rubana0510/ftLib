@@ -23,7 +23,7 @@ import com.feedbacktower.databinding.FragmentSearchBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.SearchBusiness
 import com.feedbacktower.network.models.SearchBusinessResponse
-import com.feedbacktower.ui.BusinessDetailsActivity
+import com.feedbacktower.ui.business_details.BusinessDetailsActivity
 import com.feedbacktower.ui.account.FindCustomerActivity
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.launchActivity

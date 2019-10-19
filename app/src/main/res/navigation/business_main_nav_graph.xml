@@ -73,7 +73,7 @@
         <action android:id="@+id/action_navigation_account_to_mapTrackingFragment"
                 app:destination="@id/mapTrackingFragment"/>
     </fragment>
-    <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.BusinessDetailsActivity"
+    <activity android:id="@+id/businessDetailsActivity" android:name="com.feedbacktower.ui.business_details.BusinessDetailsActivity"
               android:label="activity_business_details" tools:layout="@layout/activity_business_details">
         <argument android:name="businessId" app:argType="string"/>
     </activity>
@@ -87,36 +87,37 @@
         <action android:id="@+id/action_navigation_my_suggestion_to_businessDetailsActivity"
                 app:destination="@id/businessDetailsActivity"/>
     </fragment>
-    <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
+    <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.ui.city.SelectCityFragment"
               android:label="Select City">
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="business" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
     <fragment android:id="@+id/businessSettingsFragment"
-              android:name="com.feedbacktower.fragments.business.BusinessSettingsFragment"
+              android:name="com.feedbacktower.ui.settings.BusinessSettingsFragment"
               android:label="Settings"/>
 
     <fragment android:id="@+id/businessSetup1FragmentOnB"
-              android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
+              android:name="com.feedbacktower.ui.profile.setup1.BusinessSetup1Fragment"
               android:label="Basic Details">
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
     <fragment android:id="@+id/businessSetup2FragmentOnB"
-              android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
+              android:name="com.feedbacktower.ui.profile.setup2.BusinessSetup2Fragment"
               android:label="Address Details">
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
-    <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.fragments.PointOnMapFragment"
+    <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.ui.location.update.PointOnMapFragment"
               android:label="Mark business location">
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
     </fragment>
-    <fragment android:id="@+id/myPostsFragment" android:name="com.feedbacktower.ui.posts.MyPostsFragment"
+    <fragment android:id="@+id/myPostsFragment" android:name="com.feedbacktower.ui.posts.PostsFragment"
               android:label="My Posts">
-
+        <argument android:name="businessId" app:argType="string"/>
     </fragment>
     <fragment android:id="@+id/personalDetailsFragment"
-              android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
+              android:name="com.feedbacktower.ui.profile.personal.PersonalDetailsFragment"
               android:label="Personal Details" tools:layout="@layout/fragment_personal_details">
 
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
@@ -145,8 +146,12 @@
               android:label="Help and FAQs" tools:layout="@layout/fragment_help">
     </fragment>
     <fragment android:id="@+id/selectBusinessCityFragment"
-              android:name="com.feedbacktower.fragments.SelectBusinessCityFragment"
-              android:label="Select Business City"/>
+              android:name="com.feedbacktower.ui.city.SelectCityFragment"
+              android:label="Select Business City">
+        <argument android:name="onboarding" app:argType="boolean" android:defaultValue="false"/>
+        <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="business" app:argType="boolean" android:defaultValue="true"/>
+    </fragment>
     <fragment android:id="@+id/mapTrackingFragment"
               android:name="com.feedbacktower.ui.location.MapTrackingFragment"
               android:label="Live location"/>

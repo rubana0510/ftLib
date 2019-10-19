@@ -74,7 +74,7 @@ class ProfileManager {
     fun updateBusinessBasicDetails(
         name: String,
         regNo: String,
-        categoryId: String,
+        categoryId: String?,
         onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
         GlobalScope.launch(Dispatchers.Main) {

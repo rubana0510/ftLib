@@ -171,5 +171,9 @@
     <string name="location_tracking_hint">It allows customers to see your last location</string>
     <string name="show_business_profile">SHOW BUSINESS PROFILE</string>
     <string name="open_in_browser">OPEN IN BROWSER</string>
+    <string name="some_error_try_again">Some error occurred, Please try again</string>
+    <string name="request_sent">Request sent</string>
+    <string name="transfer_cancelled">Transfer cancelled</string>
+    <string name="transfer_success">Transfer success</string>
 
 </resources>

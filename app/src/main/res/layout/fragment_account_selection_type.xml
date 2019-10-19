@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".fragments.AccountTypeSelectionFragment">
+        tools:context=".ui.account.type_selection.AccountTypeSelectionFragment">
     <data>
         <variable name="onCutomerContinue" type="android.view.View.OnClickListener"/>
         <variable name="onBusinessContinue" type="android.view.View.OnClickListener"/>

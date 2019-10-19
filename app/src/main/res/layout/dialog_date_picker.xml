@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="@drawable/bg_bottomsheet"
         android:padding="16dp">
     <DatePicker
             android:id="@+id/datePicker"
@@ -17,7 +17,7 @@
     </DatePicker>
     <Button
             android:id="@+id/selectDateButton"
-            style="@style/ButtonFilledStyle"
+            style="@style/ButtonFilledStyle.Big"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

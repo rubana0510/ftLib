@@ -30,7 +30,7 @@
                         app:layout_constraintTop_toTopOf="@id/businessName"
                         app:layout_constraintBottom_toBottomOf="@id/editProfileButton"
                         android:layout_marginStart="24dp"
-                        app:toProfileRound="@{business.userId}"
+                        app:toMyProfileRound="@{business.userId}"
                 />
                 <TextView
                         style="@style/LargeText"

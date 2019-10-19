@@ -10,12 +10,10 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
 import com.feedbacktower.adapters.CategoryListAdapter
 import com.feedbacktower.data.models.BusinessCategory
-import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetCategoriesResponse
 import com.feedbacktower.ui.base.BaseViewDialogFragmentImpl

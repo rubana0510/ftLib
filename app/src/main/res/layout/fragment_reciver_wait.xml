@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".fragments.business.ReceiverWaitFragment">
+        tools:context=".ui.qrtransfer.receiver.wait.ReceiverWaitFragment">
     <data>
         <variable name="transaction" type="com.feedbacktower.network.models.QrTransaction"/>
         <variable name="business" type="com.feedbacktower.data.models.Business"/>

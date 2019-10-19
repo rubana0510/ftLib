@@ -1,7 +1,6 @@
 package com.feedbacktower.ui.payment
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -11,20 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
-import com.feedbacktower.data.models.PayUResponse
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.PlanPaymentTransaction
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
-import com.feedbacktower.network.models.GenerateHashResponse
-import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.ui.plans.SubscriptionPlansScreen
 import com.feedbacktower.util.*
 import com.feedbacktower.util.toDate
-import com.google.gson.Gson
-import com.payumoney.core.entity.TransactionResponse
-import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager
 import kotlinx.android.synthetic.main.activity_plan_payment_success_screen.*
 import kotlinx.android.synthetic.main.dialog_referral_success.view.*
 import org.jetbrains.anko.toast

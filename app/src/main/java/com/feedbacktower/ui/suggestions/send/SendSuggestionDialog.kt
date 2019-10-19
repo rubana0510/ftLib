@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import com.feedbacktower.R
-import com.feedbacktower.fragments.BusinessDetailFragment
+import com.feedbacktower.ui.business_details.BusinessDetailFragment
 import com.feedbacktower.network.manager.SuggestionsManager
 import com.feedbacktower.ui.base.BaseViewBottomSheetDialogFragmentImpl
 import kotlinx.android.synthetic.main.dialog_send_suggestion.view.*

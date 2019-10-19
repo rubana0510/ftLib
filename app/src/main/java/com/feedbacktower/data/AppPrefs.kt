@@ -10,7 +10,7 @@ import com.google.gson.Gson
 class AppPrefs private constructor() {
 
     companion object {
-
+        public val PROFILE_LAST_UPDATED = "PROFILE_LAST_UPDATED"
         @Volatile
         private lateinit var sharedPrefs: SharedPreferences
         private var appPrefs: AppPrefs? = null

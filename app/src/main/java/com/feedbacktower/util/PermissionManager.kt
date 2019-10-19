@@ -8,12 +8,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 
-const val PERMISSION_CODE = 1011
-
 class PermissionManager private constructor() {
 
     companion object {
         private var instance: PermissionManager? = null
+        const val PERMISSION_CODE = 1011
         fun getInstance(): PermissionManager =
             instance ?: synchronized(this) {
                 instance ?: PermissionManager().also {

@@ -22,7 +22,7 @@ import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
 import com.feedbacktower.network.models.GenerateHashRequest
 import com.feedbacktower.network.models.GenerateHashResponse
-import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.ui.payment.PlanPaymentResultScreen
 import com.feedbacktower.util.*
 import com.google.gson.Gson

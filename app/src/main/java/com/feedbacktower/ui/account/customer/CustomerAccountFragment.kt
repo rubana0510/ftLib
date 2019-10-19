@@ -13,8 +13,7 @@ import com.feedbacktower.adapters.AccountOptionsAdapter
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.databinding.FragmentCustomerAccountBinding
-import com.feedbacktower.ui.account.customer.CustomerAccountFragmentDirections
-import com.feedbacktower.ui.BusinessProfileSetupScreen
+import com.feedbacktower.ui.profile.BusinessProfileSetupScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.showAppInStore

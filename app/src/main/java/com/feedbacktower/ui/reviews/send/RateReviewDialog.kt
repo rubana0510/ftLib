@@ -6,7 +6,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.feedbacktower.R
-import com.feedbacktower.fragments.BusinessDetailFragment
+import com.feedbacktower.ui.business_details.BusinessDetailFragment
 import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.ui.base.BaseViewBottomSheetDialogFragmentImpl
 import com.feedbacktower.util.toRemarkText

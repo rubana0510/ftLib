@@ -5,13 +5,13 @@
             app:startDestination="@id/receiverScanFragment">
 
     <fragment android:id="@+id/receiverScanFragment"
-              android:name="com.feedbacktower.fragments.business.ReceiverScanFragment"
+              android:name="com.feedbacktower.ui.qrtransfer.receiver.scan.ReceiverScanFragment"
               android:label="fragment_reciver_scan" tools:layout="@layout/fragment_reciver_scan">
         <action android:id="@+id/action_receiverScanFragment_to_receiverWaitFragment"
                 app:destination="@id/receiverWaitFragment"/>
     </fragment>
     <fragment android:id="@+id/receiverWaitFragment"
-              android:name="com.feedbacktower.fragments.business.ReceiverWaitFragment"
+              android:name="com.feedbacktower.ui.qrtransfer.receiver.wait.ReceiverWaitFragment"
               android:label="fragment_reciver_wait" tools:layout="@layout/fragment_reciver_wait">
         <argument android:name="txid" app:argType="string"/>
     </fragment>

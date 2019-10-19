@@ -5,13 +5,14 @@
         <variable name="user" type="com.feedbacktower.data.models.User"/>
         <variable name="onAttachClick" type="android.view.View.OnClickListener"/>
         <variable name="loading" type="Boolean"/>
+        <variable name="showProfileUploadProgress" type="Boolean"/>
     </data>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            tools:context=".fragments.PersonalDetailsFragment">
+            tools:context=".ui.profile.personal.PersonalDetailsFragment">
         <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -22,7 +23,7 @@
                     android:layout_height="100dp"
                     android:onClick="@{onAttachClick}"
                     android:background="@drawable/bg_count_ring"
-                    app:toProfileRound="@{user.id}"/>
+                    app:toMyProfileRound="@{user.id}"/>
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -32,6 +33,11 @@
                     app:backgroundTint="@color/grey42"
                     android:onClick="@{onAttachClick}"
                     android:layout_gravity="end|bottom"/>
+            <ProgressBar
+                    app:isGone="@{!showProfileUploadProgress}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
         </FrameLayout>
 
         <LinearLayout

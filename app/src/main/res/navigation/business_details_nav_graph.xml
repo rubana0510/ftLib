@@ -5,7 +5,7 @@
             app:startDestination="@id/navigation_business_detail">
     <fragment
             android:id="@+id/navigation_business_detail"
-            android:name="com.feedbacktower.fragments.BusinessDetailFragment"
+            android:name="com.feedbacktower.ui.business_details.BusinessDetailFragment"
             android:label="Business Details"
             tools:layout="@layout/fragment_business_detail">
         <action android:id="@+id/action_navigation_business_detail_to_navigation_review"
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
             android:id="@+id/navigation_timeline"
-            android:name="com.feedbacktower.fragments.TimelineFragment"
+            android:name="com.feedbacktower.ui.posts.PostsFragment"
             android:label="@string/title_timeline"
             tools:layout="@layout/fragment_timeline">
         <argument android:name="businessId" app:argType="string"/>

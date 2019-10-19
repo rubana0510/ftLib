@@ -14,16 +14,13 @@ import android.widget.TextView
 import androidx.core.content.PermissionChecker
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AdsPagerAdapter
-import com.feedbacktower.adapters.AdsPagerAdapter2
 import com.feedbacktower.adapters.DotAdapter
 import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.callbacks.OnPageChangeListener
@@ -32,15 +29,11 @@ import com.feedbacktower.data.db.AppDatabase
 import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
-import com.feedbacktower.fragments.UploadPostDialog
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetAdsResponse
 import com.feedbacktower.network.models.GetPostsResponse
-import com.feedbacktower.ui.ImagePreviewActivity
-import com.feedbacktower.ui.PostTextScreen
-import com.feedbacktower.ui.VideoTrimmerScreen
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.*
@@ -426,7 +419,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         Log.d(TAG, "onRequestPermissionsResult")
-        if (requestCode == PERMISSION_CODE) {
+        if (requestCode == PermissionManager.PERMISSION_CODE) {
             var allGranted = true
             grantResults.forEach {
                 allGranted = it == PermissionChecker.PERMISSION_GRANTED

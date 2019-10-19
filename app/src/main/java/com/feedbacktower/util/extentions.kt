@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -15,10 +14,10 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.feedbacktower.BusinessMainActivity
+import com.feedbacktower.ui.main.BusinessMainActivity
 import com.feedbacktower.data.models.User
-import com.feedbacktower.ui.CustomerMainActivity
-import com.feedbacktower.ui.ProfileSetupScreen
+import com.feedbacktower.ui.main.CustomerMainActivity
+import com.feedbacktower.ui.profile.ProfileSetupScreen
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import java.io.File
@@ -28,18 +27,19 @@ import java.text.ParseException
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Patterns
+import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.signature.ObjectKey
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.exception.NoConnectivityException
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.models.ApiResponse
-import com.feedbacktower.qrscanner.BarcodeEncoder
-import com.feedbacktower.ui.SplashScreen
+import com.feedbacktower.utilities.qrscanner.BarcodeEncoder
+import com.feedbacktower.ui.splash.SplashScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -77,6 +77,16 @@ fun ImageView.toProfileRound(userId: String) {
                 )
             ).circleCrop()
         )
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(this)
+}
+
+fun ImageView.toMyProfileRound(userId: String) {
+    val lastUpdatedAt = AppPrefs.getInstance(this.context).getValue(AppPrefs.PROFILE_LAST_UPDATED) ?: "default-key"
+    Glide.with(this.context)
+        .load("${Environment.S3_BASE_URL}user/$userId.jpg")
+        .apply(RequestOptions().signature(ObjectKey(lastUpdatedAt)))
+        .apply(RequestOptions().circleCrop())
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
 }
@@ -159,8 +169,8 @@ fun isEmailValid(email: String): Boolean {
     return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches())
 }
 
-fun String.noValidWebsite(): Boolean {
-    return false
+fun String.validWebsite(): Boolean {
+    return this.contains('.')
 }
 
 fun Activity.navigateUser(user: User) {
@@ -434,5 +444,15 @@ fun <T> Exception.toErrorResponse(): ApiResponse<T> {
                 null,
                 null
             )
+    }
+}
+
+fun Activity?.hideKeyBoard() {
+    if (this != null && !this.isFinishing) {
+        val view = this.currentFocus
+        if (view != null) {
+            val var2 = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            var2.hideSoftInputFromWindow(view.windowToken, 2)
+        }
     }
 }

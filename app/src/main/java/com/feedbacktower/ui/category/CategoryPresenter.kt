@@ -1,7 +1,6 @@
 package com.feedbacktower.ui.category
 
 import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.network.manager.ReviewsManager
 import com.feedbacktower.ui.base.BasePresenterImpl
 
 class CategoryPresenter : BasePresenterImpl<CategoryContract.View>(),

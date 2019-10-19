@@ -5,7 +5,7 @@
             app:startDestination="@id/accountTypeSelectionFragmentOnB">
 
     <fragment android:id="@+id/accountTypeSelectionFragmentOnB"
-              android:name="com.feedbacktower.fragments.AccountTypeSelectionFragment"
+              android:name="com.feedbacktower.ui.account.type_selection.AccountTypeSelectionFragment"
               android:label="@string/select_account_type" tools:layout="@layout/fragment_account_selection_type">
         <action android:id="@+id/action_accountTypeSelectionFragment_to_businessSetup1Fragment"
                 app:destination="@id/businessSetup1FragmentOnB"/>
@@ -13,7 +13,7 @@
     </fragment>
 
     <fragment android:id="@+id/businessSetup1FragmentOnB"
-              android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
+              android:name="com.feedbacktower.ui.profile.setup1.BusinessSetup1Fragment"
               android:label="Basic Details">
         <action android:id="@+id/action_businessSetup1Fragment_to_pointOnMapFragment"
                 app:destination="@id/pointOnMapFragmentOnB"/>
@@ -22,12 +22,12 @@
     </fragment>
 
     <fragment android:id="@+id/businessSetup2FragmentOnB"
-              android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
+              android:name="com.feedbacktower.ui.profile.setup2.BusinessSetup2Fragment"
               android:label="Address Details">
         <argument android:name="onboading" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="edit" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
-    <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.fragments.PointOnMapFragment"
+    <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.ui.location.update.PointOnMapFragment"
               android:label="Mark Your Business Location" tools:layout="@layout/fragment_point_on_map">
         <action android:id="@+id/action_pointOnMapFragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2FragmentOnB"/>

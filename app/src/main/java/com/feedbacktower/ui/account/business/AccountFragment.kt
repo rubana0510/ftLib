@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
@@ -16,13 +15,11 @@ import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
-import com.feedbacktower.ui.account.business.AccountFragmentDirections
-import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.MyBusinessResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.myplan.MyPlanScreen
-import com.feedbacktower.ui.qrtransfer.ReceiverActivity
+import com.feedbacktower.ui.qrtransfer.receiver.ReceiverActivity
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.noZero
@@ -45,10 +42,10 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentBusinessAccountBinding.inflate(inflater, container, false)
-        presenter = AccountPresenter()
-        presenter.attachView(this)
         (activity as AppCompatActivity).supportActionBar?.show()
         initUi(binding)
+        presenter = AccountPresenter()
+        presenter.attachView(this)
         return binding.root
     }
 
@@ -69,12 +66,12 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         submitOptions()
 
         binding.availabilitySwitch.setOnClickListener {
-            AppPrefs.getInstance(requireContext()).user?.business?.available?.let { isAvailable ->
+            AppPrefs.getInstance(requireActivity()).user?.business?.available?.let { isAvailable ->
                 val availability = !isAvailable
                 presenter.changeAvailability(availability)
             }
         }
-        binding.business = AppPrefs.getInstance(requireContext()).user?.business!!
+        binding.business = AppPrefs.getInstance(requireActivity()).user?.business!!
         binding.editProfileButtonClicked = View.OnClickListener {
             val dir =
                 AccountFragmentDirections.actionNavigationAccountToEditBusinessFragment()
@@ -97,7 +94,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onAvailabilityChanged(availability: Boolean) {
         binding.availabilitySwitch.isChecked = availability
-        AppPrefs.getInstance(requireContext()).apply {
+        AppPrefs.getInstance(requireActivity()).apply {
             user = user?.apply {
                 business = business?.apply {
                     available = availability
@@ -121,13 +118,18 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        presenter.destroyView()
+    }
+
     override fun showNetworkError(error: ApiResponse.ErrorModel) {
         super.showNetworkError(error)
-        requireContext().toast(error.message)
+        requireActivity().toast(error.message)
     }
 
     override fun onFetched(response: MyBusinessResponse?) {
-        AppPrefs.getInstance(requireContext()).apply {
+        AppPrefs.getInstance(requireActivity()).apply {
             user = user?.apply {
                 business = response?.business
             }
@@ -136,7 +138,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         val expired = response?.business?.planStatus == "EXPIRED"
         if (expired) {
             //requireActivity().launchActivity<MyPlanScreen>()
-            requireContext().toast("Your plan expired!")
+            requireActivity().toast("Your plan expired!")
         }
     }
 
@@ -147,12 +149,12 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     private fun submitOptions() {
-        val business = AppPrefs.getInstance(requireContext()).user?.business!!
+        val business = AppPrefs.getInstance(requireActivity()).user?.business!!
         val options = listOf(
             AccountOption(
                 9,
                 "Change City",
-                "Your current city: ${AppPrefs.getInstance(requireContext()).user?.city?.name}",
+                "Your current city: ${AppPrefs.getInstance(requireActivity()).user?.city?.name}",
                 R.drawable.ic_post_like_filled
             ),
             AccountOption(
@@ -220,9 +222,12 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
                 findNavController().navigate(d)
             }
             8 -> {
-                val d =
-                    AccountFragmentDirections.actionNavigationAccountToMyPostsFragment()
-                findNavController().navigate(d)
+                val businessId = AppPrefs.getInstance(requireActivity()).user?.business?.id
+                if (businessId != null) {
+                    AccountFragmentDirections.actionNavigationAccountToMyPostsFragment(businessId).let { d ->
+                        findNavController().navigate(d)
+                    }
+                }
             }
             9 -> {
                 val d =
@@ -236,7 +241,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     private fun submitCounts() {
-        val business = AppPrefs.getInstance(requireContext()).user?.business!!
+        val business = AppPrefs.getInstance(requireActivity()).user?.business!!
         val counts = listOf(
             Count(1, business.rank.noZero(), "Rank"),
             Count(2, "${business.avgRating}", "Ratings"),

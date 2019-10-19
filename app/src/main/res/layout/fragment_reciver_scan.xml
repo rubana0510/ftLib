@@ -3,9 +3,9 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".fragments.business.ReceiverScanFragment">
+             tools:context=".ui.qrtransfer.receiver.scan.ReceiverScanFragment">
 
-    <com.feedbacktower.qrscanner.CodeScannerView
+    <com.feedbacktower.utilities.qrscanner.CodeScannerView
             android:id="@+id/scannerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

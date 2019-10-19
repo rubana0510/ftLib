@@ -5,31 +5,33 @@
             app:startDestination="@id/personalDetailsFragment">
 
     <fragment android:id="@+id/personalDetailsFragment"
-              android:name="com.feedbacktower.fragments.PersonalDetailsFragment"
+              android:name="com.feedbacktower.ui.profile.personal.PersonalDetailsFragment"
               android:label="Personal Details" tools:layout="@layout/fragment_personal_details">
 
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
         <action android:id="@+id/action_personalDetailsFragment_to_selectCityFragment"
                 app:destination="@id/selectCityFragment"/>
     </fragment>
-    <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.fragments.SelectCityFragment"
+    <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.ui.city.SelectCityFragment"
               android:label="Select your City" tools:layout="@layout/fragment_select_city">
 
         <argument android:name="onboarding" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="business" app:argType="boolean" android:defaultValue="false"/>
+
         <action android:id="@+id/action_selectCityFragment_to_businessSetup1Fragment"
                 app:destination="@id/businessSetup1FragmentOnB"/>
     </fragment>
-    <fragment android:id="@+id/businessSetup1FragmentOnB" android:name="com.feedbacktower.fragments.business.BusinessSetup1Fragment"
+    <fragment android:id="@+id/businessSetup1FragmentOnB" android:name="com.feedbacktower.ui.profile.setup1.BusinessSetup1Fragment"
               android:label="Basic Details">
         <action android:id="@+id/action_businessSetup1Fragment_to_pointOnMapFragment"
                 app:destination="@id/pointOnMapFragmentOnB"/>
     </fragment>
-    <fragment android:id="@+id/businessSetup2FragmentOnB" android:name="com.feedbacktower.fragments.business.BusinessSetup2Fragment"
+    <fragment android:id="@+id/businessSetup2FragmentOnB" android:name="com.feedbacktower.ui.profile.setup2.BusinessSetup2Fragment"
               android:label="Address Details">
         <argument android:name="edit" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="onboading" app:argType="boolean" android:defaultValue="false"/>
     </fragment>
-    <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.fragments.PointOnMapFragment"
+    <fragment android:id="@+id/pointOnMapFragmentOnB" android:name="com.feedbacktower.ui.location.update.PointOnMapFragment"
               android:label="Mark Your Business Location">
         <action android:id="@+id/action_pointOnMapFragment_to_businessSetup2Fragment"
                 app:destination="@id/businessSetup2FragmentOnB"/>

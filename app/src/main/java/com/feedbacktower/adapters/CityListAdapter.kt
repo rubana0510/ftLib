@@ -3,16 +3,9 @@ package com.feedbacktower.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.CategoryDiffCallback
-import com.feedbacktower.adapters.diffcallbacks.CityDiffCallback
-import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.data.models.City
 import com.feedbacktower.databinding.ItemCityBinding
-import com.feedbacktower.databinding.ItemInterestsCategoryBinding
-import com.feedbacktower.fragments.SelectCityFragmentDirections
 
 /**
  * Created by sanket on 12-02-2019.

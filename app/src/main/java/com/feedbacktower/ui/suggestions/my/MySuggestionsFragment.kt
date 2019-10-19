@@ -29,15 +29,15 @@ class MySuggestionsFragment : BaseViewFragmentImpl(), MySuggestionsContract.View
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentMySuggestionsBinding.inflate(inflater, container, false)
+        binding = FragmentMySuggestionsBinding.inflate(inflater, container, false)
         presenter = MySuggestionsPresenter()
         presenter.attachView(this)
         (activity as AppCompatActivity).supportActionBar?.show()
-        initUI(binding)
+        initUI()
         return binding.root
     }
 
-    private fun initUI(binding: FragmentMySuggestionsBinding) {
+    private fun initUI() {
         //setup list
         val layoutManager = LinearLayoutManager(requireContext())
         binding.suggestionListView.layoutManager = layoutManager

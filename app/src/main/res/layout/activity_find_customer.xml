@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context=".ui.account.FindCustomerActivity">
 
-    <com.feedbacktower.qrscanner.CodeScannerView
+    <com.feedbacktower.utilities.qrscanner.CodeScannerView
             android:id="@+id/scannerView"
             android:layout_width="0dp"
             android:layout_height="0dp"

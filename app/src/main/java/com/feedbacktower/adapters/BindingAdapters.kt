@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -16,8 +17,6 @@ import com.feedbacktower.data.models.Plan
 import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.*
 import com.feedbacktower.network.env.Environment
-
-
 
 
 @BindingAdapter("isGone")
@@ -102,8 +101,14 @@ fun bindGoneIfZero(view: View, value: Any?) {
 @BindingAdapter("showLoading")
 fun bindShowLoading(button: Button, loading: Boolean) {
     button.isEnabled = !loading
-    button.text = if(loading)  "Please wait..." else "Continue"
+    button.text = if (loading) "Please wait..." else "Continue"
 }
+
+@BindingAdapter("showRefreshing")
+fun bindShowRefreshing(view: SwipeRefreshLayout, loading: Boolean) {
+    view.isRefreshing = loading
+}
+
 
 @BindingAdapter("textSafe")
 fun bindTextSafe(view: TextView, text: Any) {
@@ -147,6 +152,13 @@ fun bindToDate(view: TextView, text: String?) {
 fun bindToProfileRound(view: ImageView, userId: String?) {
     if (!userId.isNullOrEmpty()) {
         view.toProfileRound(userId)
+    }
+}
+
+@BindingAdapter("toMyProfileRound")
+fun bindToMyProfileRound(view: ImageView, userId: String?) {
+    if (!userId.isNullOrEmpty()) {
+        view.toMyProfileRound(userId)
     }
 }
 

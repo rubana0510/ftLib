@@ -37,7 +37,7 @@ suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, ApiRespons
                     null,
                     ApiResponse.ErrorModel(
                         Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
-                        "Timeout error, please try again",
+                        "Poor internet connection, Check your internet",
                         ApiResponse.ErrorType.TIMEOUT
                     )
                 )

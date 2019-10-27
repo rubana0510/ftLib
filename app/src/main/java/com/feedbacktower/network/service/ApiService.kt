@@ -3,6 +3,7 @@ package com.feedbacktower.network.service
 import com.feedbacktower.App
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.data.models.PaymentSummary
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.models.*
 import com.feedbacktower.util.Constants
@@ -46,7 +47,7 @@ interface ApiService {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .baseUrl(Environment.SERVER_BASE_URL)
+                .baseUrl(Env.SERVER_BASE_URL)
                 .client(clientBuilder.build())
                 .build()
             return retrofit.create(ApiService::class.java)

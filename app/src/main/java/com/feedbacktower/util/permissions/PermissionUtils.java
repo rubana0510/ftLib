@@ -1,4 +1,4 @@
-package com.feedbacktower.util;
+package com.feedbacktower.util.permissions;
 
 import android.Manifest;
 import android.app.Activity;

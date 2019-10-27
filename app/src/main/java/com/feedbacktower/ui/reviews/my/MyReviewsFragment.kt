@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.feedbacktower.adapters.MyReviewListAdapter
-import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentMyReviewsBinding
 import com.feedbacktower.network.models.ApiResponse

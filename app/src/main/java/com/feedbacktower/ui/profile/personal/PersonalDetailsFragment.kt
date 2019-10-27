@@ -24,7 +24,7 @@ import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
 import com.feedbacktower.ui.utils.SpinnerDatePickerDialog
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
-import com.feedbacktower.util.PermissionManager
+import com.feedbacktower.util.permissions.PermissionManager
 import com.feedbacktower.util.isEmailValid
 import com.feedbacktower.util.toMyProfileRound
 import com.feedbacktower.util.uriToFile

@@ -13,7 +13,7 @@ import com.feedbacktower.network.models.ScanQrResponse
 import com.feedbacktower.utilities.qrscanner.*
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.qrtransfer.sender.SenderActivity
-import com.feedbacktower.util.PermissionManager
+import com.feedbacktower.util.permissions.PermissionManager
 import com.feedbacktower.util.launchActivity
 import kotlinx.android.synthetic.main.fragment_reciver_scan.view.*
 import org.jetbrains.anko.toast

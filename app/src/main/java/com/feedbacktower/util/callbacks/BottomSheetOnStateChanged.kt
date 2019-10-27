@@ -1,4 +1,4 @@
-package com.feedbacktower.callbacks
+package com.feedbacktower.util.callbacks
 
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior

@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.models.Plan
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.util.*
 import com.feedbacktower.network.env.Environment
@@ -32,7 +33,7 @@ fun bindIsGone(view: View, isGone: Boolean) {
 fun bindImageFromUrl(view: ImageView, path: String?) {
     Glide.with(view.context)
         .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
-        .load("${Environment.S3_BASE_URL}$path")
+        .load("${Env.S3_BASE_URL}$path")
         .into(view)
 }
 
@@ -40,7 +41,7 @@ fun bindImageFromUrl(view: ImageView, path: String?) {
 fun bindPostImage(view: ImageView, imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(view.context)
-            .load("${Environment.S3_BASE_URL}$imageUrl")
+            .load("${Env.S3_BASE_URL}$imageUrl")
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(view)
     }

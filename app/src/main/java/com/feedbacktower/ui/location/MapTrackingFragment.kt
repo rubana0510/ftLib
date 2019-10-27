@@ -3,9 +3,6 @@ package com.feedbacktower.ui.location
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.*
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -14,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -22,6 +18,7 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.FragmentMapTrackingBinding
 import com.feedbacktower.util.*
+import com.feedbacktower.util.permissions.PermissionUtils
 import com.feedbacktower.util.toRelativeTime
 import com.feedbacktower.utilities.tracker.TrackerService
 import com.google.android.gms.location.FusedLocationProviderClient

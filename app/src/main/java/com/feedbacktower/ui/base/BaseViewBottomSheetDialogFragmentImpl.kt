@@ -3,7 +3,7 @@ package com.feedbacktower.ui.base
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import com.feedbacktower.callbacks.BottomSheetOnStateChanged
+import com.feedbacktower.util.callbacks.BottomSheetOnStateChanged
 import com.feedbacktower.network.models.ApiResponse
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 

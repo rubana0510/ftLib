@@ -23,12 +23,13 @@ import com.feedbacktower.R
 import com.feedbacktower.adapters.AdsPagerAdapter
 import com.feedbacktower.adapters.DotAdapter
 import com.feedbacktower.adapters.PostListAdapter
-import com.feedbacktower.callbacks.OnPageChangeListener
+import com.feedbacktower.util.callbacks.OnPageChangeListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.db.AppDatabase
 import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
@@ -37,6 +38,7 @@ import com.feedbacktower.network.models.GetPostsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.*
+import com.feedbacktower.util.permissions.PermissionManager
 import com.feedbacktower.utilities.Glide4Engine
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
@@ -292,7 +294,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
         override fun onVideoClick(item: Post, position: Int) {
             requireActivity().launchActivity<VideoPlayerScreen> {
-                putExtra(VideoPlayerScreen.URI_KEY, Environment.S3_BASE_URL + "${item.media}")
+                putExtra(VideoPlayerScreen.URI_KEY, Env.S3_BASE_URL + "${item.media}")
             }
         }
     }

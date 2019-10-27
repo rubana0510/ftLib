@@ -1,4 +1,4 @@
-package com.feedbacktower.callbacks
+package com.feedbacktower.util.callbacks
 
 import androidx.recyclerview.widget.RecyclerView
 

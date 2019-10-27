@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.feedbacktower.adapters.MySuggestionListAdapter
-import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.FragmentMySuggestionsBinding
 import com.feedbacktower.network.models.ApiResponse

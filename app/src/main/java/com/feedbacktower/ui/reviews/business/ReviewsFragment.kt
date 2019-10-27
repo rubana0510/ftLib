@@ -5,14 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.ReviewListAdapter
-import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentReviewsBinding

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.feedbacktower.R
 import com.feedbacktower.adapters.MyPostListAdapter
-import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
 import com.feedbacktower.network.models.ApiResponse

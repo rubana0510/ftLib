@@ -15,6 +15,7 @@ import com.feedbacktower.data.models.Business
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
@@ -190,7 +191,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
         override fun onVideoClick(item: Post, position: Int) {
             requireActivity().launchActivity<VideoPlayerScreen> {
-                putExtra(VideoPlayerScreen.URI_KEY, Environment.S3_BASE_URL + "${item.media}")
+                putExtra(VideoPlayerScreen.URI_KEY, Env.S3_BASE_URL + "${item.media}")
             }
         }
     }

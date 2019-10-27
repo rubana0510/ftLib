@@ -9,6 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.feedbacktower.databinding.FragmentHelpBinding
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.util.Constants
 
@@ -28,6 +29,6 @@ class HelpFragment : Fragment() {
     private fun initUi() {
         binding.webView.settings.apply { javaScriptEnabled = true }
         binding.webView.webViewClient = WebViewClient()
-        binding.webView.loadUrl("${Environment.SERVER_BASE_URL}/help")
+        binding.webView.loadUrl("${Env.SERVER_BASE_URL}/help")
     }
 }

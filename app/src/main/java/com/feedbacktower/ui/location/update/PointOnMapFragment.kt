@@ -18,7 +18,7 @@ import com.feedbacktower.databinding.FragmentPointOnMapBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.LocationUtils
-import com.feedbacktower.util.PermissionUtils
+import com.feedbacktower.util.permissions.PermissionUtils
 import com.feedbacktower.util.toLocation
 import com.feedbacktower.util.zoomToLocation
 import com.google.android.gms.location.FusedLocationProviderClient

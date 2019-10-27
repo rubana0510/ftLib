@@ -17,6 +17,7 @@ import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.Plan
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.ActivitySubscriptionPlanScreenBinding
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
@@ -193,15 +194,15 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .setProductName(plan.name)
             .setFirstName(user.firstName)
             .setEmail(user.emailId)
-            .setsUrl("${Environment.SERVER_BASE_URL}payment/success")
-            .setfUrl("${Environment.SERVER_BASE_URL}payment/failure")
+            .setsUrl("${Env.SERVER_BASE_URL}payment/success")
+            .setfUrl("${Env.SERVER_BASE_URL}payment/failure")
             .setUdf1(requestParams.udf1)
             .setUdf2(requestParams.udf2)
             .setUdf3(requestParams.udf3)
             .setUdf4(requestParams.udf4)
             .setUdf5(requestParams.udf5)
-            .setKey(Environment.MERCHANT_KEY)
-            .setMerchantId(Environment.MERCHANT_ID)
+            .setKey(Env.MERCHANT_KEY)
+            .setMerchantId(Env.MERCHANT_ID)
             .setIsDebug(BuildConfig.DEBUG)
         val paymentParams: PayUmoneySdkInitializer.PaymentParam = builder.build()
         paymentParams.setMerchantHash(response.hash)
@@ -216,6 +217,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
             val transactionResponse: TransactionResponse? =

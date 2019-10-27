@@ -36,6 +36,7 @@ import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.exception.NoConnectivityException
+import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.utilities.qrscanner.BarcodeEncoder
@@ -68,7 +69,7 @@ fun ImageView.loadImage(bitmap: Bitmap) {
 
 fun ImageView.toProfileRound(userId: String) {
     Glide.with(this.context)
-        .load("${Environment.S3_BASE_URL}user/$userId.jpg")
+        .load("${Env.S3_BASE_URL}user/$userId.jpg")
         .apply(
             RequestOptions().placeholder(
                 ContextCompat.getDrawable(
@@ -84,7 +85,7 @@ fun ImageView.toProfileRound(userId: String) {
 fun ImageView.toMyProfileRound(userId: String) {
     val lastUpdatedAt = AppPrefs.getInstance(this.context).getValue(AppPrefs.PROFILE_LAST_UPDATED) ?: "default-key"
     Glide.with(this.context)
-        .load("${Environment.S3_BASE_URL}user/$userId.jpg")
+        .load("${Env.S3_BASE_URL}user/$userId.jpg")
         .apply(RequestOptions().signature(ObjectKey(lastUpdatedAt)))
         .apply(RequestOptions().circleCrop())
         .transition(DrawableTransitionOptions.withCrossFade())
@@ -93,7 +94,7 @@ fun ImageView.toMyProfileRound(userId: String) {
 
 fun ImageView.toUserProfileRound(userId: String) {
     Glide.with(this.context)
-        .load("${Environment.S3_BASE_URL}user/$userId.jpg")
+        .load("${Env.S3_BASE_URL}user/$userId.jpg")
         .apply(RequestOptions().circleCrop())
         .apply(
             RequestOptions().placeholder(
@@ -110,7 +111,7 @@ fun ImageView.toUserProfileRound(userId: String) {
 fun ImageView.loadAdImage(path: String) {
     Glide.with(this.context)
         .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
-        .load("${Environment.S3_BASE_URL}$path")
+        .load("${Env.S3_BASE_URL}$path")
         .into(this)
 }
 

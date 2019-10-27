@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.feedbacktower.adapters.TransactionAdapter
-import com.feedbacktower.callbacks.ScrollListener
+import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.QrTransaction
 import com.feedbacktower.databinding.FragmentTransactionBinding
 import com.feedbacktower.network.models.ApiResponse

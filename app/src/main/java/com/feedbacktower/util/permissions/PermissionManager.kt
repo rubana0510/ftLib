@@ -1,4 +1,4 @@
-package com.feedbacktower.util
+package com.feedbacktower.util.permissions
 
 import android.Manifest
 import android.app.Activity
@@ -15,7 +15,8 @@ class PermissionManager private constructor() {
         const val PERMISSION_CODE = 1011
         fun getInstance(): PermissionManager =
             instance ?: synchronized(this) {
-                instance ?: PermissionManager().also {
+                instance
+                    ?: PermissionManager().also {
                     instance = it
                 }
             }

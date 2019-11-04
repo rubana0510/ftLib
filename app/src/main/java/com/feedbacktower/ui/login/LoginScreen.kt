@@ -98,7 +98,7 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                 }
                 navigateUser(response.user)
             } else {
-                toast("Unknown error occurred")
+                toast("Could not get response")
             }
 
         }

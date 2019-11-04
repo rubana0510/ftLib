@@ -57,7 +57,7 @@ suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, ApiRespons
                     null,
                     ApiResponse.ErrorModel(
                         "0",
-                        "Unknown error occurred",
+                        "Unknown error occurred [${e}]",
                         ApiResponse.ErrorType.UNKNOWN
                     )
                 )

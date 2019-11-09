@@ -83,7 +83,6 @@ class PostsFragment : BaseViewFragmentImpl(), PostsContract.View {
             if (timestamp == null) {
                 list.clear()
                 binding.noPosts = it.isEmpty()
-                return@let
             }
             listOver = it.size < PAGE_SIZE
             list.addAll(it)

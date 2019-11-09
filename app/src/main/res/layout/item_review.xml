@@ -9,27 +9,28 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:padding="16dp"
             android:layout_marginTop="@dimen/dimen_8dp">
 
         <ImageView
                 android:id="@+id/userProfileImage"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="16dp"
                 app:toProfileRound="@{review.profileId}"/>
         <androidx.appcompat.widget.AppCompatRatingBar
                 android:id="@+id/ratingBar"
-                style="@style/Widget.AppCompat.RatingBar.Small"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/userName"
                 android:numStars="5"
                 android:rating="@{review.rating}"
+                android:isIndicator="true"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
                 tools:rating="4"
                 android:clickable="false"/>
         <TextView
@@ -39,31 +40,31 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/userProfileImage"
                 app:layout_constraintTop_toTopOf="@id/userProfileImage"
-                app:layout_constraintBottom_toBottomOf="@id/userProfileImage"
                 android:maxLines="1"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 tools:text="Jon Sno"
                 android:text="@{review.reviewerName}"
                 android:onClick="@{openProfileListener}"/>
+        <TextView
+                style="@style/TinyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/userName"
+                app:layout_constraintTop_toBottomOf="@id/userName"
+                android:layout_marginTop="4dp"
+                tools:text="21 min ago"
+                app:toDate="@{review.updatedAt}"/>
         <TextView
                 android:id="@+id/reviewMessage"
                 style="@style/ReviewMessageStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/ratingBar"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userProfileImage"
+                app:layout_constraintStart_toStartOf="@id/userName"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="4dp"
                 tools:text="It was really great experience using your service. Hope we will get the same for years to come."
                 android:text="@{review.comment}" android:fontFamily="@font/cabin"/>
-        <TextView
-                style="@style/TinyText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBaseline_toBaselineOf="@id/userName"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="8dp"
-                tools:text="21 min ago"
-                app:toDate="@{review.updatedAt}"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

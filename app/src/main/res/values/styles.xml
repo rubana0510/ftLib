@@ -153,6 +153,7 @@
 
     <style name="UserFullNameStyle" parent="SmallText">
         <item name="android:textColor">@color/textMain</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="UserProfileImageStyle">

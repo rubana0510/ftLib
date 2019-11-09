@@ -1,11 +1,10 @@
-package com.feedbacktower.adapters
+package com.feedbacktower.ui.ads
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import com.feedbacktower.data.models.Ad
 import com.feedbacktower.databinding.ItemAdPagerBinding

@@ -32,7 +32,7 @@ interface ApiService {
                 addInterceptor(HttpLoggingInterceptor().apply w@{
                     if (!BuildConfig.DEBUG) return@w
                     //level = HttpLoggingInterceptor.Level.BODY
-                    // level = HttpLoggingInterceptor.Level.HEADERS
+                     //level = HttpLoggingInterceptor.Level.HEADERS
                 })
                 addNetworkInterceptor ani@{ chain ->
                     val request = chain.request().newBuilder()

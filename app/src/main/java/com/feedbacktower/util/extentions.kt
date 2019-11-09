@@ -71,7 +71,7 @@ fun ImageView.toProfileRound(userId: String) {
     Glide.with(this.context)
         .load("${Env.S3_BASE_URL}user/$userId.jpg")
         .apply(
-            RequestOptions().placeholder(
+            RequestOptions().error(
                 ContextCompat.getDrawable(
                     this.context,
                     R.drawable.ic_business_placeholder_profile
@@ -97,7 +97,7 @@ fun ImageView.toUserProfileRound(userId: String) {
         .load("${Env.S3_BASE_URL}user/$userId.jpg")
         .apply(RequestOptions().circleCrop())
         .apply(
-            RequestOptions().placeholder(
+            RequestOptions().error(
                 ContextCompat.getDrawable(
                     this.context,
                     R.drawable.ic_person_outline_black_24dp
@@ -296,7 +296,7 @@ internal fun String.toRelativeTime(): String {
     try {
         val dt = DateTime(this, DateTimeZone.UTC)
 
-        val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
+        val toFormat = SimpleDateFormat("dd MMM yyyy hh:mm aa", Locale.ENGLISH)
         val formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
         val currentTime: Long = System.currentTimeMillis() / 1000
         val oldTime: Long = dt.millis / 1000
@@ -304,13 +304,15 @@ internal fun String.toRelativeTime(): String {
         val secs = diff.toInt()
         val mins = diff.toInt() / 60
         val hours = diff.toInt() / (60 * 60)
-
+        val days = (hours/24)
         return if (secs < 60)
             "Just now"
         else if (mins < 60)
             "$mins min${if (mins == 1) "" else "s"} ago"
         else if (hours < 24)
             "$hours hour${if (hours == 1) "" else "s"} ago"
+        else if(days < 30)
+            "$days day${if (days == 1) "" else "s"} ago"
         else
             toFormat.format(Date(oldTime * 1000))
     } catch (e: ParseException) {

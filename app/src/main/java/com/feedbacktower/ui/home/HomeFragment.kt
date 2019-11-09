@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.R
-import com.feedbacktower.adapters.AdsPagerAdapter
+import com.feedbacktower.ui.ads.AdsPagerAdapter
 import com.feedbacktower.adapters.DotAdapter
 import com.feedbacktower.adapters.PostListAdapter
 import com.feedbacktower.util.callbacks.OnPageChangeListener
@@ -30,7 +30,6 @@ import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetAdsResponse
@@ -55,7 +54,8 @@ import java.io.File
 
 class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     private val TAG = "HomeFragment"
-    private lateinit var presenter: HomePresenter
+    private var presenter: HomePresenter? = null
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var feedListView: RecyclerView
     //private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
@@ -102,14 +102,17 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val binding = FragmentHomeBinding.inflate(inflater, container, false)
-        presenter = HomePresenter()
-        presenter.attachView(this)
-        initUi(binding)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    private fun initUi(binding: FragmentHomeBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        presenter = HomePresenter()
+        presenter?.attachView(this)
+        initUi()
+    }
+
+    private fun initUi() {
         // binding.toolbar.title = getString(R.string.app_name)
         adsPager = binding.adsPager
         adsPagerAdapter = AdsPagerAdapter(requireContext(), adList, adClickListener)
@@ -189,7 +192,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
                 dotList.isVisible = false
             }
         })
-        presenter.fetchAds()
+        presenter?.fetchAds()
     }
 
     private fun setUpDots() {
@@ -312,7 +315,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     private fun fetchPostList(timestamp: String? = null) {
         if (isPostsLoading) return
 
-        presenter.fetchPosts(timestamp)
+        presenter?.fetchPosts(timestamp)
 
     }
 
@@ -436,7 +439,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     }
 
     override fun onDestroy() {
+        presenter?.destroyView()
         super.onDestroy()
-        presenter.destroyView()
     }
 }

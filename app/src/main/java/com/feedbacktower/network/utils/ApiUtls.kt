@@ -66,6 +66,52 @@ suspend fun <T> Deferred<ApiResponse<T>>.makeRequest(onComplete: (T?, ApiRespons
     }
 }
 
+suspend fun <T> Deferred<ApiResponse<T>>.makeNetworkRequest(): ApiResponse<T> {
+    try {
+        return this.await()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        when (e) {
+            is HttpException -> {
+                return ApiResponse(
+                    error = ApiResponse.ErrorModel(
+                        Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                        "Network error occurred",
+                        ApiResponse.ErrorType.HTTP_EXCEPTION
+                    ), msg = null, payload = null
+                )
+            }
+            is SocketTimeoutException -> {
+                return ApiResponse(
+                    error = ApiResponse.ErrorModel(
+                        Constants.Service.Error.SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE,
+                        "Poor internet connection, Check your internet",
+                        ApiResponse.ErrorType.TIMEOUT
+                    ), msg = null, payload = null
+                )
+            }
+            is UnknownHostException -> {
+                return ApiResponse(
+                    error = ApiResponse.ErrorModel(
+                        "0",
+                        "Could not reach server, Check your internet",
+                        ApiResponse.ErrorType.NO_INTERNET
+                    ), msg = null, payload = null
+                )
+            }
+            else -> {
+                return ApiResponse(
+                    error = ApiResponse.ErrorModel(
+                        "0",
+                        "Unknown error occurred [${e}]",
+                        ApiResponse.ErrorType.UNKNOWN
+                    ), msg = null, payload = null
+                )
+            }
+        }
+    }
+}
+
 suspend fun <T> Deferred<T>.makeRequestThirdParty(onComplete: (T?, Throwable?) -> Unit) {
     try {
         val response = this.await()

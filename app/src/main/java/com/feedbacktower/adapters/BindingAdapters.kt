@@ -129,7 +129,7 @@ fun bindTextPrice(view: TextView, text: Double) {
 @BindingAdapter("planBenefits")
 fun bindPlanBenefits(view: TextView, plan: Plan?) {
     plan?.let {
-        view.text = "• Get ₹${plan.maxWalletCashback} in wallet" +
+        view.text = "• Get upto ₹${plan.maxWalletCashback} in wallet" +
                 "\n• ${plan.maxTextPost.unlimitedCheck} Text posts" +
                 "\n• ${plan.maxPhotoPost.unlimitedCheck} Photo posts" +
                 "\n• ${plan.maxVideoPost.unlimitedCheck} Video posts"

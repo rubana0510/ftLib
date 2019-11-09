@@ -1,4 +1,4 @@
-package com.feedbacktower.decorators
+package com.feedbacktower.util.decorators
 
 import android.graphics.Rect
 import android.view.View

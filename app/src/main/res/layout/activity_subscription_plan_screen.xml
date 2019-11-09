@@ -10,7 +10,8 @@
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
         <androidx.cardview.widget.CardView
                 android:id="@+id/planView"
                 android:layout_width="300dp"
@@ -138,6 +139,7 @@
                 tools:text="Get Rs.1000 in wallet\n100 Text posts\n5 Photo Posts\n3 Video Posts"
                 android:gravity="center"
                 app:isGone="@{isLoading}"
+                android:textColor="@color/white"
                 app:planBenefits="@{plan}"/>
 
 

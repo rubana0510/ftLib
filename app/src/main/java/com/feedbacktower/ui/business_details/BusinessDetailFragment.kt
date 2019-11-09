@@ -157,7 +157,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
     override fun onPostsFetched(response: GetPostsResponse?) {
         response?.posts?.let {
-            if (it.isEmpty()) return@let
+            binding.noTimeline = it.isNullOrEmpty()
             postList.clear()
             postList.addAll(it)
             postAdapter.notifyDataSetChanged()
@@ -166,7 +166,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
     override fun onReviewsFetched(response: GetReviewsResponse?) {
         response?.review?.let {
-            if (it.isEmpty()) return@let
+            binding.noReviews = it.isNullOrEmpty()
             list.clear()
             list.addAll(it)
             reviewAdapter.notifyDataSetChanged()

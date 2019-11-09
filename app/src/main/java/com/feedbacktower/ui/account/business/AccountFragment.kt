@@ -29,7 +29,7 @@ import org.jetbrains.anko.toast
 
 class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private val TAG = "AccountFragment"
-    private lateinit var presenter: AccountPresenter
+    private var presenter: AccountPresenter? = null
     private lateinit var binding: FragmentBusinessAccountBinding
     private lateinit var counterGridView: RecyclerView
     private lateinit var accountOptionsView: RecyclerView
@@ -43,13 +43,16 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         // Inflate the layout for this fragment
         binding = FragmentBusinessAccountBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.show()
-        initUi(binding)
-        presenter = AccountPresenter()
-        presenter.attachView(this)
         return binding.root
     }
 
-    private fun initUi(binding: FragmentBusinessAccountBinding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        presenter = AccountPresenter()
+        presenter?.attachView(this)
+        initUi()
+    }
+
+    private fun initUi() {
         counterGridView = binding.counterGridView
         accountOptionsView = binding.accountOptionsView
 
@@ -68,7 +71,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         binding.availabilitySwitch.setOnClickListener {
             AppPrefs.getInstance(requireActivity()).user?.business?.available?.let { isAvailable ->
                 val availability = !isAvailable
-                presenter.changeAvailability(availability)
+                presenter?.changeAvailability(availability)
             }
         }
         binding.business = AppPrefs.getInstance(requireActivity()).user?.business!!
@@ -105,7 +108,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.fetch()
+        presenter?.fetch()
     }
 
     override fun showProgress() {
@@ -120,7 +123,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onPause() {
         super.onPause()
-        presenter.destroyView()
+        presenter?.destroyView()
     }
 
     override fun showNetworkError(error: ApiResponse.ErrorModel) {
@@ -143,7 +146,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     override fun onDestroy() {
-        presenter.destroyView()
+        presenter?.destroyView()
         Log.d("AccountFrag", "View Destroyed")
         super.onDestroy()
     }

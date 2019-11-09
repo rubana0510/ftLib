@@ -10,6 +10,8 @@
         <variable name="detailsLoading" type="Boolean"/>
         <variable name="reviewsLoading" type="Boolean"/>
         <variable name="timelineLoading" type="Boolean"/>
+        <variable name="noTimeline" type="Boolean"/>
+        <variable name="noReviews" type="Boolean"/>
         <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
         <variable name="onCurrentLocationClicked" type="android.view.View.OnClickListener"/>
@@ -175,7 +177,6 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                 <TextView
                         android:id="@+id/tvTitle2"
                         style="@style/SmallBoldText"
@@ -185,7 +186,7 @@
                         android:layout_marginTop="@dimen/layoutMarginTop"
                         android:layout_below="@id/detailsCl"
                         android:textColor="@color/colorPrimary"
-                        app:isGone="@{reviewsLoading}"
+                        app:isGone="@{noReviews}"
                         android:text="@string/title_reviews"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/reviewListView"
@@ -193,7 +194,7 @@
                         android:layout_height="match_parent"
                         android:layout_below="@id/tvTitle2"
                         android:layout_marginTop="@dimen/marginTopItem"
-                        app:isGone="@{reviewsLoading}"
+                        app:isGone="@{noReviews}"
                         android:nestedScrollingEnabled="false"/>
                 <TextView
                         android:id="@+id/viewAllReviews"
@@ -206,7 +207,7 @@
                         android:textStyle="bold"
                         android:layout_below="@id/reviewListView"
                         android:clickable="true"
-                        app:isGone="@{reviewsLoading}"
+                        app:isGone="@{noReviews}"
                         android:onClick="@{onViewReviewsClicked}"
                         android:background="?attr/selectableItemBackground"
                         android:textColor="@color/colorPrimary"/>
@@ -220,7 +221,7 @@
                         android:layout_below="@id/viewAllReviews"
                         android:textColor="@color/colorPrimary"
                         android:visibility="visible"
-                        app:isGone="@{timelineLoading}"
+                        app:isGone="@{noTimeline}"
                         android:text="@string/timeline"/>
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/postListView"
@@ -228,7 +229,7 @@
                         android:layout_height="match_parent"
                         android:layout_below="@id/tvTitle1"
                         android:nestedScrollingEnabled="false"
-                        app:isGone="@{timelineLoading}"
+                        app:isGone="@{noTimeline}"
                         android:visibility="visible"/>
                 <TextView
                         android:id="@+id/viewAllPosts"
@@ -240,7 +241,7 @@
                         android:padding="16dp"
                         android:textStyle="bold"
                         android:layout_below="@id/postListView"
-                        app:isGone="@{timelineLoading}"
+                        app:isGone="@{noTimeline}"
                         android:clickable="true"
                         android:background="?attr/selectableItemBackground"
                         android:onClick="@{onViewPostsClicked}"

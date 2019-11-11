@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.feedbacktower.App
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentReviewsBinding
 import com.feedbacktower.network.models.ApiResponse
@@ -18,6 +20,7 @@ import com.feedbacktower.network.models.GetReviewsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
@@ -27,15 +30,18 @@ class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
-    private lateinit var presenter: ReviewsPresenter
+    @Inject
+    lateinit var presenter: ReviewsPresenter
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (requireActivity().applicationContext as App).appComponent.reviewComponent().create().inject(this)
         binding = FragmentReviewsBinding.inflate(inflater, container, false)
-        presenter = ReviewsPresenter()
         presenter.attachView(this)
         val args: ReviewsFragmentArgs? by navArgs()
         businessId = args?.businessId ?: throw IllegalArgumentException("Invalid business")
         if (args?.businessId == null || args?.businessId.equals("0")) {
-            businessId = AppPrefs.getInstance(requireContext()).user?.business?.id
+            businessId =appPrefs.user?.business?.id
                 ?: throw IllegalArgumentException("Invalid business")
             Log.d("ReviewsFragment: ", "businessId: $businessId")
         }

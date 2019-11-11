@@ -171,10 +171,9 @@ dependencies {
     //zoomy: for image zoom
     implementation 'com.ablanco.zoomy:zoomy:1.1.0'
 
-
-    //kodein
-    implementation 'org.kodein.di:kodein-di-generic-jvm:6.2.1'
-    implementation 'org.kodein.di:kodein-di-framework-android-x:6.2.1'
+    //dagger
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
     //viewpager2 for ads
     implementation 'androidx.viewpager2:viewpager2:1.0.0-beta02'

@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.business_details
+package com.feedbacktower.ui.business_detail
 
 
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.adapters.ProfilePostListAdapter
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Business
@@ -16,7 +17,6 @@ import com.feedbacktower.data.models.Post
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.BusinessDetailsResponse
@@ -31,10 +31,12 @@ import com.feedbacktower.util.isCurrentBusiness
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.View {
-    private lateinit var presenter: BusinessDetailPresenter
+    @Inject
+    lateinit var presenter: BusinessDetailPresenter
     private lateinit var binding: FragmentBusinessDetailBinding
     private lateinit var reviewListView: RecyclerView
     private lateinit var postListView: RecyclerView
@@ -49,10 +51,11 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        (requireActivity().applicationContext as App).appComponent.businessDetailComponent().create().inject(this)
+
         binding = FragmentBusinessDetailBinding.inflate(inflater, container, false)
         businessId = arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid args")
         initUi()
-        presenter = BusinessDetailPresenter()
         presenter.attachView(this)
         presenter.fetchBusinessDetails(businessId)
         return binding.root

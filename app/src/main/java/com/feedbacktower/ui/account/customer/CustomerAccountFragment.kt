@@ -8,29 +8,33 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AccountOptionsAdapter
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.databinding.FragmentCustomerAccountBinding
 import com.feedbacktower.ui.profile.BusinessProfileSetupScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.showAppInStore
+import javax.inject.Inject
 
 
 class CustomerAccountFragment : Fragment() {
 
     private val TAG = "CustomerAccountFrag"
-    private lateinit var accountOptionsView: RecyclerView
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
 
+    private lateinit var accountOptionsView: RecyclerView
     private lateinit var accountOptionsAdapter: AccountOptionsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
         val binding = FragmentCustomerAccountBinding.inflate(inflater, container, false)
         initUi(binding)
         return binding.root
@@ -45,7 +49,7 @@ class CustomerAccountFragment : Fragment() {
         accountOptionsAdapter = AccountOptionsAdapter(onItemSelected)
         accountOptionsView.adapter = accountOptionsAdapter
         submitOptions()
-        binding.user = AppPrefs.getInstance(requireContext()).user
+        binding.user = appPrefs.user
         binding.editProfileButtonClicked = View.OnClickListener {
             val dir =
                 CustomerAccountFragmentDirections.actionNavigationAccountToPersonalDetailsFragment()
@@ -53,14 +57,19 @@ class CustomerAccountFragment : Fragment() {
             findNavController().navigate(dir)
         }
         binding.registerButtonClicked = View.OnClickListener {
-           requireActivity().launchActivity<BusinessProfileSetupScreen> {}
+            requireActivity().launchActivity<BusinessProfileSetupScreen> {}
         }
 
     }
 
     private fun submitOptions() {
         val options = listOf(
-            AccountOption(1, "Change City", "Your current city: ${AppPrefs.getInstance(requireContext()).user?.city?.name}", R.drawable.ic_post_like_filled),
+            AccountOption(
+                1,
+                "Change City",
+                "Your current city: ${appPrefs.user?.city?.name}",
+                R.drawable.ic_post_like_filled
+            ),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
             AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),

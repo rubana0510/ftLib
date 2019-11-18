@@ -1,101 +1,139 @@
 package com.feedbacktower.ui.city
 
+import com.feedbacktower.BuildConfig
 import com.feedbacktower.data.models.City
 import com.feedbacktower.data.models.Place
-import com.feedbacktower.network.manager.LocationManager
-import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.AutoCompleteResponse
+import com.feedbacktower.network.models.PlaceDetailsResponse
+import com.feedbacktower.network.models.getUnknownError
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.utils.awaitGoogleApiRequest
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SelectCityPresenter : BasePresenterImpl<SelectCityContract.View>(),
+class SelectCityPresenter @Inject constructor(
+    private val apiService: ApiService
+) : BasePresenterImpl<SelectCityContract.View>(),
     SelectCityContract.Presenter {
     override fun saveBusinessCity(city: City) {
-        getView()?.showProgress()
-        ProfileManager.getInstance()
-            .updateBusinessCity(city.id.toString()) { _, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@updateBusinessCity
-                }
-                getView()?.onBusinessCitySaved(city)
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.updateBusinessAsync(
+                hashMapOf(
+                    "cityId" to city.id
+                )
+            ).awaitNetworkRequest()
+            getView()?.dismissProgress()
+
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onBusinessCitySaved(city)
+        }
     }
 
     override fun saveUserCity(city: City) {
-        getView()?.showProgress()
-        ProfileManager.getInstance()
-            .updateCity(city.id.toString()) { _, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@updateCity
-                }
-                getView()?.onUserCitySaved(city)
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.updatePersonalDetailsAsync(
+                hashMapOf(
+                    "cityId" to city.id
+                )
+            ).awaitNetworkRequest()
+            getView()?.dismissProgress()
+
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onUserCitySaved(city)
+        }
     }
 
     override fun fetchCities(keyword: String) {
-        getView()?.showProgress()
-        LocationManager.getInstance()
-            .getCities(keyword) { response, error ->
-                if (error != null) {
-                    getView()?.dismissProgress()
-                    getView()?.showNetworkError(error)
-                    return@getCities
-                }
-                if (response != null && response.cities.isNotEmpty()) {
-                    getView()?.dismissProgress()
-                    getView()?.onCitiesFetched(response)
-                } else {
-                    fetchPlaces(keyword)
-                }
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.getCitiesAsync(keyword).awaitNetworkRequest()
+            getView()?.dismissProgress()
+
+            if (response.error != null) {
+                getView()?.dismissProgress()
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            if (response.payload != null && !response.payload.cities.isNullOrEmpty()) {
+                getView()?.dismissProgress()
+                getView()?.onCitiesFetched(response.payload)
+            } else {
+                fetchPlaces(keyword)
+            }
+        }
     }
 
     override fun createNewCityState(city: String, state: String) {
-        getView()?.showProgress()
-        LocationManager.getInstance()
-            .addNewCity(city, state) { response, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@addNewCity
-                }
-                response?.city?.let {
-                    getView()?.onCityStateCreated(it)
-                }
+        GlobalScope.launch(Dispatchers.Main) {
+            val map = hashMapOf<String, Any?>("cityName" to city, "stateName" to state)
+            getView()?.showProgress()
+            val response = apiService.addCity(
+                map
+            ).awaitNetworkRequest()
+            getView()?.dismissProgress()
+
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            response.payload?.city?.let {
+                getView()?.onCityStateCreated(it)
+            }
+        }
     }
 
     override fun getPlaceDetails(placeId: String) {
-        getView()?.showProgress()
-        LocationManager.getInstance()
-            .placeDetails(placeId) { response, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@placeDetails
-                }
-                response?.let {
-                    getView()?.onPlaceDetailsFetched(it.result)
-                }
+        val url =
+            "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=${BuildConfig.PLACES_API_KEY}"
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response: ApiResponse<PlaceDetailsResponse> = apiService.placeDetailsAsync(url).awaitGoogleApiRequest()
+            getView()?.dismissProgress()
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            if (response.payload != null && response.payload.status == "OK") {
+                response.payload.result.let {
+                    getView()?.onPlaceDetailsFetched(it)
+                }
+            } else {
+                getView()?.showNetworkError(getUnknownError(response.payload?.status))
+            }
+        }
     }
 
     private fun fetchPlaces(keyword: String) {
-        getView()?.showProgress()
-        LocationManager.getInstance()
-            .autocomplete(keyword) { response, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@autocomplete
+        val url =
+            "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${keyword}&key=${BuildConfig.PLACES_API_KEY}&sessiontoken=1234567890";
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.autocompleteAsync(url).awaitGoogleApiRequest()
+            getView()?.dismissProgress()
+            if (response.payload != null && response.payload.status == "OK") {
+                response.payload.predictions.let {
+                    val places = getPlaces(it)
+                    getView()?.onPlacesFetched(places)
                 }
-                val places = getPlaces(response?.predictions)
-                getView()?.onPlacesFetched(places)
+            } else {
+                getView()?.showNetworkError(getUnknownError(response.payload?.status))
             }
+        }
     }
+
 
     private fun getPlaces(predictions: List<AutoCompleteResponse.Prediction>?): List<Place> {
         val list = ArrayList<Place>()

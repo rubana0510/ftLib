@@ -1,5 +1,6 @@
 package com.feedbacktower.di.reviews
 import com.feedbacktower.ui.reviews.business.ReviewsFragment
+import com.feedbacktower.ui.reviews.my.MyReviewsFragment
 import dagger.Subcomponent
 
 @ReviewsScope
@@ -10,4 +11,5 @@ interface ReviewsComponent {
         fun create(): ReviewsComponent
     }
     fun inject(fragment: ReviewsFragment)
+    fun inject(fragment: MyReviewsFragment)
 }

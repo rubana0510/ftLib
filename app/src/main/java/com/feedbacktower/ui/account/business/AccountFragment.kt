@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.adapters.AccountOptionsAdapter
 import com.feedbacktower.adapters.CountAdapter
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
@@ -25,11 +26,16 @@ import com.feedbacktower.util.logOut
 import com.feedbacktower.util.noZero
 import com.feedbacktower.util.showAppInStore
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private val TAG = "AccountFragment"
-    private var presenter: AccountPresenter? = null
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+    @Inject
+    lateinit var presenter: AccountPresenter
+
     private lateinit var binding: FragmentBusinessAccountBinding
     private lateinit var counterGridView: RecyclerView
     private lateinit var accountOptionsView: RecyclerView
@@ -40,15 +46,14 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
         binding = FragmentBusinessAccountBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.show()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = AccountPresenter()
-        presenter?.attachView(this)
+        presenter.attachView(this)
         initUi()
     }
 
@@ -69,12 +74,12 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         submitOptions()
 
         binding.availabilitySwitch.setOnClickListener {
-            AppPrefs.getInstance(requireActivity()).user?.business?.available?.let { isAvailable ->
+            appPrefs.user?.business?.available?.let { isAvailable ->
                 val availability = !isAvailable
-                presenter?.changeAvailability(availability)
+                presenter.changeAvailability(availability)
             }
         }
-        binding.business = AppPrefs.getInstance(requireActivity()).user?.business!!
+        binding.business = appPrefs.user?.business!!
         binding.editProfileButtonClicked = View.OnClickListener {
             val dir =
                 AccountFragmentDirections.actionNavigationAccountToEditBusinessFragment()
@@ -97,7 +102,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onAvailabilityChanged(availability: Boolean) {
         binding.availabilitySwitch.isChecked = availability
-        AppPrefs.getInstance(requireActivity()).apply {
+        appPrefs.apply {
             user = user?.apply {
                 business = business?.apply {
                     available = availability
@@ -108,7 +113,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter?.fetch()
+        presenter.fetch()
     }
 
     override fun showProgress() {
@@ -123,7 +128,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onPause() {
         super.onPause()
-        presenter?.destroyView()
+        presenter.destroyView()
     }
 
     override fun showNetworkError(error: ApiResponse.ErrorModel) {
@@ -132,7 +137,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     override fun onFetched(response: MyBusinessResponse?) {
-        AppPrefs.getInstance(requireActivity()).apply {
+        appPrefs.apply {
             user = user?.apply {
                 business = response?.business
             }
@@ -146,18 +151,18 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     override fun onDestroy() {
-        presenter?.destroyView()
+        presenter.destroyView()
         Log.d("AccountFrag", "View Destroyed")
         super.onDestroy()
     }
 
     private fun submitOptions() {
-        val business = AppPrefs.getInstance(requireActivity()).user?.business!!
+        val business = appPrefs.user?.business!!
         val options = listOf(
             AccountOption(
                 9,
                 "Change City",
-                "Your current city: ${AppPrefs.getInstance(requireActivity()).user?.city?.name}",
+                "Your current city: ${appPrefs.user?.city?.name}",
                 R.drawable.ic_post_like_filled
             ),
             AccountOption(
@@ -225,7 +230,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
                 findNavController().navigate(d)
             }
             8 -> {
-                val businessId = AppPrefs.getInstance(requireActivity()).user?.business?.id
+                val businessId = appPrefs.user?.business?.id
                 if (businessId != null) {
                     AccountFragmentDirections.actionNavigationAccountToMyPostsFragment(businessId).let { d ->
                         findNavController().navigate(d)
@@ -244,7 +249,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     private fun submitCounts() {
-        val business = AppPrefs.getInstance(requireActivity()).user?.business!!
+        val business = appPrefs.user?.business!!
         val counts = listOf(
             Count(1, business.rank.noZero(), "Rank"),
             Count(2, "${business.avgRating}", "Ratings"),

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.feedbacktower.App
 import com.feedbacktower.adapters.CategoryInterestAdapter
 import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.databinding.FragmentSelectInterestsBinding
@@ -13,11 +14,12 @@ import com.feedbacktower.network.models.GetCategoriesResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.setGrid
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 class SelectInterestsFragment : BaseViewFragmentImpl(), InterestsContract.View {
-
+@Inject
+    lateinit var presenter: InterestsPresenter
     private lateinit var binding: FragmentSelectInterestsBinding
-    private lateinit var presenter: InterestsPresenter
     private lateinit var adapter: CategoryInterestAdapter
     private var list: ArrayList<BusinessCategory> = ArrayList()
 
@@ -29,9 +31,8 @@ class SelectInterestsFragment : BaseViewFragmentImpl(), InterestsContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
         binding = FragmentSelectInterestsBinding.inflate(inflater, container, false)
-        presenter = InterestsPresenter()
         presenter.attachView(this)
         adapter = CategoryInterestAdapter(list, toggleListener)
         binding.categoryGridView.setGrid(requireContext(), 2)

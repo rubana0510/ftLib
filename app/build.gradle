@@ -178,6 +178,9 @@ dependencies {
     //viewpager2 for ads
     implementation 'androidx.viewpager2:viewpager2:1.0.0-beta02'
 
+    //another picker
+    implementation 'net.alhazmy13.MediaPicker:libary:2.4.4'
+
     //test
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"

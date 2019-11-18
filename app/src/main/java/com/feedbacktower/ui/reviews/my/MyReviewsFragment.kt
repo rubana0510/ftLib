@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.feedbacktower.App
 import com.feedbacktower.adapters.MyReviewListAdapter
 import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.Review
@@ -15,6 +16,7 @@ import com.feedbacktower.network.models.GetReviewsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
@@ -23,11 +25,12 @@ class MyReviewsFragment : BaseViewFragmentImpl(), MyReviewsContract.View {
     private var list: ArrayList<Review> = ArrayList()
     private var listOver = false
     private var fetching = false
-    private lateinit var presenter: MyReviewsPresenter
+    @Inject
+    lateinit var presenter: MyReviewsPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (requireActivity().applicationContext as App).appComponent.reviewComponent().create().inject(this)
         binding = FragmentMyReviewsBinding.inflate(inflater, container, false)
-        presenter = MyReviewsPresenter()
         presenter.attachView(this)
         initUI()
         return binding.root

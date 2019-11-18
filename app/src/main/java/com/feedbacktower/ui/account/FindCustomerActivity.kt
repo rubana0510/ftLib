@@ -4,8 +4,9 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import com.feedbacktower.App
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.FindCustomerResponse
 import com.feedbacktower.utilities.qrscanner.AutoFocusMode
@@ -21,14 +22,19 @@ import kotlinx.android.synthetic.main.dialog_customer_profile.view.*
 import kotlinx.android.synthetic.main.dialog_my_qr.view.*
 import org.jetbrains.anko.toast
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
 class FindCustomerActivity : AppCompatActivity() {
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
     private lateinit var codeScanner: CodeScanner
     private val myQr: Bitmap? by lazy { createMyQr() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_customer)
+        (applicationContext as App).appComponent.accountComponent().create().inject(this)
+
         codeScanner = CodeScanner(this, scannerView)
         codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
         codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
@@ -100,7 +106,7 @@ class FindCustomerActivity : AppCompatActivity() {
     }
 
     private fun createMyQr(): Bitmap? {
-        val b = AppPrefs.getInstance(this@FindCustomerActivity).user?.id
+        val b = appPrefs.user?.id
             ?: throw IllegalStateException("User cannot be null")
         return b.toQrBitmap()
     }

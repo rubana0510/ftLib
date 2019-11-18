@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.adapters.CategoryListAdapter
 import com.feedbacktower.data.models.BusinessCategory
@@ -22,11 +23,13 @@ import com.feedbacktower.util.setVertical
 import com.feedbacktower.util.visible
 import kotlinx.android.synthetic.main.dialog_select_category.view.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.View {
 
-    private lateinit var presenter: CategoryPresenter
+    @Inject
+    lateinit var presenter: CategoryPresenter
     private lateinit var adapter: CategoryListAdapter
     private lateinit var progressBar: ProgressBar
     private lateinit var categoryList: RecyclerView
@@ -48,7 +51,7 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        presenter = CategoryPresenter()
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
         presenter.attachView(this)
         val view = inflater.inflate(R.layout.dialog_select_category, container, false)
         val toolbar = view.toolbar

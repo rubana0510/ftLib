@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:animateLayoutChanges="true">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/black"
+             android:animateLayoutChanges="true">
 
     <RelativeLayout
             android:id="@+id/layout_surface_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:background="@android:color/black"
             android:gravity="center"
             android:orientation="vertical">
@@ -17,9 +16,7 @@
         <VideoView
                 android:id="@+id/video_loader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
+                android:layout_height="match_parent"/>
 
         <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_video_play"
@@ -35,43 +32,12 @@
                 android:visibility="gone"
                 android:layout_centerInParent="true"/>
     </RelativeLayout>
-
-
     <LinearLayout
-            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/grey21"
+            android:layout_gravity="top"
+            android:background="@color/black"
             android:orientation="vertical">
-
-        <LinearLayout
-                android:id="@+id/timeText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-            <TextView
-                    android:id="@+id/textSize"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"/>
-
-            <TextView
-                    android:id="@+id/textTimeSelection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@android:color/white"/>
-
-            <TextView
-                    android:id="@+id/textTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"/>
-
-        </LinearLayout>
 
         <SeekBar
                 android:id="@+id/handlerTop"
@@ -98,6 +64,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/timeLineView"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/black"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:id="@+id/timeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+            <TextView
+                    android:id="@+id/textSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"/>
+
+            <TextView
+                    android:id="@+id/textTimeSelection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"/>
+
+            <TextView
+                    android:id="@+id/textTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"/>
+
+        </LinearLayout>
 
         <View
                 android:id="@+id/lineTop"
@@ -141,4 +145,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

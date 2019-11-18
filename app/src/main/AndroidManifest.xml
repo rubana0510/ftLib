@@ -59,13 +59,14 @@
                     tools:replace="android:resource"/>
         </provider>
 
-        <activity android:name=".ui.home.VideoTrimmerScreen"
+        <activity android:name=".ui.home.post.video.VideoTrimmerScreen"
+                  android:theme="@style/FullScreenTheme"
                   android:screenOrientation="portrait">
         </activity>
         <activity android:name=".ui.myplan.MyPlanScreen"
                   android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.home.ImagePreviewActivity"
+        <activity android:name=".ui.home.post.image.ImagePostActivity"
                   android:screenOrientation="portrait">
         </activity>
         <activity
@@ -79,7 +80,7 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.home.PostTextScreen"
+                android:name=".ui.home.post.text.TextPostActivity"
                 android:label="@string/write_something"
                 android:screenOrientation="portrait">
         </activity>
@@ -96,7 +97,7 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.business_details.BusinessDetailsActivity"
+                android:name=".ui.business_detail.BusinessDetailsActivity"
                 android:theme="@style/AppTheme.NoActionBar"
                 android:screenOrientation="portrait">
         </activity>
@@ -181,6 +182,9 @@
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
                   android:theme="@style/Base.Theme.AppCompat"
                   android:screenOrientation="portrait"/>
+        <activity
+                android:name=".ui.home.post.video.VideoTrimmerScreen2"
+                android:theme="@style/FullScreenTheme"/>
     </application>
 
 </manifest>

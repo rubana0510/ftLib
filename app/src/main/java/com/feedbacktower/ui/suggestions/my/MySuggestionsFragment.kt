@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.feedbacktower.App
 import com.feedbacktower.adapters.MySuggestionListAdapter
 import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.Suggestion
@@ -16,21 +17,23 @@ import com.feedbacktower.network.models.GetSuggestionsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class MySuggestionsFragment : BaseViewFragmentImpl(), MySuggestionsContract.View {
     private lateinit var binding: FragmentMySuggestionsBinding
-    private lateinit var presenter: MySuggestionsPresenter
     private lateinit var suggestionAdapter: MySuggestionListAdapter
     private val list: ArrayList<Suggestion> = ArrayList()
     private var listOver = false
     private var fetching = false
+    @Inject
+    lateinit var presenter: MySuggestionsPresenter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (requireActivity().applicationContext as App).appComponent.suggestionComponent().create().inject(this)
         binding = FragmentMySuggestionsBinding.inflate(inflater, container, false)
-        presenter = MySuggestionsPresenter()
         presenter.attachView(this)
         (activity as AppCompatActivity).supportActionBar?.show()
         initUI()

@@ -11,6 +11,7 @@ import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.adapters.AutoCompleteAdapter
 import com.feedbacktower.adapters.CityListAdapter
 import com.feedbacktower.data.AppPrefs
@@ -23,10 +24,12 @@ import com.feedbacktower.network.models.PlaceDetailsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 class SelectCityFragment : BaseViewFragmentImpl(), SelectCityContract.View {
+    @Inject
+    lateinit var presenter: SelectCityPresenter
     private lateinit var binding: FragmentSelectCityBinding
-    private lateinit var presenter: SelectCityPresenter
     private lateinit var adapter: CityListAdapter
     private lateinit var autoCompleteAdapter: AutoCompleteAdapter
     private lateinit var queryInput: EditText
@@ -35,20 +38,12 @@ class SelectCityFragment : BaseViewFragmentImpl(), SelectCityContract.View {
     private val placeList: ArrayList<Place> = ArrayList()
     private val args: SelectCityFragmentArgs by navArgs()
 
-    companion object {
-        fun getInstance(): SelectCityFragment {
-            val fragment = SelectCityFragment()
-            return fragment
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
         binding = FragmentSelectCityBinding.inflate(inflater, container, false)
-
         adapter = CityListAdapter(cityList, object : CityListAdapter.Listener {
             override fun onCityClick(city: City) {
                 saveCityToProfile(city)
@@ -87,7 +82,6 @@ class SelectCityFragment : BaseViewFragmentImpl(), SelectCityContract.View {
         listView = binding.cityList
         listView.setVertical(requireContext())
         listView.adapter = adapter
-        presenter = SelectCityPresenter()
         presenter.attachView(this)
         fetchCities()
         return binding.root

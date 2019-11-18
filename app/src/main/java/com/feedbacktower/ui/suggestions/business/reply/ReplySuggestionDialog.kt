@@ -2,11 +2,11 @@ package com.feedbacktower.ui.suggestions.business.reply
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.models.Suggestion
 import com.feedbacktower.databinding.DialogReplySuggestionBinding
@@ -16,6 +16,7 @@ import com.feedbacktower.util.disable
 import com.feedbacktower.util.enable
 import kotlinx.android.synthetic.main.dialog_reply_suggestion.view.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class ReplySuggestionDialog : BaseViewBottomSheetDialogFragmentImpl(), ReplySuggestionContract.View {
@@ -32,8 +33,8 @@ class ReplySuggestionDialog : BaseViewBottomSheetDialogFragmentImpl(), ReplySugg
         }
     }
 
-    private lateinit var presenter: ReplySuggestionPresenter
-    private lateinit var ctx: Context
+    @Inject
+    lateinit var presenter: ReplySuggestionPresenter
     private lateinit var replyMessageInput: EditText
     private lateinit var sendReplyButton: Button
     private lateinit var suggestion: Suggestion
@@ -42,10 +43,10 @@ class ReplySuggestionDialog : BaseViewBottomSheetDialogFragmentImpl(), ReplySugg
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
-        presenter = ReplySuggestionPresenter()
-        presenter.attachView(this)
-        ctx = activity ?: return
+        (requireActivity().applicationContext as App).appComponent.suggestionComponent().create().inject(this)
 
+
+        presenter.attachView(this)
         suggestion = arguments?.getSerializable("SUGGESTION") as? Suggestion
             ?: throw IllegalArgumentException("Wrong suggestion args")
 
@@ -96,7 +97,7 @@ class ReplySuggestionDialog : BaseViewBottomSheetDialogFragmentImpl(), ReplySugg
     override fun onReplySent() {
         dismiss()
         listener?.onReply(suggestion)
-        ctx.toast("Sent reply")
+        requireActivity().toast("Reply sent")
     }
 
     override fun showNetworkError(error: ApiResponse.ErrorModel) {

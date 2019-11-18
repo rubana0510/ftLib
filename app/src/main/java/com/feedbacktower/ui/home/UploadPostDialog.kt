@@ -16,7 +16,6 @@ class UploadPostDialog(val listener: Listener) : BaseViewBottomSheetDialogFragme
 
         val contentView = View.inflate(context, R.layout.dialog_upload_post, null)
         dialog.setContentView(contentView)
-        setUpBehaviour(contentView)
         initUI(contentView)
     }
 

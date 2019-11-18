@@ -1,20 +1,27 @@
 package com.feedbacktower.ui.suggestions.my
 
-import com.feedbacktower.network.manager.SuggestionsManager
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MySuggestionsPresenter : BasePresenterImpl<MySuggestionsContract.View>(),
+class MySuggestionsPresenter @Inject constructor(
+    private val apiService: ApiService
+) : BasePresenterImpl<MySuggestionsContract.View>(),
     MySuggestionsContract.Presenter {
     override fun fetch(timestamp: String, initial: Boolean) {
-        getView()?.showProgress()
-        SuggestionsManager.getInstance()
-            .getMySuggestions(timestamp) { response, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@getMySuggestions
-                }
-                getView()?.onFetched(response, initial)
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.getMySuggestionsAsync(timestamp).awaitNetworkRequest()
+            getView()?.dismissProgress()
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onFetched(response.payload, initial)
+        }
     }
 }

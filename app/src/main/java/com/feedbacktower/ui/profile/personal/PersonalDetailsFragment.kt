@@ -27,7 +27,7 @@ import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.permissions.PermissionManager
 import com.feedbacktower.util.isEmailValid
 import com.feedbacktower.util.toMyProfileRound
-import com.feedbacktower.util.uriToFile
+import com.feedbacktower.util.imageUriToFile
 import com.feedbacktower.utilities.compressor.Compressor
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
@@ -140,7 +140,7 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
                     val result = CropImage.getActivityResult(data)
                     if (resultCode == RESULT_OK) {
                         val resultUri = result.uri
-                        requireActivity().uriToFile(resultUri).let { file ->
+                        requireActivity().imageUriToFile(resultUri).let { file ->
                             val fileToUpload = Compressor(requireActivity()).compressToFile(file)
                             presenter.uploadProfilePicture(fileToUpload)
                             Log.d(TAG, "Reduced: ${file.length() / 1024}KB to ${fileToUpload.length() / 1024}KB")

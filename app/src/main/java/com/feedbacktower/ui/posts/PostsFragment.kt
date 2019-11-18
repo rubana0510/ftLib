@@ -20,7 +20,7 @@ import com.feedbacktower.databinding.FragmentTimelineBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetPostsResponse
 import com.feedbacktower.network.models.LikeUnlikeResponse
-import com.feedbacktower.ui.home.PostTextScreen
+import com.feedbacktower.ui.home.post.text.TextPostActivity
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants.PAGE_SIZE
 import com.feedbacktower.util.launchActivity
@@ -114,7 +114,7 @@ class PostsFragment : BaseViewFragmentImpl(), PostsContract.View {
                     when (index) {
                         0 -> {
                             if (item.type == "TEXT") {
-                                requireActivity().launchActivity<PostTextScreen> {
+                                requireActivity().launchActivity<TextPostActivity> {
                                     putExtra("TEXT", item.text)
                                     putExtra("POST_ID", item.id)
                                 }

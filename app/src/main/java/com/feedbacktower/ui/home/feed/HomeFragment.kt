@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.home
+package com.feedbacktower.ui.home.feed
 
 
 import android.app.Activity
@@ -19,12 +19,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.R
-import com.feedbacktower.ui.ads.AdsPagerAdapter
 import com.feedbacktower.adapters.DotAdapter
 import com.feedbacktower.adapters.PostListAdapter
-import com.feedbacktower.util.callbacks.OnPageChangeListener
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.db.AppDatabase
 import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
@@ -34,9 +33,17 @@ import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetAdsResponse
 import com.feedbacktower.network.models.GetPostsResponse
+import com.feedbacktower.ui.ads.AdsPagerAdapter
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
+import com.feedbacktower.ui.home.*
+import com.feedbacktower.ui.home.post.image.ImagePostActivity
+import com.feedbacktower.ui.home.post.text.TextPostActivity
+import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen
+import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen2
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
-import com.feedbacktower.util.*
+import com.feedbacktower.util.Constants
+import com.feedbacktower.util.callbacks.OnPageChangeListener
+import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.permissions.PermissionManager
 import com.feedbacktower.utilities.Glide4Engine
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
@@ -47,17 +54,22 @@ import com.yalantis.ucrop.UCrop
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.fragment_home.*
+import net.alhazmy13.mediapicker.Video.VideoPicker
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import java.io.File
+import javax.inject.Inject
 
 
 class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     private val TAG = "HomeFragment"
-    private var presenter: HomePresenter? = null
+    @Inject
+    lateinit var presenter: HomePresenter
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+
     private lateinit var binding: FragmentHomeBinding
     private lateinit var feedListView: RecyclerView
-    //private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var message: TextView
     private lateinit var postAdapter: PostListAdapter
     private lateinit var dotAdapter: DotAdapter
@@ -65,11 +77,10 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     private var currentCity: String? = null
     private var noPosts: Boolean? = false
     private val REQUEST_CODE_CHOOSE_IMAGE = 1012
-    private val REQUEST_CODE_CHOOSE_VIDEO = 1013
+    private val REQUEST_TAKE_GALLERY_VIDEO = 1013
+    private val REQUEST_CODE_CHOOSE_VIDEO = 1014
     private val posts: ArrayList<Post> = ArrayList()
     private var postsOver: Boolean = false
-    private var isPostsLoading: Boolean = false
-
     private lateinit var adsPager: ViewPagerX
     private lateinit var adsPagerAdapter: AdsPagerAdapter
     private val adList = ArrayList<Ad>()
@@ -102,15 +113,13 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        (requireActivity().applicationContext as App).appComponent.homeComponent().create().inject(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        presenter.attachView(this)
+        initUi()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = HomePresenter()
-        presenter?.attachView(this)
-        initUi()
-    }
 
     private fun initUi() {
         // binding.toolbar.title = getString(R.string.app_name)
@@ -129,7 +138,6 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         feedListView = binding.feedListView
         // swipeRefresh = binding.swipeRefresh
         message = binding.message
-        val appPrefs by lazy { AppPrefs.getInstance(requireContext()) }
         binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
         binding.currentCity = appPrefs.getValue("CITY") ?: "Select City"
         //setup list
@@ -162,6 +170,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
             dir.onboarding = false
             findNavController().navigate(dir)
         }
+        listenToAds()
     }
 
     private val onPageChangeListener = OnPageChangeListener { pos ->
@@ -192,7 +201,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
                 dotList.isVisible = false
             }
         })
-        presenter?.fetchAds()
+        presenter.fetchAds()
     }
 
     private fun setUpDots() {
@@ -225,8 +234,8 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     override fun onResume() {
         super.onResume()
-        fetchPostList()
         foreground = true
+        fetchPostList()
     }
 
     override fun onPause() {
@@ -258,6 +267,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         UploadPostDialog(object : UploadPostDialog.Listener {
             override fun videoClick() {
                 pickVideo()
+                //pickVideoMatisse()
             }
 
             override fun imageClick() {
@@ -265,18 +275,26 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
             }
 
             override fun textClick() {
-                requireActivity().launchActivity<PostTextScreen>()
+                requireActivity().launchActivity<TextPostActivity>()
             }
 
         }).show(fragmentManager!!, "chooser")
     }
 
     private fun pickVideo() {
+        val i = Intent().apply {
+            type = "video/*"
+            action = Intent.ACTION_GET_CONTENT
+        }
+        startActivityForResult(Intent.createChooser(i, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO)
+    }
+
+    private fun pickVideoMatisse() {
         Matisse.from(this)
             .choose(MimeType.ofVideo())
             .countable(true)
             .maxSelectable(1)
-            .gridExpectedSize(resources.getDimensionPixelSize(com.feedbacktower.R.dimen.grid_expected_size))
+            .gridExpectedSize(resources.getDimensionPixelSize(R.dimen.grid_expected_size))
             .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             .thumbnailScale(0.85f)
             .imageEngine(Glide4Engine())
@@ -313,9 +331,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
 
     private fun fetchPostList(timestamp: String? = null) {
-        if (isPostsLoading) return
-
-        presenter?.fetchPosts(timestamp)
+        presenter.fetchPosts(timestamp)
 
     }
 
@@ -333,12 +349,12 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     override fun showProgress() {
         super.showProgress()
-        isPostsLoading = true
+        binding.isLoading = true
     }
 
     override fun dismissProgress() {
         super.dismissProgress()
-        isPostsLoading = false
+        binding.isLoading = false
     }
 
     override fun onPostsFetched(response: GetPostsResponse?, timestamp: String?) {
@@ -371,15 +387,13 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
                 return
             }
             CropImage.activity(mSelected[0]).start(requireActivity())
-        } else if (requestCode == REQUEST_CODE_CHOOSE_VIDEO && resultCode == RESULT_OK) {
-            var mSelected = Matisse.obtainResult(data!!)
-            if (mSelected.size < 1) {
-                requireContext().toast("No video selected")
-                return
-            }
-            Log.d("Matisse", "mSelected Video: $mSelected")
-            requireActivity().launchActivity<VideoTrimmerScreen> {
-                putExtra("URI", mSelected[0])
+        } else if (requestCode == REQUEST_TAKE_GALLERY_VIDEO && resultCode == RESULT_OK) {
+            data?.let {
+                val uri = it.data
+                Log.d(TAG, "Video selected: $uri")
+                requireActivity().launchActivity<VideoTrimmerScreen2> {
+                    putExtra("EXTRA_INPUT_URI", uri)
+                }
             }
         } else if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK && data != null) {
@@ -405,13 +419,23 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
                 val result = CropImage.getActivityResult(data)
                 if (resultCode == RESULT_OK) {
                     val resultUri = result.getUri();
-                    requireActivity().launchActivity<ImagePreviewActivity> {
-                        putExtra("URI", resultUri)
+                    requireActivity().launchActivity<ImagePostActivity> {
+                        putExtra(ImagePostActivity.URI, resultUri)
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     val error = result.getError();
                 }
 
+            }
+        } else if (requestCode == REQUEST_CODE_CHOOSE_VIDEO) {
+            var mSelected = Matisse.obtainResult(data!!)
+            if (mSelected.size < 1) {
+                requireContext().toast("No video selected")
+                return
+            }
+            Log.d("Matisse", "mSelected Video: $mSelected")
+            requireActivity().launchActivity<VideoTrimmerScreen> {
+                putExtra("URI", mSelected[0])
             }
         }
     }
@@ -439,7 +463,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     }
 
     override fun onDestroy() {
-        presenter?.destroyView()
+        presenter.destroyView()
         super.onDestroy()
     }
 }

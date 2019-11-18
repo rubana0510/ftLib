@@ -1,33 +1,43 @@
 package com.feedbacktower.ui.account.business
 
-import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AccountPresenter : BasePresenterImpl<AccountContract.View>(),
+class AccountPresenter
+@Inject constructor(
+    private val apiService: ApiService
+) : BasePresenterImpl<AccountContract.View>(),
     AccountContract.Presenter {
     override fun changeAvailability(availability: Boolean) {
-        getView()?.showAvailabilityChangeProgress()
-        ProfileManager.getInstance()
-            .changeBusinessAvailability(availability) { _, error ->
-                getView()?.dismissAvailabilityChangeProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@changeBusinessAvailability
-                }
-                getView()?.onAvailabilityChanged(availability)
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showAvailabilityChangeProgress()
+            val response = apiService.updateBusinessAsync(
+                hashMapOf("available" to availability)
+            ).awaitNetworkRequest()
+            getView()?.dismissAvailabilityChangeProgress()
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onAvailabilityChanged(availability)
+        }
     }
 
     override fun fetch() {
-        getView()?.showProgress()
-        ProfileManager.getInstance()
-            .getMyBusiness { response, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@getMyBusiness
-                }
-                getView()?.onFetched(response)
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.getMyBusinessAsync().awaitNetworkRequest()
+            getView()?.dismissProgress()
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onFetched(response.payload)
+        }
     }
 }

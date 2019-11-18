@@ -2,7 +2,7 @@ package com.feedbacktower.ui.reviews.business
 
 import com.feedbacktower.di.reviews.ReviewsScope
 import com.feedbacktower.network.service.ApiService
-import com.feedbacktower.network.utils.makeNetworkRequest
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -20,7 +20,7 @@ class ReviewsPresenter @Inject constructor(
             val response = apiService.getBusinessReviewsAsync(
                 businessId = businessId,
                 timestamp = timestamp
-            ).makeNetworkRequest()
+            ).awaitNetworkRequest()
             getView()?.dismissProgress()
             if (response.error != null) {
                 getView()?.showNetworkError(response.error)

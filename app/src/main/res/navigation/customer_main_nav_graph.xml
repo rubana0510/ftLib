@@ -4,7 +4,7 @@
             android:id="@+id/business_main_nav_graph" app:startDestination="@id/navigation_home">
     <fragment
             android:id="@+id/navigation_home"
-            android:name="com.feedbacktower.ui.home.HomeFragment"
+            android:name="com.feedbacktower.ui.home.feed.HomeFragment"
             android:label="@string/app_name"
             tools:layout="@layout/fragment_home">
         <action android:id="@+id/action_navigation_home_to_selectCityFragment"
@@ -40,7 +40,7 @@
     </fragment>
     <activity
             android:id="@+id/businessDetailsActivity"
-            android:name="com.feedbacktower.ui.business_details.BusinessDetailsActivity"
+            android:name="com.feedbacktower.ui.business_detail.BusinessDetailsActivity"
             android:label="activity_business_details"
             tools:layout="@layout/activity_business_details">
         <argument android:name="businessId" app:argType="string"/>

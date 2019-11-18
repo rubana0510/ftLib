@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.business_details
+package com.feedbacktower.ui.business_detail
 
 import com.feedbacktower.network.models.BusinessDetailsResponse
 import com.feedbacktower.network.models.GetPostsResponse

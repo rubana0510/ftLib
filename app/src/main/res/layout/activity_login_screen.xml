@@ -66,6 +66,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                             style="@style/EditTextStyle.Auth"
                             android:id="@+id/mobileInput"
+                            android:digits="0123456789"
                             android:maxLength="@integer/phone_length"
                             android:inputType="phone"/>
                 </com.google.android.material.textfield.TextInputLayout>

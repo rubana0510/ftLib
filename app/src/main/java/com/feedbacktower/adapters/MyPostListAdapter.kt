@@ -10,7 +10,7 @@ import com.ablanco.zoomy.Zoomy
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemMyPostMediaBinding
 import com.feedbacktower.databinding.ItemMyPostTextBinding
-import com.feedbacktower.ui.home.HomeFragmentDirections
+import com.feedbacktower.ui.home.feed.HomeFragmentDirections
 
 /**
  * Created by sanket on 12-02-2019.

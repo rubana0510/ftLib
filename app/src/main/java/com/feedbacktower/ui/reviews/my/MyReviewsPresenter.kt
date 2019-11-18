@@ -7,13 +7,12 @@ import com.feedbacktower.ui.base.BasePresenterImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyReviewsPresenter : BasePresenterImpl<MyReviewsContract.View>(),
+class MyReviewsPresenter@Inject constructor(
+    val apiService: ApiService
+) : BasePresenterImpl<MyReviewsContract.View>(),
     MyReviewsContract.Presenter {
-    private val apiService: ApiService by lazy {
-        ApiService.create()
-    }
-
     override fun fetchReviews(timestamp: String, initial: Boolean) {
         GlobalScope.launch(Dispatchers.Main) {
             getView()?.showProgress()

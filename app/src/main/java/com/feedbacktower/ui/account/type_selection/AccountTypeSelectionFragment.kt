@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.App
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.databinding.FragmentAccountSelectionTypeBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.main.CustomerMainActivity
@@ -16,19 +17,24 @@ import com.feedbacktower.util.disable
 import com.feedbacktower.util.enable
 import com.feedbacktower.util.launchActivity
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 class AccountTypeSelectionFragment : BaseViewFragmentImpl(), AccountTypeSelectionContract.View {
+    @Inject
+    lateinit var presenter: AccountTypeSelectionPresenter
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+
     private lateinit var binding: FragmentAccountSelectionTypeBinding
-    private lateinit var presenter: AccountTypeSelectionPresenter
     private val args: AccountTypeSelectionFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
 
         binding = FragmentAccountSelectionTypeBinding.inflate(inflater, container, false)
         initUi()
-        presenter = AccountTypeSelectionPresenter()
         presenter.attachView(this)
         return binding.root
     }
@@ -41,7 +47,7 @@ class AccountTypeSelectionFragment : BaseViewFragmentImpl(), AccountTypeSelectio
                 presenter.continueAsCustomer()
         }
         binding.onBusinessContinue = View.OnClickListener { presenter.registerAsBusiness() }
-        binding.user = AppPrefs.getInstance(requireContext()).user
+        binding.user = appPrefs.user
     }
 
     override fun showProgress() {
@@ -64,7 +70,7 @@ class AccountTypeSelectionFragment : BaseViewFragmentImpl(), AccountTypeSelectio
     }
 
     override fun onContinueCustomerResponse() {
-        AppPrefs.getInstance(requireContext()).apply {
+        appPrefs.apply {
             user = user?.apply {
                 profileSetup = true
             }

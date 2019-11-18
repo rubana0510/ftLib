@@ -26,6 +26,7 @@ import java.util.*
 import java.text.ParseException
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -37,7 +38,6 @@ import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.exception.NoConnectivityException
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.utilities.qrscanner.BarcodeEncoder
 import com.feedbacktower.ui.splash.SplashScreen
@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import okhttp3.MultipartBody
 import org.joda.time.DateTimeZone
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -64,6 +65,13 @@ fun ImageView.loadImage(bitmap: Bitmap) {
     Glide.with(this.context)
         .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
         .load(bitmap)
+        .into(this)
+}
+
+fun ImageView.loadImage(uri: Uri) {
+    Glide.with(this.context)
+        .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
+        .load(uri)
         .into(this)
 }
 
@@ -264,7 +272,7 @@ internal fun String.toDate(): String {
         val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
         return toFormat.format(Date(dt.millis))
     } catch (e: ParseException) {
-        return "";
+        return ""
     }
 }
 
@@ -304,14 +312,14 @@ internal fun String.toRelativeTime(): String {
         val secs = diff.toInt()
         val mins = diff.toInt() / 60
         val hours = diff.toInt() / (60 * 60)
-        val days = (hours/24)
+        val days = (hours / 24)
         return if (secs < 60)
             "Just now"
         else if (mins < 60)
             "$mins min${if (mins == 1) "" else "s"} ago"
         else if (hours < 24)
             "$hours hour${if (hours == 1) "" else "s"} ago"
-        else if(days < 30)
+        else if (days < 30)
             "$days day${if (days == 1) "" else "s"} ago"
         else
             toFormat.format(Date(oldTime * 1000))
@@ -350,9 +358,9 @@ fun String.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("te
 
 fun Int.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this.toString())
 
-fun Activity.uriToFile(_uri: Uri): File {
+fun Context.imageUriToFile(_uri: Uri): File {
     var filePath: String? = null
-    if (_uri != null && "content" == _uri.getScheme()) {
+    if ("content" == _uri.scheme) {
         val cursor = this.contentResolver.query(
             _uri,
             arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA),
@@ -364,7 +372,45 @@ fun Activity.uriToFile(_uri: Uri): File {
         filePath = cursor.getString(0)
         cursor.close()
     } else {
-        filePath = _uri.getPath()
+        filePath = _uri.path
+    }
+    return File(filePath)
+}
+
+fun Uri.toImageFile(context: Context): File {
+    var filePath: String? = null
+    if ("content" == this.scheme) {
+        val cursor = context.contentResolver.query(
+            this,
+            arrayOf(android.provider.MediaStore.Images.ImageColumns.DATA),
+            null,
+            null,
+            null
+        )
+        cursor.moveToFirst()
+        filePath = cursor.getString(0)
+        cursor.close()
+    } else {
+        filePath = this.path
+    }
+    return File(filePath)
+}
+
+fun Uri.toVideoFile(context: Context): File? {
+    var filePath: String? = null
+    if ("content" == this.scheme) {
+        val cursor = context.contentResolver.query(
+            this,
+            arrayOf(android.provider.MediaStore.Video.VideoColumns.DATA),
+            null,
+            null,
+            null
+        )
+        cursor.moveToFirst()
+        filePath = cursor.getString(0)
+        cursor.close()
+    } else {
+        filePath = this.path
     }
     return File(filePath)
 }
@@ -458,4 +504,15 @@ fun Activity?.hideKeyBoard() {
             var2.hideSoftInputFromWindow(view.windowToken, 2)
         }
     }
+}
+
+fun File.toPart(): MultipartBody.Part {
+    val requestBody = RequestBody.create(MediaType.parse("image/*"), this)
+    return MultipartBody.Part.createFormData("media", name, requestBody)
+}
+
+fun Activity.logd(message: String) {
+    val name = this::class.java.simpleName
+    val tag = if (name.length < 24) name else name.substring(0, 22)
+    Log.d(tag, message)
 }

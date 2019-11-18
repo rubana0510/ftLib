@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.business_details
+package com.feedbacktower.ui.business_detail
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

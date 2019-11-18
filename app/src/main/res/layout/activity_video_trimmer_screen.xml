@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.VideoTrimmerScreen">
+        tools:context=".ui.home.post.video.VideoTrimmerScreen">
     <com.feedbacktower.utilities.videotrimmer.VideoTrimmer
             android:id="@+id/videoTrimmer"
             android:layout_width="match_parent"

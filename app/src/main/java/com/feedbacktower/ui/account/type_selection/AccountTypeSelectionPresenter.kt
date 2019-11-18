@@ -1,35 +1,42 @@
 package com.feedbacktower.ui.account.type_selection
 
-import com.feedbacktower.network.manager.AuthManager
-import com.feedbacktower.network.manager.ProfileManager
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AccountTypeSelectionPresenter : BasePresenterImpl<AccountTypeSelectionContract.View>(),
+class AccountTypeSelectionPresenter
+@Inject constructor(
+    private val apiService: ApiService
+) : BasePresenterImpl<AccountTypeSelectionContract.View>(),
     AccountTypeSelectionContract.Presenter {
 
     override fun continueAsCustomer() {
-        getView()?.showProgress()
-        ProfileManager.getInstance()
-            .continueAsCustomer onResponse@{ _, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@onResponse
-                }
-                getView()?.onContinueCustomerResponse()
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.continueAsCustomerAsync().awaitNetworkRequest()
+            getView()?.dismissProgress()
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onContinueCustomerResponse()
+        }
     }
 
     override fun registerAsBusiness() {
-        getView()?.showProgress()
-        AuthManager.getInstance()
-            .registerAsBusiness onResponse@{ _, error ->
-                getView()?.dismissProgress()
-                if (error != null) {
-                    getView()?.showNetworkError(error)
-                    return@onResponse
-                }
-                getView()?.onBusinessRegistered()
+        GlobalScope.launch(Dispatchers.Main) {
+            getView()?.showProgress()
+            val response = apiService.continueAsCustomerAsync().awaitNetworkRequest()
+            getView()?.dismissProgress()
+            if (response.error != null) {
+                getView()?.showNetworkError(response.error)
+                return@launch
             }
+            getView()?.onBusinessRegistered()
+        }
     }
 }

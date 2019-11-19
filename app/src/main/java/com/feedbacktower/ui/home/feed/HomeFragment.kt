@@ -38,7 +38,6 @@ import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.home.*
 import com.feedbacktower.ui.home.post.image.ImagePostActivity
 import com.feedbacktower.ui.home.post.text.TextPostActivity
-import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen
 import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen2
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.Constants
@@ -54,7 +53,6 @@ import com.yalantis.ucrop.UCrop
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
 import kotlinx.android.synthetic.main.fragment_home.*
-import net.alhazmy13.mediapicker.Video.VideoPicker
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import java.io.File
@@ -428,15 +426,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
             }
         } else if (requestCode == REQUEST_CODE_CHOOSE_VIDEO) {
-            var mSelected = Matisse.obtainResult(data!!)
-            if (mSelected.size < 1) {
-                requireContext().toast("No video selected")
-                return
-            }
-            Log.d("Matisse", "mSelected Video: $mSelected")
-            requireActivity().launchActivity<VideoTrimmerScreen> {
-                putExtra("URI", mSelected[0])
-            }
+
         }
     }
 

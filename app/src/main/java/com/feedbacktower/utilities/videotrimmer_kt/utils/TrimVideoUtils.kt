@@ -92,8 +92,9 @@ object TrimVideoUtils {
                         override fun onSuccess() {
                            callback.onFinishedCompressing(Uri.parse(outputFinalVideoFile.absolutePath))
 
-                            Log.d("TrimVideoUtils", "Before compress: ${trimmedVideoFile.length()}")
-                            Log.d("TrimVideoUtils", "After compress: ${outputFinalVideoFile.length()}")
+                            Log.d("TrimVideoUtils", "Original : ${File(inputVideoUri.path).length()/(1024 * 1024)} MB")
+                            Log.d("TrimVideoUtils", "After trimmed: ${trimmedVideoFile.length()/(1024 * 1024)} MB")
+                            Log.d("TrimVideoUtils", "After compress: ${outputFinalVideoFile.length()/(1024 * 1024)} MB")
                         }
 
                         override fun onFail() {

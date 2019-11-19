@@ -2,7 +2,7 @@ package com.feedbacktower.di.upload_post
 
 import com.feedbacktower.ui.home.post.image.ImagePostActivity
 import com.feedbacktower.ui.home.post.text.TextPostActivity
-import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen
+import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen2
 import dagger.Subcomponent
 
 @UploadPostScope
@@ -15,5 +15,5 @@ interface UploadPostComponent {
 
     fun inject(activity: ImagePostActivity)
     fun inject(activity: TextPostActivity)
-    fun inject(activity: VideoTrimmerScreen)
+    fun inject(activity: VideoTrimmerScreen2)
 }

@@ -175,5 +175,8 @@
     <string name="request_sent">Request sent</string>
     <string name="transfer_cancelled">Transfer cancelled</string>
     <string name="transfer_success">Transfer success</string>
+    <string name="preparing_video_for_upload">Preparing video for upload...</string>
+    <string name="uploading_video">Uploading video, please wait</string>
+    <string name="video_uploaded">Video posted</string>
 
 </resources>

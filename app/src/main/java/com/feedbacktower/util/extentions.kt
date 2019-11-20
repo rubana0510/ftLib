@@ -118,7 +118,9 @@ fun ImageView.toUserProfileRound(userId: String) {
 
 fun ImageView.loadAdImage(path: String) {
     Glide.with(this.context)
-        .setDefaultRequestOptions(RequestOptions().apply { placeholder(R.color.grey100) })
+        .setDefaultRequestOptions(RequestOptions().apply {
+            placeholder(R.color.grey100)
+        })
         .load("${Env.S3_BASE_URL}$path")
         .into(this)
 }

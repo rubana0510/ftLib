@@ -17,6 +17,7 @@ import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.logd
+import com.feedbacktower.util.visible
 import com.feedbacktower.utilities.videotrimmer_kt.interfaces.VideoTrimmingListener
 import kotlinx.android.synthetic.main.activity_video_trimmer_screen2.*
 import kotlinx.android.synthetic.main.dialog_loading.view.*
@@ -28,15 +29,11 @@ class VideoTrimmerScreen2 : BaseViewActivityImpl(), VideoPostContract.View, Vide
     @Inject
     lateinit var presenter: VideoPostPresenter
 
-    private lateinit var progressDialog: AlertDialog
-    private lateinit var progressTitle: TextView
-    private lateinit var progressBar: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_trimmer_screen2)
         (applicationContext as App).appComponent.uploadPostComponent().create().inject(this)
         presenter.attachView(this)
-        initProgressBar()
         val inputVideoUri: Uri? = intent?.getParcelableExtra("EXTRA_INPUT_URI")
         if (inputVideoUri == null) {
             finish()
@@ -60,21 +57,12 @@ class VideoTrimmerScreen2 : BaseViewActivityImpl(), VideoPostContract.View, Vide
         }
     }
 
-    private fun initProgressBar() {
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_loading, null)
-        progressDialog = AlertDialog.Builder(this)
-            .setView(view)
-            .setCancelable(false)
-            .create()
-        progressTitle = view.title
-        progressBar = view.progress
-    }
-
     override fun onTrimStarted() {
         trimmingProgressView.visibility = View.VISIBLE
         progressTitle.text = getString(R.string.preparing_video_for_upload)
         progressBar.isIndeterminate = true
-        progressDialog.show()
+        loadingView.visible()
+        loadingView.setOnClickListener{}
     }
 
     override fun onFinishedTrimming(uri: Uri?) {
@@ -129,19 +117,12 @@ class VideoTrimmerScreen2 : BaseViewActivityImpl(), VideoPostContract.View, Vide
 
     override fun dismissProgress() {
         super.dismissProgress()
-        progressDialog.dismiss()
     }
 
     override fun showNetworkError(error: ApiResponse.ErrorModel) {
         super.showNetworkError(error)
         toast(error.message)
         finish()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        if (progressDialog.isShowing)
-            progressDialog.dismiss()
     }
 
 }

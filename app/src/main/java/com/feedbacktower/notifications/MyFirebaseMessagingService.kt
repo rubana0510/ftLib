@@ -15,24 +15,36 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.ui.splash.SplashScreen
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.inject.Inject
 
 
 /**
  * Created by sanket on 02-09-2018.
  */
 class MyFirebaseMessagingService : FirebaseMessagingService() {
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+
     companion object {
         private const val TAG = "MyFirebaseMessaging"
     }
 
+    init {
+        (application as App).appComponent.authComponent().create()
+    }
+
     override fun onNewToken(token: String?) {
         super.onNewToken(token)
-        AppPrefs.getInstance(this).firebaseToken = token
+        appPrefs.firebaseToken = token
         Log.d(TAG, "Token: $token")
     }
 

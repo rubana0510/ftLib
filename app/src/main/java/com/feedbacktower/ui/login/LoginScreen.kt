@@ -3,30 +3,32 @@ package com.feedbacktower.ui.login
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.feedbacktower.App
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.ActivityLoginScreenBinding
-import com.feedbacktower.network.manager.AuthManager
+import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.utils.ConnectivityReceiver
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.register.RegisterPhoneScreen
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.navigateUser
 import kotlinx.android.synthetic.main.activity_login_screen.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
-class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
-
-    companion object {
-        private const val TAG = "LoginScreen"
-    }
+class LoginScreen : BaseViewActivityImpl(), LoginContract.View, ConnectivityReceiver.ConnectivityReceiverListener {
+    private val TAG = "LoginScreen"
+    @Inject
+    lateinit var presenter: LoginPresenter
+    private lateinit var binding: ActivityLoginScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityLoginScreenBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_login_screen)
-        initUi(binding)
+        (application as App).appComponent.authComponent().create()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login_screen)
+        initUi()
     }
 
     override fun onResume() {
@@ -34,14 +36,18 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
         ConnectivityReceiver.connectivityReceiverListener = this
     }
 
-    private fun initUi(binding: ActivityLoginScreenBinding) {
+    private fun initUi() {
         with(binding) {
-            onSignUpClicked = View.OnClickListener { launchActivity<RegisterPhoneScreen>{
-                putExtra(RegisterPhoneScreen.SCREEN_TYPE_KEY, RegisterPhoneScreen.ScreenFunction.REGISTER)
-            } }
-            onForgotClicked = View.OnClickListener { launchActivity<RegisterPhoneScreen>{
-                putExtra(RegisterPhoneScreen.SCREEN_TYPE_KEY, RegisterPhoneScreen.ScreenFunction.FORGOT_PASSWORD)
-            } }
+            onSignUpClicked = View.OnClickListener {
+                launchActivity<RegisterPhoneScreen> {
+                    putExtra(RegisterPhoneScreen.SCREEN_TYPE_KEY, RegisterPhoneScreen.ScreenFunction.REGISTER)
+                }
+            }
+            onForgotClicked = View.OnClickListener {
+                launchActivity<RegisterPhoneScreen> {
+                    putExtra(RegisterPhoneScreen.SCREEN_TYPE_KEY, RegisterPhoneScreen.ScreenFunction.FORGOT_PASSWORD)
+                }
+            }
             onLoginClicked = View.OnClickListener {
                 val phone = mobileInput.text.toString().trim()
                 val password = passwordInput.text.toString().trim()
@@ -51,7 +57,7 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
                 if (!ConnectivityReceiver.isConnected()) {
                     toast("Not connected to the internet")
                 } else {
-                    tryLogin(phone, password)
+                    presenter.login(phone, password)
                 }
             }
         }
@@ -81,37 +87,25 @@ class LoginScreen : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiv
         }
     }
 
-    private fun tryLogin(phone: String, password: String) {
-        showLoading()
-        AuthManager.getInstance().phoneLogin(phone, password)
-        { response, error ->
-            hideLoading()
-            if (error != null) {
-                toast(error.message)
-                return@phoneLogin
-            }
-
-            if (response != null) {
-                AppPrefs.getInstance(this).apply {
-                    user = response.user
-                    authToken = response.token
-                }
-                navigateUser(response.user)
-            } else {
-                toast("Could not get response")
-            }
-
-        }
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        toast(error.message)
     }
 
-    private fun showLoading() {
+    override fun onLoginSuccess(user: User) {
+        navigateUser(user)
+    }
+
+    override fun showProgress() {
+        super.showProgress()
         loginButton.isEnabled = false
-        loginButton.text = "Please wait..."
+        loginButton.text = getString(R.string.please_wait_dot_dot)
     }
 
-    private fun hideLoading() {
+    override fun dismissProgress() {
+        super.dismissProgress()
         loginButton.isEnabled = true
-        loginButton.text = "LOG IN"
+        loginButton.text = getString(R.string.log_in)
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {

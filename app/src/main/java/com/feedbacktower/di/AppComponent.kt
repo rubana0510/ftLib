@@ -2,6 +2,7 @@ package com.feedbacktower.di
 
 import android.content.Context
 import com.feedbacktower.di.account.AccountComponent
+import com.feedbacktower.di.auth.AuthComponent
 import com.feedbacktower.di.business_detail.BusinessDetailComponent
 import com.feedbacktower.di.home.HomeComponent
 import com.feedbacktower.di.reviews.ReviewsComponent
@@ -22,6 +23,7 @@ interface AppComponent {
         fun create(@BindsInstance context: Context): AppComponent
     }
 
+    fun authComponent(): AuthComponent.Factory
     fun reviewComponent(): ReviewsComponent.Factory
     fun suggestionComponent(): SuggestionsComponent.Factory
     fun businessDetailComponent(): BusinessDetailComponent.Factory

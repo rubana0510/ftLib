@@ -5,6 +5,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.feedbacktower.App
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.AppVersion
@@ -16,11 +17,17 @@ import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
 import com.feedbacktower.util.navigateUser
 import com.feedbacktower.util.showAppInStore
+import javax.inject.Inject
 
 
 class SplashScreen : AppCompatActivity() {
+    @Inject
+    lateinit var presenter: SplashPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as App).appComponent.authComponent().create()
+
         val fcmToken = AppPrefs.getInstance(this).firebaseToken
         pushFcmToken(fcmToken)
         subscribeToTopic()

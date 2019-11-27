@@ -9,25 +9,27 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.PlanPaymentTransaction
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
-import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.ui.plans.SubscriptionPlansScreen
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.util.*
-import com.feedbacktower.util.toDate
 import kotlinx.android.synthetic.main.activity_plan_payment_success_screen.*
 import kotlinx.android.synthetic.main.dialog_referral_success.view.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 class PlanPaymentResultScreen : AppCompatActivity() {
     companion object {
         const val PAYMENT_SUMMARY = "PAYMENT_SUMMARY"
     }
 
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
     private lateinit var paymentSummary: PaymentSummary
     private var statusCallCount = 0
     private var paymentStatus: PlanPaymentTransaction.Status? = null
@@ -45,7 +47,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         }
 
         button.setOnClickListener {
-            if(paymentStatus == null){
+            if (paymentStatus == null) {
                 launchActivity<SubscriptionPlansScreen> {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
@@ -125,7 +127,8 @@ class PlanPaymentResultScreen : AppCompatActivity() {
                 if (
                     error.message == "USER_NOT_FOUND"
                 ) {
-                    logOut()
+                    appPrefs.clearUserPrefs()
+                    launchActivity<SplashScreen> { }
                     return@refreshToken
                 }
                 val builder = AlertDialog.Builder(this)
@@ -139,7 +142,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
                 return@refreshToken
             }
             if (response != null) {
-                AppPrefs.getInstance(this).apply {
+                appPrefs.apply {
                     user = response.user
                     authToken = response.token
                 }
@@ -167,7 +170,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         button.text = "GO TO DASHBOARD"
         referralNote.text = "Apply Referral code and get \n Rs.${transaction.amount} more in wallet"
         walletBalance.text = "Rs.${transaction.amount}"
-        AppPrefs.getInstance(this).summary = null
+        appPrefs.summary = null
         refreshAuthToken()
         hideLoading()
     }
@@ -207,7 +210,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
     }
 
     private fun showCodeAppliedMessage() {
-        val builder= AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_referral_success, null)
         val alert = builder.create()
         alert.setView(view)
@@ -221,7 +224,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         alert.show()
     }
 
-    private fun openSplash(){
+    private fun openSplash() {
         launchActivity<SplashScreen> {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -232,7 +235,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         message.text = "Payment Pending.."
         image.setImageResource(R.drawable.ic_payment_pending)
         button.text = "OKAY"
-        AppPrefs.getInstance(this).summary = null
+        appPrefs.summary = null
         hideLoading()
     }
 
@@ -240,7 +243,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         message.text = "Payment Failed"
         image.setImageResource(R.drawable.ic_cancel_failure)
         button.text = "TRY AGAIN"
-        AppPrefs.getInstance(this).summary = null
+        appPrefs.summary = null
         hideLoading()
     }
 

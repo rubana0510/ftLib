@@ -22,38 +22,6 @@ import java.util.concurrent.TimeUnit
  * Created by sanket on 25-09-2018.
  */
 interface ApiService {
-
-    companion object Factory {
-        fun create(): ApiService {
-            val clientBuilder = OkHttpClient.Builder().apply {
-                connectTimeout(Constants.Service.Timeout.CONNECT, TimeUnit.MILLISECONDS)
-                readTimeout(Constants.Service.Timeout.READ, TimeUnit.MILLISECONDS)
-                writeTimeout(Constants.Service.Timeout.WRITE, TimeUnit.MILLISECONDS)
-                addInterceptor(HttpLoggingInterceptor().apply w@{
-                    if (!BuildConfig.DEBUG) return@w
-                    //level = HttpLoggingInterceptor.Level.BODY
-                     //level = HttpLoggingInterceptor.Level.HEADERS
-                })
-                addNetworkInterceptor ani@{ chain ->
-                    val request = chain.request().newBuilder()
-                        .addHeader(Constants.AUTHORIZATION, "Bearer ${App.getInstance().getToken()}")
-                        .addHeader("Platform", "android")
-                        .addHeader("VersionCode", BuildConfig.VERSION_CODE.toString())
-                        .addHeader("VersionName", BuildConfig.VERSION_NAME)
-                        .build()
-                    return@ani chain.proceed(request);
-                }
-            }
-            val retrofit = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .baseUrl(Env.SERVER_BASE_URL)
-                .client(clientBuilder.build())
-                .build()
-            return retrofit.create(ApiService::class.java)
-        }
-    }
-
     //PROFILE
     @POST("/api/auth/login")
     fun loginAsync(

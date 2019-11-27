@@ -44,8 +44,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String?) {
         super.onNewToken(token)
-        appPrefs.firebaseToken = token
-        Log.d(TAG, "Token: $token")
+        if(appPrefs.firebaseToken != token){
+            appPrefs.apply {
+                firebaseToken = token
+                tokenPushRequired = true
+            }
+        }
     }
 
     override fun onMessageReceived(message: RemoteMessage?) {

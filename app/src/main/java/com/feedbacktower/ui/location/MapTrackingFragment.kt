@@ -15,11 +15,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.databinding.FragmentMapTrackingBinding
-import com.feedbacktower.util.*
+import com.feedbacktower.util.LocationUtils
 import com.feedbacktower.util.permissions.PermissionUtils
 import com.feedbacktower.util.toRelativeTime
+import com.feedbacktower.util.zoomToLocation
 import com.feedbacktower.utilities.tracker.TrackerService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class MapTrackingFragment : Fragment(), OnMapReadyCallback {
@@ -39,6 +41,8 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
     }
 
     private val TAG = "MapTracking"
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var googleMap: GoogleMap? = null
     private var MAX_GET_LOCATION_RETRY = 2
@@ -56,7 +60,7 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
 
     private fun initUi() {
 
-        if (AppPrefs.getInstance(requireContext()).getValue(TRACKING_ON_KEY, false)) {
+        if (appPrefs.getValue(TRACKING_ON_KEY, false)) {
             showTrackingOn()
             binding.trackingSwitch.isChecked = true
         } else {
@@ -65,7 +69,7 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
         }
         binding.trackingSwitch.setOnClickListener {
             if (binding.trackingSwitch.isChecked) {
-                AppPrefs.getInstance(requireContext()).setValue(TRACKING_ON_KEY, true)
+                appPrefs.setValue(TRACKING_ON_KEY, true)
                 showTrackingOn()
                 if (trackingService == null) {
                     val intent = Intent(requireActivity().application, TrackerService::class.java)
@@ -74,11 +78,11 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
                     Handler().postDelayed({
                         trackingService?.startTracking()
                     }, 500)
-                }else{
+                } else {
                     trackingService?.startTracking()
                 }
             } else {
-                AppPrefs.getInstance(requireContext()).setValue(TRACKING_ON_KEY, false)
+                appPrefs.setValue(TRACKING_ON_KEY, false)
                 showTrackingOff()
                 if (trackingService == null) {
                     val intent = Intent(requireActivity().application, TrackerService::class.java)
@@ -86,7 +90,7 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
                     Handler().postDelayed({
                         trackingService?.stopTracking()
                     }, 500)
-                }else{
+                } else {
                     trackingService?.stopTracking()
                 }
             }

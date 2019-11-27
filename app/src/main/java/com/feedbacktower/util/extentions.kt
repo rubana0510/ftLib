@@ -7,52 +7,50 @@ import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.graphics.Bitmap
 import android.location.Location
-import android.os.Bundle
-import android.util.DisplayMetrics
-import android.view.View
-import android.widget.ImageView
-import androidx.recyclerview.widget.*
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.feedbacktower.ui.main.BusinessMainActivity
-import com.feedbacktower.data.models.User
-import com.feedbacktower.ui.main.CustomerMainActivity
-import com.feedbacktower.ui.profile.ProfileSetupScreen
-import okhttp3.MediaType
-import okhttp3.RequestBody
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
-import java.text.ParseException
 import android.net.Uri
+import android.os.Bundle
 import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.*
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.signature.ObjectKey
+import com.bumptech.glide.request.RequestOptions
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.User
 import com.feedbacktower.exception.NoConnectivityException
 import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.ui.main.BusinessMainActivity
+import com.feedbacktower.ui.main.CustomerMainActivity
+import com.feedbacktower.ui.profile.ProfileSetupScreen
 import com.feedbacktower.utilities.qrscanner.BarcodeEncoder
-import com.feedbacktower.ui.splash.SplashScreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import okhttp3.MediaType
 import okhttp3.MultipartBody
-import org.joda.time.DateTimeZone
+import okhttp3.RequestBody
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.joda.time.format.DateTimeFormat
 import retrofit2.HttpException
+import java.io.File
 import java.net.SocketTimeoutException
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun ImageView.loadImage(url: String) {
     Glide.with(this.context)
@@ -90,7 +88,7 @@ fun ImageView.toProfileRound(userId: String) {
         .into(this)
 }
 
-fun ImageView.toMyProfileRound(userId: String) {
+/*fun ImageView.toMyProfileRound(userId: String) {
     val lastUpdatedAt = AppPrefs.getInstance(this.context).getValue(AppPrefs.PROFILE_LAST_UPDATED) ?: "default-key"
     Glide.with(this.context)
         .load("${Env.S3_BASE_URL}user/$userId.jpg")
@@ -98,9 +96,9 @@ fun ImageView.toMyProfileRound(userId: String) {
         .apply(RequestOptions().circleCrop())
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(this)
-}
+}*/
 
-fun ImageView.toUserProfileRound(userId: String) {
+fun ImageView.toUserProfileRound(userId: String?) {
     Glide.with(this.context)
         .load("${Env.S3_BASE_URL}user/$userId.jpg")
         .apply(RequestOptions().circleCrop())
@@ -209,6 +207,12 @@ inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noi
     startActivity(intent)
 }
 
+inline fun <reified T : Any> Fragment.launchActivity(bundle: Bundle? = null, noinline init: Intent.() -> Unit = {}) {
+    val intent = newIntent<T>(this.requireActivity())
+    intent.init()
+    startActivity(intent)
+}
+
 inline fun <reified T : Any> newIntent(context: Context): Intent = Intent(context, T::class.java)
 
 
@@ -292,14 +296,6 @@ fun <T> Context.isServiceRunning(service: Class<T>): Boolean {
     return (getSystemService(ACTIVITY_SERVICE) as ActivityManager)
         .getRunningServices(Integer.MAX_VALUE)
         .any { it -> it.service.className == service.name }
-}
-
-internal fun Activity.logOut() {
-    AppPrefs.getInstance(this).authToken = null
-    AppPrefs.getInstance(this).user = null
-    this.launchActivity<SplashScreen> {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-    }
 }
 
 internal fun String.toRelativeTime(): String {
@@ -415,13 +411,6 @@ fun Uri.toVideoFile(context: Context): File? {
         filePath = this.path
     }
     return File(filePath)
-}
-
-fun isCurrentBusiness(businessId: String, context: Context): Boolean {
-    if (AppPrefs.getInstance(context).user?.userType == "CUSTOMER") return false
-    val currentBusinessId =
-        AppPrefs.getInstance(context).user?.business?.id ?: throw IllegalArgumentException("Invalid user")
-    return currentBusinessId == businessId
 }
 
 fun LatLng.toArray(): List<Double> {

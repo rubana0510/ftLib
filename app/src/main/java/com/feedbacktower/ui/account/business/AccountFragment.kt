@@ -1,5 +1,6 @@
 package com.feedbacktower.ui.account.business
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,24 +16,24 @@ import com.feedbacktower.adapters.CountAdapter
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.data.local.models.Count
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessAccountBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.MyBusinessResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.receiver.ReceiverActivity
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.util.launchActivity
-import com.feedbacktower.util.logOut
 import com.feedbacktower.util.noZero
 import com.feedbacktower.util.showAppInStore
 import org.jetbrains.anko.toast
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 
 class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private val TAG = "AccountFragment"
-    @Inject
-    lateinit var appPrefs: ApplicationPreferences
     @Inject
     lateinit var presenter: AccountPresenter
 
@@ -41,6 +42,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private lateinit var accountOptionsView: RecyclerView
     private lateinit var accountOptionsAdapter: AccountOptionsAdapter
     private lateinit var countAdapter: CountAdapter
+    private lateinit var user: User
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +56,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter.attachView(this)
+        user = presenter.user ?: throw IllegalStateException("User must not be null")
         initUi()
     }
 
@@ -74,12 +77,9 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
         submitOptions()
 
         binding.availabilitySwitch.setOnClickListener {
-            appPrefs.user?.business?.available?.let { isAvailable ->
-                val availability = !isAvailable
-                presenter.changeAvailability(availability)
-            }
+            presenter.changeAvailability()
         }
-        binding.business = appPrefs.user?.business!!
+        binding.business = user.business
         binding.editProfileButtonClicked = View.OnClickListener {
             val dir =
                 AccountFragmentDirections.actionNavigationAccountToEditBusinessFragment()
@@ -102,13 +102,6 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
 
     override fun onAvailabilityChanged(availability: Boolean) {
         binding.availabilitySwitch.isChecked = availability
-        appPrefs.apply {
-            user = user?.apply {
-                business = business?.apply {
-                    available = availability
-                }
-            }
-        }
     }
 
     override fun onResume() {
@@ -137,11 +130,6 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     override fun onFetched(response: MyBusinessResponse?) {
-        appPrefs.apply {
-            user = user?.apply {
-                business = response?.business
-            }
-        }
         submitOptions()
         val expired = response?.business?.planStatus == "EXPIRED"
         if (expired) {
@@ -157,12 +145,12 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     private fun submitOptions() {
-        val business = appPrefs.user?.business!!
+        val business = presenter.user?.business ?: return
         val options = listOf(
             AccountOption(
                 9,
                 "Change City",
-                "Your current city: ${appPrefs.user?.city?.name}",
+                "Your current city: ${user.city?.name}",
                 R.drawable.ic_post_like_filled
             ),
             AccountOption(
@@ -217,7 +205,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
                 findNavController().navigate(d)
             }
             5 -> {
-                requireActivity().logOut()
+                presenter.logOut()
             }
             6 -> {
                 val d =
@@ -230,7 +218,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
                 findNavController().navigate(d)
             }
             8 -> {
-                val businessId = appPrefs.user?.business?.id
+                val businessId = user.business?.id
                 if (businessId != null) {
                     AccountFragmentDirections.actionNavigationAccountToMyPostsFragment(businessId).let { d ->
                         findNavController().navigate(d)
@@ -249,15 +237,20 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     }
 
     private fun submitCounts() {
-        val business = appPrefs.user?.business!!
-        val counts = listOf(
-            Count(1, business.rank.noZero(), "Rank"),
-            Count(2, "${business.avgRating}", "Ratings"),
-            Count(3, "${business.totalReviews}", "Reviews"),
-            Count(4, "${business.totalSuggestions}", "Suggestions")
-        )
-        countAdapter.submitList(counts)
+        user.business?.let { business ->
+            val counts = listOf(
+                Count(1, business.rank.noZero(), "Rank"),
+                Count(2, "${business.avgRating}", "Ratings"),
+                Count(3, "${business.totalReviews}", "Reviews"),
+                Count(4, "${business.totalSuggestions}", "Suggestions")
+            )
+            countAdapter.submitList(counts)
+        }
     }
 
-
+    override fun onLogOut() {
+        launchActivity<SplashScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+    }
 }

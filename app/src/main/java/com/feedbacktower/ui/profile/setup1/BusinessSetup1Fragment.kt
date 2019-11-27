@@ -1,6 +1,5 @@
 package com.feedbacktower.ui.profile.setup1
 
-
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -8,22 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.BusinessCategory
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.category.SelectCategoryFragment
 import com.feedbacktower.util.disable
 import com.feedbacktower.util.enable
-import com.payumoney.sdkui.ui.utils.Utils
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.View {
 
+    @Inject
+    lateinit var presenter: BusinessSetup1Presenter
+    @Inject
+    lateinit var user: User
     private lateinit var binding: FragmentBusinessSetup1Binding
-    private lateinit var presenter: BusinessSetup1Presenter
-
     private var selectedCatId: String? = null
     private var selectedMasterCatId: String? = null
 
@@ -34,7 +35,6 @@ class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.Vi
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentBusinessSetup1Binding.inflate(inflater, container, false)
-        presenter = BusinessSetup1Presenter()
         presenter.attachView(this)
         initUi()
         return binding.root
@@ -42,7 +42,7 @@ class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.Vi
 
     private fun initUi() {
 
-        val business = AppPrefs.getInstance(requireContext()).user?.business
+        val business = user.business
         binding.business = business
         selectedCatId = business?.businessCategory?.id
 
@@ -72,7 +72,7 @@ class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.Vi
                     binding.businessCatInput.setText(category.name)
                     selectedCatId = category.id
                     selectedMasterCatId = category.masterBusinessCategoryId
-                    AppPrefs.getInstance(requireContext()).setValue("MASTER_CAT_ID", selectedMasterCatId ?: "")
+                    presenter.saveMasterCategory(selectedMasterCatId)
                 }
             }
             fragment.show(fragmentManager!!, "select_category")
@@ -123,14 +123,6 @@ class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.Vi
     }
 
     override fun onDetailsUpdated(name: String, regNo: String, categoryId: String?) {
-        AppPrefs.getInstance(requireActivity()).apply {
-            user = user?.apply {
-                business = business?.apply {
-                    this.name = name
-                    this.regNo = regNo
-                }
-            }
-        }
         navigateNext()
     }
 

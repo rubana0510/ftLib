@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
@@ -15,6 +16,7 @@ import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.data.models.Business
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.data.models.Review
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.manager.PostManager
@@ -27,7 +29,6 @@ import com.feedbacktower.ui.map.MapScreen
 import com.feedbacktower.ui.reviews.send.RateReviewDialog
 import com.feedbacktower.ui.suggestions.send.SendSuggestionDialog
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
-import com.feedbacktower.util.isCurrentBusiness
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
@@ -37,6 +38,8 @@ import javax.inject.Inject
 class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.View {
     @Inject
     lateinit var presenter: BusinessDetailPresenter
+    @Inject
+    var user: User? = null
     private lateinit var binding: FragmentBusinessDetailBinding
     private lateinit var reviewListView: RecyclerView
     private lateinit var postListView: RecyclerView
@@ -63,6 +66,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
     private fun initUi() {
 
+        binding.buttonLay.isGone =  user?.business?.id?.equals(businessId) == true
         binding.onViewReviewsClicked = View.OnClickListener {
             val d =
                 BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationReview(
@@ -78,36 +82,21 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
             findNavController().navigate(d)
         }
         binding.onSendSuggestionClicked = View.OnClickListener {
-            if (isCurrentBusiness(businessId, requireContext())) {
-                requireContext().toast("You cannot Send suggestion to yourself!")
-                return@OnClickListener
-            }
-
             val d = SendSuggestionDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager!!, "suggestion")
         }
         binding.onCurrentLocationClicked = View.OnClickListener {
-            if (business == null || business?.currentLocation == null) {
-                requireContext().toast("No location found")
-                return@OnClickListener
-            }
             business?.let {
                 requireActivity().launchActivity<MapScreen> {
                     putExtra("LOCATION", it.currentLocation)
                     putExtra("TITLE", "Last Seen At")
                 }
             }
-
         }
 
 
         binding.sendReviewButtonClicked = View.OnClickListener {
-            if (isCurrentBusiness(businessId, requireContext())) {
-                requireContext().toast("You cannot Rate or Review yourself!")
-                return@OnClickListener
-            }
-
             val d = RateReviewDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager!!, "review")

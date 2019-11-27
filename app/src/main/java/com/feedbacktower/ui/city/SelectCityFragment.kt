@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
 import com.feedbacktower.adapters.AutoCompleteAdapter
 import com.feedbacktower.adapters.CityListAdapter
-import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.City
 import com.feedbacktower.data.models.Place
 import com.feedbacktower.databinding.FragmentSelectCityBinding
@@ -175,24 +174,10 @@ class SelectCityFragment : BaseViewFragmentImpl(), SelectCityContract.View {
     }
 
     override fun onBusinessCitySaved(city: City) {
-        AppPrefs.getInstance(requireContext()).apply {
-            user = user?.apply {
-                this.business = business?.apply {
-                    this.city = city
-                }
-            }
-        }
         navigateNext()
     }
 
     override fun onUserCitySaved(city: City) {
-        AppPrefs.getInstance(requireContext()).setValue("USER_CITY", city.id.toString())
-        AppPrefs.getInstance(requireContext()).setValue("CITY", city.name)
-        AppPrefs.getInstance(requireContext()).apply {
-            user = user?.apply {
-                this.city = city
-            }
-        }
         navigateNext()
     }
 

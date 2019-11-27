@@ -1,6 +1,7 @@
 package com.feedbacktower.ui.city
 
 import com.feedbacktower.BuildConfig
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.City
 import com.feedbacktower.data.models.Place
 import com.feedbacktower.network.models.ApiResponse
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectCityPresenter @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<SelectCityContract.View>(),
     SelectCityContract.Presenter {
     override fun saveBusinessCity(city: City) {
@@ -33,6 +35,13 @@ class SelectCityPresenter @Inject constructor(
             if (response.error != null) {
                 getView()?.showNetworkError(response.error)
                 return@launch
+            }
+            appPrefs.apply {
+                user = user?.apply {
+                    this.business = business?.apply {
+                        this.city = city
+                    }
+                }
             }
             getView()?.onBusinessCitySaved(city)
         }
@@ -51,6 +60,13 @@ class SelectCityPresenter @Inject constructor(
             if (response.error != null) {
                 getView()?.showNetworkError(response.error)
                 return@launch
+            }
+            appPrefs.apply {
+                setValue("USER_CITY", city.id.toString())
+                setValue("CITY", city.name)
+                user = user?.apply {
+                    this.city = city
+                }
             }
             getView()?.onUserCitySaved(city)
         }

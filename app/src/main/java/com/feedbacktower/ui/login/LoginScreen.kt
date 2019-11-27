@@ -28,6 +28,7 @@ class LoginScreen : BaseViewActivityImpl(), LoginContract.View, ConnectivityRece
         super.onCreate(savedInstanceState)
         (application as App).appComponent.authComponent().create()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_screen)
+        presenter.attachView(this)
         initUi()
     }
 
@@ -110,5 +111,10 @@ class LoginScreen : BaseViewActivityImpl(), LoginContract.View, ConnectivityRece
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         Log.d(TAG, "IS_CONNECTED: $isConnected")
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

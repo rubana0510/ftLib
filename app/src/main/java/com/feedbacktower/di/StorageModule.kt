@@ -1,6 +1,8 @@
 package com.feedbacktower.di
+
 import android.content.Context
 import com.feedbacktower.data.ApplicationPreferences
+import com.feedbacktower.data.models.User
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -11,5 +13,11 @@ class StorageModule {
     @Provides
     fun provideAppPrefs(context: Context): ApplicationPreferences {
         return ApplicationPreferences(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUser(appPrefs: ApplicationPreferences): User? {
+        return appPrefs.user
     }
 }

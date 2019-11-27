@@ -19,15 +19,15 @@ import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
-import com.feedbacktower.ui.utils.SpinnerDatePickerDialog
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
-import com.feedbacktower.util.permissions.PermissionManager
-import com.feedbacktower.util.isEmailValid
-import com.feedbacktower.util.toMyProfileRound
+import com.feedbacktower.ui.utils.SpinnerDatePickerDialog
 import com.feedbacktower.util.imageUriToFile
+import com.feedbacktower.util.isEmailValid
+import com.feedbacktower.util.permissions.PermissionManager
+import com.feedbacktower.util.toUserProfileRound
 import com.feedbacktower.utilities.compressor.Compressor
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
@@ -38,11 +38,16 @@ import org.jetbrains.anko.toast
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 
 class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.View,
     SpinnerDatePickerDialog.OnDateSelectedListener {
-    private lateinit var presenter: PersonalDetailPresenter
+    @Inject
+    lateinit var user: User
+    @Inject
+    lateinit var presenter: PersonalDetailPresenter
+
     private lateinit var binding: FragmentPersonalDetailsBinding
     private val TAG = "PersonalDetails"
     private val PERMISSION_CODE = 399
@@ -67,7 +72,6 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentPersonalDetailsBinding.inflate(inflater, container, false)
-        presenter = PersonalDetailPresenter()
         presenter.attachView(this)
         initUi()
         return binding.root
@@ -111,7 +115,6 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
             }
         }
         PermissionManager.getInstance().requestMediaPermission(this)
-        val user = AppPrefs.getInstance(requireContext()).user
         binding.user = user
         if (user?.dob == null) {
             dobInput.setText("Select Date")
@@ -235,23 +238,12 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
         dateSelected = date//sdf.format(sqldf.parse(date).time)
     }
 
-    override fun onProfileUploaded() {
-        val appPrefs = AppPrefs.getInstance(requireActivity())
-        val userId = appPrefs.user?.id ?: return
-        appPrefs.setValue(AppPrefs.PROFILE_LAST_UPDATED, System.currentTimeMillis().toString())
-        profileImage.toMyProfileRound(userId)
+    override fun onProfileUploaded(path: String?) {
+        profileImage.toUserProfileRound(path)
         requireContext().toast("Uploaded successfully")
     }
 
     override fun onDetailsUpdated(firstName: String, lastName: String, email: String, dateOfBirth: String) {
-        AppPrefs.getInstance(requireContext()).apply {
-            user = user?.apply {
-                this.firstName = firstName
-                this.lastName = lastName
-                this.emailId = email
-                this.dob = dateOfBirth
-            }
-        }
         if (!args.onboarding) {
             findNavController().navigateUp()
         } else {

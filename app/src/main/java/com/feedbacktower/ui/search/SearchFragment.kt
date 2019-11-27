@@ -24,7 +24,7 @@ import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.SearchBusiness
 import com.feedbacktower.network.models.SearchBusinessResponse
 import com.feedbacktower.ui.business_detail.BusinessDetailsActivity
-import com.feedbacktower.ui.account.FindCustomerActivity
+import com.feedbacktower.ui.account.find_customer.FindCustomerActivity
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical

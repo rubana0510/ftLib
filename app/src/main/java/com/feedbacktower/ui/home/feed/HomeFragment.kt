@@ -35,7 +35,7 @@ import com.feedbacktower.network.models.GetAdsResponse
 import com.feedbacktower.network.models.GetPostsResponse
 import com.feedbacktower.ui.ads.AdsPagerAdapter
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
-import com.feedbacktower.ui.home.*
+import com.feedbacktower.ui.home.UploadPostDialog
 import com.feedbacktower.ui.home.post.image.ImagePostActivity
 import com.feedbacktower.ui.home.post.text.TextPostActivity
 import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen2
@@ -137,7 +137,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         // swipeRefresh = binding.swipeRefresh
         message = binding.message
         binding.isBusiness = appPrefs.user?.userType == "BUSINESS"
-        binding.currentCity = appPrefs.getValue("CITY") ?: "Select City"
+        binding.currentCity = appPrefs.getValue("CITY", null) ?: "Select City"
         //setup list
         val layoutManager = LinearLayoutManager(context)
         feedListView.layoutManager = layoutManager

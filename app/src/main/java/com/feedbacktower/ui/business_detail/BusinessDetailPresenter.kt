@@ -1,5 +1,6 @@
 package com.feedbacktower.ui.business_detail
 
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
@@ -10,9 +11,12 @@ import javax.inject.Inject
 
 class BusinessDetailPresenter
 @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<BusinessDetailContract.View>(),
     BusinessDetailContract.Presenter {
+
+
 
     override fun fetchPosts(businessId: String, timestamp: String?) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -50,5 +54,7 @@ class BusinessDetailPresenter
             getView()?.onBusinessDetailFetched(response.payload)
         }
     }
+
+
 
 }

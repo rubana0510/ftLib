@@ -6,7 +6,7 @@ import java.io.File
 
 interface PersonalDetailContract {
     interface View : BaseView {
-        fun onProfileUploaded()
+        fun onProfileUploaded(path: String?)
         fun onDetailsUpdated(firstName: String, lastName: String, email: String, dateOfBirth: String)
         fun showProfileUploadProgress()
         fun hideProfileUploadProgress()

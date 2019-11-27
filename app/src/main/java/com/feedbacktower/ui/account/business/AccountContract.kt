@@ -10,10 +10,12 @@ interface AccountContract {
         fun onAvailabilityChanged(availability: Boolean)
         fun showAvailabilityChangeProgress()
         fun dismissAvailabilityChangeProgress()
+        fun onLogOut()
     }
 
     interface Presenter : BasePresenter<View> {
         fun fetch()
-        fun changeAvailability(availability: Boolean)
+        fun changeAvailability()
+        fun logOut()
     }
 }

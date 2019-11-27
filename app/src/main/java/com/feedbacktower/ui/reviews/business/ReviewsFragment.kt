@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.feedbacktower.App
 import com.feedbacktower.adapters.ReviewListAdapter
 import com.feedbacktower.util.callbacks.ScrollListener
-import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.Review
 import com.feedbacktower.databinding.FragmentReviewsBinding

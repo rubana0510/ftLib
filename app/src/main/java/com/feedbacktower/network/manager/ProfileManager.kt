@@ -167,9 +167,7 @@ class ProfileManager {
         categoryId: String,
         onComplete: (PlanListResponse?, ApiResponse.ErrorModel?) -> Unit
     ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            apiService.getSubscriptionPlansAsync(categoryId).makeRequest(onComplete)
-        }
+
     }
 
     fun setUnsetCategoryInterest(

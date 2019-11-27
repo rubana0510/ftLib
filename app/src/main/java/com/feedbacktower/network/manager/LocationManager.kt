@@ -31,15 +31,7 @@ class LocationManager {
             }
     }
 
-    fun saveBusinessLocation(
-        location: LatLng,
-        onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit
-    ) {
-        val map = hashMapOf<String, Any?>("location" to location.toArray())
-        GlobalScope.launch(Dispatchers.Main) {
-            apiService.updateBusinessAsync(map).makeRequest(onComplete)
-        }
-    }
+
 
     fun saveCurrentLocation(
         location: LatLng,

@@ -1,17 +1,12 @@
 package com.feedbacktower.ui.splash
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import com.feedbacktower.App
-import com.feedbacktower.BuildConfig
-import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.data.models.AppVersion
-import com.feedbacktower.network.manager.AuthManager
-import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.notifications.FcmManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.AuthResponse
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.login.LoginScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.logOut
@@ -20,95 +15,45 @@ import com.feedbacktower.util.showAppInStore
 import javax.inject.Inject
 
 
-class SplashScreen : AppCompatActivity() {
+class SplashScreen : BaseViewActivityImpl(), SplashContract.View {
     @Inject
     lateinit var presenter: SplashPresenter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as App).appComponent.authComponent().create()
-
-        val fcmToken = AppPrefs.getInstance(this).firebaseToken
-        pushFcmToken(fcmToken)
-        subscribeToTopic()
-    }
-
-    private fun subscribeToTopic() {
-        val user = AppPrefs.getInstance(this).user ?: return
-        FcmManager.subscribeToTopic(user.userType)
+        presenter.attachView(this)
+        presenter.saveFirebaseToken()
+        presenter.subscribeToTopicNotifications()
     }
 
     override fun onResume() {
         super.onResume()
-        if (AppPrefs.getInstance(this).user == null) {
-            Handler().postDelayed({
-                launchActivity<LoginScreen>()
-                finish()
-            }, 1000)
+        presenter.checkUserSignedIn()
+    }
+
+    override fun tokenRefreshError(error: ApiResponse.ErrorModel) {
+        if (error.code == "USER_NOT_FOUND" || error.code == "INVALID_AUTH_TOKEN") {
+            logOut()
             return
-        } else {
-            refreshAuthToken()
         }
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Some error occurred")
+        builder.setMessage(error.message)
+        builder.setPositiveButton("TRY AGAIN") { _, _ -> presenter.refreshToken() }
+        builder.setCancelable(false)
+        val alert = builder.create()
+        alert.setCanceledOnTouchOutside(false)
+        alert.show()
     }
 
-    private fun pushFcmToken(token: String?) {
-        token?.let {
-            val lastToken = AppPrefs.getInstance(this).getValue("LAST_TOKEN_ON_SERVER")
-            if (lastToken == token) return
-            ProfileManager.getInstance()
-                .updateFcmToken(token) { _, error ->
-                    if (error != null) {
-                        Log.e("SplashScreen", "Error: Token; ${error.message}")
-                        return@updateFcmToken
-                    }
-                    AppPrefs.getInstance(this).setValue("LAST_TOKEN_ON_SERVER", token)
-                    Log.d("SplashScreen", "Token Updated")
-                }
-        }
+    override fun onRefreshed(response: AuthResponse) {
+        navigateUser(response.user)
+        finish()
     }
 
-    private fun refreshAuthToken() {
-        Log.i("SplashScreen", "Refreshing token")
-        AuthManager.getInstance().refreshToken()
-        { response, error ->
-            Log.d("SplashScreen", "Error Occurred: $error")
-            if (error != null) {
-                if (error.code == "USER_NOT_FOUND" || error.code == "INVALID_AUTH_TOKEN") {
-                    logOut()
-                    return@refreshToken
-                }
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Some error occurred")
-                builder.setMessage(error.message)
-                builder.setPositiveButton("TRY AGAIN") { _, _ -> refreshAuthToken() }
-                builder.setCancelable(false)
-                val alert = builder.create()
-                alert.setCanceledOnTouchOutside(false)
-                alert.show()
-
-            }
-            if (response != null) {
-                AppPrefs.getInstance(this).apply {
-                    user = response.user
-                    authToken = response.token
-                }
-                Log.i("SplashScreen", "Token refreshed")
-                AppPrefs.getInstance(this).latestVersionCode = response.appVersion.code
-                //validate app version
-                if (response.appVersion.code > BuildConfig.VERSION_CODE && response.appVersion.updateType == AppVersion.UpdateType.HARD) {
-                    //user has old version
-                    showForceUpdateDialog(response.appVersion.version)
-                } else {
-                    navigateUser(response.user)
-                    finish()
-                }
-            } else {
-                Log.e("SplashScreen", "Token refresh failed")
-            }
-        }
-    }
-
-    private fun showForceUpdateDialog(versionName: String) {
+    override fun forceUpdateRequired(version: AppVersion) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("New update Available!")
         builder.setMessage("Download the latest version from play store.")
@@ -117,6 +62,16 @@ class SplashScreen : AppCompatActivity() {
         builder.setCancelable(false)
         alert.setCanceledOnTouchOutside(false)
         alert.show()
+    }
+
+    override fun loginRequired() {
+        launchActivity<LoginScreen>()
+        finish()
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 
 }

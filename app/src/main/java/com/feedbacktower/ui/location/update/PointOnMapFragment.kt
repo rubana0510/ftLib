@@ -12,8 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.App
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentPointOnMapBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
@@ -28,12 +29,16 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View, OnMapReadyCallback {
     private val TAG = "PointOnMap"
+    @Inject
+    lateinit var presenter: BusinessLocationPresenter
+    @Inject
+    lateinit var user: User
     private lateinit var binding: FragmentPointOnMapBinding
-    private lateinit var presenter: BusinessLocationPresenter
     private var markedLocation: LatLng? = null
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var googleMap: GoogleMap? = null
@@ -48,13 +53,17 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as App).appComponent.accountComponent().create().inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPointOnMapBinding.inflate(inflater, container, false)
+
         initUi()
-        presenter = BusinessLocationPresenter()
         presenter.attachView(this)
         return binding.root
     }
@@ -72,7 +81,7 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
             markedLocation = googleMap?.cameraPosition?.target ?: return@setOnCameraIdleListener
         }
         enableMyLocation()
-        val oldLocation = AppPrefs.getInstance(requireContext()).user?.business?.location
+        val oldLocation = user.business?.location
         if (oldLocation?.latitude != null && oldLocation.longitude != null) {
             googleMap?.zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 15f)
             return
@@ -111,7 +120,7 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
             }
             val currLocation = LatLng(location.latitude, location.longitude)
             LocationUtils.getInstance().lastKnownLocation = currLocation
-            val oldLocation = AppPrefs.getInstance(requireContext()).user?.business?.location
+            val oldLocation = user.business?.location
             if (oldLocation?.latitude == null || oldLocation.longitude == null) {
                 googleMap?.zoomToLocation(currLocation, 12f)
             }
@@ -140,14 +149,6 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
     }
 
     override fun onSaved(savedLocation: LatLng) {
-        AppPrefs.getInstance(requireContext())
-            .apply {
-                user = user?.apply {
-                    business?.apply {
-                        location = savedLocation.toLocation()
-                    }
-                }
-            }
         navigateNext()
     }
 

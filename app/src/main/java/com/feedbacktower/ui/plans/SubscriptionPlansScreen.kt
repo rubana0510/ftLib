@@ -11,20 +11,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.adapters.PlanAdapter
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PayUResponse
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.Plan
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.ActivitySubscriptionPlanScreenBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.env.Environment
 import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.TransactionManager
 import com.feedbacktower.network.models.GenerateHashRequest
 import com.feedbacktower.network.models.GenerateHashResponse
-import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.ui.payment.PlanPaymentResultScreen
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.util.*
 import com.google.gson.Gson
 import com.payumoney.core.PayUmoneySdkInitializer
@@ -34,22 +33,29 @@ import com.payumoney.sdkui.ui.utils.ResultModel
 import kotlinx.android.synthetic.main.activity_subscription_plan_screen.*
 import org.jetbrains.anko.toast
 import java.util.*
+import javax.inject.Inject
 
 
 class SubscriptionPlansScreen : AppCompatActivity() {
-
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+    @Inject
+    var user: User? = null
     private lateinit var planListView: RecyclerView
     private lateinit var planAdapter: PlanAdapter
     private var hashResponse: GenerateHashResponse? = null
     private var plan: Plan? = null
-    private lateinit var user: User
     private lateinit var binding: ActivitySubscriptionPlanScreenBinding
     private val TAG = "SubscriptionPlansScreen"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_subscription_plan_screen)
+
+        if (user == null) {
+            throw IllegalStateException("User cannot be null")
+        }
+
         initUi()
-        user = AppPrefs.getInstance(this).user!!
     }
 
     private fun initUi() {
@@ -59,7 +65,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
          planListView.adapter = planAdapter*/
         binding.onContinueClick = onContinueClick
 
-        val pendingPaymentSummary = AppPrefs.getInstance(this).summary
+        val pendingPaymentSummary = appPrefs.summary
         if (pendingPaymentSummary != null)
             saveTransactionStatus(pendingPaymentSummary)
         else
@@ -68,14 +74,16 @@ class SubscriptionPlansScreen : AppCompatActivity() {
 
 
     private fun getPlanList() {
-        var categoryId = AppPrefs.getInstance(this).getValue("MASTER_CAT_ID")
+        var categoryId = appPrefs.getValue("MASTER_CAT_ID", null)
         if (categoryId == null)
-            categoryId = AppPrefs.getInstance(this).user?.business?.businessCategory?.masterBusinessCategoryId
+            categoryId = appPrefs.user?.business?.businessCategory?.masterBusinessCategoryId
         if (categoryId == null) {
             toast("Select category")
             finish()
             return
         }
+
+
         ProfileManager.getInstance()
             .getSubscriptionPlans(categoryId) { planListResponse, error ->
                 if (error != null) {
@@ -101,7 +109,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .saveResponse(summary) { _, error ->
                 hideLoading()
                 if (error == null) {
-                    AppPrefs.getInstance(this).summary
+                    appPrefs.summary
                     launchActivity<SplashScreen> {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
@@ -124,7 +132,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             .cancel(id) { _, error ->
                 hideLoading()
                 if (error == null) {
-                    AppPrefs.getInstance(this).summary = null
+                    appPrefs.summary = null
                     hashResponse = null
                 } else {
                     Log.e(TAG, "Could not save status")
@@ -144,8 +152,8 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         val txId = generateTransactionID()
         val requestParams: GenerateHashRequest = GenerateHashRequest(
             plan.id,
-            user.emailId,
-            user.firstName,
+            user!!.emailId,
+            user!!.firstName,
             plan.name,
             txId,
             "",
@@ -166,7 +174,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     }
 
     private fun generateTransactionID(): String {
-        // val user: User = AppPrefs.getInstance(this).user ?: throw IllegalStateException("User cannot be null")
+        // val user: User = appPrefs.user ?: throw IllegalStateException("User cannot be null")
         return "${System.currentTimeMillis()}${Random().nextInt(999999) + 100000}"
     }
 
@@ -190,10 +198,10 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         val builder: PayUmoneySdkInitializer.PaymentParam.Builder = PayUmoneySdkInitializer.PaymentParam.Builder()
         builder.setAmount(String.format("%.2f", response.txn.totalAmount))
             .setTxnId(requestParams.txnid)
-            .setPhone(user.phone)
+            .setPhone(user!!.phone)
             .setProductName(plan.name)
-            .setFirstName(user.firstName)
-            .setEmail(user.emailId)
+            .setFirstName(user!!.firstName)
+            .setEmail(user!!.emailId)
             .setsUrl("${Env.SERVER_BASE_URL}payment/success")
             .setfUrl("${Env.SERVER_BASE_URL}payment/failure")
             .setUdf1(requestParams.udf1)
@@ -252,7 +260,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
                         payUResult.udf5,
                         hashResponse?.txn?.createdAt!!
                     )
-                    AppPrefs.getInstance(this).summary = summary
+                    appPrefs.summary = summary
                     launchActivity<PlanPaymentResultScreen> {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         putExtra(PlanPaymentResultScreen.PAYMENT_SUMMARY, summary)

@@ -6,7 +6,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.account.FindCustomerActivity">
+        tools:context=".ui.account.find_customer.FindCustomerActivity">
 
     <com.feedbacktower.utilities.qrscanner.CodeScannerView
             android:id="@+id/scannerView"

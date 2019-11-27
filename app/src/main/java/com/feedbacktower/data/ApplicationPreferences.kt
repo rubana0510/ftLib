@@ -2,6 +2,7 @@ package com.feedbacktower.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.User
@@ -15,28 +16,34 @@ class ApplicationPreferences @Inject constructor(
 
 
     var firebaseToken: String?
-        get() = sharedPrefs.getString("FIREBASE_TOKEN", null)
+        get() = getValue("FIREBASE_TOKEN", null)
         set(value) {
-            sharedPrefs.edit().putString("FIREBASE_TOKEN", value).apply()
+            setValue("FIREBASE_TOKEN", value)
+        }
+
+    var tokenPushRequired: Boolean
+        get() = getValue("TOKEN_PUSH_REQUIRED", false)
+        set(value) {
+            setValue("TOKEN_PUSH_REQUIRED", value)
         }
 
     var authToken: String?
-        get() = sharedPrefs.getString("AUTH_TOKEN", null)
+        get() = getValue("AUTH_TOKEN", null)
         set(value) {
-            sharedPrefs.edit().putString("AUTH_TOKEN", value).apply()
+            setValue("AUTH_TOKEN", value)
         }
 
-    fun setValue(key: String, value: String) {
+    fun setValue(key: String, value: String?) {
         sharedPrefs.edit().putString(key, value).apply()
     }
 
 
-    fun getValue(key: String): String? {
-        return sharedPrefs.getString(key, null)
+    fun getValue(key: String, default: String?): String? {
+        return sharedPrefs.getString(key, default)
     }
 
     fun setValue(key: String, value: Boolean) {
-        sharedPrefs.edit().putBoolean(key, value).apply()
+        sharedPrefs.edit { putBoolean(key, value) }
     }
 
     fun getValue(key: String, default: Boolean): Boolean {
@@ -63,4 +70,10 @@ class ApplicationPreferences @Inject constructor(
         get() = sharedPrefs.getInt("VERSION_CODE", BuildConfig.VERSION_CODE)
         set(value) = sharedPrefs.edit().putInt("VERSION_CODE", value).apply()
 
+
+    fun clearUserPrefs() {
+        sharedPrefs.edit {
+            clear()
+        }
+    }
 }

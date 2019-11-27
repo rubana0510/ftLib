@@ -7,32 +7,36 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.feedbacktower.data.AppPrefs
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.databinding.FragmentBusinessSetup2Binding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.plans.SubscriptionPlansScreen
 import com.feedbacktower.util.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class BusinessSetup2Fragment : BaseViewFragmentImpl(), BusinessSetup2Contract.View {
+    @Inject
+    lateinit var presenter: BusinessSetup2Presenter
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+
     private lateinit var binding: FragmentBusinessSetup2Binding
-    private lateinit var presenter: BusinessSetup2Presenter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentBusinessSetup2Binding.inflate(inflater, container, false)
-        presenter = BusinessSetup2Presenter()
         presenter.attachView(this)
         initUi()
         return binding.root
     }
 
     private fun initUi() {
-        binding.business = AppPrefs.getInstance(requireContext()).user?.business
+        binding.business = appPrefs.user?.business
 
         binding.onContinueClick = View.OnClickListener {
             if (valid(
@@ -98,15 +102,6 @@ class BusinessSetup2Fragment : BaseViewFragmentImpl(), BusinessSetup2Contract.Vi
     }
 
     override fun onDetailsUpdated(address: String, contact: String, website: String) {
-        AppPrefs.getInstance(requireActivity()).apply {
-            user = user?.apply {
-                business = business?.apply {
-                    this.address = address
-                    this.phone = contact
-                    this.website = website
-                }
-            }
-        }
         navigateNext()
     }
 

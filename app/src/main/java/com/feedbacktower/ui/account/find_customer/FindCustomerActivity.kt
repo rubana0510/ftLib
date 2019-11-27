@@ -1,40 +1,31 @@
-package com.feedbacktower.ui.account
+package com.feedbacktower.ui.account.find_customer
 
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.feedbacktower.App
 import com.feedbacktower.R
-import com.feedbacktower.data.ApplicationPreferences
-import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.models.FindCustomerResponse
-import com.feedbacktower.utilities.qrscanner.AutoFocusMode
-import com.feedbacktower.utilities.qrscanner.CodeScanner
-import com.feedbacktower.utilities.qrscanner.DecodeCallback
-import com.feedbacktower.utilities.qrscanner.ErrorCallback
-import com.feedbacktower.utilities.qrscanner.ScanMode
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.util.loadImage
 import com.feedbacktower.util.toProfileRound
-import com.feedbacktower.util.toQrBitmap
+import com.feedbacktower.utilities.qrscanner.*
 import kotlinx.android.synthetic.main.activity_find_customer.*
 import kotlinx.android.synthetic.main.dialog_customer_profile.view.*
 import kotlinx.android.synthetic.main.dialog_my_qr.view.*
 import org.jetbrains.anko.toast
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
-class FindCustomerActivity : AppCompatActivity() {
+class FindCustomerActivity : BaseViewActivityImpl(), FindCustomerContract.View {
     @Inject
-    lateinit var appPrefs: ApplicationPreferences
+    lateinit var presenter: FindCustomerPresenter
     private lateinit var codeScanner: CodeScanner
-    private val myQr: Bitmap? by lazy { createMyQr() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_find_customer)
         (applicationContext as App).appComponent.accountComponent().create().inject(this)
-
+        presenter.attachView(this)
         codeScanner = CodeScanner(this, scannerView)
         codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
         codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
@@ -45,7 +36,7 @@ class FindCustomerActivity : AppCompatActivity() {
         codeScanner.isFlashEnabled = false // Whether to enable flash or not
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
-                scanned(it.text)
+                presenter.findCustomer(it.text)
             }
         }
         codeScanner.errorCallback = ErrorCallback {
@@ -60,17 +51,6 @@ class FindCustomerActivity : AppCompatActivity() {
         showQr.setOnClickListener {
             showQrDialog()
         }
-    }
-
-    private fun scanned(data: String) {
-        ProfileManager.getInstance()
-            .find(data) { response, error ->
-                if (error != null || response == null) {
-                    toast(error?.message ?: getString(R.string.default_err_message))
-                    return@find
-                }
-                showInDialog(response)
-            }
     }
 
     private fun showInDialog(response: FindCustomerResponse) {
@@ -93,11 +73,7 @@ class FindCustomerActivity : AppCompatActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_my_qr, null)
         alertDialog.setView(view)
         view.apply {
-            if (myQr == null) {
-                toast("Could not show your QR")
-                return
-            }
-            myQr?.let {
+            presenter.getMyQrBitmap()?.let {
                 qrImage.loadImage(it)
             }
             close2.setOnClickListener { alertDialog.dismiss() }
@@ -105,11 +81,6 @@ class FindCustomerActivity : AppCompatActivity() {
         alertDialog.show()
     }
 
-    private fun createMyQr(): Bitmap? {
-        val b = appPrefs.user?.id
-            ?: throw IllegalStateException("User cannot be null")
-        return b.toQrBitmap()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -121,4 +92,13 @@ class FindCustomerActivity : AppCompatActivity() {
         super.onPause()
     }
 
+    override fun onFoundResponse(response: FindCustomerResponse) {
+        showInDialog(response)
+    }
+
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
+    }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.feedbacktower.R
-import com.feedbacktower.data.AppPrefs
 import com.feedbacktower.databinding.ActivityRegisterPhoneScreenBinding
 import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.util.Constants

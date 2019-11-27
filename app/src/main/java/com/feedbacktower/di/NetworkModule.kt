@@ -1,7 +1,7 @@
 package com.feedbacktower.di
 
-import com.feedbacktower.App
 import com.feedbacktower.BuildConfig
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.util.Constants
@@ -23,7 +23,9 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideOkhttpClient(): OkHttpClient {
+    fun provideOkhttpClient(
+        appPrefs: ApplicationPreferences
+    ): OkHttpClient {
         val clientBuilder = OkHttpClient.Builder().apply {
             connectTimeout(Constants.Service.Timeout.CONNECT, TimeUnit.MILLISECONDS)
             readTimeout(Constants.Service.Timeout.READ, TimeUnit.MILLISECONDS)
@@ -35,7 +37,7 @@ class NetworkModule {
             })
             addNetworkInterceptor ani@{ chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader(Constants.AUTHORIZATION, "Bearer ${App.getInstance().getToken()}")
+                    .addHeader(Constants.AUTHORIZATION, "Bearer ${appPrefs.authToken}")
                     .addHeader("Platform", "android")
                     .addHeader("VersionCode", BuildConfig.VERSION_CODE.toString())
                     .addHeader("VersionName", BuildConfig.VERSION_NAME)

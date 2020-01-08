@@ -50,7 +50,7 @@ data class PlanPaymentTransaction(
 
     enum class Status { FAILURE, PENDING, SUCCESS }
 
-    val PaymentStatus: Status
+    val paymentStatus: Status
         get() = when (status) {
             "FAILURE" -> Status.FAILURE
             "SUCCESS" -> Status.SUCCESS

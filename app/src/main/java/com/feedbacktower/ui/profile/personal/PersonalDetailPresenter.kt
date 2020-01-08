@@ -25,7 +25,7 @@ class PersonalDetailPresenter
     PersonalDetailContract.Presenter {
     override fun updateDetails(firstName: String, lastName: String, email: String, dateOfBirth: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showUpdateDetailsProgress()
+            view?.showUpdateDetailsProgress()
             val response = apiService.updatePersonalDetailsAsync(
                 hashMapOf(
                     "firstName" to firstName,
@@ -34,9 +34,9 @@ class PersonalDetailPresenter
                     "emailId" to email
                 )
             ).awaitNetworkRequest()
-            getView()?.hideUpdateDetailsProgress()
+            view?.hideUpdateDetailsProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -47,7 +47,7 @@ class PersonalDetailPresenter
                     this.dob = dateOfBirth
                 }
             }
-            getView()?.onDetailsUpdated(firstName, lastName, email, dateOfBirth)
+            view?.onDetailsUpdated(firstName, lastName, email, dateOfBirth)
         }
     }
 
@@ -59,17 +59,17 @@ class PersonalDetailPresenter
         val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
         val filePart = MultipartBody.Part.createFormData("avatar", file.name, requestBody)
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProfileUploadProgress()
+            view?.showProfileUploadProgress()
             val response = apiService.uploadProfileAsync(
                 filePart
             ).awaitNetworkRequest()
-            getView()?.hideProfileUploadProgress()
+            view?.hideProfileUploadProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.setValue("PROFILE_LAST_UPDATED", System.currentTimeMillis().toString())
-            getView()?.onProfileUploaded(appPrefs.user?.id)
+            view?.onProfileUploaded(appPrefs.user?.id)
         }
     }
 

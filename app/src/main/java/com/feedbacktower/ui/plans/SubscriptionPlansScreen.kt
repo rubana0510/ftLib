@@ -15,7 +15,6 @@ import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PayUResponse
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.Plan
-import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.ActivitySubscriptionPlanScreenBinding
 import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.manager.ProfileManager
@@ -39,8 +38,6 @@ import javax.inject.Inject
 class SubscriptionPlansScreen : AppCompatActivity() {
     @Inject
     lateinit var appPrefs: ApplicationPreferences
-    @Inject
-    var user: User? = null
     private lateinit var planListView: RecyclerView
     private lateinit var planAdapter: PlanAdapter
     private var hashResponse: GenerateHashResponse? = null
@@ -50,11 +47,6 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_subscription_plan_screen)
-
-        if (user == null) {
-            throw IllegalStateException("User cannot be null")
-        }
-
         initUi()
     }
 
@@ -152,8 +144,8 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         val txId = generateTransactionID()
         val requestParams: GenerateHashRequest = GenerateHashRequest(
             plan.id,
-            user!!.emailId,
-            user!!.firstName,
+            appPrefs.user!!.emailId,
+            appPrefs.user!!.firstName,
             plan.name,
             txId,
             "",
@@ -198,10 +190,10 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         val builder: PayUmoneySdkInitializer.PaymentParam.Builder = PayUmoneySdkInitializer.PaymentParam.Builder()
         builder.setAmount(String.format("%.2f", response.txn.totalAmount))
             .setTxnId(requestParams.txnid)
-            .setPhone(user!!.phone)
+            .setPhone(appPrefs.user!!.phone)
             .setProductName(plan.name)
-            .setFirstName(user!!.firstName)
-            .setEmail(user!!.emailId)
+            .setFirstName(appPrefs.user!!.firstName)
+            .setEmail(appPrefs.user!!.emailId)
             .setsUrl("${Env.SERVER_BASE_URL}payment/success")
             .setfUrl("${Env.SERVER_BASE_URL}payment/failure")
             .setUdf1(requestParams.udf1)

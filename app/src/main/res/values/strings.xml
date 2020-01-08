@@ -179,6 +179,6 @@
     <string name="uploading_video">Uploading video, please wait</string>
     <string name="video_uploaded">Video posted</string>
     <string name="please_wait_dot_dot">Please wait...</string>
-    <string name="log_in">LOG IN</string>
+    <string name="session_expired_message">Session expired, please login again</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.feedbacktower.ui.account.customer
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,8 +16,8 @@ import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.local.models.AccountOption
 import com.feedbacktower.databinding.FragmentCustomerAccountBinding
 import com.feedbacktower.ui.profile.BusinessProfileSetupScreen
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.util.launchActivity
-import com.feedbacktower.util.logOut
 import com.feedbacktower.util.showAppInStore
 import javax.inject.Inject
 
@@ -103,7 +104,10 @@ class CustomerAccountFragment : Fragment() {
                 findNavController().navigate(d)
             }
             5 -> {
-                requireActivity().logOut()
+                appPrefs.clearUserPrefs()
+                launchActivity<SplashScreen> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             }
             10 -> {
                 requireActivity().showAppInStore()

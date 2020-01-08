@@ -21,11 +21,11 @@ class FindCustomerPresenter
         GlobalScope.launch(Dispatchers.Main) {
             val response = apiService.findCustomerAsync(qrData).awaitNetworkRequest()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             response.payload?.let {
-                getView()?.onFoundResponse(it)
+                view?.onFoundResponse(it)
             }
         }
     }

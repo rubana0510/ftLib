@@ -234,7 +234,7 @@ class ProfileManager {
 
     fun applyReferralCode(code: String, onComplete: (EmptyResponse?, ApiResponse.ErrorModel?) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
-            apiService.applyReferralCodeAsync(
+            apiService.verifyReferralCodeAsync(
                 hashMapOf("code" to code)
             ).makeRequest(onComplete)
         }

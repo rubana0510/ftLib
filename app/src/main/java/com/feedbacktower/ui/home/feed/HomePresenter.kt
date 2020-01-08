@@ -19,23 +19,23 @@ class HomePresenter
         GlobalScope.launch(Dispatchers.Main) {
             val response = apiService.getAdsAsync().awaitNetworkRequest()
             if (response.error != null) {
-                getView()?.showPostsError(response.error)
+                view?.showPostsError(response.error)
                 return@launch
             }
-            getView()?.onAdsFetched(response.payload)
+            view?.onAdsFetched(response.payload)
         }
     }
 
     override fun fetchPosts(timestamp: String?) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.getPostsAsync(timestamp).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showPostsError(response.error)
+                view?.showPostsError(response.error)
                 return@launch
             }
-            getView()?.onPostsFetched(response.payload, timestamp)
+            view?.onPostsFetched(response.payload, timestamp)
         }
     }
 

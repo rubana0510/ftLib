@@ -5,6 +5,7 @@ import com.feedbacktower.di.account.AccountComponent
 import com.feedbacktower.di.auth.AuthComponent
 import com.feedbacktower.di.business_detail.BusinessDetailComponent
 import com.feedbacktower.di.home.HomeComponent
+import com.feedbacktower.di.payment.PaymentComponent
 import com.feedbacktower.di.reviews.ReviewsComponent
 import com.feedbacktower.di.suggestions.SuggestionsComponent
 import com.feedbacktower.di.upload_post.UploadPostComponent
@@ -30,4 +31,5 @@ interface AppComponent {
     fun accountComponent(): AccountComponent.Factory
     fun homeComponent(): HomeComponent.Factory
     fun uploadPostComponent(): UploadPostComponent.Factory
+    fun paymentComponent(): PaymentComponent.Factory
 }

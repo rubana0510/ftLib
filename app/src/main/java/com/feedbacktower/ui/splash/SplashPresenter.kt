@@ -20,8 +20,14 @@ class SplashPresenter @Inject constructor(
     override fun refreshToken() {
         GlobalScope.launch(Dispatchers.Main) {
             val response = apiService.refreshTokenAsync().awaitNetworkRequest()
-            if (response.error != null) {
-                getView()?.tokenRefreshError(response.error)
+            val error = response.error
+            if (error != null) {
+                if (error.code == "USER_NOT_FOUND" || error.code == "INVALID_AUTH_TOKEN") {
+                    appPrefs.clearUserPrefs()
+                    view?.logout()
+                    return@launch
+                }
+                view?.tokenRefreshError(response.error)
                 return@launch
             }
             response.payload?.let { data ->
@@ -33,9 +39,9 @@ class SplashPresenter @Inject constructor(
                 //validate app version
                 if (data.appVersion.code > BuildConfig.VERSION_CODE && data.appVersion.updateType == AppVersion.UpdateType.HARD) {
                     //user has old version
-                    getView()?.forceUpdateRequired(data.appVersion)
+                    view?.forceUpdateRequired(data.appVersion)
                 } else {
-                    getView()?.onRefreshed(data)
+                    view?.onRefreshed(data)
                 }
             }
 
@@ -49,7 +55,7 @@ class SplashPresenter @Inject constructor(
                     val response =
                         apiService.updatePersonalDetailsAsync(hashMapOf("fcmToken" to token)).awaitNetworkRequest()
                     if (response.error != null) {
-                        // getView()?.showNetworkError(response.error)
+                        // view?.showNetworkError(response.error)
                         return@launch
                     }
                     appPrefs.tokenPushRequired = false
@@ -67,7 +73,7 @@ class SplashPresenter @Inject constructor(
     override fun checkUserSignedIn() {
         if (appPrefs.user == null) {
             Handler().postDelayed({
-                getView()?.loginRequired()
+                view?.loginRequired()
             }, 1000)
             return
         } else {

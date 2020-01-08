@@ -1,5 +1,6 @@
 package com.feedbacktower.ui.splash
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.feedbacktower.App
@@ -9,7 +10,6 @@ import com.feedbacktower.network.models.AuthResponse
 import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.login.LoginScreen
 import com.feedbacktower.util.launchActivity
-import com.feedbacktower.util.logOut
 import com.feedbacktower.util.navigateUser
 import com.feedbacktower.util.showAppInStore
 import javax.inject.Inject
@@ -34,10 +34,6 @@ class SplashScreen : BaseViewActivityImpl(), SplashContract.View {
     }
 
     override fun tokenRefreshError(error: ApiResponse.ErrorModel) {
-        if (error.code == "USER_NOT_FOUND" || error.code == "INVALID_AUTH_TOKEN") {
-            logOut()
-            return
-        }
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Some error occurred")
         builder.setMessage(error.message)
@@ -67,6 +63,12 @@ class SplashScreen : BaseViewActivityImpl(), SplashContract.View {
     override fun loginRequired() {
         launchActivity<LoginScreen>()
         finish()
+    }
+
+    override fun logout() {
+        launchActivity<SplashScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
     }
 
     override fun onDestroy() {

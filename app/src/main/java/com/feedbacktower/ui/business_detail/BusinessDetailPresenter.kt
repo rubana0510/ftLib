@@ -1,6 +1,7 @@
 package com.feedbacktower.ui.business_detail
 
 import com.feedbacktower.data.ApplicationPreferences
+import com.feedbacktower.data.models.User
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
@@ -16,18 +17,20 @@ class BusinessDetailPresenter
 ) : BasePresenterImpl<BusinessDetailContract.View>(),
     BusinessDetailContract.Presenter {
 
+    val user: User?
+        get() = appPrefs.user
 
 
     override fun fetchPosts(businessId: String, timestamp: String?) {
         GlobalScope.launch(Dispatchers.Main) {
-            //getView()?.showProgress()
+            //view?.showProgress()
             val response = apiService.getBusinessPostsAsync(businessId, timestamp).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onPostsFetched(response.payload)
+            view?.onPostsFetched(response.payload)
         }
     }
 
@@ -35,23 +38,23 @@ class BusinessDetailPresenter
         GlobalScope.launch(Dispatchers.Main) {
             val response = apiService.getBusinessReviewsAsync(businessId).awaitNetworkRequest()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onReviewsFetched(response.payload)
+            view?.onReviewsFetched(response.payload)
         }
     }
 
     override fun fetchBusinessDetails(businessId: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.getBusinessDetailsAsync(businessId).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onBusinessDetailFetched(response.payload)
+            view?.onBusinessDetailFetched(response.payload)
         }
     }
 

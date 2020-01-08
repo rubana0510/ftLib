@@ -17,7 +17,7 @@ class LoginPresenter @Inject constructor(
         GlobalScope.launch(Dispatchers.Main) {
            val response =  apiService.loginAsync(hashMapOf("phone" to phone, "password" to password)).awaitNetworkRequest()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             response.payload?.let { payload->
@@ -25,7 +25,7 @@ class LoginPresenter @Inject constructor(
                     user = payload.user
                     authToken = payload.token
                 }
-                getView()?.onLoginSuccess(payload.user)
+                view?.onLoginSuccess(payload.user)
             }
         }
     }

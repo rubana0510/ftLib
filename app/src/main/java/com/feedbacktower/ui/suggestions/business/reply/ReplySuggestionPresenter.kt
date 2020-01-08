@@ -14,16 +14,16 @@ class ReplySuggestionPresenter @Inject constructor(
     ReplySuggestionContract.Presenter {
     override fun reply(suggestionId: String, replyMessage: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.replySuggestionAsync(
                 hashMapOf("id" to suggestionId, "reply" to replyMessage)
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onReplySent()
+            view?.onReplySent()
         }
     }
 }

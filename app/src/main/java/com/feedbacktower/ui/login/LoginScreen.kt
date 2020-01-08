@@ -106,7 +106,7 @@ class LoginScreen : BaseViewActivityImpl(), LoginContract.View, ConnectivityRece
     override fun dismissProgress() {
         super.dismissProgress()
         loginButton.isEnabled = true
-        loginButton.text = getString(R.string.log_in)
+        loginButton.text = getString(R.string.login)
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {

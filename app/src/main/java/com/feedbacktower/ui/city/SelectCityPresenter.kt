@@ -24,16 +24,16 @@ class SelectCityPresenter @Inject constructor(
     SelectCityContract.Presenter {
     override fun saveBusinessCity(city: City) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.updateBusinessAsync(
                 hashMapOf(
                     "cityId" to city.id
                 )
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
 
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -43,22 +43,22 @@ class SelectCityPresenter @Inject constructor(
                     }
                 }
             }
-            getView()?.onBusinessCitySaved(city)
+            view?.onBusinessCitySaved(city)
         }
     }
 
     override fun saveUserCity(city: City) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.updatePersonalDetailsAsync(
                 hashMapOf(
                     "cityId" to city.id
                 )
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
 
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -68,24 +68,24 @@ class SelectCityPresenter @Inject constructor(
                     this.city = city
                 }
             }
-            getView()?.onUserCitySaved(city)
+            view?.onUserCitySaved(city)
         }
     }
 
     override fun fetchCities(keyword: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.getCitiesAsync(keyword).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
 
             if (response.error != null) {
-                getView()?.dismissProgress()
-                getView()?.showNetworkError(response.error)
+                view?.dismissProgress()
+                view?.showNetworkError(response.error)
                 return@launch
             }
             if (response.payload != null && !response.payload.cities.isNullOrEmpty()) {
-                getView()?.dismissProgress()
-                getView()?.onCitiesFetched(response.payload)
+                view?.dismissProgress()
+                view?.onCitiesFetched(response.payload)
             } else {
                 fetchPlaces(keyword)
             }
@@ -95,18 +95,18 @@ class SelectCityPresenter @Inject constructor(
     override fun createNewCityState(city: String, state: String) {
         GlobalScope.launch(Dispatchers.Main) {
             val map = hashMapOf<String, Any?>("cityName" to city, "stateName" to state)
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.addCity(
                 map
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
 
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             response.payload?.city?.let {
-                getView()?.onCityStateCreated(it)
+                view?.onCityStateCreated(it)
             }
         }
     }
@@ -115,19 +115,19 @@ class SelectCityPresenter @Inject constructor(
         val url =
             "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=${BuildConfig.PLACES_API_KEY}"
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response: ApiResponse<PlaceDetailsResponse> = apiService.placeDetailsAsync(url).awaitGoogleApiRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             if (response.payload != null && response.payload.status == "OK") {
                 response.payload.result.let {
-                    getView()?.onPlaceDetailsFetched(it)
+                    view?.onPlaceDetailsFetched(it)
                 }
             } else {
-                getView()?.showNetworkError(getUnknownError(response.payload?.status))
+                view?.showNetworkError(getUnknownError(response.payload?.status))
             }
         }
     }
@@ -136,16 +136,16 @@ class SelectCityPresenter @Inject constructor(
         val url =
             "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${keyword}&key=${BuildConfig.PLACES_API_KEY}&sessiontoken=1234567890";
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.autocompleteAsync(url).awaitGoogleApiRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.payload != null && response.payload.status == "OK") {
                 response.payload.predictions.let {
                     val places = getPlaces(it)
-                    getView()?.onPlacesFetched(places)
+                    view?.onPlacesFetched(places)
                 }
             } else {
-                getView()?.showNetworkError(getUnknownError(response.payload?.status))
+                view?.showNetworkError(getUnknownError(response.payload?.status))
             }
         }
     }

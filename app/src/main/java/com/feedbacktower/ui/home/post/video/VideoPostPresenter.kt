@@ -20,17 +20,17 @@ class VideoPostPresenter
     VideoPostContract.Presenter {
     override fun postVideo(file: File, caption: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.createVideoPostAsync(
                 file.toPart(),
                 caption.toRequestBody()
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onVideoPosted()
+            view?.onVideoPosted()
         }
     }
 }

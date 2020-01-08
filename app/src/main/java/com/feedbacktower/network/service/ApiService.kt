@@ -236,7 +236,7 @@ interface ApiService {
     fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>
 
     @POST("/api/business/referral")
-    fun applyReferralCodeAsync(@Body map: HashMap<String, String>): Deferred<ApiResponse<EmptyResponse?>>
+    fun verifyReferralCodeAsync(@Body map: HashMap<String, String>): Deferred<ApiResponse<EmptyResponse?>>
 
     //QR Transaction
     @POST("/api/wallet-amt-transfer/generate")

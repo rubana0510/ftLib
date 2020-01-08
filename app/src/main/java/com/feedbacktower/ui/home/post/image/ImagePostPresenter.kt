@@ -20,17 +20,17 @@ class ImagePostPresenter
     ImagePostContract.Presenter {
     override fun postImage(file: File, caption: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.createPhotoPostAsync(
                 file.toPart(),
                 caption.toRequestBody()
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onImagePosted()
+            view?.onImagePosted()
         }
     }
 }

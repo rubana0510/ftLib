@@ -16,27 +16,27 @@ class AccountTypeSelectionPresenter
 
     override fun continueAsCustomer() {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.continueAsCustomerAsync().awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onContinueCustomerResponse()
+            view?.onContinueCustomerResponse()
         }
     }
 
     override fun registerAsBusiness() {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.continueAsCustomerAsync().awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onBusinessRegistered()
+            view?.onBusinessRegistered()
         }
     }
 }

@@ -7,27 +7,27 @@ class SenderQrPresenter : BasePresenterImpl<SenderQrContract.View>(),
     SenderQrContract.Presenter {
 
     override fun fetchQrData() {
-        getView()?.showProgress()
+        view?.showProgress()
         QRTransactionManager.getInstance()
             .generate { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@generate
                 }
-                getView()?.onQrDataFetched(response)
+                view?.onQrDataFetched(response)
             }
     }
 
     override fun listenForChanges(txId: String) {
         QRTransactionManager.getInstance()
             .checkStatusSender(txId) { response, error ->
-             //   getView()?.dismissProgress()
+             //   view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@checkStatusSender
                 }
-                getView()?.onQrPaymentStatusResponse(response)
+                view?.onQrPaymentStatusResponse(response)
             }
     }
 }

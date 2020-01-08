@@ -3,18 +3,16 @@ package com.feedbacktower.ui.payment
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.PlanPaymentTransaction
-import com.feedbacktower.network.manager.AuthManager
-import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.network.manager.TransactionManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.plans.SubscriptionPlansScreen
 import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.util.*
@@ -23,27 +21,30 @@ import kotlinx.android.synthetic.main.dialog_referral_success.view.*
 import org.jetbrains.anko.toast
 import javax.inject.Inject
 
-class PlanPaymentResultScreen : AppCompatActivity() {
+class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.View {
     companion object {
         const val PAYMENT_SUMMARY = "PAYMENT_SUMMARY"
     }
 
     @Inject
     lateinit var appPrefs: ApplicationPreferences
+    @Inject
+    lateinit var presenter: PaymentResultPresenter
+
     private lateinit var paymentSummary: PaymentSummary
-    private var statusCallCount = 0
     private var paymentStatus: PlanPaymentTransaction.Status? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_payment_success_screen)
-
+        (application as App).appComponent.paymentComponent().create()
+        presenter.attachView(this)
         intent?.let {
             paymentSummary =
                 it.getSerializableExtra(PAYMENT_SUMMARY) as? PaymentSummary
                     ?: throw IllegalStateException("Payment summary cannot be null")
             transactionId.text = paymentSummary.txid
             date.text = paymentSummary.createdAt.toDate()
-            saveTransactionStatus()
+            presenter.saveTransactionStatus(paymentSummary)
         }
 
         button.setOnClickListener {
@@ -73,85 +74,78 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         //getPlanTransactions()
     }
 
-    private fun saveTransactionStatus() {
+    override fun showProgress() {
+        super.showProgress()
         showLoading()
-        TransactionManager.getInstance()
-            .saveResponse(paymentSummary) { _, error ->
-                hideLoading()
-                if (error == null) {
-                    checkTransactionStatus()
-                } else {
-                    toast(error.message ?: getString(R.string.default_err_message))
-                }
-            }
     }
 
-    private fun checkTransactionStatus() {
-        showLoading()
-        statusCallCount++
-        TransactionManager.getInstance()
-            .checkPaymentStatus(paymentSummary.id) { response, error ->
-                if (error == null) {
-                    response?.let {
-                        paymentStatus = it.transaction.PaymentStatus
-                        if (it.transaction.PaymentStatus == PlanPaymentTransaction.Status.SUCCESS) {
-                            //Success yay!
-
-                            setPaymentSuccess(it.transaction)
-
-                        } else if (it.transaction.PaymentStatus == PlanPaymentTransaction.Status.PENDING) {
-                            statusMessage.text = "Please wait, payment status is pending"
-                            Handler().postDelayed({
-                                if (statusCallCount < Constants.PAYMENT_STATUS_CHECK_MAX_WAIT_TIME / Constants.PAYMENT_STATUS_CHECK_INTERVAL)
-                                    checkTransactionStatus()
-                                else
-                                    setPaymentPending()
-                            }, Constants.PAYMENT_STATUS_CHECK_INTERVAL)
-
-                        } else if (it.transaction.PaymentStatus == PlanPaymentTransaction.Status.FAILURE) {
-                            setPaymentFailed()
-                        } else {
-                            toast("Some error occurred")
-                        }
-                    }
-                } else {
-                    toast("Some error occurred")
-                }
-            }
+    override fun dismissProgress() {
+        super.dismissProgress()
+        hideLoading()
     }
 
-    private fun refreshAuthToken() {
-        AuthManager.getInstance().refreshToken()
-        { response, error ->
-            if (error != null) {
-                if (
-                    error.message == "USER_NOT_FOUND"
-                ) {
-                    appPrefs.clearUserPrefs()
-                    launchActivity<SplashScreen> { }
-                    return@refreshToken
-                }
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Error occurred")
-                builder.setMessage(error.message ?: getString(R.string.default_err_message))
-                builder.setPositiveButton("TRY AGAIN") { _, _ -> refreshAuthToken() }
-                builder.setCancelable(false)
-                val alert = builder.create()
-                alert.setCanceledOnTouchOutside(false)
-                alert.show()
-                return@refreshToken
-            }
-            if (response != null) {
-                appPrefs.apply {
-                    user = response.user
-                    authToken = response.token
-                }
-                initializeReferral()
-                Log.i("PlanPayment", "Token refreshed")
-            } else {
-                Log.e("PlanPayment", "Token refresh failed")
-            }
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error occurred")
+        builder.setMessage(error.message)
+        builder.setPositiveButton("TRY AGAIN") { _, _ -> presenter.refreshAuthToken() }
+        builder.setCancelable(false)
+        val alert = builder.create()
+        alert.setCanceledOnTouchOutside(false)
+        alert.show()
+        toast(error.message)
+    }
+
+
+    override fun saveTransactionStatusSuccess() {
+        presenter.checkPaymentStatus(paymentSummary.id)
+    }
+
+    override fun checkPaymentStatusSuccess(transaction: PlanPaymentTransaction) {
+        paymentStatus = transaction.paymentStatus
+        if (paymentStatus == PlanPaymentTransaction.Status.SUCCESS) {
+            //Success yay!
+            setPaymentSuccess(transaction)
+        } else if (paymentStatus == PlanPaymentTransaction.Status.PENDING) {
+            statusMessage.text = "Please wait, payment status is pending"
+            Handler().postDelayed({
+                if (presenter.statusCallCount < Constants.PAYMENT_STATUS_CHECK_MAX_WAIT_TIME / Constants.PAYMENT_STATUS_CHECK_INTERVAL)
+                    presenter.checkPaymentStatus(paymentSummary.id)
+                else
+                    setPaymentPending()
+            }, Constants.PAYMENT_STATUS_CHECK_INTERVAL)
+
+        } else if (paymentStatus == PlanPaymentTransaction.Status.FAILURE) {
+            setPaymentFailed()
+        } else {
+            toast("Some error occurred")
         }
+    }
+
+
+    override fun refreshAuthTokenSuccess() {
+        initializeReferral()
+    }
+
+    override fun hideVerifyReferralProgress() {
+        button.enable()
+    }
+
+    override fun showVerifyReferralProgress() {
+        referralCodeInput.disable()
+        button.disable()
+    }
+
+    override fun verifyReferralCodeSuccess() {
+        apply.text = "APPLIED"
+        referralCodeLay.disable()
+        apply.disable()
+        referralCode.disable()
+        apply.icon = getDrawable(R.drawable.ic_check_circle_black_24dp)
+        apply.iconSize = 16
+        apply.iconTint = ContextCompat.getColorStateList(this, R.color.button_green)
+        showCodeAppliedMessage()
     }
 
     private fun hideLoading() {
@@ -171,7 +165,7 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         referralNote.text = "Apply Referral code and get \n Rs.${transaction.amount} more in wallet"
         walletBalance.text = "Rs.${transaction.amount}"
         appPrefs.summary = null
-        refreshAuthToken()
+        presenter.refreshAuthToken()
         hideLoading()
     }
 
@@ -184,29 +178,8 @@ class PlanPaymentResultScreen : AppCompatActivity() {
                 toast("Enter  referral code")
                 return@setOnClickListener
             }
-            verifyReferralCode(code)
+            presenter.verifyReferralCode(code)
         }
-    }
-
-    private fun verifyReferralCode(code: String) {
-        referralCodeInput.disable()
-        button.disable()
-        ProfileManager.getInstance()
-            .applyReferralCode(code) { _, error ->
-                button.enable()
-                if (error == null) {
-                    apply.text = "APPLIED"
-                    referralCodeLay.disable()
-                    apply.disable()
-                    referralCode.disable()
-                    apply.icon = getDrawable(R.drawable.ic_check_circle_black_24dp)
-                    apply.iconSize = 16
-                    apply.iconTint = ContextCompat.getColorStateList(this, R.color.button_green)
-                    showCodeAppliedMessage()
-                } else {
-                    toast("Referral code invalid")
-                }
-            }
     }
 
     private fun showCodeAppliedMessage() {
@@ -247,23 +220,8 @@ class PlanPaymentResultScreen : AppCompatActivity() {
         hideLoading()
     }
 
-    private fun getPlanTransactions() {
-        txDetails.gone()
-        TransactionManager.getInstance()
-            .getTransactions { response, error ->
-                if (error == null && response?.transactions != null) {
-                    if (response.transactions.isNotEmpty()) {
-                        txDetails.visible()
-                        val transaction = response.transactions[0]
-                        transactionId.text = transaction.txnid
-                        date.text = transaction.updatedAt.toDate()
-                    } else {
-                        //toast("You don't have any active plans")
-                        Log.e("PlanPaySuccess", "No transaction data")
-                    }
-                }
-            }
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
-
-
 }

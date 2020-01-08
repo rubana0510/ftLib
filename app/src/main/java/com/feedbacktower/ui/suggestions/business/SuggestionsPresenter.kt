@@ -14,14 +14,14 @@ class SuggestionsPresenter @Inject constructor(
     SuggestionsContract.Presenter {
     override fun fetch(timestamp: String, initial: Boolean) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.getSuggestionsAsync(timestamp).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onFetched(response.payload, initial)
+            view?.onFetched(response.payload, initial)
         }
     }
 }

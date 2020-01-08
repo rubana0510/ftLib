@@ -6,14 +6,14 @@ import com.feedbacktower.ui.base.BasePresenterImpl
 class TransactionPresenter : BasePresenterImpl<TransactionsContract.View>(),
     TransactionsContract.Presenter {
     override fun fetch(timestamp: String) {
-        getView()?.showProgress()
+        view?.showProgress()
         QRTransactionManager.getInstance().getTransactions(timestamp) { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@getTransactions
                 }
-                getView()?.onFetched(response, timestamp)
+                view?.onFetched(response, timestamp)
             }
     }
 }

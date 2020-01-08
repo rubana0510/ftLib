@@ -6,15 +6,15 @@ import com.feedbacktower.ui.base.BasePresenterImpl
 class ReceiverScanPresenter : BasePresenterImpl<ReceiverScanContract.View>(),
     ReceiverScanContract.Presenter {
     override fun verifyScannedData(data: String) {
-        getView()?.showProgress()
+        view?.showProgress()
         QRTransactionManager.getInstance()
             .scan(data) { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@scan
                 }
-                getView()?.onVerified(response)
+                view?.onVerified(response)
             }
     }
 }

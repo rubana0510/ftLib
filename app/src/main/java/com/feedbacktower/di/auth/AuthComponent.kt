@@ -2,6 +2,7 @@ package com.feedbacktower.di.auth
 
 import com.feedbacktower.notifications.MyFirebaseMessagingService
 import com.feedbacktower.ui.login.LoginScreen
+import com.feedbacktower.ui.register.RegisterPhoneScreen
 import com.feedbacktower.ui.splash.SplashScreen
 import dagger.Subcomponent
 
@@ -14,6 +15,7 @@ interface AuthComponent {
     }
 
     fun inject(activity: LoginScreen)
+    fun inject(activity: RegisterPhoneScreen)
     fun inject(activity: SplashScreen)
     fun inject(firebaseMessagingService: MyFirebaseMessagingService)
 }

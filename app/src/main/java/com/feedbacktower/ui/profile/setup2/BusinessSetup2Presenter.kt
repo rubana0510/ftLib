@@ -17,7 +17,7 @@ class BusinessSetup2Presenter
     BusinessSetup2Contract.Presenter {
     override fun updateDetails(address: String, contact: String, website: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.updateBusinessAsync(
                 hashMapOf(
                     "address" to address,
@@ -27,9 +27,9 @@ class BusinessSetup2Presenter
                     "long" to null
                 )
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -41,7 +41,7 @@ class BusinessSetup2Presenter
                     }
                 }
             }
-            getView()?.onDetailsUpdated(address, contact, website)
+            view?.onDetailsUpdated(address, contact, website)
         }
     }
 }

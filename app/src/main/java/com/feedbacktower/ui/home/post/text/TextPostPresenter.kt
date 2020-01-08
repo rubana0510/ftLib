@@ -20,27 +20,27 @@ class TextPostPresenter
     TextPostContract.Presenter {
     override fun postText(caption: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.createTextPostAsync(hashMapOf("text" to caption)).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onTextPosted()
+            view?.onTextPosted()
         }
     }
 
     override fun editPostText(caption: String, postId: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.editTextPostAsync(postId, hashMapOf("text" to caption)).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onTextEdited()
+            view?.onTextEdited()
         }
     }
 }

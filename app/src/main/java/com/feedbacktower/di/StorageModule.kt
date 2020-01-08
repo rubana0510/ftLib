@@ -14,10 +14,4 @@ class StorageModule {
     fun provideAppPrefs(context: Context): ApplicationPreferences {
         return ApplicationPreferences(context)
     }
-
-    @Singleton
-    @Provides
-    fun provideUser(appPrefs: ApplicationPreferences): User? {
-        return appPrefs.user
-    }
 }

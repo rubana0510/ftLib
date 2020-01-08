@@ -26,13 +26,13 @@ class AccountPresenter
         val isAvailable = appPrefs.user?.business?.available ?: return
         val availability = !isAvailable
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showAvailabilityChangeProgress()
+            view?.showAvailabilityChangeProgress()
             val response = apiService.updateBusinessAsync(
                 hashMapOf("available" to availability)
             ).awaitNetworkRequest()
-            getView()?.dismissAvailabilityChangeProgress()
+            view?.dismissAvailabilityChangeProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -42,17 +42,17 @@ class AccountPresenter
                     }
                 }
             }
-            getView()?.onAvailabilityChanged(availability)
+            view?.onAvailabilityChanged(availability)
         }
     }
 
     override fun fetch() {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.getMyBusinessAsync().awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -60,7 +60,7 @@ class AccountPresenter
                     business = response.payload?.business
                 }
             }
-            getView()?.onFetched(response.payload)
+            view?.onFetched(response.payload)
         }
     }
 

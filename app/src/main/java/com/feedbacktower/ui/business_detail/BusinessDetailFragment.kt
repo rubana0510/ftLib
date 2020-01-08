@@ -32,14 +32,14 @@ import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 
 class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.View {
     @Inject
     lateinit var presenter: BusinessDetailPresenter
-    @Inject
-    var user: User? = null
+    lateinit var user: User
     private lateinit var binding: FragmentBusinessDetailBinding
     private lateinit var reviewListView: RecyclerView
     private lateinit var postListView: RecyclerView
@@ -60,6 +60,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
         businessId = arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid args")
         initUi()
         presenter.attachView(this)
+        user = presenter.user ?: throw IllegalStateException("User must not be null")
         presenter.fetchBusinessDetails(businessId)
         return binding.root
     }

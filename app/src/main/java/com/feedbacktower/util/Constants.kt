@@ -1,5 +1,6 @@
 package com.feedbacktower.util
 
+import com.feedbacktower.BuildConfig
 import com.feedbacktower.network.env.Environment
 
 object Constants {
@@ -10,7 +11,7 @@ object Constants {
             const val WRITE: Long = 30 * 1000
         }
 
-        object Error{
+        object Error {
             const val HTTP_EXCEPTION_ERROR_CODE = "NETWORK_ERROR"
             const val SOCKET_TIMEOUT_EXCEPTION_ERROR_CODE = "TIMEOUT_ERROR"
             const val NO_INTERNET_ERROR_CODE = "NO_INTERNET_ERROR"
@@ -23,6 +24,7 @@ object Constants {
         const val MAX_VIDEO_SIZE = 10 //mb
     }
 
+    const val SESSION_EXPIRED_INTENT_FILTER: String = BuildConfig.APPLICATION_ID + ".session_expired"
     const val AD_BANNER_DURATION: Long = 5000
     const val PAGE_SIZE = 10
     const val CAT_GRID_SIZE = 3

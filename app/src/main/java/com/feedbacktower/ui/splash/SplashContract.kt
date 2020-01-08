@@ -19,5 +19,6 @@ interface SplashContract {
         fun forceUpdateRequired(version: AppVersion)
         fun tokenRefreshError(error: ApiResponse.ErrorModel)
         fun loginRequired()
+        fun logout()
     }
 }

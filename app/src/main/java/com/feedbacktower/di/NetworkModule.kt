@@ -1,6 +1,8 @@
 package com.feedbacktower.di
 
+import android.content.Context
 import com.feedbacktower.BuildConfig
+import com.feedbacktower.R
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.service.ApiService
@@ -10,8 +12,11 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.jetbrains.anko.toast
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.HTTP
+import java.net.HttpURLConnection
 import java.util.concurrent.TimeUnit
 
 @Module
@@ -24,6 +29,7 @@ class NetworkModule {
 
     @Provides
     fun provideOkhttpClient(
+        context: Context,
         appPrefs: ApplicationPreferences
     ): OkHttpClient {
         val clientBuilder = OkHttpClient.Builder().apply {
@@ -42,7 +48,12 @@ class NetworkModule {
                     .addHeader("VersionCode", BuildConfig.VERSION_CODE.toString())
                     .addHeader("VersionName", BuildConfig.VERSION_NAME)
                     .build()
-                return@ani chain.proceed(request);
+                val response = chain.proceed(request)
+                if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    appPrefs.clearUserPrefs()
+                    context.toast(context.getString(R.string.session_expired_message))
+                }
+                return@ani response
             }
         }
         return clientBuilder.build()

@@ -1,12 +1,10 @@
 package com.feedbacktower.ui.register
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.feedbacktower.R
 import com.feedbacktower.databinding.ActivityRegisterPhoneScreenBinding
-import com.feedbacktower.network.manager.AuthManager
 import com.feedbacktower.util.Constants
 import com.feedbacktower.util.gone
 import com.feedbacktower.util.launchActivity
@@ -14,13 +12,22 @@ import com.feedbacktower.util.visible
 import kotlinx.android.synthetic.main.activity_register_phone_screen.*
 import org.jetbrains.anko.toast
 import android.content.Intent
+import com.feedbacktower.App
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.profile.ProfileSetupScreen
+import javax.inject.Inject
 
 
-class RegisterPhoneScreen : AppCompatActivity() {
+class RegisterPhoneScreen : BaseViewActivityImpl(), RegisterContract.View {
+
     companion object {
         const val SCREEN_TYPE_KEY = "SCREEN_TYPE_KEY"
     }
+
+    @Inject
+    lateinit var presenter: RegisterPresenter
+    private lateinit var binding: ActivityRegisterPhoneScreenBinding
 
     private enum class State { INITIAL, OTP_SENT, OTP_VERIFIED, REGISTERED, RESET }
     enum class ScreenFunction { FORGOT_PASSWORD, REGISTER }
@@ -30,14 +37,15 @@ class RegisterPhoneScreen : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as App).appComponent.authComponent().create()
+        presenter.attachView(this)
         screenFunction = intent?.getSerializableExtra(SCREEN_TYPE_KEY) as? ScreenFunction
             ?: throw IllegalArgumentException("No type args passed")
-        val binding: ActivityRegisterPhoneScreenBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_register_phone_screen)
-        initUi(binding)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_register_phone_screen)
+        initUi()
     }
 
-    private fun initUi(binding: ActivityRegisterPhoneScreenBinding) {
+    private fun initUi() {
         binding.onSignUpClicked = onSignUpClicked
         binding.pageTitle = if (screenFunction == ScreenFunction.FORGOT_PASSWORD) "FORGOT PASSWORD" else "SIGN UP"
         binding.textInputPassword.hint = "New Password"
@@ -50,16 +58,16 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 val phone = mobileInput.text.toString().trim()
                 if (phoneValid(phone)) {
                     if (screenFunction == ScreenFunction.REGISTER)
-                        preRegister(phone)
+                        presenter.preRegister(phone)
                     else
-                        requestOtp(phone)
+                        presenter.requestOtp(phone)
                 }
             }
             State.OTP_SENT -> {
                 val phone = mobileInput.text.toString().trim()
                 val otp = OTPInput.text.toString().trim()
                 if (phoneValid(phone) && otpValid(otp)) {
-                    verifyOtp(phone, otp)
+                    presenter.verifyOtp(phone, otp)
                 }
             }
             State.OTP_VERIFIED -> {
@@ -67,9 +75,9 @@ class RegisterPhoneScreen : AppCompatActivity() {
                 val phone = mobileInput.text.toString().trim()
                 if (passwordValid(password)) {
                     if (screenFunction == ScreenFunction.REGISTER)
-                        registerPhone(phone, password)
+                        presenter.registerPhone(phone, password)
                     else
-                        resetPassword(phone, password)
+                        presenter.resetPassword(phone, password)
                 }
             }
             else -> {
@@ -121,116 +129,53 @@ class RegisterPhoneScreen : AppCompatActivity() {
         }
     }
 
-    private fun preRegister(phone: String) {
+    override fun showProgress() {
+        super.showProgress()
         showLoading()
-        AuthManager.getInstance().preRegister(phone)
-        preReg@{ response, error ->
-            if (error != null) {
-                toast(error.message ?: getString(R.string.default_err_message))
-                hideLoading()
-                return@preReg
-            }
-            if (response != null) {
-                //  OTP_RECEIVED = response.user.otp
-                state = State.OTP_SENT
-                toast("OTP sent to your Phone")
-            } else {
-                toast("Unknown error occurred")
-            }
-            hideLoading()
-            updateUi()
-        }
     }
 
-    private fun requestOtp(phone: String) {
-        showLoading()
-        AuthManager.getInstance().requestOtp(phone)
-        reqOtp@{ response, error ->
-            if (error != null) {
-                toast(error.message ?: getString(R.string.default_err_message))
-                hideLoading()
-                return@reqOtp
-            }
-            if (response != null) {
-                //  OTP_RECEIVED = response.user.otp
-                state = State.OTP_SENT
-                toast("OTP sent to your Phone")
-            } else {
-                toast("Unknown error occurred")
-            }
-            hideLoading()
-            updateUi()
-        }
+    override fun dismissProgress() {
+        super.dismissProgress()
+        hideLoading()
     }
 
-    private fun verifyOtp(phone: String, otp: String) {
-        showLoading()
-        AuthManager.getInstance().verifyOtpRegister(phone, otp)
-        { response, error ->
-            if (error != null) {
-                toast(error.message ?: getString(R.string.default_err_message))
-                hideLoading()
-                return@verifyOtpRegister
-            }
-            if (response != null) {
-                AppPrefs.getInstance(this).authToken = response.token
-                state = State.OTP_VERIFIED
-                toast("OTP verified")
-            } else {
-                toast("Unknown error occurred")
-            }
-            hideLoading()
-            updateUi()
-        }
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        toast(error.message)
     }
 
-    private fun registerPhone(phone: String, password: String) {
-        showLoading()
-        AuthManager.getInstance().registerPhone(phone, password)
-        rp@{ response, error ->
-            if (error != null) {
-                toast(error.message ?: getString(R.string.default_err_message))
-                hideLoading()
-                return@rp
-            }
-            if (response != null) {
-                state = State.REGISTERED
-                AppPrefs.getInstance(this).apply {
-                    user = response.user
-                    authToken = response.token
-                }
-                launchActivity<ProfileSetupScreen> {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
-                toast("Registered")
-            } else {
-                toast("Unknown error occurred")
-            }
-            hideLoading()
-            updateUi()
-        }
+    override fun onPreRegisterSuccess() {
+        state = State.OTP_SENT
+        toast("OTP sent to your Phone")
+        updateUi()
     }
 
-    private fun resetPassword(phone: String, password: String) {
-        showLoading()
-        AuthManager.getInstance().resetPassword(phone, password)
-        rp@{ response, error ->
-            if (error != null) {
-                toast(error.message ?: getString(R.string.default_err_message))
-                hideLoading()
-                return@rp
-            }
+    override fun onRequestOtpSuccess() {
+        state = State.OTP_SENT
+        toast("OTP sent to your Phone")
+        updateUi()
+    }
 
-            if (response != null) {
-                state = State.RESET
-                toast("Password has been set,  please login")
-                finish()
-            } else {
-                toast("Unknown error occurred")
-            }
-            hideLoading()
-            updateUi()
+    override fun onVerifyOtpSuccess() {
+        state = State.OTP_VERIFIED
+        toast("OTP verified")
+        updateUi()
+    }
+
+    override fun onRegisterPhoneSuccess() {
+        state = State.REGISTERED
+        launchActivity<ProfileSetupScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
+        toast("Registered successfully")
+        updateUi()
+    }
+
+    override fun onResetPasswordSuccess() {
+        state = State.RESET
+        toast("Password has been set,  please login")
+        updateUi()
+        finish()
     }
 
     private fun showLoading() {
@@ -279,6 +224,11 @@ class RegisterPhoneScreen : AppCompatActivity() {
             }
             else -> true
         }
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 
 }

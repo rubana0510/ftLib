@@ -6,15 +6,15 @@ import com.feedbacktower.ui.base.BasePresenterImpl
 class SearchPresenter : BasePresenterImpl<SearchContract.View>(),
     SearchContract.Presenter {
     override fun fetch(keyword: String?){
-        getView()?.showProgress()
+        view?.showProgress()
         ProfileManager.getInstance()
             .searchBusiness(keyword)  { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@searchBusiness
                 }
-                getView()?.onFetched(response)
+                view?.onFetched(response)
             }
     }
 }

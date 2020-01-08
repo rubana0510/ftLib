@@ -6,41 +6,41 @@ import com.feedbacktower.ui.base.BasePresenterImpl
 class SenderWaitPresenter : BasePresenterImpl<SenderWaitContract.View>(),
     SenderWaitContract.Presenter {
     override fun acceptRequest(txId: String) {
-        getView()?.showProgress()
+        view?.showProgress()
         QRTransactionManager.getInstance()
             .confirmPayment(txId, true) { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@confirmPayment
                 }
-                getView()?.onRequestAccepted(response)
+                view?.onRequestAccepted(response)
             }
     }
 
     override fun cancelTransaction(txId: String) {
-        getView()?.showProgress()
+        view?.showProgress()
         QRTransactionManager.getInstance()
             .cancel(txId) { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@cancel
                 }
-                getView()?.onTransactionCancelled(response)
+                view?.onTransactionCancelled(response)
             }
     }
 
     override fun listenForChanges(txId: String) {
-        getView()?.showProgress()
+        view?.showProgress()
         QRTransactionManager.getInstance()
             .checkStatusSender(txId) { response, error ->
-                getView()?.dismissProgress()
+                view?.dismissProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@checkStatusSender
                 }
-                getView()?.onQrPaymentStatusResponse(response)
+                view?.onQrPaymentStatusResponse(response)
             }
     }
 }

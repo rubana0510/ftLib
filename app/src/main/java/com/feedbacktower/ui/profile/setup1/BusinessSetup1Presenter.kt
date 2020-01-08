@@ -18,7 +18,7 @@ class BusinessSetup1Presenter @Inject constructor(
     BusinessSetup1Contract.Presenter {
     override fun updateDetails(name: String, regNo: String, categoryId: String?) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.updateBusinessAsync(
                 hashMapOf(
                     "name" to name,
@@ -26,9 +26,9 @@ class BusinessSetup1Presenter @Inject constructor(
                     "businessCategoryId" to categoryId
                 )
             ).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -39,7 +39,7 @@ class BusinessSetup1Presenter @Inject constructor(
                     }
                 }
             }
-            getView()?.onDetailsUpdated(name, regNo, categoryId)
+            view?.onDetailsUpdated(name, regNo, categoryId)
         }
     }
 

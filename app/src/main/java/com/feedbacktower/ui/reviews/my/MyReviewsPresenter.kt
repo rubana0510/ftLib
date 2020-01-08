@@ -15,14 +15,14 @@ class MyReviewsPresenter@Inject constructor(
     MyReviewsContract.Presenter {
     override fun fetchReviews(timestamp: String, initial: Boolean) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response: ApiResponse<GetReviewsResponse?> = apiService.getMyReviewsAsync(timestamp = timestamp).await()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onReviewsFetched(response.payload, initial)
+            view?.onReviewsFetched(response.payload, initial)
         }
     }
 }

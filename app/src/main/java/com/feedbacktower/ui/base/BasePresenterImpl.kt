@@ -1,7 +1,9 @@
 package com.feedbacktower.ui.base
 
 open class BasePresenterImpl<V : BaseView> : BasePresenter<V> {
-    private var view: V? = null
+    protected var view: V? = null
+        private set
+
     override fun attachView(view: V) {
         this.view = view
     }
@@ -9,6 +11,4 @@ open class BasePresenterImpl<V : BaseView> : BasePresenter<V> {
     override fun destroyView() {
         this.view = null
     }
-
-    protected fun getView(): V? = view
 }

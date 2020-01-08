@@ -29,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import org.jetbrains.anko.toast
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 
@@ -36,7 +37,6 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
     private val TAG = "PointOnMap"
     @Inject
     lateinit var presenter: BusinessLocationPresenter
-    @Inject
     lateinit var user: User
     private lateinit var binding: FragmentPointOnMapBinding
     private var markedLocation: LatLng? = null
@@ -65,6 +65,7 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
 
         initUi()
         presenter.attachView(this)
+        user = presenter.user ?: throw IllegalStateException("User must not be null")
         return binding.root
     }
 

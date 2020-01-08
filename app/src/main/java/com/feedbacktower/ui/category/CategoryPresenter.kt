@@ -17,14 +17,14 @@ class CategoryPresenter
     CategoryContract.Presenter {
     override fun fetch(keyword: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.getCategoriesAsync(keyword).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
-            getView()?.onFetched(response.payload)
+            view?.onFetched(response.payload)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.feedbacktower.ui.location.update
 
 import com.feedbacktower.data.ApplicationPreferences
+import com.feedbacktower.data.models.User
 import com.feedbacktower.network.manager.LocationManager
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
@@ -19,14 +20,17 @@ class BusinessLocationPresenter @Inject constructor(
     private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<BusinessLocationContract.View>(),
     BusinessLocationContract.Presenter {
+    val user: User?
+        get() = appPrefs.user
+
     override fun saveLocation(location: LatLng) {
         val map = hashMapOf<String, Any?>("location" to location.toArray())
         GlobalScope.launch(Dispatchers.Main) {
-            getView()?.showProgress()
+            view?.showProgress()
             val response = apiService.updateBusinessAsync(map).awaitNetworkRequest()
-            getView()?.dismissProgress()
+            view?.dismissProgress()
             if (response.error != null) {
-                getView()?.showNetworkError(response.error)
+                view?.showNetworkError(response.error)
                 return@launch
             }
             appPrefs.apply {
@@ -36,7 +40,7 @@ class BusinessLocationPresenter @Inject constructor(
                     }
                 }
             }
-            getView()?.onSaved(location)
+            view?.onSaved(location)
         }
     }
 }

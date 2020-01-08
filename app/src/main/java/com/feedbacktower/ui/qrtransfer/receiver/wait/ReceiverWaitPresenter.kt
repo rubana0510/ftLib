@@ -7,28 +7,28 @@ import com.feedbacktower.ui.base.BasePresenterImpl
 class ReceiverWaitPresenter : BasePresenterImpl<ReceiverWaitContract.View>(),
     ReceiverWaitContract.Presenter {
     override fun listenForChanges(txId: String) {
-        getView()?.onListenShowProgress()
+        view?.onListenShowProgress()
         QRTransactionManager.getInstance()
             .checkStatusReceiver(txId) { response, error ->
-                getView()?.onListenHideProgress()
+                view?.onListenHideProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@checkStatusReceiver
                 }
-                getView()?.onListenResponse(response)
+                view?.onListenResponse(response)
             }
     }
 
     override fun sendPaymentRequest(txId: String, amount: Double) {
-        getView()?.onPaymentRequestShowProgress()
+        view?.onPaymentRequestShowProgress()
         QRTransactionManager.getInstance()
             .requestPayment(txId, amount) { response, error ->
-                getView()?.onPaymentRequestHideProgress()
+                view?.onPaymentRequestHideProgress()
                 if (error != null) {
-                    getView()?.showNetworkError(error)
+                    view?.showNetworkError(error)
                     return@requestPayment
                 }
-                getView()?.onPaymentRequestResponse(response)
+                view?.onPaymentRequestResponse(response)
             }
     }
 }

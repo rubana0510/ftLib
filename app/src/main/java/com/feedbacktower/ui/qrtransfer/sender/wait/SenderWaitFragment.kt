@@ -6,19 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.databinding.FragmentSenderWaitBinding
 import com.feedbacktower.network.models.*
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class SenderWaitFragment : BaseViewFragmentImpl(), SenderWaitContract.View {
     private val TAG = "SenderWaitFrag"
-    private lateinit var presenter: SenderWaitPresenter
+    @Inject
+    lateinit var presenter: SenderWaitPresenter
     private lateinit var binding: FragmentSenderWaitBinding
     private val args: SenderWaitFragmentArgs by navArgs()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.paymentComponent().create().inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +34,6 @@ class SenderWaitFragment : BaseViewFragmentImpl(), SenderWaitContract.View {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentSenderWaitBinding.inflate(inflater, container, false)
-        presenter = SenderWaitPresenter()
         presenter.attachView(this)
         binding.onRequestConfirmClick = View.OnClickListener { presenter.acceptRequest(args.txid) }
         binding.onCancelClick = View.OnClickListener { presenter.cancelTransaction(args.txid) }

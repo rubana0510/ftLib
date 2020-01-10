@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.feedbacktower.App
 import com.feedbacktower.adapters.TransactionAdapter
 import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.QrTransaction
@@ -19,10 +20,12 @@ import com.feedbacktower.network.models.QrTransactionsResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class WalletTransactionsFragment : BaseViewFragmentImpl(), TransactionsContract.View {
-    private lateinit var presenter: TransactionPresenter
+    @Inject
+    lateinit var presenter: TransactionPresenter
     private lateinit var binding: FragmentTransactionBinding
     private lateinit var listView: RecyclerView
     private lateinit var swipeRefresh: SwipeRefreshLayout
@@ -31,13 +34,17 @@ class WalletTransactionsFragment : BaseViewFragmentImpl(), TransactionsContract.
     private var isLoading: Boolean? = false
     private var list: ArrayList<QrTransaction> = ArrayList()
     private var listOver = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTransactionBinding.inflate(inflater, container, false)
-        presenter = TransactionPresenter()
         presenter.attachView(this)
         initUi()
         return binding.root

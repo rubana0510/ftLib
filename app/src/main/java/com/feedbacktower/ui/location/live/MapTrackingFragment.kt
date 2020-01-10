@@ -21,7 +21,6 @@ import com.feedbacktower.util.LocationUtils
 import com.feedbacktower.util.permissions.PermissionUtils
 import com.feedbacktower.util.toRelativeTime
 import com.feedbacktower.util.zoomToLocation
-import com.feedbacktower.utilities.tracker.TrackerService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory

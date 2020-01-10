@@ -1,33 +1,41 @@
 package com.feedbacktower.ui.qrtransfer.sender.showqr
 
-import com.feedbacktower.network.manager.QRTransactionManager
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SenderQrPresenter : BasePresenterImpl<SenderQrContract.View>(),
+class SenderQrPresenter @Inject constructor(
+    private val apiService: ApiService
+) : BasePresenterImpl<SenderQrContract.View>(),
     SenderQrContract.Presenter {
 
     override fun fetchQrData() {
-        view?.showProgress()
-        QRTransactionManager.getInstance()
-            .generate { response, error ->
-                view?.dismissProgress()
-                if (error != null) {
-                    view?.showNetworkError(error)
-                    return@generate
-                }
-                view?.onQrDataFetched(response)
+        GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
+            val response = apiService.generateQrCodeAsync().awaitNetworkRequest()
+            view?.dismissProgress()
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
             }
+            view?.onQrDataFetched(response.payload)
+        }
     }
 
     override fun listenForChanges(txId: String) {
-        QRTransactionManager.getInstance()
-            .checkStatusSender(txId) { response, error ->
-             //   view?.dismissProgress()
-                if (error != null) {
-                    view?.showNetworkError(error)
-                    return@checkStatusSender
-                }
-                view?.onQrPaymentStatusResponse(response)
+        GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
+            val response = apiService.checkQrTransferStatusSenderAsync(hashMapOf("code" to txId)).awaitNetworkRequest()
+            view?.dismissProgress()
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
             }
+            view?.onQrPaymentStatusResponse(response.payload)
+        }
     }
 }

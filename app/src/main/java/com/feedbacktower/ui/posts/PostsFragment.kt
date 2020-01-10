@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.adapters.MyPostListAdapter
 import com.feedbacktower.util.callbacks.ScrollListener
@@ -26,22 +27,28 @@ import com.feedbacktower.util.Constants.PAGE_SIZE
 import com.feedbacktower.util.launchActivity
 import kotlinx.android.synthetic.main.dialog_edit_caption.view.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class PostsFragment : BaseViewFragmentImpl(), PostsContract.View {
     private lateinit var binding: FragmentTimelineBinding
-    private lateinit var presenter: PostsPresenter
+    @Inject
+    lateinit var presenter: PostsPresenter
     private val args: PostsFragmentArgs by navArgs()
     private lateinit var postAdapter: MyPostListAdapter
     private val list: ArrayList<Post> = ArrayList()
     private var listOver = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTimelineBinding.inflate(inflater, container, false)
-        presenter = PostsPresenter()
         presenter.attachView(this)
         initUi()
         return binding.root

@@ -159,7 +159,7 @@ fun bindToProfileRound(view: ImageView, userId: String?) {
 @BindingAdapter("toMyProfileRound")
 fun bindToMyProfileRound(view: ImageView, userId: String?) {
     if (!userId.isNullOrEmpty()) {
-        view.toMyProfileRound(userId)
+        view.toUserProfileRound(userId)
     }
 }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.navigation.fragment.findNavController
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.QrPaymentStatus
@@ -20,22 +21,26 @@ import com.feedbacktower.util.toQrBitmap
 import com.feedbacktower.util.visible
 import kotlinx.android.synthetic.main.fragment_sender_qr.view.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class SenderQrFragment : BaseViewFragmentImpl(), SenderQrContract.View {
     private val TAG = "SenderQrFragment"
-    private lateinit var presenter: SenderQrPresenter
+    @Inject
+    lateinit var presenter: SenderQrPresenter
     private lateinit var qrImage: ImageView
     private lateinit var progress: ProgressBar
     private var currentTransactionData: String? = null
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.paymentComponent().create().inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sender_qr, container, false)
-        presenter = SenderQrPresenter()
         presenter.attachView(this)
         qrImage = view.qrImage
         progress = view.progress

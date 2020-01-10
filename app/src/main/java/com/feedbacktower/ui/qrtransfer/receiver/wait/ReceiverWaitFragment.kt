@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.databinding.FragmentReciverWaitBinding
 import com.feedbacktower.network.models.ApiResponse
@@ -15,22 +16,26 @@ import com.feedbacktower.network.models.QrTxStatus
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.Constants
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class ReceiverWaitFragment : BaseViewFragmentImpl(), ReceiverWaitContract.View {
     private val TAG = "ReceiverWaitFrag"
-    private lateinit var presenter: ReceiverWaitPresenter
+    @Inject
+    lateinit var presenter: ReceiverWaitPresenter
     private val args: ReceiverWaitFragmentArgs by navArgs()
     private lateinit var binding: FragmentReciverWaitBinding
     private var senderWalletAmount = 0.0
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.paymentComponent().create().inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentReciverWaitBinding.inflate(inflater, container, false)
-        presenter = ReceiverWaitPresenter()
         presenter.attachView(this)
         presenter.listenForChanges(args.txid)
         binding.onSendRequestClick = View.OnClickListener { sendRequest() }

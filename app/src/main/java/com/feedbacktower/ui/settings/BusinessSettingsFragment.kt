@@ -7,7 +7,7 @@ import android.os.IBinder
 import androidx.fragment.app.Fragment
 import androidx.preference.*
 import com.feedbacktower.R
-import com.feedbacktower.utilities.tracker.TrackerService
+import com.feedbacktower.ui.location.live.TrackerService
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.ResolvableApiException

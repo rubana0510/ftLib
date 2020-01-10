@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.transactions
+package com.feedbacktower.ui.myplan
 
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
@@ -7,22 +7,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class TransactionPresenter @Inject constructor(
+@Singleton
+class MyPlanPresenter
+@Inject constructor(
     private val apiService: ApiService
-) : BasePresenterImpl<TransactionsContract.View>(),
-    TransactionsContract.Presenter {
-    override fun fetch(timestamp: String) {
+) : BasePresenterImpl<MyPlanContract.View>(),
+    MyPlanContract.Presenter {
+    override fun getMyPlans() {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()
-            val response = apiService.getQrTransactionsAsync(timestamp)
-                .awaitNetworkRequest()
+            val response = apiService.getTransactionsAsync().awaitNetworkRequest()
             view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
             }
-            view?.onFetched(response.payload, timestamp)
+            response.payload?.let { view?.onMyPlansResponse(it) }
         }
     }
 }

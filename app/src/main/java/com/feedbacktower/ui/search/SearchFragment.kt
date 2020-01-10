@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.adapters.SearchBusinessAdapter
 import com.feedbacktower.databinding.FragmentSearchBinding
 import com.feedbacktower.network.models.ApiResponse
@@ -29,10 +30,12 @@ import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusinessAdapter.Listener {
-    private lateinit var presenter: SearchPresenter
+    @Inject
+    lateinit var presenter: SearchPresenter
     private lateinit var searchListView: RecyclerView
     private lateinit var message: TextView
     private lateinit var searchBusinessAdapter: SearchBusinessAdapter
@@ -42,13 +45,16 @@ class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusine
     private lateinit var queryInput: EditText
     private var list: ArrayList<SearchBusiness> = ArrayList()
     private var fetching = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentSearchBinding.inflate(inflater, container, false)
-        presenter = SearchPresenter()
         presenter.attachView(this)
         initUi(binding)
         return binding.root

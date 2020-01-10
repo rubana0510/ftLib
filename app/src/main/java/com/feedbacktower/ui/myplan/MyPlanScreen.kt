@@ -1,54 +1,68 @@
 package com.feedbacktower.ui.myplan
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.models.SubscriptionPlan
 import com.feedbacktower.data.type.DurationType
 import com.feedbacktower.databinding.ActivityMyPlanScreenBinding
-import com.feedbacktower.network.manager.TransactionManager
+import com.feedbacktower.network.models.ApiResponse
+import com.feedbacktower.network.models.PlanTransactionsResponse
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.plans.SubscriptionPlansScreen
 import com.feedbacktower.util.launchActivity
 import org.jetbrains.anko.toast
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class MyPlanScreen : AppCompatActivity() {
+class MyPlanScreen : BaseViewActivityImpl(), MyPlanContract.View {
+    @Inject
+    lateinit var presenter: MyPlanPresenter
     private lateinit var binding: ActivityMyPlanScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as App).appComponent.paymentComponent().create()
         binding =
             DataBindingUtil.setContentView(this, R.layout.activity_my_plan_screen)
         title = "Subscription Plan"
         binding.renewPlan.setOnClickListener {
             launchActivity<SubscriptionPlansScreen> { }
         }
-        getPlanTransactions()
+        presenter.attachView(this)
+        presenter.getMyPlans()
     }
 
-    private fun getPlanTransactions() {
+    override fun showProgress() {
+        super.showProgress()
         binding.isLoading = true
-        TransactionManager.getInstance()
-            .getTransactions { response, error ->
-                if (error == null && response?.transactions != null) {
-                    if (response.transactions.isNotEmpty()) {
-                        binding.isLoading = false
-                        val latestPlanTaken = response.transactions[0].subscriptionPlan
-                        binding.plan = latestPlanTaken
-                        binding.expiryDate = getExpiry(latestPlanTaken)
+    }
 
-                    } else {
-                        launchActivity<SubscriptionPlansScreen>()
-                        toast("You don't have any active plans")
-                    }
-                }
-            }
+    override fun dismissProgress() {
+        super.dismissProgress()
+        binding.isLoading = false
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        toast(error.message)
+    }
+
+    override fun onMyPlansResponse(response: PlanTransactionsResponse) {
+        if (response.transactions.isNotEmpty()) {
+            val latestPlanTaken = response.transactions[0].subscriptionPlan
+            binding.plan = latestPlanTaken
+            binding.expiryDate = getExpiry(latestPlanTaken)
+
+        } else {
+            launchActivity<SubscriptionPlansScreen>()
+            toast("You don't have any active plans")
+        }
     }
 
     private fun getExpiry(plan: SubscriptionPlan): String {

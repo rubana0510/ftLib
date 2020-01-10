@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.ScanQrResponse
@@ -17,12 +18,19 @@ import com.feedbacktower.util.permissions.PermissionManager
 import com.feedbacktower.util.launchActivity
 import kotlinx.android.synthetic.main.fragment_reciver_scan.view.*
 import org.jetbrains.anko.toast
+import javax.inject.Inject
 
 
 class ReceiverScanFragment : BaseViewFragmentImpl(), ReceiverScanContract.View {
-
-    private lateinit var presenter: ReceiverScanPresenter
+    @Inject
+    lateinit var presenter: ReceiverScanPresenter
     private lateinit var codeScanner: CodeScanner
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.paymentComponent().create().inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,7 +65,6 @@ class ReceiverScanFragment : BaseViewFragmentImpl(), ReceiverScanContract.View {
         view.scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
-        presenter = ReceiverScanPresenter()
         presenter.attachView(this)
         return view
     }

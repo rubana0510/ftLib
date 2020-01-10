@@ -10,6 +10,9 @@ import com.feedbacktower.ui.category.interests.SelectInterestsFragment
 import com.feedbacktower.ui.city.SelectCityFragment
 import com.feedbacktower.ui.location.live.TrackerService
 import com.feedbacktower.ui.location.update.PointOnMapFragment
+import com.feedbacktower.ui.posts.PostsFragment
+import com.feedbacktower.ui.search.SearchFragment
+import com.feedbacktower.ui.transactions.WalletTransactionsFragment
 import dagger.Subcomponent
 
 @AccountScope
@@ -29,5 +32,8 @@ interface AccountComponent {
     fun inject(fragment: SelectInterestsFragment)
     fun inject(fragment: SelectCategoryFragment)
     fun inject(fragment: PointOnMapFragment)
+    fun inject(fragment: PostsFragment)
     fun inject(service: TrackerService)
+    fun inject(service: SearchFragment)
+    fun inject(service: WalletTransactionsFragment)
 }

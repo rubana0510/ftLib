@@ -1,6 +1,5 @@
 package com.feedbacktower.ui.qrtransfer.receiver.wait
 
-import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.manager.QRTransactionManager
 import com.feedbacktower.ui.base.BasePresenterImpl
 

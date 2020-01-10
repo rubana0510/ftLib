@@ -1,11 +1,7 @@
-package com.feedbacktower.utilities.tracker;
+package com.feedbacktower.ui.location.live;
 
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;

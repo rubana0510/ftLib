@@ -2,10 +2,8 @@ package com.feedbacktower.ui.location.update
 
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.User
-import com.feedbacktower.network.manager.LocationManager
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
-import com.feedbacktower.network.utils.makeRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
 import com.feedbacktower.util.toArray
 import com.feedbacktower.util.toLocation

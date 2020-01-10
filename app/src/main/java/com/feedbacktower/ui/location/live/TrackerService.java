@@ -1,4 +1,4 @@
-package com.feedbacktower.utilities.tracker;
+package com.feedbacktower.ui.location.live;
 
 import android.app.*;
 import android.content.Context;
@@ -13,15 +13,21 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavDeepLinkBuilder;
+import com.feedbacktower.App;
 import com.feedbacktower.BuildConfig;
 import com.feedbacktower.R;
 import com.google.android.gms.maps.model.LatLng;
+
+import javax.inject.Inject;
 
 import static com.feedbacktower.util.Constants.TRACKING_NOTIFICATION_CHANNEL;
 import static com.feedbacktower.util.Constants.TRACKING_NOTIFICATION_CHANNEL_ID;
 
 
 public class TrackerService extends Service {
+
+    @Inject
+    com.feedbacktower.ui.location.live.LocationManager locationManager;
 
     private final LocationServiceBinder binder = new LocationServiceBinder();
     private final String TAG = "TrackingService";
@@ -49,12 +55,10 @@ public class TrackerService extends Service {
         }
 
 
-
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
-
-            com.feedbacktower.network.manager.LocationManager.getInstance()
+            locationManager
                     .saveCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()),
                             (emptyResponse, error) -> {
                                 if (error != null) {
@@ -102,6 +106,7 @@ public class TrackerService extends Service {
 
     @Override
     public void onCreate() {
+        ((App) getApplication()).getAppComponent().accountComponent().create().inject(this);
         Log.i(TAG, "onCreate");
     }
 
@@ -129,7 +134,7 @@ public class TrackerService extends Service {
     }
 
     public void startTracking() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             startForeground(12345678, getNotification());
         initializeLocationManager();
         mLocationListener = new LocationListener(this, LocationManager.GPS_PROVIDER);
@@ -137,13 +142,14 @@ public class TrackerService extends Service {
         try {
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE, mLocationListener);
             Log.d(TAG, "Updates requested");
-        } catch (java.lang.SecurityException ex) {
+        } catch (SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
 
     }
+
     public void stopTracking() {
         this.onDestroy();
     }

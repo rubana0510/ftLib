@@ -19,7 +19,6 @@ import com.feedbacktower.data.models.Review
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.BusinessDetailsResponse
 import com.feedbacktower.network.models.GetPostsResponse
@@ -32,7 +31,6 @@ import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 
@@ -179,7 +177,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
     private val listener = object : ProfilePostListAdapter.Listener {
         override fun onLikeClick(item: Post, position: Int) {
-            likeUnlikePost(item, position)
+            presenter.likePost(item.id, position)
         }
 
         override fun onVideoClick(item: Post, position: Int) {
@@ -189,14 +187,10 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
         }
     }
 
-
-    private fun likeUnlikePost(item: Post, position: Int) {
-        PostManager.getInstance()
-            .likePost(item.id) { response, _ ->
-                if (response?.liked != null)
-                    postAdapter.updateLike(position, response.liked)
-            }
+    override fun onLikePostResponse(liked: Boolean, position: Int) {
+        postAdapter.updateLike(position, liked)
     }
+
 
     private val updateListener = object : UpdateListener {
         override fun update() {

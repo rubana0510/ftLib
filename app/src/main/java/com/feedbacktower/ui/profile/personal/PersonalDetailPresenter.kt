@@ -2,11 +2,8 @@ package com.feedbacktower.ui.profile.personal
 
 import android.util.Log
 import com.feedbacktower.data.ApplicationPreferences
-import com.feedbacktower.network.manager.PostManager
-import com.feedbacktower.network.manager.ProfileManager
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
-import com.feedbacktower.network.utils.makeRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

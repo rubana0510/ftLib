@@ -8,6 +8,7 @@ import com.feedbacktower.ui.account.type_selection.AccountTypeSelectionFragment
 import com.feedbacktower.ui.category.SelectCategoryFragment
 import com.feedbacktower.ui.category.interests.SelectInterestsFragment
 import com.feedbacktower.ui.city.SelectCityFragment
+import com.feedbacktower.ui.location.live.TrackerService
 import com.feedbacktower.ui.location.update.PointOnMapFragment
 import dagger.Subcomponent
 
@@ -28,4 +29,5 @@ interface AccountComponent {
     fun inject(fragment: SelectInterestsFragment)
     fun inject(fragment: SelectCategoryFragment)
     fun inject(fragment: PointOnMapFragment)
+    fun inject(service: TrackerService)
 }

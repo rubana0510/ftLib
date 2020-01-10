@@ -12,10 +12,12 @@ interface HomeContract {
         fun onPostsFetched(response: GetPostsResponse?, timestamp: String?)
         fun showAdsError(error: ApiResponse.ErrorModel)
         fun showPostsError(error: ApiResponse.ErrorModel)
+        fun onLikePostResponse(liked: Boolean, position: Int)
     }
 
     interface Presenter : BasePresenter<View> {
         fun fetchAds()
         fun fetchPosts(timestamp: String?)
+        fun likePost(postId: String, position: Int)
     }
 }

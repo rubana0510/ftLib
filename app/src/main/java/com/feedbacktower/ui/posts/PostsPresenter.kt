@@ -1,59 +1,66 @@
 package com.feedbacktower.ui.posts
 
-import com.feedbacktower.data.models.Post
-import com.feedbacktower.network.manager.PostManager
-import com.feedbacktower.network.manager.SuggestionsManager
+import com.feedbacktower.network.service.ApiService
+import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PostsPresenter : BasePresenterImpl<PostsContract.View>(),
+class PostsPresenter @Inject constructor(
+    private val apiService: ApiService
+) : BasePresenterImpl<PostsContract.View>(),
     PostsContract.Presenter {
     override fun fetchBusinessPosts(businessId: String, timestamp: String?) {
-        view?.showProgress()
-        PostManager.getInstance().getBusinessPosts(businessId, timestamp) { response, error ->
+        GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
+            val response = apiService.getBusinessPostsAsync(businessId, timestamp).awaitNetworkRequest();
             view?.dismissProgress()
-            if (error != null) {
-                view?.showNetworkError(error)
-                return@getBusinessPosts
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
             }
-            view?.onBusinessPostsFetched(response, timestamp)
+            view?.onBusinessPostsFetched(response.payload, timestamp)
         }
     }
 
     override fun deletePost(postId: String) {
-        view?.showProgress()
-        PostManager.getInstance().deletePost(postId) onResponse@{ _, error ->
+        GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
+            val response = apiService.deletePost(postId).awaitNetworkRequest();
             view?.dismissProgress()
-            if (error != null) {
-                view?.showNetworkError(error)
-                return@onResponse
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
             }
             view?.onPostDeleted(postId)
         }
     }
 
     override fun onEditPostCaption(postId: String, caption: String) {
-        view?.showProgress()
-        PostManager.getInstance()
-            .editTextPost(postId, caption) { _, error ->
+        GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
+            val response = apiService.editTextPostAsync(postId, hashMapOf("text" to caption)).awaitNetworkRequest();
             view?.dismissProgress()
-            if (error != null) {
-                view?.showNetworkError(error)
-                return@editTextPost
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
             }
-            view?.onPostDeleted(postId)
+            view?.onPostEdited(postId, caption)
         }
     }
 
     override fun onLikeDislike(postId: String, position: Int) {
-        //view?.showProgress()
-        PostManager.getInstance()
-            .likePost(postId) { response, error ->
-                //view?.dismissProgress()
-                if (error != null) {
-                    view?.showNetworkError(error)
-                    return@likePost
-                }
-                view?.onLikedDisliked(response, position)
+        GlobalScope.launch(Dispatchers.Main) {
+            //view?.showProgress()
+            val response = apiService.likePostAsync(postId).awaitNetworkRequest();
+            //view?.dismissProgress()
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
             }
+            view?.onLikedDisliked(response.payload, position)
+        }
     }
 }

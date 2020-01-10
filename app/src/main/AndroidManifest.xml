@@ -167,7 +167,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".ui.location.MapTrackingFragment$LocationBroadcastReceiver"/>
+        <receiver android:name=".ui.location.live.MapTrackingFragment$LocationBroadcastReceiver"/>
 
         <service android:name=".notifications.MyFirebaseMessagingService">
             <intent-filter>

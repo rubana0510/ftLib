@@ -1,4 +1,4 @@
-package com.feedbacktower.ui.location
+package com.feedbacktower.ui.location.live
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog

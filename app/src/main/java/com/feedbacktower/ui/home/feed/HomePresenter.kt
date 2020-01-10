@@ -39,4 +39,17 @@ class HomePresenter
         }
     }
 
+    override fun likePost(postId: String, position: Int) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = apiService.likePostAsync(postId).awaitNetworkRequest()
+            if (response.error != null) {
+                view?.showAdsError(response.error)
+                return@launch
+            }
+            response.payload?.let {
+                view?.onLikePostResponse(it.liked, position)
+            }
+        }
+    }
+
 }

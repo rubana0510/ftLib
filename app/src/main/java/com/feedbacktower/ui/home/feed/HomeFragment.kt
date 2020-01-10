@@ -29,7 +29,6 @@ import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.manager.PostManager
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetAdsResponse
 import com.feedbacktower.network.models.GetPostsResponse
@@ -308,7 +307,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     private val listener = object : PostListAdapter.Listener {
         override fun onLikeClick(item: Post, position: Int) {
-            likeUnlikePost(item, position)
+            presenter.likePost(item.id, position)
         }
 
         override fun onVideoClick(item: Post, position: Int) {
@@ -318,15 +317,9 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         }
     }
 
-
-    private fun likeUnlikePost(item: Post, position: Int) {
-        PostManager.getInstance()
-            .likePost(item.id) { response, _ ->
-                if (response?.liked != null)
-                    postAdapter.updateLike(position, response.liked)
-            }
+    override fun onLikePostResponse(liked: Boolean, position: Int) {
+        postAdapter.updateLike(position, liked)
     }
-
 
     private fun fetchPostList(timestamp: String? = null) {
         presenter.fetchPosts(timestamp)

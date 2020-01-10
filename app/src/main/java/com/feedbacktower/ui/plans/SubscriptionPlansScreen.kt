@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.feedbacktower.App
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.adapters.PlanAdapter
@@ -17,10 +17,10 @@ import com.feedbacktower.data.models.PaymentSummary
 import com.feedbacktower.data.models.Plan
 import com.feedbacktower.databinding.ActivitySubscriptionPlanScreenBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.manager.ProfileManager
-import com.feedbacktower.network.manager.TransactionManager
+import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GenerateHashRequest
 import com.feedbacktower.network.models.GenerateHashResponse
+import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.payment.PlanPaymentResultScreen
 import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.util.*
@@ -35,9 +35,13 @@ import java.util.*
 import javax.inject.Inject
 
 
-class SubscriptionPlansScreen : AppCompatActivity() {
+class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContract.View {
     @Inject
     lateinit var appPrefs: ApplicationPreferences
+
+    @Inject
+    lateinit var presenter: SubscriptionPlansPresenter
+
     private lateinit var planListView: RecyclerView
     private lateinit var planAdapter: PlanAdapter
     private var hashResponse: GenerateHashResponse? = null
@@ -46,8 +50,10 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     private val TAG = "SubscriptionPlansScreen"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as App).appComponent.paymentComponent().create()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_subscription_plan_screen)
         initUi()
+        presenter.attachView(this)
     }
 
     private fun initUi() {
@@ -58,10 +64,19 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         binding.onContinueClick = onContinueClick
 
         val pendingPaymentSummary = appPrefs.summary
-        if (pendingPaymentSummary != null)
-            saveTransactionStatus(pendingPaymentSummary)
-        else
+        if (pendingPaymentSummary != null) {
+            showButtonLoading()
+            presenter.saveTxnResponse(pendingPaymentSummary)
+        } else
             getPlanList()
+    }
+
+    override fun onSaveResponse() {
+        hideButtonLoading()
+        appPrefs.summary = null
+        launchActivity<SplashScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
     }
 
 
@@ -74,62 +89,24 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             finish()
             return
         }
-
-
-        ProfileManager.getInstance()
-            .getSubscriptionPlans(categoryId) { planListResponse, error ->
-                if (error != null) {
-                    toast(error.message ?: getString(R.string.default_err_message))
-                    return@getSubscriptionPlans
-                }
-                if (planListResponse != null && planListResponse.list.isNotEmpty()) {
-                    // planAdapter.submitList(planListResponse.list)
-                    plan = planListResponse.list[0]
-                    binding.plan = plan
-                    binding.isLoading = false
-                } else {
-                    toast("No plans found")
-                    finish()
-                }
-            }
+        presenter.getSubscriptionPlans(categoryId)
     }
 
-    private fun saveTransactionStatus(summary: PaymentSummary) {
-        showLoading()
-        binding.isLoading = true
-        TransactionManager.getInstance()
-            .saveResponse(summary) { _, error ->
-                hideLoading()
-                if (error == null) {
-                    appPrefs.summary
-                    launchActivity<SplashScreen> {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                } else {
-                    //toast(error.message ?: getString(R.string.default_err_message))
-                    getPlanList()
-                    Log.e(TAG, "Could not save status")
-                }
-            }
-    }
-
-    private fun saveTransactionCancelled() {
-        val id = hashResponse?.txn?.id
-        if (id == null) {
-            toast("Could not save transaction status")
-            return
+    override fun onPlansResponse(list: List<Plan>?) {
+        if (list != null && list.isNotEmpty()) {
+            plan = list[0]
+            binding.plan = plan
+            binding.isLoading = false
+        } else {
+            toast("No plans found")
+            finish()
         }
-        showLoading()
-        TransactionManager.getInstance()
-            .cancel(id) { _, error ->
-                hideLoading()
-                if (error == null) {
-                    appPrefs.summary = null
-                    hashResponse = null
-                } else {
-                    Log.e(TAG, "Could not save status")
-                }
-            }
+    }
+
+    override fun onTxnCancelled() {
+        appPrefs.summary = null
+        hashResponse = null
+        hideButtonLoading()
     }
 
     private val onContinueClick = View.OnClickListener {
@@ -140,7 +117,7 @@ class SubscriptionPlansScreen : AppCompatActivity() {
     }
 
     private fun generateHashForPayment(plan: Plan) {
-        showLoading()
+        showButtonLoading()
         val txId = generateTransactionID()
         val requestParams: GenerateHashRequest = GenerateHashRequest(
             plan.id,
@@ -154,15 +131,18 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             "",
             ""
         )
-        TransactionManager.getInstance()
-            .generateHash(requestParams) { response, error ->
-                if (error != null || response == null) {
-                    toast(getString(R.string.default_err_message))
-                    hideLoading()
-                    return@generateHash
-                }
-                initiatePayment(requestParams, response, plan)
-            }
+
+        presenter.generateHash(requestParams, plan)
+    }
+
+    override fun showNetworkError(error: ApiResponse.ErrorModel) {
+        super.showNetworkError(error)
+        hideButtonLoading()
+    }
+
+
+    override fun onHashGenerated(request: GenerateHashRequest, response: GenerateHashResponse, plan: Plan) {
+        initiatePayment(request, response, plan)
     }
 
     private fun generateTransactionID(): String {
@@ -170,13 +150,13 @@ class SubscriptionPlansScreen : AppCompatActivity() {
         return "${System.currentTimeMillis()}${Random().nextInt(999999) + 100000}"
     }
 
-    private fun showLoading() {
+    private fun showButtonLoading() {
         continueButton.disable()
         continueButton.text = "Please wait..."
         progress.visible()
     }
 
-    private fun hideLoading() {
+    private fun hideButtonLoading() {
         continueButton.enable()
         continueButton.text = "CONTINUE"
         progress.gone()
@@ -266,8 +246,16 @@ class SubscriptionPlansScreen : AppCompatActivity() {
             }
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == Activity.RESULT_CANCELED) {
             toast("Payment Cancelled")
-            saveTransactionCancelled()
+            hashResponse?.txn?.id?.let { txnId ->
+                showButtonLoading()
+                presenter.cancelTxn(txnId)
+            }
         }
 
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

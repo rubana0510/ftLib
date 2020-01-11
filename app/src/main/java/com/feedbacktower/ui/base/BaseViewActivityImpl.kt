@@ -2,7 +2,7 @@ package com.feedbacktower.ui.base
 
 import com.feedbacktower.network.models.ApiResponse
 
-open class BaseViewActivityImpl : BaseActivty(), BaseView {
+open class BaseViewActivityImpl : BaseActivity(), BaseView {
     override fun showProgress() {
     }
 

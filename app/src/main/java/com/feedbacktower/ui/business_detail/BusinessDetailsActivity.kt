@@ -1,13 +1,13 @@
 package com.feedbacktower.ui.business_detail
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.feedbacktower.R
+import com.feedbacktower.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_business_details.*
 
-class BusinessDetailsActivity : AppCompatActivity() {
+class BusinessDetailsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

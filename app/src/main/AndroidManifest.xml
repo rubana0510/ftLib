@@ -171,7 +171,7 @@
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
                   android:theme="@style/Base.Theme.AppCompat"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.base.BaseActivty"/>
+        <activity android:name=".ui.base.BaseActivity"/>
     </application>
 
 </manifest>

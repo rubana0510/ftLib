@@ -1,9 +1,9 @@
 package com.feedbacktower.ui.map
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.feedbacktower.R
 import com.feedbacktower.data.models.Location
+import com.feedbacktower.ui.base.BaseActivity
 import com.feedbacktower.util.zoomToLocation
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 
-class MapScreen : AppCompatActivity(), OnMapReadyCallback {
+class MapScreen : BaseActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var location: Location

@@ -1,12 +1,11 @@
 package com.feedbacktower.ui.qrtransfer.sender
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
-import androidx.navigation.ui.setupWithNavController
 import com.feedbacktower.R
+import com.feedbacktower.ui.base.BaseActivity
 
-class SenderActivity : AppCompatActivity() {
+class SenderActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

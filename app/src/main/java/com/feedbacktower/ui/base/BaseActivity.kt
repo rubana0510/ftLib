@@ -17,7 +17,7 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 
-open class BaseActivty : AppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocalBroadcastManager.getInstance(this)

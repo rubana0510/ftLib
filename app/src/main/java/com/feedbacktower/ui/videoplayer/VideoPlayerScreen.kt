@@ -6,8 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import com.feedbacktower.R
+import com.feedbacktower.ui.base.BaseActivity
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -20,7 +20,7 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player_screen.*
 
 
-class VideoPlayerScreen : AppCompatActivity() {
+class VideoPlayerScreen : BaseActivity() {
     companion object {
         val URI_KEY = "URI"
     }

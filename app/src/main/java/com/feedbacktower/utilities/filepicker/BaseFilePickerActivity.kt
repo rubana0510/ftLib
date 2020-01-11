@@ -2,16 +2,15 @@ package com.feedbacktower.utilities.filepicker
 
 import android.os.Bundle
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
-
 import androidx.appcompat.widget.Toolbar
 import com.feedbacktower.R
+import com.feedbacktower.ui.base.BaseActivity
 
 /**
  * Created by droidNinja on 22/07/17.
  */
 
-abstract class BaseFilePickerActivity : AppCompatActivity() {
+abstract class BaseFilePickerActivity : BaseActivity() {
 
     protected fun onCreate(savedInstanceState: Bundle?, @LayoutRes layout: Int) {
         super.onCreate(savedInstanceState)

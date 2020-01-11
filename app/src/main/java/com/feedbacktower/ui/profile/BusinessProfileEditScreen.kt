@@ -1,14 +1,14 @@
 package com.feedbacktower.ui.profile
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.feedbacktower.R
+import com.feedbacktower.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_profile_setup_screen.*
 
-class BusinessProfileEditScreen : AppCompatActivity() {
+class BusinessProfileEditScreen : BaseActivity() {
 
     companion object {
         const val ONBOARDING_KEY = "ONBOARDING_KEY"

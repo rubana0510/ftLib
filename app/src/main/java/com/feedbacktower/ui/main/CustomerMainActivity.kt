@@ -1,14 +1,14 @@
 package com.feedbacktower.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.feedbacktower.R
+import com.feedbacktower.ui.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_customer_main.*
 
-class CustomerMainActivity : AppCompatActivity() {
+class CustomerMainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

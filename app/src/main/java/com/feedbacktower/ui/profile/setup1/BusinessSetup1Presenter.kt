@@ -1,6 +1,7 @@
 package com.feedbacktower.ui.profile.setup1
 
 import com.feedbacktower.data.ApplicationPreferences
+import com.feedbacktower.data.models.User
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
@@ -14,6 +15,9 @@ class BusinessSetup1Presenter @Inject constructor(
     private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<BusinessSetup1Contract.View>(),
     BusinessSetup1Contract.Presenter {
+    val user: User
+        get() = appPrefs.user?:throw IllegalStateException("User cannot be null")
+
     override fun updateDetails(name: String, regNo: String, categoryId: String?) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()

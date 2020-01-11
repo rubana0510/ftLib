@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.App
 import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessSetup1Binding
@@ -22,13 +23,17 @@ class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.Vi
 
     @Inject
     lateinit var presenter: BusinessSetup1Presenter
-    @Inject
-    lateinit var user: User
+
     private lateinit var binding: FragmentBusinessSetup1Binding
     private var selectedCatId: String? = null
     private var selectedMasterCatId: String? = null
 
     private val args: BusinessSetup1FragmentArgs by navArgs()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as App).appComponent.accountComponent().create().inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +47,7 @@ class BusinessSetup1Fragment : BaseViewFragmentImpl(), BusinessSetup1Contract.Vi
 
     private fun initUi() {
 
-        val business = user.business
+        val business = presenter.user.business
         binding.business = business
         selectedCatId = business?.businessCategory?.id
 

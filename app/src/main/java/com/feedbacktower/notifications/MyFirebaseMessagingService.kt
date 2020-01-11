@@ -34,8 +34,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         private const val TAG = "MyFirebaseMessaging"
     }
 
-    init {
-        (application as App).appComponent.authComponent().create()
+
+    override fun onCreate() {
+        super.onCreate()
+        (application as App).appComponent.authComponent().create().inject(this)
     }
 
     override fun onNewToken(token: String?) {

@@ -37,7 +37,6 @@ import javax.inject.Inject
 class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.View {
     @Inject
     lateinit var presenter: BusinessDetailPresenter
-    lateinit var user: User
     private lateinit var binding: FragmentBusinessDetailBinding
     private lateinit var reviewListView: RecyclerView
     private lateinit var postListView: RecyclerView
@@ -58,14 +57,13 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
         businessId = arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid args")
         initUi()
         presenter.attachView(this)
-        user = presenter.user ?: throw IllegalStateException("User must not be null")
         presenter.fetchBusinessDetails(businessId)
         return binding.root
     }
 
     private fun initUi() {
 
-        binding.buttonLay.isGone =  user?.business?.id?.equals(businessId) == true
+        binding.buttonLay.isGone =  presenter.user?.business?.id?.equals(businessId) == true
         binding.onViewReviewsClicked = View.OnClickListener {
             val d =
                 BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationReview(

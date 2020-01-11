@@ -7,7 +7,10 @@ import com.feedbacktower.ui.base.BaseView
 
 interface SenderQrContract {
     interface View : BaseView {
+        fun showQrDataFetchProgress()
         fun onQrDataFetched(response: QrPaymentStatus?)
+        fun hideQrDataFetchProgress()
+        fun showQrPaymentStatusProgress()
         fun onQrPaymentStatusResponse(response: QrStatusSenderResponse?)
     }
 

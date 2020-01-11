@@ -16,7 +16,7 @@ class RegisterPresenter @Inject constructor(
     override fun preRegister(phone: String) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()
-            val response = apiService.loginAsync(hashMapOf("phone" to phone)).awaitNetworkRequest()
+            val response = apiService.preRegisterAsync(hashMapOf("phone" to phone)).awaitNetworkRequest()
             view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)

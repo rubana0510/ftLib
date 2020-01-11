@@ -26,7 +26,7 @@ class LoginScreen : BaseViewActivityImpl(), LoginContract.View, ConnectivityRece
     private lateinit var binding: ActivityLoginScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.authComponent().create()
+        (application as App).appComponent.authComponent().create().inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login_screen)
         presenter.attachView(this)
         initUi()

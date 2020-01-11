@@ -36,7 +36,7 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_payment_success_screen)
-        (application as App).appComponent.paymentComponent().create()
+        (application as App).appComponent.paymentComponent().create().inject(this)
         presenter.attachView(this)
         intent?.let {
             paymentSummary =

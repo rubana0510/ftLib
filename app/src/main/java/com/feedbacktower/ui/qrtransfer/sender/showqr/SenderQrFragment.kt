@@ -47,15 +47,17 @@ class SenderQrFragment : BaseViewFragmentImpl(), SenderQrContract.View {
         return view
     }
 
-    override fun showProgress() {
-        super.showProgress()
+    override fun showQrDataFetchProgress() {
         progress.visible()
         qrImage.gone()
     }
 
-    override fun dismissProgress() {
-        super.dismissProgress()
+    override fun hideQrDataFetchProgress() {
         progress.gone()
+    }
+
+    override fun showQrPaymentStatusProgress() {
+        
     }
 
     private fun showImage() {

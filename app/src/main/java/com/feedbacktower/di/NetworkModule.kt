@@ -1,6 +1,8 @@
 package com.feedbacktower.di
 
 import android.content.Context
+import android.content.Intent
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
 import com.feedbacktower.data.ApplicationPreferences
@@ -51,7 +53,8 @@ class NetworkModule {
                 val response = chain.proceed(request)
                 if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                     appPrefs.clearUserPrefs()
-                    context.toast(context.getString(R.string.session_expired_message))
+                    LocalBroadcastManager.getInstance(context)
+                        .sendBroadcast(Intent(Constants.SESSION_EXPIRED_INTENT_FILTER))
                 }
                 return@ani response
             }

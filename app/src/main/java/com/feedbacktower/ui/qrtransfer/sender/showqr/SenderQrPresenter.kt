@@ -15,9 +15,9 @@ class SenderQrPresenter @Inject constructor(
 
     override fun fetchQrData() {
         GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
+            view?.showQrDataFetchProgress()
             val response = apiService.generateQrCodeAsync().awaitNetworkRequest()
-            view?.dismissProgress()
+            view?.hideQrDataFetchProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
@@ -28,9 +28,9 @@ class SenderQrPresenter @Inject constructor(
 
     override fun listenForChanges(txId: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
+            view?.showQrPaymentStatusProgress()
             val response = apiService.checkQrTransferStatusSenderAsync(hashMapOf("code" to txId)).awaitNetworkRequest()
-            view?.dismissProgress()
+          //  view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch

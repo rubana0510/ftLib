@@ -50,7 +50,7 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
     private val TAG = "SubscriptionPlansScreen"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.paymentComponent().create()
+        (application as App).appComponent.paymentComponent().create().inject(this)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_subscription_plan_screen)
         initUi()
         presenter.attachView(this)

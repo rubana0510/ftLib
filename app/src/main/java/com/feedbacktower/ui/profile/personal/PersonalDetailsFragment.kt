@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
@@ -43,8 +44,7 @@ import javax.inject.Inject
 
 class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.View,
     SpinnerDatePickerDialog.OnDateSelectedListener {
-    @Inject
-    lateinit var user: User
+
     @Inject
     lateinit var presenter: PersonalDetailPresenter
 
@@ -66,6 +66,10 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
     private var lastImagePath: String? = null
     private lateinit var profileImage: ImageView
     private var dateSelected: String? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as App).appComponent.accountComponent().create().inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -115,12 +119,8 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
             }
         }
         PermissionManager.getInstance().requestMediaPermission(this)
-        binding.user = user
-        if (user?.dob == null) {
-            dobInput.setText("Select Date")
-        } else {
-            setDateText(user.dob)
-        }
+        binding.user = presenter.user
+        setDateText(presenter.user.dob)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

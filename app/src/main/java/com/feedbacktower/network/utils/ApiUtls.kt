@@ -6,6 +6,8 @@ import com.feedbacktower.network.models.Result
 import com.feedbacktower.util.Constants
 import kotlinx.coroutines.Deferred
 import retrofit2.HttpException
+import retrofit2.http.HTTP
+import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -88,11 +90,23 @@ suspend fun <T> Deferred<T>.awaitGoogleApiRequest(): ApiResponse<T> {
 fun <T> Exception.getNetworkError(): ApiResponse<T> {
     return when (this) {
         is HttpException -> {
-            ApiResponse.toError(
-                Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
-                "Network error occurred",
-                ApiResponse.ErrorType.HTTP_EXCEPTION
-            )
+            when (this.code()) {
+                HttpURLConnection.HTTP_UNAUTHORIZED -> ApiResponse.toError(
+                    Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                    "Your session has expired",
+                    ApiResponse.ErrorType.HTTP_EXCEPTION
+                )
+                HttpURLConnection.HTTP_FORBIDDEN -> ApiResponse.toError(
+                    Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                    "Sorry, You do not have access",
+                    ApiResponse.ErrorType.HTTP_EXCEPTION
+                )
+                else -> ApiResponse.toError(
+                    Constants.Service.Error.HTTP_EXCEPTION_ERROR_CODE,
+                    "Network error occurred",
+                    ApiResponse.ErrorType.HTTP_EXCEPTION
+                )
+            }
         }
         is SocketTimeoutException -> {
             ApiResponse.toError(

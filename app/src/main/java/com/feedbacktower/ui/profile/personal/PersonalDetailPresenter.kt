@@ -2,6 +2,7 @@ package com.feedbacktower.ui.profile.personal
 
 import android.util.Log
 import com.feedbacktower.data.ApplicationPreferences
+import com.feedbacktower.data.models.User
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
@@ -20,6 +21,10 @@ class PersonalDetailPresenter
     private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<PersonalDetailContract.View>(),
     PersonalDetailContract.Presenter {
+
+    val user: User
+        get() = appPrefs.user?:throw IllegalStateException("User cannot be null")
+
     override fun updateDetails(firstName: String, lastName: String, email: String, dateOfBirth: String) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showUpdateDetailsProgress()

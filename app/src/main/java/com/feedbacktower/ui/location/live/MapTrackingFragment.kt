@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.databinding.FragmentMapTrackingBinding
@@ -42,11 +43,18 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
     private val TAG = "MapTracking"
     @Inject
     lateinit var appPrefs: ApplicationPreferences
+
     private var fusedLocationClient: FusedLocationProviderClient? = null
     private var googleMap: GoogleMap? = null
     private var MAX_GET_LOCATION_RETRY = 2
     private var trackingService: TrackerService? = null
     private lateinit var binding: FragmentMapTrackingBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as App).appComponent.accountComponent().create().inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

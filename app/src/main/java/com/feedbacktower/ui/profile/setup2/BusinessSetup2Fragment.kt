@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.feedbacktower.App
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.databinding.FragmentBusinessSetup2Binding
 import com.feedbacktower.network.models.ApiResponse
@@ -20,10 +21,14 @@ import javax.inject.Inject
 class BusinessSetup2Fragment : BaseViewFragmentImpl(), BusinessSetup2Contract.View {
     @Inject
     lateinit var presenter: BusinessSetup2Presenter
-    @Inject
-    lateinit var appPrefs: ApplicationPreferences
 
     private lateinit var binding: FragmentBusinessSetup2Binding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as App).appComponent.accountComponent().create().inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +41,7 @@ class BusinessSetup2Fragment : BaseViewFragmentImpl(), BusinessSetup2Contract.Vi
     }
 
     private fun initUi() {
-        binding.business = appPrefs.user?.business
+        binding.business = presenter.user.business
 
         binding.onContinueClick = View.OnClickListener {
             if (valid(

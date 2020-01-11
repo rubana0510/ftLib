@@ -37,7 +37,7 @@ class RegisterPhoneScreen : BaseViewActivityImpl(), RegisterContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.authComponent().create()
+        (application as App).appComponent.authComponent().create().inject(this)
         presenter.attachView(this)
         screenFunction = intent?.getSerializableExtra(SCREEN_TYPE_KEY) as? ScreenFunction
             ?: throw IllegalArgumentException("No type args passed")

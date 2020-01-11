@@ -27,7 +27,7 @@ class MyPlanScreen : BaseViewActivityImpl(), MyPlanContract.View {
     private lateinit var binding: ActivityMyPlanScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.paymentComponent().create()
+        (application as App).appComponent.paymentComponent().create().inject(this)
         binding =
             DataBindingUtil.setContentView(this, R.layout.activity_my_plan_screen)
         title = "Subscription Plan"

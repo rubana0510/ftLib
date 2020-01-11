@@ -22,7 +22,7 @@ class SplashScreen : BaseViewActivityImpl(), SplashContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.authComponent().create()
+        (application as App).appComponent.authComponent().create().inject(this)
         presenter.attachView(this)
         presenter.saveFirebaseToken()
         presenter.subscribeToTopicNotifications()

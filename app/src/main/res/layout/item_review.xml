@@ -36,21 +36,24 @@
         <TextView
                 android:id="@+id/userName"
                 style="@style/UserFullNameStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/userProfileImage"
                 app:layout_constraintTop_toTopOf="@id/userProfileImage"
+                app:layout_constraintEnd_toStartOf="@id/ratingBar"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:layout_marginStart="8dp"
                 tools:text="Jon Sno"
                 android:text="@{review.reviewerName}"
                 android:onClick="@{openProfileListener}"/>
         <TextView
                 style="@style/TinyText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@id/userName"
+                app:layout_constraintEnd_toStartOf="@id/ratingBar"
                 android:layout_marginTop="4dp"
                 tools:text="21 min ago"
                 app:toDate="@{review.updatedAt}"/>

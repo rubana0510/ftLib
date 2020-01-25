@@ -9,18 +9,18 @@
             tools:layout="@layout/fragment_home">
         <action android:id="@+id/action_navigation_home_to_selectCityFragment"
                 app:destination="@id/selectCityFragment"/>
-        <action android:id="@+id/action_navigation_home_to_businessDetailsActivity"
-                app:destination="@id/businessDetailsActivity"/>
         <action android:id="@+id/action_navigation_home_to_adDetailFragment"
                 app:destination="@id/adDetailFragment"/>
+        <action android:id="@+id/action_navigation_home_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_search"
             android:name="com.feedbacktower.ui.search.SearchFragment"
             android:label="@string/title_search"
             tools:layout="@layout/fragment_search">
-        <action android:id="@+id/action_navigation_search_to_businessDetailsActivity"
-                app:destination="@id/businessDetailsActivity"/>
+        <action android:id="@+id/action_navigation_search_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
     </fragment>
     <fragment
             android:id="@+id/navigation_customer_account"
@@ -38,22 +38,15 @@
         <action android:id="@+id/action_navigation_account_to_helpFragment"
                 app:destination="@id/helpFragment"/>
     </fragment>
-    <activity
-            android:id="@+id/businessDetailsActivity"
-            android:name="com.feedbacktower.ui.business_detail.BusinessDetailsActivity"
-            android:label="activity_business_details"
-            tools:layout="@layout/activity_business_details">
-        <argument android:name="businessId" app:argType="string"/>
-    </activity>
     <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.ui.suggestions.my.MySuggestionsFragment"
               android:label="My Suggestions" tools:layout="@layout/fragment_my_suggestions">
-        <action android:id="@+id/action_navigation_my_suggestion_to_businessDetailsActivity"
-                app:destination="@id/businessDetailsActivity"/>
+        <action android:id="@+id/action_mySuggestionsFragment_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
     </fragment>
     <fragment android:id="@+id/myReviewsFragment" android:name="com.feedbacktower.ui.reviews.my.MyReviewsFragment"
               android:label="My Reviews" tools:layout="@layout/fragment_my_reviews">
-        <action android:id="@+id/action_navigation_my_review_to_businessDetailsActivity"
-                app:destination="@id/businessDetailsActivity"/>
+        <action android:id="@+id/action_myReviewsFragment_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
     </fragment>
     <fragment android:id="@+id/selectCityFragment" android:name="com.feedbacktower.ui.city.SelectCityFragment"
               android:label="Select City">
@@ -74,7 +67,17 @@
               android:name="com.feedbacktower.ui.ads.AdDetailFragment"
               android:label="Detail">
         <argument android:name="ad" app:argType="com.feedbacktower.data.models.Ad"/>
-        <action android:id="@+id/action_adDetailFragment_to_businessDetailsActivity"
-                app:destination="@id/businessDetailsActivity"/>
+        <action android:id="@+id/action_adDetailFragment_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/navigation_business_detail"
+            android:name="com.feedbacktower.ui.business_detail.BusinessDetailFragment"
+            android:label="Business Details"
+            tools:layout="@layout/fragment_business_detail">
+        <argument android:name="businessId" app:argType="string"/>
+        <action android:id="@+id/action_navigation_business_detail_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
     </fragment>
 </navigation>

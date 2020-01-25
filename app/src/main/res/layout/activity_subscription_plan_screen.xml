@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary">
         <androidx.cardview.widget.CardView
                 android:id="@+id/planView"
                 android:layout_width="300dp"
@@ -24,6 +24,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.2"
+                android:visibility="gone"
                 app:isGone="@{isLoading}">
 
             <FrameLayout
@@ -140,6 +141,7 @@
                 android:gravity="center"
                 app:isGone="@{isLoading}"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 app:planBenefits="@{plan}"/>
 
 
@@ -154,14 +156,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@{`Pay `  + plan.payableAmountDisplay}"
                 app:isGone="@{isLoading}"
+                android:visibility="gone"
                 android:onClick="@{onContinueClick}"/>
-        <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

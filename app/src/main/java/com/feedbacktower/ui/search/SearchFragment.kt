@@ -24,7 +24,6 @@ import com.feedbacktower.databinding.FragmentSearchBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.SearchBusiness
 import com.feedbacktower.network.models.SearchBusinessResponse
-import com.feedbacktower.ui.business_detail.BusinessDetailsActivity
 import com.feedbacktower.ui.account.find_customer.FindCustomerActivity
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.launchActivity
@@ -141,9 +140,7 @@ class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusine
     }
 
     override fun onItemClick(item: SearchBusiness) {
-        requireActivity().launchActivity<BusinessDetailsActivity> {
-            putExtra("businessId", item.businessId)
-        }
+//        SearchFragmentDirections.
     }
 
     override fun showProgress() {
@@ -170,5 +167,10 @@ class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusine
     override fun showNetworkError(error: ApiResponse.ErrorModel) {
         super.showNetworkError(error)
         requireContext().toast(error.message)
+    }
+
+    override fun onDestroy() {
+        presenter.destroyView()
+        super.onDestroy()
     }
 }

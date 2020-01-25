@@ -39,7 +39,7 @@ class MyReviewListAdapter(val list: List<Review>) : RecyclerView.Adapter<MyRevie
     }
 
     private fun createProfileClickListener(item: Review): View.OnClickListener = View.OnClickListener { view ->
-        MyReviewsFragmentDirections.actionNavigationMyReviewToBusinessDetailsActivity(item.businessId).let {
+        MyReviewsFragmentDirections.actionMyReviewsFragmentToNavigationBusinessDetail(item.businessId).let {
             view.findNavController().navigate(it)
         }
     }

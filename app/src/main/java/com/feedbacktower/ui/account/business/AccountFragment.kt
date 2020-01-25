@@ -156,7 +156,7 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
             AccountOption(
                 6,
                 "Wallet Transactions",
-                "Wallet balance ₹${business.walletAmount}, Discount Amount: ₹${business.discountAmount}",
+                "Wallet balance ₹${business.walletAmount}, Business Index: ₹${business.discountAmount}",
                 R.drawable.ic_post_like_filled
             ),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),

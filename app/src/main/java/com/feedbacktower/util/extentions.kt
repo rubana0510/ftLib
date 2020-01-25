@@ -19,6 +19,8 @@ import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -506,4 +508,8 @@ fun Activity.logd(message: String) {
     val name = this::class.java.simpleName
     val tag = if (name.length < 24) name else name.substring(0, 22)
     Log.d(tag, message)
+}
+
+fun NavDirections.navigate(view: View) {
+    view.findNavController().navigate(this)
 }

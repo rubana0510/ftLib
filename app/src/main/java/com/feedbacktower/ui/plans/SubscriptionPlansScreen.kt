@@ -6,11 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R
-import com.feedbacktower.adapters.PlanAdapter
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PayUResponse
 import com.feedbacktower.data.models.PaymentSummary
@@ -23,7 +21,8 @@ import com.feedbacktower.network.models.GenerateHashResponse
 import com.feedbacktower.ui.base.BaseViewActivityImpl
 import com.feedbacktower.ui.payment.PlanPaymentResultScreen
 import com.feedbacktower.ui.splash.SplashScreen
-import com.feedbacktower.util.*
+import com.feedbacktower.util.enable
+import com.feedbacktower.util.launchActivity
 import com.google.gson.Gson
 import com.payumoney.core.PayUmoneySdkInitializer
 import com.payumoney.core.entity.TransactionResponse
@@ -42,8 +41,7 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
     @Inject
     lateinit var presenter: SubscriptionPlansPresenter
 
-    private lateinit var planListView: RecyclerView
-    private lateinit var planAdapter: PlanAdapter
+
     private var hashResponse: GenerateHashResponse? = null
     private var plan: Plan? = null
     private lateinit var binding: ActivitySubscriptionPlanScreenBinding
@@ -57,25 +55,18 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
     }
 
     private fun initUi() {
-        /* planAdapter = PlanAdapter()
-         planListView = binding.planListView
-         planListView.setHorizontal(this)
-         planListView.adapter = planAdapter*/
+
         binding.onContinueClick = onContinueClick
 
         val pendingPaymentSummary = appPrefs.summary
         if (pendingPaymentSummary != null) {
-            showButtonLoading()
-            presenter.saveTxnResponse(pendingPaymentSummary)
-        } else
+            launchActivity<PlanPaymentResultScreen> {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra(PlanPaymentResultScreen.PAYMENT_SUMMARY, pendingPaymentSummary)
+            }
+            finish()
+        } else {
             getPlanList()
-    }
-
-    override fun onSaveResponse() {
-        hideButtonLoading()
-        appPrefs.summary = null
-        launchActivity<SplashScreen> {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
     }
 
@@ -106,7 +97,7 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
     override fun onTxnCancelled() {
         appPrefs.summary = null
         hashResponse = null
-        hideButtonLoading()
+        binding.isLoading = false
     }
 
     private val onContinueClick = View.OnClickListener {
@@ -117,9 +108,8 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
     }
 
     private fun generateHashForPayment(plan: Plan) {
-        showButtonLoading()
         val txId = generateTransactionID()
-        val requestParams: GenerateHashRequest = GenerateHashRequest(
+        val requestParams = GenerateHashRequest(
             plan.id,
             appPrefs.user!!.emailId,
             appPrefs.user!!.firstName,
@@ -137,7 +127,7 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
 
     override fun showNetworkError(error: ApiResponse.ErrorModel) {
         super.showNetworkError(error)
-        hideButtonLoading()
+        toast(error.message)
     }
 
 
@@ -150,16 +140,9 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
         return "${System.currentTimeMillis()}${Random().nextInt(999999) + 100000}"
     }
 
-    private fun showButtonLoading() {
-        continueButton.disable()
-        continueButton.text = "Please wait..."
-        progress.visible()
-    }
-
-    private fun hideButtonLoading() {
-        continueButton.enable()
-        continueButton.text = "CONTINUE"
-        progress.gone()
+    override fun showProgress() {
+        super.showProgress()
+        binding.isLoading = true
     }
 
     private fun initiatePayment(
@@ -247,7 +230,6 @@ class SubscriptionPlansScreen : BaseViewActivityImpl(), SubscriptionPlansContrac
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == Activity.RESULT_CANCELED) {
             toast("Payment Cancelled")
             hashResponse?.txn?.id?.let { txnId ->
-                showButtonLoading()
                 presenter.cancelTxn(txnId)
             }
         }

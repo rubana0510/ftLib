@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.feedbacktower.App
 import com.feedbacktower.adapters.ReviewListAdapter
+import com.feedbacktower.adapters.Screen
 import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.Review
@@ -54,7 +55,7 @@ class ReviewsFragment : BaseViewFragmentImpl(), ReviewsContract.View {
         binding.reviewListView.layoutManager = layoutManager
         binding.reviewListView.itemAnimator = DefaultItemAnimator()
         binding.reviewListView.setHasFixedSize(true)
-        reviewAdapter = ReviewListAdapter(list)
+        reviewAdapter = ReviewListAdapter(list, Screen.REVIEW_LIST)
         binding.reviewListView.adapter = reviewAdapter
 
         binding.reviewListView.addOnScrollListener(ScrollListener {

@@ -8,15 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
 import com.feedbacktower.adapters.ProfilePostListAdapter
 import com.feedbacktower.adapters.ReviewListAdapter
+import com.feedbacktower.adapters.Screen
 import com.feedbacktower.data.models.Business
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.data.models.Review
-import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentBusinessDetailBinding
 import com.feedbacktower.network.env.Env
 import com.feedbacktower.network.models.ApiResponse
@@ -31,6 +30,7 @@ import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
+import com.feedbacktower.util.navigate
 import javax.inject.Inject
 
 
@@ -63,20 +63,12 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
     private fun initUi() {
 
-        binding.buttonLay.isGone =  presenter.user?.business?.id?.equals(businessId) == true
+        binding.buttonLay.isGone = presenter.user?.business?.id?.equals(businessId) == true
         binding.onViewReviewsClicked = View.OnClickListener {
-            val d =
-                BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationReview(
-                    businessId
-                )
-            findNavController().navigate(d)
+            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToBusinessReview(businessId).navigate(it)
         }
         binding.onViewPostsClicked = View.OnClickListener {
-            val d =
-                BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationTimeline(
-                    businessId
-                )
-            findNavController().navigate(d)
+            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationTimeline(businessId).navigate(it)
         }
         binding.onSendSuggestionClicked = View.OnClickListener {
             val d = SendSuggestionDialog(updateListener)
@@ -114,7 +106,7 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
         //setup list
         reviewListView.setVertical(requireContext())
-        reviewAdapter = ReviewListAdapter(list)
+        reviewAdapter = ReviewListAdapter(list, Screen.BUSINESS_DETAIL)
         reviewListView.adapter = reviewAdapter
 
         postListView.setVertical(requireContext())

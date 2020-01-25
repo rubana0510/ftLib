@@ -16,11 +16,11 @@ class InterestsPresenter
     InterestsContract.Presenter {
     override fun toggleInterest(interest: BusinessCategory) {
         GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
+            //view?.showProgress()
             val response = apiService.setBusinessCategoryInterestAsync(
                 hashMapOf("businessCategoryId" to interest.id, "interest" to interest.selected)
             ).awaitNetworkRequest()
-            view?.dismissProgress()
+           // view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch

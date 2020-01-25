@@ -38,7 +38,7 @@ class AdDetailFragment : Fragment() {
             )
         }
         binding.showBusinessDetails = View.OnClickListener {
-            AdDetailFragmentDirections.actionAdDetailFragmentToBusinessDetailsActivity(args.ad.business.id).let {
+            AdDetailFragmentDirections.actionAdDetailFragmentToNavigationBusinessDetail(args.ad.business.id).let {
                 findNavController().navigate(it)
             }
         }

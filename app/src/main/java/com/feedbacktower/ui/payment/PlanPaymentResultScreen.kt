@@ -62,7 +62,9 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
                 }
                 finish()
             } else if (paymentStatus == PlanPaymentTransaction.Status.FAILURE) {
-                finish()
+                launchActivity<SubscriptionPlansScreen> {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
             } else if (paymentStatus == PlanPaymentTransaction.Status.PENDING) {
                 //TODO: needs to be handled payment pending state
                 launchActivity<SplashScreen> {
@@ -89,12 +91,17 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error occurred")
         builder.setMessage(error.message)
-        builder.setPositiveButton("TRY AGAIN") { _, _ -> presenter.refreshAuthToken() }
+        builder.setPositiveButton("OKAY", null)// { _, _ ->  presenter.refreshAuthToken() }
         builder.setCancelable(false)
         val alert = builder.create()
         alert.setCanceledOnTouchOutside(false)
         alert.show()
         toast(error.message)
+
+        if (error.message.equals("Payment Failed", true)) {
+            paymentStatus = PlanPaymentTransaction.Status.FAILURE
+            setPaymentFailed()
+        }
     }
 
 
@@ -209,6 +216,7 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         image.setImageResource(R.drawable.ic_payment_pending)
         button.text = "OKAY"
         appPrefs.summary = null
+        referralCodeLay.gone()
         hideLoading()
     }
 
@@ -217,6 +225,7 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         image.setImageResource(R.drawable.ic_cancel_failure)
         button.text = "TRY AGAIN"
         appPrefs.summary = null
+        referralCodeLay.gone()
         hideLoading()
     }
 

@@ -15,6 +15,7 @@ import com.feedbacktower.ui.home.feed.HomeFragmentDirections
 /**
  * Created by sanket on 12-02-2019.
  */
+
 class MyPostListAdapter(private val list: List<Post>, private val activity: Activity, private val listener: Listener?) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
     override fun getItemCount(): Int {
@@ -94,9 +95,9 @@ class MyPostListAdapter(private val list: List<Post>, private val activity: Acti
     }
 
     private fun createProfileClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->
-        HomeFragmentDirections.actionNavigationHomeToBusinessDetailsActivity(item.businessId).let {
+     /*   HomeFragmentDirections.actionNavigationHomeToNavigationBusinessDetail(item.businessId).let {
             view.findNavController().navigate(it)
-        }
+        }*/
     }
 
     private fun createVideoClickListener(item: Post, pos: Int): View.OnClickListener = View.OnClickListener { view ->

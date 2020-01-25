@@ -17,9 +17,9 @@ class PaymentResultPresenter @Inject constructor(
     var statusCallCount = 0
     override fun verifyReferralCode(code: String) {
         GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
+            view?.showVerifyReferralProgress()
             val response = apiService.verifyReferralCodeAsync(hashMapOf("code" to code)).awaitNetworkRequest()
-            view?.dismissProgress()
+            view?.hideVerifyReferralProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch

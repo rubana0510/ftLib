@@ -21,7 +21,9 @@ class SubscriptionPlansPresenter @Inject constructor(
     SubscriptionPlansContract.Presenter {
     override fun getSubscriptionPlans(categoryId: String) {
         GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
             val response = apiService.getSubscriptionPlansAsync(categoryId).awaitNetworkRequest()
+            view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
@@ -30,20 +32,12 @@ class SubscriptionPlansPresenter @Inject constructor(
         }
     }
 
-    override fun saveTxnResponse(summary: PaymentSummary) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = apiService.saveTransactionResponseAsync(summary).awaitNetworkRequest()
-            if (response.error != null) {
-                view?.showNetworkError(response.error)
-                return@launch
-            }
-            view?.onSaveResponse()
-        }
-    }
-
     override fun cancelTxn(id: String) {
         GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
             val response = apiService.cancelTransactionAsync(hashMapOf("id" to id)).awaitNetworkRequest()
+            view?.dismissProgress()
+
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
@@ -54,7 +48,10 @@ class SubscriptionPlansPresenter @Inject constructor(
 
     override fun generateHash(request: GenerateHashRequest, plan: Plan) {
         GlobalScope.launch(Dispatchers.Main) {
+            view?.showProgress()
             val response = apiService.generateHashAsync(request).awaitNetworkRequest()
+            view?.dismissProgress()
+
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch

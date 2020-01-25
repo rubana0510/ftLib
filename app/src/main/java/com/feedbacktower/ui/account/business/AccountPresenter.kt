@@ -66,5 +66,6 @@ class AccountPresenter
 
     override fun logOut() {
         appPrefs.clearUserPrefs()
+        view?.onLogOut()
     }
 }

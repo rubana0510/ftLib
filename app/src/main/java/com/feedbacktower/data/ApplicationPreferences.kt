@@ -60,10 +60,11 @@ class ApplicationPreferences @Inject constructor(
 
     var summary: PaymentSummary?
         get() {
-            return Gson().fromJson(sharedPrefs.getString("PAYMENT_SUMMARY", null), PaymentSummary::class.java)
+            val temp = sharedPrefs.getString("PAYMENT_SUMMARY", null) ?: return null
+            return Gson().fromJson(temp, PaymentSummary::class.java)
         }
         set(value) {
-            sharedPrefs.edit().putString("PAYMENT_SUMMARY", Gson().toJson(value)).apply()
+            sharedPrefs.edit().putString("PAYMENT_SUMMARY", if (value == null) null else Gson().toJson(value)).apply()
         }
 
     var latestVersionCode: Int

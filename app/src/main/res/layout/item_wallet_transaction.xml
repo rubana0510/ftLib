@@ -28,14 +28,16 @@
         <TextView
                 android:id="@+id/businessName"
                 style="@style/MediumText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/businessProfile"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/amount"
                 android:layout_marginStart="@dimen/dimen_16dp"
                 android:text="@{transaction.user.business.name}"
                 tools:text="Roy's Garage"/>
         <TextView
+                android:id="@+id/date"
                 style="@style/SmallText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,5 +55,15 @@
                 app:layout_constraintBaseline_toBaselineOf="@id/businessName"
                 android:text="@{transaction.displayAmount}"
                 tools:text="+ Rs. 100"/>
+        <TextView
+                android:id="@+id/cancelled"
+                style="@style/SmallText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@id/date"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/color_d0021b"
+                app:isGone="@{!transaction.status.equals(`FAILED`)}"
+                tools:text="CANCELLED"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

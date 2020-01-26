@@ -19,5 +19,7 @@ class BusinessMainActivity : BaseActivity() {
         val mToolbar = toolbar
         mToolbar.navigationIcon = ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_24dp)
         NavigationUI.setupWithNavController(mToolbar, navController)
+
+        //navigation.lis
     }
 }

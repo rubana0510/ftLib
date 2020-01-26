@@ -28,9 +28,9 @@ class HomePresenter
 
     override fun fetchPosts(timestamp: String?) {
         GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
+            //view?.showProgress()
             val response = apiService.getPostsAsync(timestamp).awaitNetworkRequest()
-            view?.dismissProgress()
+            //view?.dismissProgress()
             if (response.error != null) {
                 view?.showPostsError(response.error)
                 return@launch

@@ -38,7 +38,7 @@ class SearchBusinessAdapter(val list: List<SearchBusiness>, val listener: Listen
     }
 
     private fun createClickListener(item: SearchBusiness): View.OnClickListener = View.OnClickListener {
-        listener.onItemClick(item)
+        listener.onItemClick(item, it)
     }
 
 
@@ -58,6 +58,6 @@ class SearchBusinessAdapter(val list: List<SearchBusiness>, val listener: Listen
     }
 
     interface Listener {
-        fun onItemClick(item: SearchBusiness)
+        fun onItemClick(item: SearchBusiness, view: View)
     }
 }

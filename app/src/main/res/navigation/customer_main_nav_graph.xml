@@ -79,5 +79,32 @@
         <argument android:name="businessId" app:argType="string"/>
         <action android:id="@+id/action_navigation_business_detail_to_navigation_business_detail"
                 app:destination="@id/navigation_business_detail"/>
+        <action android:id="@+id/action_navigation_business_detail_to_business_review"
+                app:destination="@id/business_review"/>
+        <action android:id="@+id/action_navigation_business_detail_to_navigation_timeline"
+                app:destination="@id/posts_fragment"/>
     </fragment>
+
+    <fragment
+            android:id="@+id/posts_fragment"
+            android:name="com.feedbacktower.ui.posts.PostsFragment"
+            android:label="Timeline"
+            tools:layout="@layout/fragment_timeline">
+        <argument android:name="businessId" app:argType="string"/>
+    </fragment>
+
+
+    <fragment
+            android:id="@+id/business_review"
+            android:name="com.feedbacktower.ui.reviews.business.ReviewsFragment"
+            android:label="@string/title_reviews"
+            tools:layout="@layout/fragment_reviews">
+
+        <argument android:name="businessId" app:argType="string"/>
+
+        <action android:id="@+id/action_business_review_to_navigation_business_detail"
+                app:destination="@id/navigation_business_detail"/>
+    </fragment>
+
+
 </navigation>

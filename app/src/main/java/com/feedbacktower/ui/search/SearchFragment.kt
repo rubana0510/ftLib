@@ -27,6 +27,7 @@ import com.feedbacktower.network.models.SearchBusinessResponse
 import com.feedbacktower.ui.account.find_customer.FindCustomerActivity
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.util.launchActivity
+import com.feedbacktower.util.navigate
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
 import javax.inject.Inject
@@ -139,8 +140,8 @@ class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusine
         presenter.fetch(s)
     }
 
-    override fun onItemClick(item: SearchBusiness) {
-//        SearchFragmentDirections.
+    override fun onItemClick(item: SearchBusiness, view: View) {
+       SearchFragmentDirections.actionNavigationSearchToNavigationBusinessDetail(item.businessId).navigate(view)
     }
 
     override fun showProgress() {

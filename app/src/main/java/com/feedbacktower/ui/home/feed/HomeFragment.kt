@@ -112,10 +112,14 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         // Inflate the layout for this fragment
         (requireActivity().applicationContext as App).appComponent.homeComponent().create().inject(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        presenter.attachView(this)
-        initUi()
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initUi()
+    }
+
 
 
     private fun initUi() {
@@ -186,9 +190,8 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         AppDatabase(requireContext()).adsDao().getAll().observe(this, Observer { list ->
             adList.clear()
             adList.addAll(list)
+            adsPagerAdapter.notifyDataSetChanged()
             if (adList.isNotEmpty()) {
-                adsPager.isVisible = adList.isEmpty()
-                adsPagerAdapter.notifyDataSetChanged()
                 adsPager.isVisible = true
                 dotList.isVisible = true
                 setUpDots()
@@ -231,13 +234,9 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     override fun onResume() {
         super.onResume()
+        presenter.attachView(this)
         foreground = true
         fetchPostList()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        foreground = false
     }
 
     private val addPostClickListener = View.OnClickListener {
@@ -350,11 +349,13 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     override fun onPostsFetched(response: GetPostsResponse?, timestamp: String?) {
         response?.posts?.let {
+            Log.e(TAG, "onPostsFetched")
             if (timestamp.isNullOrEmpty())
                 posts.clear()
             postsOver = it.size < Constants.PAGE_SIZE
             posts.addAll(it)
             postAdapter.notifyDataSetChanged()
+            binding.isLoading = false
         }
     }
 
@@ -445,8 +446,9 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         }
     }
 
-    override fun onDestroy() {
+    override fun onPause() {
         presenter.destroyView()
-        super.onDestroy()
+        foreground = false
+        super.onPause()
     }
 }

@@ -5,18 +5,12 @@
         <variable name="business" type="com.feedbacktower.network.models.SearchBusiness"/>
         <variable name="onItemClick" type="android.view.View.OnClickListener"/>
     </data>
-    <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="8dp"
-            android:layout_margin="@dimen/cardMargin"
-            app:contentPadding="0dp"
-    android:clickable="true">
+
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="8dp"
                 android:onClick="@{onItemClick}">
             <ImageView
                     android:id="@+id/businessProfileImage"
@@ -24,22 +18,23 @@
                     android:layout_height="@dimen/businessSearchProfileImage"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_margin="@dimen/dimen_8dp"
                     app:toProfileRound="@{business.userId}"/>
             <TextView
                     android:id="@+id/businessName"
                     style="@style/businessNameStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                    app:layout_constraintEnd_toStartOf="@id/ratings"
                     android:layout_marginStart="@dimen/marginStartItem"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Rolls Mania"
+                    tools:text="Rolls Mania Rolls Mania Rolls Mania Rolls Mania "
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:layout_marginTop="8dp"
+                    android:maxLines="2"
                     android:text="@{business.name}"/>
             <TextView
+                    android:id="@+id/ratings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_star_filled_16dp"
@@ -94,5 +89,4 @@
                     app:isGone="@{business.available}"
                     android:text="Unavailable"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
 </layout>

@@ -104,8 +104,8 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
         }
     }
 
-    private val toggleListener = object : CategoryListAdapter.ToggleListener {
-        override fun categoryToggled(item: BusinessCategory) {
+    private val toggleListener = object : CategoryListAdapter.OnItemTappedListener {
+        override fun onTapped(item: BusinessCategory) {
             listener?.onSelect(item)
             dismiss()
         }

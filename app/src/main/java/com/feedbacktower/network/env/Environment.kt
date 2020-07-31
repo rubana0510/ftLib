@@ -9,27 +9,27 @@ interface Environment {
     val MERCHANT_KEY: String
 }
 
-class Live : Environment {
+class Prod : Environment {
     override val SERVER_BASE_URL: String
-        get() = BuildConfig.LIVE_SERVER_BASE_URL
+        get() = BuildConfig.PROD_SERVER_BASE_URL
     override val S3_BASE_URL: String
-        get() = BuildConfig.LIVE_S3_BASE_URL
+        get() = BuildConfig.PROD_S3_BASE_URL
     override val MERCHANT_ID: String
-        get() = BuildConfig.LIVE_MERCHANT_ID
+        get() = BuildConfig.PROD_MERCHANT_ID
     override val MERCHANT_KEY: String
-        get() = BuildConfig.LIVE_MERCHANT_KEY
+        get() = BuildConfig.PROD_MERCHANT_KEY
 }
 
 
-class Test : Environment {
+class Dev : Environment {
     override val SERVER_BASE_URL: String
-        get() = BuildConfig.TEST_SERVER_BASE_URL
+        get() = BuildConfig.DEV_SERVER_BASE_URL
     override val S3_BASE_URL: String
-        get() = BuildConfig.TEST_S3_BASE_URL
+        get() = BuildConfig.DEV_S3_BASE_URL
     override val MERCHANT_ID: String
-        get() = BuildConfig.TEST_MERCHANT_ID
+        get() = BuildConfig.DEV_MERCHANT_ID
     override val MERCHANT_KEY: String
-        get() = BuildConfig.TEST_MERCHANT_KEY
+        get() = BuildConfig.DEV_MERCHANT_KEY
 }
 
-val Env: Environment = Live()
+val Env: Environment = Dev()

@@ -1,35 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         tools:context=".ui.business_detail.BusinessDetailFragment">
+
     <data>
-        <variable name="business" type="com.feedbacktower.data.models.Business"/>
-        <variable name="isLoading" type="Boolean"/>
-        <variable name="detailsLoading" type="Boolean"/>
-        <variable name="reviewsLoading" type="Boolean"/>
-        <variable name="timelineLoading" type="Boolean"/>
-        <variable name="noTimeline" type="Boolean"/>
-        <variable name="noReviews" type="Boolean"/>
-        <variable name="onCallClicked" type="android.view.View.OnClickListener"/>
-        <variable name="onLocationClicked" type="android.view.View.OnClickListener"/>
-        <variable name="onCurrentLocationClicked" type="android.view.View.OnClickListener"/>
-        <variable name="onViewReviewsClicked" type="android.view.View.OnClickListener"/>
-        <variable name="onViewPostsClicked" type="android.view.View.OnClickListener"/>
-        <variable name="onSendSuggestionClicked" type="android.view.View.OnClickListener"/>
-        <variable name="sendReviewButtonClicked" type="android.view.View.OnClickListener"/>
+
+        <variable
+                name="business"
+                type="com.feedbacktower.data.models.Business" />
+
+        <variable
+                name="isLoading"
+                type="Boolean" />
+
+        <variable
+                name="detailsLoading"
+                type="Boolean" />
+
+        <variable
+                name="reviewsLoading"
+                type="Boolean" />
+
+        <variable
+                name="timelineLoading"
+                type="Boolean" />
+
+        <variable
+                name="noTimeline"
+                type="Boolean" />
+
+        <variable
+                name="noReviews"
+                type="Boolean" />
+
+        <variable
+                name="onCallClicked"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="onLocationClicked"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="onCurrentLocationClicked"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="onViewReviewsClicked"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="onViewPostsClicked"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="onSendSuggestionClicked"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="sendReviewButtonClicked"
+                type="android.view.View.OnClickListener" />
 
     </data>
-    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:isGone="@{isLoading}">
+
             <RelativeLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,141 +84,162 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:isGone="@{detailsLoading}">
-                    <ImageView
-                            android:id="@+id/businessProfileImage"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="@dimen/layoutMarginStart"
-                            android:layout_marginTop="@dimen/layoutMarginTop"
-                            app:toProfileRound="@{business.userId}"/>
-                    <TextView
-                            android:id="@+id/businessName"
-                            style="@style/businessNameBigStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layoutMarginStart"
-                            android:layout_marginEnd="@dimen/layoutMarginEnd"
-                            android:layout_marginTop="@dimen/dimen_8dp"
-                            app:layout_constraintStart_toEndOf="@id/businessProfileImage"
-                            app:layout_constraintEnd_toStartOf="@id/averageRatings"
-                            app:layout_constraintTop_toTopOf="@id/businessProfileImage"
-                            tools:text="Roy Garage"
-                            android:text="@{business.name}"/>
-                    <TextView
-                            android:id="@+id/businessCategory"
-                            style="@style/MediumText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layoutMarginStart"
-                            android:layout_marginEnd="@dimen/layoutMarginEnd"
-                            app:layout_constraintStart_toEndOf="@id/businessProfileImage"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/businessName"
-                            tools:text="Car Garage"
-                            android:text="@{business.businessCategory.name}"/>
-                    <TextView
-                            android:id="@+id/businessCity"
-                            style="@style/SmallText"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/layoutMarginStart"
-                            android:layout_marginEnd="@dimen/layoutMarginEnd"
-                            app:layout_constraintStart_toEndOf="@id/businessProfileImage"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/businessCategory"
-                            tools:text="Ranks 1 in Panjim"
-                            android:gravity="center_vertical"
-                            app:goneIfZero="@{business.rank}"
-                            android:drawableStart="@drawable/ic_timeline"
-                            android:drawableTint="@color/colorPrimaryDark"
-                            android:drawablePadding="@dimen/dimen_8dp"
-                            android:text="@{`Ranks ` + business.rank + ` in ` + business.city.name}"/>
-                    <TextView
-                            android:id="@+id/averageRatings"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_star_filled_16dp"
-                            tools:text="4.4"
-                            android:onClick="@{onViewReviewsClicked}"
-                            android:layout_marginStart="@dimen/marginItemSubVertical"
-                            android:layout_marginEnd="@dimen/marginEndItem"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:goneIfZero="@{business.avgRating}"
-                            app:layout_constraintBaseline_toBaselineOf="@id/businessName"
-                            android:text="@{``+business.avgRating}"/>
 
-                    <TextView
-                            android:id="@+id/unavailable"
-                            style="@style/businessCityStyle"
-                            android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/profile_lay_1"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:layout_constraintStart_toStartOf="@id/businessCategory"
-                            app:layout_constraintTop_toBottomOf="@id/businessCity"
-                            android:textColor="@color/red"
-                            android:textStyle="bold"
-                            app:isGone="@{business.available}"
-                            android:text="Unavailable"/>
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                                android:id="@+id/businessProfileImage"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginStart="@dimen/layoutMarginStart"
+                                android:layout_marginTop="@dimen/layoutMarginTop"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:toProfileRound="@{business.userId}" />
+
+                        <TextView
+                                android:id="@+id/businessName"
+                                style="@style/businessNameBigStyle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/layoutMarginStart"
+                                android:layout_marginTop="@dimen/dimen_8dp"
+                                android:layout_marginEnd="@dimen/layoutMarginEnd"
+                                android:text="@{business.name}"
+                                android:maxLines="3"
+                                app:layout_constraintEnd_toStartOf="@id/averageRatings"
+                                app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                                app:layout_constraintTop_toTopOf="@id/businessProfileImage"
+                                tools:text="Roy Garage Roy Garage Roy Garage Roy Garage Roy Garage" />
+
+                        <TextView
+                                android:id="@+id/businessCategory"
+                                style="@style/MediumText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/layoutMarginStart"
+                                android:layout_marginEnd="@dimen/layoutMarginEnd"
+                                android:text="@{business.businessCategory.name}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                                app:layout_constraintTop_toBottomOf="@id/businessName"
+                                tools:text="Car Garage" />
+
+                        <TextView
+                                android:id="@+id/businessCity"
+                                style="@style/SmallText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/layoutMarginStart"
+                                android:layout_marginEnd="@dimen/layoutMarginEnd"
+                                android:drawableStart="@drawable/ic_timeline"
+                                android:drawablePadding="@dimen/dimen_8dp"
+                                android:drawableTint="@color/colorPrimaryDark"
+                                android:gravity="center_vertical"
+                                android:text="@{`Ranks ` + business.rank + ` in ` + business.city.name}"
+                                app:goneIfZero="@{business.rank}"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/businessProfileImage"
+                                app:layout_constraintTop_toBottomOf="@id/businessCategory"
+                                tools:text="Ranks 1 in Panjim" />
+
+                        <TextView
+                                android:id="@+id/averageRatings"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/marginItemSubVertical"
+                                android:layout_marginEnd="@dimen/marginEndItem"
+                                android:drawableStart="@drawable/ic_star_filled_16dp"
+                                android:onClick="@{onViewReviewsClicked}"
+                                android:text="@{``+business.avgRating}"
+                                app:goneIfZero="@{business.avgRating}"
+                                app:layout_constraintBaseline_toBaselineOf="@id/businessName"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                tools:text="4.4" />
+
+                        <TextView
+                                android:id="@+id/unavailable"
+                                style="@style/businessCityStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Unavailable"
+                                android:textColor="@color/red"
+                                android:textStyle="bold"
+                                app:isGone="@{business.available}"
+                                app:layout_constraintStart_toStartOf="@id/businessCategory"
+                                app:layout_constraintTop_toBottomOf="@id/businessCity" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
                             android:id="@+id/ll1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"
                             android:layout_marginTop="@dimen/layoutMarginTop"
-                            app:layout_constraintTop_toBottomOf="@id/businessProfileImage">
+                            android:orientation="vertical"
+                            app:layout_constraintTop_toBottomOf="@id/profile_lay_1">
 
-                        <include layout="@layout/layout_divider"/>
+                        <include layout="@layout/layout_divider" />
 
                         <TextView
                                 style="@style/IconTextViewStyle"
                                 android:drawableStart="@drawable/ic_call_black_24dp"
                                 android:onClick="@{onCallClicked}"
-                                tools:text="+919922887766"
-                                android:text="@{business.phone}"/>
-                        <include layout="@layout/layout_divider"/>
+                                android:text="@{business.phone}"
+                                tools:text="+919922887766" />
+
+                        <include layout="@layout/layout_divider" />
 
                         <TextView
                                 style="@style/IconTextViewStyle"
                                 android:drawableStart="@drawable/ic_location_on_black_24dp"
                                 android:onClick="@{onLocationClicked}"
-                                tools:text="Taleigao, Panaji Goa, 403524"
-                                android:text="@{business.address}"/>
-                        <include layout="@layout/layout_divider"/>
+                                android:text="@{business.address}"
+                                tools:text="Taleigao, Panaji Goa, 403524" />
+
+                        <include layout="@layout/layout_divider" />
+
                         <TextView
                                 style="@style/IconTextViewStyle"
                                 android:drawableStart="@drawable/ic_location_on_black_24dp"
                                 android:onClick="@{onCurrentLocationClicked}"
-                                android:text="Last Location"/>
-                        <include layout="@layout/layout_divider"/>
+                                android:text="Last Location" />
+
+                        <include layout="@layout/layout_divider" />
 
                         <LinearLayout
                                 android:id="@+id/buttonLay"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="@dimen/dimen_8dp"
-                                android:layout_below="@id/detailsCl">
+                                android:layout_below="@id/detailsCl"
+                                android:padding="@dimen/dimen_8dp">
+
                             <com.google.android.material.button.MaterialButton
                                     android:id="@+id/sendReviewButton"
                                     style="@style/OutlinedIconButton"
-                                    app:icon="@drawable/ic_nav_review"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:layout_marginEnd="@dimen/dimen_4dp"
+                                    android:layout_weight="1"
                                     android:onClick="@{sendReviewButtonClicked}"
-                                    android:text="@string/write_review"/>
+                                    android:text="@string/write_review"
+                                    app:icon="@drawable/ic_nav_review" />
+
                             <com.google.android.material.button.MaterialButton
                                     android:id="@+id/sendSuggestionButton"
                                     style="@style/OutlinedIconButton"
-                                    app:icon="@drawable/ic_nav_suggestion"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:layout_marginStart="@dimen/dimen_4dp"
+                                    android:layout_weight="1"
                                     android:onClick="@{onSendSuggestionClicked}"
-                                    android:text="@string/send_suggestion"/>
+                                    android:text="@string/send_suggestion"
+                                    app:icon="@drawable/ic_nav_suggestion" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -182,90 +250,98 @@
                         style="@style/SmallBoldText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/detailsCl"
                         android:layout_marginStart="@dimen/layoutMarginStart"
                         android:layout_marginTop="@dimen/layoutMarginTop"
-                        android:layout_below="@id/detailsCl"
+                        android:text="@string/title_reviews"
                         android:textColor="@color/colorPrimary"
-                        app:isGone="@{noReviews}"
-                        android:text="@string/title_reviews"/>
+                        app:isGone="@{noReviews}" />
+
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/reviewListView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/tvTitle2"
                         android:layout_marginTop="@dimen/marginTopItem"
-                        app:isGone="@{noReviews}"
-                        android:nestedScrollingEnabled="false"/>
+                        android:nestedScrollingEnabled="false"
+                        app:isGone="@{noReviews}" />
+
                 <TextView
                         android:id="@+id/viewAllReviews"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="View all reviews"
+                        android:layout_below="@id/reviewListView"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
                         android:drawableEnd="@drawable/ic_arrow_right_24dp"
                         android:drawablePadding="16dp"
-                        android:padding="16dp"
-                        android:textStyle="bold"
-                        android:layout_below="@id/reviewListView"
-                        android:clickable="true"
-                        app:isGone="@{noReviews}"
                         android:onClick="@{onViewReviewsClicked}"
-                        android:background="?attr/selectableItemBackground"
-                        android:textColor="@color/colorPrimary"/>
+                        android:padding="16dp"
+                        android:text="View all reviews"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        app:isGone="@{noReviews}" />
+
                 <TextView
                         android:id="@+id/tvTitle1"
                         style="@style/SmallBoldText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/viewAllReviews"
                         android:layout_marginStart="@dimen/layoutMarginStart"
                         android:layout_marginTop="@dimen/layoutMarginTop"
-                        android:layout_below="@id/viewAllReviews"
+                        android:text="@string/timeline"
                         android:textColor="@color/colorPrimary"
                         android:visibility="visible"
-                        app:isGone="@{noTimeline}"
-                        android:text="@string/timeline"/>
+                        app:isGone="@{noTimeline}" />
+
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/postListView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/tvTitle1"
                         android:nestedScrollingEnabled="false"
-                        app:isGone="@{noTimeline}"
-                        android:visibility="visible"/>
+                        android:visibility="visible"
+                        app:isGone="@{noTimeline}" />
+
                 <TextView
                         android:id="@+id/viewAllPosts"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="View all posts"
+                        android:layout_below="@id/postListView"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
                         android:drawableEnd="@drawable/ic_arrow_right_24dp"
                         android:drawablePadding="16dp"
-                        android:padding="16dp"
-                        android:textStyle="bold"
-                        android:layout_below="@id/postListView"
-                        app:isGone="@{noTimeline}"
-                        android:clickable="true"
-                        android:background="?attr/selectableItemBackground"
                         android:onClick="@{onViewPostsClicked}"
-                        android:textColor="@color/colorPrimary"/>
+                        android:padding="16dp"
+                        android:text="View all posts"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        app:isGone="@{noTimeline}" />
+
                 <ProgressBar
                         android:id="@+id/progressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_marginTop="50dp"/>
+                        android:layout_marginTop="50dp"
+                        android:visibility="gone" />
+
                 <ProgressBar
                         android:id="@+id/mainProgressBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:isGone="@{!detailsLoading}"
                         android:layout_centerInParent="true"
-                        android:visibility="visible"/>
+                        android:visibility="visible"
+                        app:isGone="@{!detailsLoading}" />
 
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
+
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:isGone="@{!isLoading}"/>
+                app:isGone="@{!isLoading}" />
     </FrameLayout>
 </layout>

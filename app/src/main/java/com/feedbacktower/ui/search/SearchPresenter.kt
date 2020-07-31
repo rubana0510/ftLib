@@ -14,16 +14,36 @@ class SearchPresenter @Inject constructor(
     private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<SearchContract.View>(),
     SearchContract.Presenter {
-    override fun fetch(keyword: String?) {
+    var isCategoriesLoading = false
+    override fun fetch(keyword: String?, categoryId: String?) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()
-            val response = apiService.searchBusinessAsync(keyword).awaitNetworkRequest()
+            val response = apiService.searchBusinessAsync(keyword, categoryId).awaitNetworkRequest()
             view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
             }
             view?.onFetched(response.payload)
+        }
+    }
+
+    override fun fetchCategories(offset: Int) {
+        GlobalScope.launch(Dispatchers.Main) {
+            if (offset == 0) {
+                view?.showProgress()
+            }
+            isCategoriesLoading = true
+            val response = apiService.getCategoriesAsync(offset = offset).awaitNetworkRequest()
+            isCategoriesLoading = false
+            if (offset == 0) {
+                view?.dismissProgress()
+            }
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
+            }
+            view?.onCategoriesFetched(response.payload)
         }
     }
 }

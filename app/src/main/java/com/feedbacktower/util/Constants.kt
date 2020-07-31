@@ -27,6 +27,7 @@ object Constants {
     const val SESSION_EXPIRED_INTENT_FILTER: String = BuildConfig.APPLICATION_ID + ".session_expired"
     const val AD_BANNER_DURATION: Long = 5000
     const val PAGE_SIZE = 10
+    const val CATEGORY_PAGE_SIZE = 20
     const val CAT_GRID_SIZE = 3
     const val CAT_MAX_HOME = 6
     const val KEY_LISTTYPE = "LIST_TYPE"

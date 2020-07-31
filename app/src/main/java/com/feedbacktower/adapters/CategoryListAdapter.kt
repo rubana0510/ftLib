@@ -3,9 +3,7 @@ package com.feedbacktower.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.feedbacktower.adapters.diffcallbacks.CategoryDiffCallback
 import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.databinding.ItemListCategoryBinding
 
@@ -14,11 +12,14 @@ import com.feedbacktower.databinding.ItemListCategoryBinding
  */
 class CategoryListAdapter(
     private val list: List<BusinessCategory>,
-    private val listener: ToggleListener
+    private val listener: OnItemTappedListener,
+    private val mode: Mode = Mode.TOGGLE
 ) : RecyclerView.Adapter<CategoryListAdapter.ViewHolder>() {
     override fun getItemCount(): Int = list.size
 
     enum class Type { LIST, GRID }
+
+    enum class Mode { TOGGLE, SELECT }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -42,9 +43,12 @@ class CategoryListAdapter(
 
     private fun createClickListener(item: BusinessCategory, position: Int): View.OnClickListener =
         View.OnClickListener {
-            item.selected = !item.selected
-            notifyItemChanged(position)
-            listener.categoryToggled(item)
+            if (mode == Mode.TOGGLE) {
+                item.selected = !item.selected
+                notifyItemChanged(position)
+            } else {
+                listener.onTapped(item)
+            }
         }
 
     fun getItemAtPos(position: Int): BusinessCategory = getItem(position)
@@ -61,7 +65,7 @@ class CategoryListAdapter(
         }
     }
 
-    public interface ToggleListener {
-        fun categoryToggled(item: BusinessCategory)
+    interface OnItemTappedListener {
+        fun onTapped(item: BusinessCategory)
     }
 }

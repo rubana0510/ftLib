@@ -19,55 +19,62 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:toProfileRound="@{review.profileId}"/>
+
         <androidx.appcompat.widget.AppCompatRatingBar
                 android:id="@+id/ratingBar"
-                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/userName"
+                android:clickable="false"
+                android:isIndicator="true"
                 android:numStars="5"
                 android:rating="@{review.rating}"
-                android:isIndicator="true"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                tools:rating="4"
-                android:clickable="false"/>
+                android:textAlignment="textEnd"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
+                tools:rating="4" />
+
         <TextView
                 android:id="@+id/userName"
                 style="@style/UserFullNameStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:onClick="@{openProfileListener}"
+                android:text="@{review.reviewerName}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/userProfileImage"
                 app:layout_constraintTop_toTopOf="@id/userProfileImage"
-                app:layout_constraintEnd_toStartOf="@id/ratingBar"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_marginStart="8dp"
-                tools:text="Jon Sno"
-                android:text="@{review.reviewerName}"
-                android:onClick="@{openProfileListener}"/>
+                tools:text="Jon Sno" />
+
         <TextView
+                android:id="@+id/textView"
                 style="@style/TinyText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/userName"
                 app:layout_constraintTop_toBottomOf="@id/userName"
-                app:layout_constraintEnd_toStartOf="@id/ratingBar"
-                android:layout_marginTop="4dp"
-                tools:text="21 min ago"
-                app:toDate="@{review.updatedAt}"/>
+                app:toDate="@{review.updatedAt}"
+                tools:text="21 min ago" />
+
         <TextView
                 android:id="@+id/reviewMessage"
                 style="@style/ReviewMessageStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/userProfileImage"
-                app:layout_constraintStart_toStartOf="@id/userName"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="4dp"
-                tools:text="It was really great experience using your service. Hope we will get the same for years to come."
-                android:text="@{review.comment}" android:fontFamily="@font/cabin"/>
+                android:fontFamily="@font/cabin"
+                android:text="@{review.comment}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/userName"
+                app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+                tools:text="It was really great experience using your service. Hope we will get the same for years to come." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

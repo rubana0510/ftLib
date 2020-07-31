@@ -22,8 +22,8 @@ android {
         applicationId "com.feedbacktower"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 49
-        versionName "1.2.3.2"
+        versionCode 51
+        versionName "1.2.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -31,37 +31,37 @@ android {
             Properties properties = new Properties()
             properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
-            def liveServerBaseUrl = properties.getProperty("live_server_base_url", "")
-            it.buildConfigField 'String', "LIVE_SERVER_BASE_URL", liveServerBaseUrl
-            it.resValue 'string', "live_server_base_url", liveServerBaseUrl
+            def prodServerBaseUrl = properties.getProperty("prod_server_base_url", "")
+            it.buildConfigField 'String', "PROD_SERVER_BASE_URL", prodServerBaseUrl
+            it.resValue 'string', "prod_server_base_url", prodServerBaseUrl
 
-            def liveS3BaseUrl = properties.getProperty("live_s3_base_url", "")
-            it.buildConfigField 'String', "LIVE_S3_BASE_URL", liveS3BaseUrl
-            it.resValue 'string', "live_s3_base_url", liveS3BaseUrl
+            def prodS3BaseUrl = properties.getProperty("prod_s3_base_url", "")
+            it.buildConfigField 'String', "PROD_S3_BASE_URL", prodS3BaseUrl
+            it.resValue 'string', "prod_s3_base_url", prodS3BaseUrl
 
-            def liveMerchantKey = properties.getProperty("live_merchant_key", "")
-            it.buildConfigField 'String', "LIVE_MERCHANT_KEY", liveMerchantKey
-            it.resValue 'string', "live_merchant_key", liveMerchantKey
+            def prodMerchantKey = properties.getProperty("prod_merchant_key", "")
+            it.buildConfigField 'String', "PROD_MERCHANT_KEY", prodMerchantKey
+            it.resValue 'string', "prod_merchant_key", prodMerchantKey
 
-            def liveMerchantId = properties.getProperty("live_merchant_id", "")
-            it.buildConfigField 'String', "LIVE_MERCHANT_ID", liveMerchantId
-            it.resValue 'string', "live_merchant_id", liveMerchantId
+            def prodMerchantId = properties.getProperty("prod_merchant_id", "")
+            it.buildConfigField 'String', "PROD_MERCHANT_ID", prodMerchantId
+            it.resValue 'string', "prod_merchant_id", prodMerchantId
 
-            def testServerBaseUrl = properties.getProperty("test_server_base_url", "")
-            it.buildConfigField 'String', "TEST_SERVER_BASE_URL", testServerBaseUrl
-            it.resValue 'string', "test_server_base_url", testServerBaseUrl
+            def devServerBaseUrl = properties.getProperty("dev_server_base_url", "")
+            it.buildConfigField 'String', "DEV_SERVER_BASE_URL", devServerBaseUrl
+            it.resValue 'string', "dev_server_base_url", devServerBaseUrl
 
-            def testS3BaseUrl = properties.getProperty("test_s3_base_url", "")
-            it.buildConfigField 'String', "TEST_S3_BASE_URL", testS3BaseUrl
-            it.resValue 'string', "test_s3_base_url", testS3BaseUrl
+            def devS3BaseUrl = properties.getProperty("dev_s3_base_url", "")
+            it.buildConfigField 'String', "DEV_S3_BASE_URL", devS3BaseUrl
+            it.resValue 'string', "dev_s3_base_url", devS3BaseUrl
 
-            def testMerchantKey = properties.getProperty("test_merchant_key", "")
-            it.buildConfigField 'String', "TEST_MERCHANT_KEY", testMerchantKey
-            it.resValue 'string', "test_merchant_key", testMerchantKey
+            def devMerchantKey = properties.getProperty("dev_merchant_key", "")
+            it.buildConfigField 'String', "DEV_MERCHANT_KEY", devMerchantKey
+            it.resValue 'string', "dev_merchant_key", devMerchantKey
 
-            def testMerchantId = properties.getProperty("test_merchant_id", "")
-            it.buildConfigField 'String', "TEST_MERCHANT_ID", testMerchantId
-            it.resValue 'string', "test_merchant_id", testMerchantId
+            def devMerchantId = properties.getProperty("dev_merchant_id", "")
+            it.buildConfigField 'String', "DEV_MERCHANT_ID", devMerchantId
+            it.resValue 'string', "dev_merchant_id", devMerchantId
 
 
             def placesApiKey = properties.getProperty("places_api_key", "")
@@ -137,7 +137,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.3'
 
     //payu
-    implementation 'com.payumoney.sdkui:plug-n-play:1.5.0'
+    implementation 'com.payumoney.sdkui:plug-n-play:1.6.0'
 
     //firebase
     implementation 'com.google.firebase:firebase-core:16.0.9'

@@ -14,8 +14,5 @@ data class BusinessCategory(
     @SerializedName("featured")
     val featured: Boolean
 ) {
-    val image: String
-        get() = "base_url" + id
-
     var selected: Boolean = false
 }

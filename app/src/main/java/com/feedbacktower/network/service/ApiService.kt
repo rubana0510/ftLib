@@ -162,7 +162,10 @@ interface ApiService {
     fun deletePost(@Path("postId") postId: String): Deferred<ApiResponse<EmptyResponse?>>
 
     @PUT("/api/post/{postId}")
-    fun editTextPostAsync(@Path("postId") postId: String, @Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
+    fun editTextPostAsync(
+        @Path("postId") postId: String,
+        @Body map: HashMap<String, Any?>
+    ): Deferred<ApiResponse<EmptyResponse?>>
 
 
     //REVIEW
@@ -210,7 +213,8 @@ interface ApiService {
     //BUSINESS
     @GET("/api/business-category/search")
     fun getCategoriesAsync(
-        @Query("search") keyword: String = ""
+        @Query("search") keyword: String = "",
+        @Query("offset") offset: Int = 0
     ): Deferred<ApiResponse<GetCategoriesResponse?>>
 
     @GET("/api/business-category/featured")
@@ -221,7 +225,8 @@ interface ApiService {
 
     @GET("/api/business/search/")
     fun searchBusinessAsync(
-        @Query("search") keyword: String?
+        @Query("search") keyword: String?,
+        @Query("categoryId") categoryId: String? = null
     ): Deferred<ApiResponse<SearchBusinessResponse?>>
 
     @PUT("/api/business/")

@@ -34,15 +34,11 @@ class NetworkModule {
         context: Context,
         appPrefs: ApplicationPreferences
     ): OkHttpClient {
+       // print("Bearer ${appPrefs.authToken}")
         val clientBuilder = OkHttpClient.Builder().apply {
             connectTimeout(Constants.Service.Timeout.CONNECT, TimeUnit.MILLISECONDS)
             readTimeout(Constants.Service.Timeout.READ, TimeUnit.MILLISECONDS)
             writeTimeout(Constants.Service.Timeout.WRITE, TimeUnit.MILLISECONDS)
-            addInterceptor(HttpLoggingInterceptor().apply w@{
-                if (!BuildConfig.DEBUG) return@w
-                level = HttpLoggingInterceptor.Level.BODY
-                level = HttpLoggingInterceptor.Level.HEADERS
-            })
             addNetworkInterceptor ani@{ chain ->
                 val request = chain.request().newBuilder()
                     .addHeader(Constants.AUTHORIZATION, "Bearer ${appPrefs.authToken}")
@@ -58,6 +54,9 @@ class NetworkModule {
                 }
                 return@ani response
             }
+            addInterceptor(HttpLoggingInterceptor().apply {
+                level  = HttpLoggingInterceptor.Level.HEADERS
+            })
         }
         return clientBuilder.build()
     }

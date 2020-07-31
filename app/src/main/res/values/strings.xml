@@ -26,7 +26,7 @@
     <string name="office_address">Office Address</string>
     <string name="office_phone">Office Contact</string>
     <string name="office_website">Business Website(Optional)</string>
-    <string name="write_review">Write review</string>
+    <string name="write_review">Review</string>
     <string name="write_something">Write Something…</string>
     <string name="send_review">SEND REVIEW</string>
     <string name="send_suggestion">Suggestion</string>

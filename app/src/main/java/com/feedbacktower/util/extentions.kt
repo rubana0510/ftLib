@@ -203,13 +203,19 @@ fun Activity.navigateUser(user: User) {
     }
 }
 
-inline fun <reified T : Any> Activity.launchActivity(bundle: Bundle? = null, noinline init: Intent.() -> Unit = {}) {
+inline fun <reified T : Any> Activity.launchActivity(
+    bundle: Bundle? = null,
+    noinline init: Intent.() -> Unit = {}
+) {
     val intent = newIntent<T>(this)
     intent.init()
     startActivity(intent)
 }
 
-inline fun <reified T : Any> Fragment.launchActivity(bundle: Bundle? = null, noinline init: Intent.() -> Unit = {}) {
+inline fun <reified T : Any> Fragment.launchActivity(
+    bundle: Bundle? = null,
+    noinline init: Intent.() -> Unit = {}
+) {
     val intent = newIntent<T>(this.requireActivity())
     intent.init()
     startActivity(intent)
@@ -221,7 +227,10 @@ inline fun <reified T : Any> newIntent(context: Context): Intent = Intent(contex
 //recyclerview utils
 enum class Orientation { H, V }
 
-internal fun RecyclerView.setLinearLayoutManager(context: Context, orientation: Orientation = Orientation.V) {
+internal fun RecyclerView.setLinearLayoutManager(
+    context: Context,
+    orientation: Orientation = Orientation.V
+) {
     if (orientation == Orientation.V)
         layoutManager = LinearLayoutManager(context)
     else
@@ -356,7 +365,8 @@ internal fun Long.toRelativeTime(): String {
 
 fun String.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this)
 
-fun Int.toRequestBody(): RequestBody = RequestBody.create(MediaType.parse("text/plain"), this.toString())
+fun Int.toRequestBody(): RequestBody =
+    RequestBody.create(MediaType.parse("text/plain"), this.toString())
 
 fun Context.imageUriToFile(_uri: Uri): File {
     var filePath: String? = null
@@ -457,7 +467,11 @@ fun <T> Exception.toErrorResponse(): ApiResponse<T> {
 
         is NoConnectivityException ->
             ApiResponse(
-                ApiResponse.ErrorModel("", "You are not connected to the internet", ApiResponse.ErrorType.NO_INTERNET),
+                ApiResponse.ErrorModel(
+                    "",
+                    "You are not connected to the internet",
+                    ApiResponse.ErrorType.NO_INTERNET
+                ),
                 null,
                 null
             )
@@ -475,7 +489,11 @@ fun <T> Exception.toErrorResponse(): ApiResponse<T> {
 
         is SocketTimeoutException ->
             ApiResponse(
-                ApiResponse.ErrorModel("", "Could not reach servers", ApiResponse.ErrorType.TIMEOUT),
+                ApiResponse.ErrorModel(
+                    "",
+                    "Could not reach servers",
+                    ApiResponse.ErrorType.TIMEOUT
+                ),
                 null,
                 null
             )
@@ -498,6 +516,15 @@ fun Activity?.hideKeyBoard() {
         }
     }
 }
+
+
+fun Activity?.showKeyboard() {
+    if (this != null && !this.isFinishing) {
+        val imgr = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+}
+
 
 fun File.toPart(): MultipartBody.Part {
     val requestBody = RequestBody.create(MediaType.parse("image/*"), this)

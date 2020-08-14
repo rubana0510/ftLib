@@ -2,6 +2,7 @@ package com.feedbacktower.di
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.feedbacktower.BuildConfig
 import com.feedbacktower.R

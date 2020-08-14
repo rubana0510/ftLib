@@ -82,6 +82,9 @@ interface ApiService {
     @POST("/api/profile/continue-as-customer")
     fun continueAsCustomerAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
+    @POST("/api/business/")
+    fun registerAsBusinessAsync(): Deferred<ApiResponse<EmptyResponse?>>
+
     @POST("/api/profile/set-business-interest")
     fun setBusinessCategoryInterestAsync(@Body map: HashMap<String, Any?>): Deferred<ApiResponse<EmptyResponse?>>
 
@@ -233,9 +236,6 @@ interface ApiService {
     fun updateBusinessAsync(
         @Body map: HashMap<String, Any?>
     ): Deferred<ApiResponse<EmptyResponse?>>
-
-    @POST("/api/business/")
-    fun registerAsBusinessAsync(): Deferred<ApiResponse<EmptyResponse?>>
 
     @GET("/api/business/{businessId}")
     fun getBusinessDetailsAsync(@Path("businessId") businessId: String): Deferred<ApiResponse<BusinessDetailsResponse?>>

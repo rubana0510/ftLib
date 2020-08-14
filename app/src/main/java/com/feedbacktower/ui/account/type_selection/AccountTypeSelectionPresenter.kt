@@ -30,7 +30,7 @@ class AccountTypeSelectionPresenter
     override fun registerAsBusiness() {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()
-            val response = apiService.continueAsCustomerAsync().awaitNetworkRequest()
+            val response = apiService.registerAsBusinessAsync().awaitNetworkRequest()
             view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)

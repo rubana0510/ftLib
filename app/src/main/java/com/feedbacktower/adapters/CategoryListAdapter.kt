@@ -46,9 +46,8 @@ class CategoryListAdapter(
             if (mode == Mode.TOGGLE) {
                 item.selected = !item.selected
                 notifyItemChanged(position)
-            } else {
-                listener.onTapped(item)
             }
+            listener.onTapped(item)
         }
 
     fun getItemAtPos(position: Int): BusinessCategory = getItem(position)

@@ -10,13 +10,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.*
+import android.widget.HorizontalScrollView
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.content.PermissionChecker
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
@@ -29,17 +32,15 @@ import com.feedbacktower.data.models.Ad
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentHomeBinding
 import com.feedbacktower.network.env.Env
-import com.feedbacktower.network.models.ApiResponse
-import com.feedbacktower.network.models.GetAdsResponse
-import com.feedbacktower.network.models.GetPostsResponse
+import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.ui.ads.AdsPagerAdapter
-import com.feedbacktower.ui.base.BaseViewFragmentImpl
 import com.feedbacktower.ui.home.UploadPostDialog
 import com.feedbacktower.ui.home.post.image.ImagePostActivity
 import com.feedbacktower.ui.home.post.text.TextPostActivity
 import com.feedbacktower.ui.home.post.video.VideoTrimmerScreen2
 import com.feedbacktower.ui.videoplayer.VideoPlayerScreen
 import com.feedbacktower.util.Constants
+import com.feedbacktower.util.Constants.PAGE_SIZE
 import com.feedbacktower.util.callbacks.OnPageChangeListener
 import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.permissions.PermissionManager
@@ -58,12 +59,14 @@ import java.io.File
 import javax.inject.Inject
 
 
-class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
+class HomeFragment : Fragment() {
     private val TAG = "HomeFragment"
-    @Inject
-    lateinit var presenter: HomePresenter
+
     @Inject
     lateinit var appPrefs: ApplicationPreferences
+
+    @Inject
+    lateinit var apiService: ApiService
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var feedListView: RecyclerView
@@ -76,18 +79,26 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     private val REQUEST_CODE_CHOOSE_IMAGE = 1012
     private val REQUEST_TAKE_GALLERY_VIDEO = 1013
     private val REQUEST_CODE_CHOOSE_VIDEO = 1014
-    private val posts: ArrayList<Post> = ArrayList()
-    private var postsOver: Boolean = false
     private lateinit var adsPager: ViewPagerX
     private lateinit var adsPagerAdapter: AdsPagerAdapter
     private val adList = ArrayList<Ad>()
     private var foreground: Boolean = false
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var scrollView: ScrollView
+
 
     private val dots = ArrayList<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (requireActivity().applicationContext as App).appComponent.homeComponent().create()
+            .inject(this)
+
         setHasOptionsMenu(true)
+        homeViewModel = ViewModelProviders.of(
+            this,
+            ViewModelFactory(apiService)
+        ).get(HomeViewModel::class.java)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,7 +121,6 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        (requireActivity().applicationContext as App).appComponent.homeComponent().create().inject(this)
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -121,9 +131,9 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     }
 
 
-
     private fun initUi() {
         // binding.toolbar.title = getString(R.string.app_name)
+        scrollView = binding.mainScrollView
         adsPager = binding.adsPager
         adsPagerAdapter = AdsPagerAdapter(requireContext(), adList, adClickListener)
         adsPager.adapter = adsPagerAdapter
@@ -144,21 +154,23 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         //setup list
         val layoutManager = LinearLayoutManager(context)
         feedListView.layoutManager = layoutManager
-        feedListView.itemAnimator = DefaultItemAnimator()
-        postAdapter = PostListAdapter(posts, requireActivity(), listener)
+        postAdapter = PostListAdapter(homeViewModel.postList, requireActivity(), listener)
         feedListView.adapter = postAdapter
-        feedListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (postsOver || posts.isEmpty()) return
-
-                val lastPostPosition = layoutManager.findLastVisibleItemPosition()
-                if (posts.size == lastPostPosition + 1) {
-                    val post = posts[posts.size - 1]
-                    fetchPostList(post.createdAt)
+        scrollView.viewTreeObserver
+            .addOnScrollChangedListener {
+                val view = scrollView.getChildAt(scrollView.childCount - 1) as View
+                val diff: Int = view.bottom - (scrollView.height + scrollView
+                    .scrollY)
+                if (diff == 0) {
+                    if (!homeViewModel.postsOver && homeViewModel.postList.isNotEmpty()) {
+                        val lastPostPosition = layoutManager.findLastVisibleItemPosition()
+                        if (homeViewModel.postList.size == lastPostPosition + 1) {
+                            val post = homeViewModel.postList[homeViewModel.postList.size - 1]
+                            fetchPostList(post.createdAt)
+                        }
+                    }
                 }
             }
-        })
         isLoading = binding.isLoading
         noPosts = binding.noPosts
         /*  swipeRefresh.setOnRefreshListener {
@@ -172,6 +184,29 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
             findNavController().navigate(dir)
         }
         listenToAds()
+        fetchPostList()
+        listenToPosts()
+        listenToAds()
+        listenToLoading()
+        listenToPostLiked()
+    }
+
+    private fun listenToPostLiked() {
+        homeViewModel.lastLikedPost.observe(this, Observer { post ->
+            postAdapter.updateLike(post.position, post.liked)
+        })
+    }
+
+    private fun listenToLoading() {
+        homeViewModel.loading.observe(this, Observer { loading ->
+            // binding.isLoading = loading
+        })
+    }
+
+    private fun listenToPosts() {
+        homeViewModel.posts.observe(this, Observer { response ->
+            postAdapter.notifyDataSetChanged()
+        })
     }
 
     private val onPageChangeListener = OnPageChangeListener { pos ->
@@ -201,7 +236,18 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
                 dotList.isVisible = false
             }
         })
-        presenter.fetchAds()
+        homeViewModel.ads.observe(this, Observer {
+            it?.ads?.let { ads ->
+                doAsync {
+                    AppDatabase(requireContext())
+                        .adsDao().apply {
+                            deleteAll()
+                            save(ads)
+                        }
+                }
+            }
+        })
+        homeViewModel.getAds()
     }
 
     private fun setUpDots() {
@@ -234,9 +280,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.attachView(this)
         foreground = true
-        fetchPostList()
     }
 
     private val addPostClickListener = View.OnClickListener {
@@ -306,7 +350,7 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
 
     private val listener = object : PostListAdapter.Listener {
         override fun onLikeClick(item: Post, position: Int) {
-            presenter.likePost(item.id, position)
+            homeViewModel.likePost(item.id, position)
         }
 
         override fun onVideoClick(item: Post, position: Int) {
@@ -316,55 +360,9 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
         }
     }
 
-    override fun onLikePostResponse(liked: Boolean, position: Int) {
-        postAdapter.updateLike(position, liked)
-    }
 
     private fun fetchPostList(timestamp: String? = null) {
-        presenter.fetchPosts(timestamp)
-
-    }
-
-    override fun onAdsFetched(response: GetAdsResponse?) {
-        response?.ads?.let { ads ->
-            doAsync {
-                AppDatabase(requireContext())
-                    .adsDao().apply {
-                        deleteAll()
-                        save(ads)
-                    }
-            }
-        }
-    }
-
-    override fun showProgress() {
-        super.showProgress()
-        binding.isLoading = true
-    }
-
-    override fun dismissProgress() {
-        super.dismissProgress()
-        binding.isLoading = false
-    }
-
-    override fun onPostsFetched(response: GetPostsResponse?, timestamp: String?) {
-        response?.posts?.let {
-            Log.e(TAG, "onPostsFetched")
-            if (timestamp.isNullOrEmpty())
-                posts.clear()
-            postsOver = it.size < Constants.PAGE_SIZE
-            posts.addAll(it)
-            postAdapter.notifyDataSetChanged()
-            binding.isLoading = false
-        }
-    }
-
-    override fun showPostsError(error: ApiResponse.ErrorModel) {
-        requireContext().toast(error.message)
-    }
-
-    override fun showAdsError(error: ApiResponse.ErrorModel) {
-//        requireContext().toast(error.message)
+        homeViewModel.getPosts(timestamp)
     }
 
 
@@ -389,7 +387,8 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
             }
         } else if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
             if (resultCode == Activity.RESULT_OK && data != null) {
-                var paths: ArrayList<String> = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
+                var paths: ArrayList<String> =
+                    data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
                 if (paths.size < 1) {
                     requireContext().toast("No image selected")
                     return
@@ -410,12 +409,12 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
             data?.let {
                 val result = CropImage.getActivityResult(data)
                 if (resultCode == RESULT_OK) {
-                    val resultUri = result.getUri();
+                    val resultUri = result.uri
                     requireActivity().launchActivity<ImagePostActivity> {
                         putExtra(ImagePostActivity.URI, resultUri)
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    val error = result.getError();
+                    val error = result.error
                 }
 
             }
@@ -430,7 +429,11 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
             .start(requireContext(), this, UCrop.REQUEST_CROP)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         Log.d(TAG, "onRequestPermissionsResult")
         if (requestCode == PermissionManager.PERMISSION_CODE) {
             var allGranted = true
@@ -447,8 +450,8 @@ class HomeFragment : BaseViewFragmentImpl(), HomeContract.View {
     }
 
     override fun onPause() {
-        presenter.destroyView()
         foreground = false
         super.onPause()
     }
+
 }

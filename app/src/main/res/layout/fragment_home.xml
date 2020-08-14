@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <ScrollView
+                android:id="@+id/mainScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -53,8 +54,7 @@
                         android:layout_marginTop="@dimen/dimen_8dp"
                         tools:listitem="@layout/item_post_media"
                         android:layout_below="@+id/dotList"
-                        android:nestedScrollingEnabled="false"
-                        app:isGone="@{isLoading}"/>
+                        android:nestedScrollingEnabled="false"/>
             </RelativeLayout>
         </ScrollView>
         <TextView

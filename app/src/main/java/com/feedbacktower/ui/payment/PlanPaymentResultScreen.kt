@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.feedbacktower.App
@@ -28,20 +29,26 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
 
     @Inject
     lateinit var appPrefs: ApplicationPreferences
+
     @Inject
     lateinit var presenter: PaymentResultPresenter
 
+    private var referralCodeApplied = false
+
     private lateinit var paymentSummary: PaymentSummary
     private var paymentStatus: PlanPaymentTransaction.Status? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plan_payment_success_screen)
         (application as App).appComponent.paymentComponent().create().inject(this)
         presenter.attachView(this)
+        presenter.getSubscriptionPlan()
         intent?.let {
             paymentSummary =
                 it.getSerializableExtra(PAYMENT_SUMMARY) as? PaymentSummary
                     ?: throw IllegalStateException("Payment summary cannot be null")
+
             transactionId.text = paymentSummary.txid
             date.text = paymentSummary.createdAt.toDate()
             presenter.saveTransactionStatus(paymentSummary)
@@ -56,21 +63,39 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
                 return@setOnClickListener
             }
 
-            if (paymentStatus == PlanPaymentTransaction.Status.SUCCESS) {
-                launchActivity<SplashScreen> {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            when (paymentStatus) {
+                PlanPaymentTransaction.Status.SUCCESS -> {
+                    if (referralCodeApplied) {
+                        launchActivity<SplashScreen> {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        finish()
+                    } else {
+                        if (presenter.plan == null) {
+                            toast("Error occurred, please try again")
+                            presenter.getSubscriptionPlan()
+                            return@setOnClickListener
+                        }
+                        presenter.plan?.let {
+                            showApplyCodeAlert(
+                                it.maxWalletCashback,
+                                it.fee
+                            )
+                        }
+                    }
                 }
-                finish()
-            } else if (paymentStatus == PlanPaymentTransaction.Status.FAILURE) {
-                launchActivity<SubscriptionPlansScreen> {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                PlanPaymentTransaction.Status.FAILURE -> {
+                    launchActivity<SubscriptionPlansScreen> {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
                 }
-            } else if (paymentStatus == PlanPaymentTransaction.Status.PENDING) {
-                //TODO: needs to be handled payment pending state
-                launchActivity<SplashScreen> {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                PlanPaymentTransaction.Status.PENDING -> {
+                    //TODO: needs to be handled payment pending state
+                    launchActivity<SplashScreen> {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    finish()
                 }
-                finish()
             }
         }
         //getPlanTransactions()
@@ -111,22 +136,27 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
 
     override fun checkPaymentStatusSuccess(transaction: PlanPaymentTransaction) {
         paymentStatus = transaction.paymentStatus
-        if (paymentStatus == PlanPaymentTransaction.Status.SUCCESS) {
-            //Success yay!
-            setPaymentSuccess(transaction)
-        } else if (paymentStatus == PlanPaymentTransaction.Status.PENDING) {
-            statusMessage.text = "Please wait, payment status is pending"
-            Handler().postDelayed({
-                if (presenter.statusCallCount < Constants.PAYMENT_STATUS_CHECK_MAX_WAIT_TIME / Constants.PAYMENT_STATUS_CHECK_INTERVAL)
-                    presenter.checkPaymentStatus(paymentSummary.id)
-                else
-                    setPaymentPending()
-            }, Constants.PAYMENT_STATUS_CHECK_INTERVAL)
+        when (paymentStatus) {
+            PlanPaymentTransaction.Status.SUCCESS -> {
+                //Success yay!
+                setPaymentSuccess(transaction)
+            }
+            PlanPaymentTransaction.Status.PENDING -> {
+                statusMessage.text = "Please wait, payment status is pending"
+                Handler().postDelayed({
+                    if (presenter.statusCallCount < Constants.PAYMENT_STATUS_CHECK_MAX_WAIT_TIME / Constants.PAYMENT_STATUS_CHECK_INTERVAL)
+                        presenter.checkPaymentStatus(paymentSummary.id)
+                    else
+                        setPaymentPending()
+                }, Constants.PAYMENT_STATUS_CHECK_INTERVAL)
 
-        } else if (paymentStatus == PlanPaymentTransaction.Status.FAILURE) {
-            setPaymentFailed()
-        } else {
-            toast("Some error occurred")
+            }
+            PlanPaymentTransaction.Status.FAILURE -> {
+                setPaymentFailed()
+            }
+            else -> {
+                toast("Some error occurred")
+            }
         }
     }
 
@@ -145,6 +175,7 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
     }
 
     override fun verifyReferralCodeSuccess() {
+        referralCodeApplied = true;
         apply.text = "APPLIED"
         referralCodeLay.disable()
         apply.disable()
@@ -169,7 +200,7 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         message.text = "Payment Successful"
         image.setImageResource(R.drawable.ic_success_check)
         button.text = "GO TO DASHBOARD"
-        referralNote.text = "Apply Referral code and get \n Rs.${transaction.amount} more in wallet"
+        //referralNote.text = "Apply Referral code and get \n Rs.${transaction.amount} in wallet"
         walletBalance.text = "Rs.${transaction.amount}"
         appPrefs.summary = null
         presenter.refreshAuthToken()
@@ -189,19 +220,27 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         }
     }
 
+    private fun showApplyCodeAlert(maxAmount: String, amount: Double) {
+        showAlertMessage(
+            "Proceed without applying code?",
+            "Apply referral code to avail  Rs.$maxAmount as wallet balance. Proceed without applying referral code and  get Rs.$amount as wallet balance.",
+            positiveText = "CANCEL",
+            negativeText = "PROCEED",
+            onPositivePressed = {
+
+            },
+            onNegativePressed = {
+                openSplash()
+            }
+        )
+    }
+
     private fun showCodeAppliedMessage() {
-        val builder = AlertDialog.Builder(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_referral_success, null)
-        val alert = builder.create()
-        alert.setView(view)
-        view.actionButton.setOnClickListener {
-            alert.dismiss()
-            openSplash()
-        }
-        alert.setOnDismissListener {
-            openSplash()
-        }
-        alert.show()
+        showAlertMessage(
+            "Congratulations! \uD83C\uDF89",
+            "You have successfully applied the referral code",
+            positiveText = "OKAY"
+        )
     }
 
     private fun openSplash() {

@@ -13,10 +13,12 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Patterns
+import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import kotlinx.android.synthetic.main.dialog_referral_success.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -53,6 +56,7 @@ import java.net.SocketTimeoutException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 fun ImageView.loadImage(url: String) {
     Glide.with(this.context)
@@ -157,7 +161,7 @@ fun Float.toRemarkText(): String {
 
 fun Int.dpToPx(context: Context): Int {
     val displayMetrics = context.resources.displayMetrics
-    return Math.round(this * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
+    return (this * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)).roundToInt()
 }
 
 fun isPasswordValid(password: String): Boolean {
@@ -284,12 +288,12 @@ internal fun Int.toPrice(): String {
 }
 
 internal fun String.toDate(): String {
-    try {
+    return try {
         val dt = DateTime(this, DateTimeZone.UTC)
         val toFormat = SimpleDateFormat("dd/MM/yyyy hh:mm aa", Locale.ENGLISH)
-        return toFormat.format(Date(dt.millis))
+        toFormat.format(Date(dt.millis))
     } catch (e: ParseException) {
-        return ""
+        ""
     }
 }
 
@@ -348,14 +352,12 @@ internal fun Long.toRelativeTime(): String {
         val mins = diff.toInt() / 60
         val hours = diff.toInt() / (60 * 60)
 
-        return if (secs < 60)
-            "Just now"
-        else if (mins < 60)
-            "$mins min${if (mins == 1) "" else "s"} ago"
-        else if (hours < 24)
-            "$hours hour${if (hours == 1) "" else "s"} ago"
-        else
-            toFormat.format(Date(oldTime * 1000))
+        return when {
+            secs < 60 -> "Just now"
+            mins < 60 -> "$mins min${if (mins == 1) "" else "s"} ago"
+            hours < 24 -> "$hours hour${if (hours == 1) "" else "s"} ago"
+            else -> toFormat.format(Date(oldTime * 1000))
+        }
     } catch (e: ParseException) {
         return this.toString()
     }
@@ -378,9 +380,9 @@ fun Context.imageUriToFile(_uri: Uri): File {
             null,
             null
         )
-        cursor.moveToFirst()
-        filePath = cursor.getString(0)
-        cursor.close()
+        cursor?.moveToFirst()
+        filePath = cursor?.getString(0)
+        cursor?.close()
     } else {
         filePath = _uri.path
     }
@@ -397,9 +399,9 @@ fun Uri.toImageFile(context: Context): File {
             null,
             null
         )
-        cursor.moveToFirst()
-        filePath = cursor.getString(0)
-        cursor.close()
+        cursor?.moveToFirst()
+        filePath = cursor?.getString(0)
+        cursor?.close()
     } else {
         filePath = this.path
     }
@@ -416,9 +418,9 @@ fun Uri.toVideoFile(context: Context): File? {
             null,
             null
         )
-        cursor.moveToFirst()
-        filePath = cursor.getString(0)
-        cursor.close()
+        cursor?.moveToFirst()
+        filePath = cursor?.getString(0)
+        cursor?.close()
     } else {
         filePath = this.path
     }
@@ -539,4 +541,44 @@ fun Activity.logd(message: String) {
 
 fun NavDirections.navigate(view: View) {
     view.findNavController().navigate(this)
+}
+
+fun Context.showAlertMessage(
+    titleText: String,
+    subTitleText: String,
+    onPositivePressed: () -> Unit = {},
+    onNegativePressed: () -> Unit = {},
+    onDismiss: () -> Unit = {},
+    positiveText: String = "OKAY",
+    negativeText: String? = null
+) {
+    val builder = AlertDialog.Builder(this)
+    val alert = builder.create()
+    val view = LayoutInflater.from(this).inflate(R.layout.dialog_referral_success, null)
+    view.apply {
+        title.text = titleText
+        subtitle.text = subTitleText
+        positiveButton.apply {
+            text = positiveText
+            setOnClickListener {
+                alert.dismiss()
+                onPositivePressed()
+            }
+        }
+        negativeButton.apply {
+            if(negativeText == null){
+                visibility = View.GONE
+            }
+            text = negativeText
+            setOnClickListener {
+                alert.dismiss()
+                onNegativePressed()
+            }
+        }
+    }
+    alert.setOnDismissListener {
+        onDismiss()
+    }
+    alert.setView(view)
+    alert.show()
 }

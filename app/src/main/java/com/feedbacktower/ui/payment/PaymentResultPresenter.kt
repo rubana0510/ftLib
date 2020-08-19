@@ -2,12 +2,15 @@ package com.feedbacktower.ui.payment
 
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PaymentSummary
+import com.feedbacktower.data.models.Plan
+import com.feedbacktower.data.models.SubscriptionPlan
 import com.feedbacktower.network.service.ApiService
 import com.feedbacktower.network.utils.awaitNetworkRequest
 import com.feedbacktower.ui.base.BasePresenterImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class PaymentResultPresenter @Inject constructor(
@@ -15,6 +18,7 @@ class PaymentResultPresenter @Inject constructor(
     private val appPrefs: ApplicationPreferences
 ) : BasePresenterImpl<PaymentResultContract.View>(), PaymentResultContract.Presenter {
     var statusCallCount = 0
+    var plan: Plan? = null
     override fun verifyReferralCode(code: String) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showVerifyReferralProgress()
@@ -76,4 +80,20 @@ class PaymentResultPresenter @Inject constructor(
         }
     }
 
+    override fun getSubscriptionPlan() {
+        val categoryId: String = appPrefs.getValue("MASTER_CAT_ID", null)
+            ?: throw IllegalStateException("CategoryId cannot be null")
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = apiService.getSubscriptionPlansAsync(categoryId).awaitNetworkRequest()
+            if (response.error != null) {
+                return@launch
+            }
+            response.payload?.list?.let{
+                if(it.isNotEmpty()){
+                    plan = it.first()
+                }
+            }
+        }
+    }
 }

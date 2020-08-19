@@ -1,6 +1,7 @@
 package com.feedbacktower.ui.payment
 
 import com.feedbacktower.data.models.PaymentSummary
+import com.feedbacktower.data.models.Plan
 import com.feedbacktower.data.models.PlanPaymentTransaction
 import com.feedbacktower.ui.base.BasePresenter
 import com.feedbacktower.ui.base.BaseView
@@ -18,6 +19,8 @@ interface PaymentResultContract {
     }
 
     interface Presenter : BasePresenter<View> {
+        fun getSubscriptionPlan()
+
         fun verifyReferralCode(code: String)
         fun refreshAuthToken()
         fun checkPaymentStatus(transactionId: String)

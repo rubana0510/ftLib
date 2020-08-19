@@ -106,7 +106,10 @@ class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusine
         isBusinessLoading = binding.isBusinessLoading
         isBusinessListEmpty = binding.isListEmpty
         clearButton = binding.clearButton
-        binding.onClearClick = View.OnClickListener { binding.queryInput.text = null }
+        binding.onClearClick = View.OnClickListener {
+            binding.queryInput.text = null
+            requireActivity().hideKeyBoard()
+        }
 
         binding.onScanClick = View.OnClickListener {
             requireActivity().launchActivity<FindCustomerActivity> { }
@@ -121,7 +124,7 @@ class SearchFragment : BaseViewFragmentImpl(), SearchContract.View, SearchBusine
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 val query: String? = s?.toString()
-
+                binding.goBackLay.gone()
                 if (query.isNullOrEmpty()) {
                     categoryListView.isVisible = true
                     searchListView.isVisible = false

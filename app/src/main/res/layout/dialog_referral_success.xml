@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:background="@color/white" android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="16dp">
+
     <TextView
+            android:id="@+id/title"
             style="@style/LargeBoldText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_16dp"
-            android:text="🎉Congratulations!🎉"/>
+            tools:text="Proceed without applying code?" />
+
     <TextView
+            android:id="@+id/subtitle"
             style="@style/MediumText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_16dp"
-            android:text="You have successfully applied the referral code"/>
-    <Button
-            android:id="@+id/actionButton"
-            style="@style/ButtonFilledStyle.Big"
+            android:textAlignment="center"
+            tools:text="You will get Rs.$maxAmount in wallet if you apply referral code. If you don't apply you will get only Rs.$amount." />
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimen_16dp"
-            android:text="CONTINUE"/>
+            android:orientation="horizontal">
+
+        <Button
+                android:id="@+id/negativeButton"
+                style="@style/ButtonFilledStyle.Big"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_16dp"
+                android:layout_weight="1"
+                android:text="PROCEED" />
+
+        <Button
+                android:id="@+id/positiveButton"
+                style="@style/ButtonFilledStyle.Big"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_16dp"
+                android:layout_weight="1"
+                android:text="CANCEL" />
+    </LinearLayout>
 </LinearLayout>

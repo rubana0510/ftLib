@@ -35,7 +35,7 @@ class NetworkModule {
         context: Context,
         appPrefs: ApplicationPreferences
     ): OkHttpClient {
-       // print("Bearer ${appPrefs.authToken}")
+        // print("Bearer ${appPrefs.authToken}")
         val clientBuilder = OkHttpClient.Builder().apply {
             connectTimeout(Constants.Service.Timeout.CONNECT, TimeUnit.MILLISECONDS)
             readTimeout(Constants.Service.Timeout.READ, TimeUnit.MILLISECONDS)
@@ -56,7 +56,7 @@ class NetworkModule {
                 return@ani response
             }
             addInterceptor(HttpLoggingInterceptor().apply {
-                level  = HttpLoggingInterceptor.Level.NONE
+                level = HttpLoggingInterceptor.Level.NONE
             })
         }
         return clientBuilder.build()

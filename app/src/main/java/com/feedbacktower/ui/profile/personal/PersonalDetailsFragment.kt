@@ -14,21 +14,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.view.isGone
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.feedbacktower.App
 import com.feedbacktower.R
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.User
 import com.feedbacktower.databinding.FragmentPersonalDetailsBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
+import com.feedbacktower.ui.splash.SplashScreen
 import com.feedbacktower.ui.utils.SpinnerDatePickerDialog
-import com.feedbacktower.util.imageUriToFile
-import com.feedbacktower.util.isEmailValid
+import com.feedbacktower.util.*
 import com.feedbacktower.util.permissions.PermissionManager
-import com.feedbacktower.util.toUserProfileRound
 import com.feedbacktower.utilities.compressor.Compressor
 import com.feedbacktower.utilities.filepicker.FilePickerBuilder
 import com.feedbacktower.utilities.filepicker.FilePickerConst
@@ -48,6 +50,9 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
     @Inject
     lateinit var presenter: PersonalDetailPresenter
 
+    @Inject
+    lateinit var appPrefs: ApplicationPreferences
+
     private lateinit var binding: FragmentPersonalDetailsBinding
     private val TAG = "PersonalDetails"
     private val PERMISSION_CODE = 399
@@ -58,6 +63,7 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
     private lateinit var emailLayout: TextInputLayout
     private lateinit var dobLayout: TextInputLayout
     private lateinit var continueButton: Button
+    private lateinit var cancelButton: Button
     private lateinit var firstNameInput: TextInputEditText
     private lateinit var lastNameInput: TextInputEditText
     private lateinit var emailInput: TextInputEditText
@@ -70,6 +76,7 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
         super.onCreate(savedInstanceState)
         (requireActivity().application as App).appComponent.accountComponent().create().inject(this)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -93,12 +100,28 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
         dobInput = binding.birthdateInput
         dobInput.inputType = InputType.TYPE_NULL
         continueButton = binding.continueButton
+        cancelButton = binding.cancelButton
         profileImage = binding.profileImage
-
+        cancelButton.isGone = !args.onboarding
         dobInput.setOnClickListener {
             val dialog = SpinnerDatePickerDialog.getInstance()
             dialog.setDateSelectListener(this@PersonalDetailsFragment)
             dialog.show(fragmentManager!!, "date_selector")
+        }
+
+        cancelButton.setOnClickListener {
+            requireContext().showAlertMessage(
+                "Do you want to cancel?",
+                "You will be logged out if you proceed.",
+                positiveText = "CLOSE",
+                negativeText = "YES",
+                onPositivePressed = {
+
+                },
+                onNegativePressed = {
+                    logoutUser()
+                }
+            )
         }
 
         continueButton.setOnClickListener {
@@ -123,12 +146,20 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
         setDateText(presenter.user.dob)
     }
 
+    private fun logoutUser() {
+        appPrefs.clearUserPrefs()
+        launchActivity<SplashScreen> {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == FilePickerConst.REQUEST_CODE_PHOTO) {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    var paths: ArrayList<String> = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
+                    var paths: ArrayList<String> =
+                        data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA)
                     if (paths.size < 1) {
                         requireContext().toast("No image selected")
                         return
@@ -146,7 +177,10 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
                         requireActivity().imageUriToFile(resultUri).let { file ->
                             val fileToUpload = Compressor(requireActivity()).compressToFile(file)
                             presenter.uploadProfilePicture(fileToUpload)
-                            Log.d(TAG, "Reduced: ${file.length() / 1024}KB to ${fileToUpload.length() / 1024}KB")
+                            Log.d(
+                                TAG,
+                                "Reduced: ${file.length() / 1024}KB to ${fileToUpload.length() / 1024}KB"
+                            )
                         }
                     }
                 }
@@ -162,7 +196,11 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
 
 
     @SuppressLint("MissingPermission")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.isNotEmpty()) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -243,7 +281,12 @@ class PersonalDetailsFragment : BaseViewFragmentImpl(), PersonalDetailContract.V
         requireContext().toast("Uploaded successfully")
     }
 
-    override fun onDetailsUpdated(firstName: String, lastName: String, email: String, dateOfBirth: String) {
+    override fun onDetailsUpdated(
+        firstName: String,
+        lastName: String,
+        email: String,
+        dateOfBirth: String
+    ) {
         if (!args.onboarding) {
             findNavController().navigateUp()
         } else {

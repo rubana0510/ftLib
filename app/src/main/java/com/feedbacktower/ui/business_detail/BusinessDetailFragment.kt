@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
@@ -31,6 +32,7 @@ import com.feedbacktower.util.launchActivity
 import com.feedbacktower.util.setVertical
 import org.jetbrains.anko.toast
 import com.feedbacktower.util.navigate
+import com.feedbacktower.util.visible
 import javax.inject.Inject
 
 
@@ -51,10 +53,12 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        (requireActivity().applicationContext as App).appComponent.businessDetailComponent().create().inject(this)
+        (requireActivity().applicationContext as App).appComponent.businessDetailComponent()
+            .create().inject(this)
 
         binding = FragmentBusinessDetailBinding.inflate(inflater, container, false)
-        businessId = arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid args")
+        businessId =
+            arguments?.getString("businessId") ?: throw  IllegalArgumentException("Invalid args")
         initUi()
         presenter.attachView(this)
         presenter.fetchBusinessDetails(businessId)
@@ -65,23 +69,19 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
 
         binding.buttonLay.isGone = presenter.user?.business?.id?.equals(businessId) == true
         binding.onViewReviewsClicked = View.OnClickListener {
-            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToBusinessReview(businessId).navigate(it)
+            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToBusinessReview(
+                businessId
+            ).navigate(it)
         }
         binding.onViewPostsClicked = View.OnClickListener {
-            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationTimeline(businessId).navigate(it)
+            BusinessDetailFragmentDirections.actionNavigationBusinessDetailToNavigationTimeline(
+                businessId
+            ).navigate(it)
         }
         binding.onSendSuggestionClicked = View.OnClickListener {
             val d = SendSuggestionDialog(updateListener)
             d.arguments = Bundle().apply { putString("businessId", businessId) }
             d.show(fragmentManager!!, "suggestion")
-        }
-        binding.onCurrentLocationClicked = View.OnClickListener {
-            business?.let {
-                requireActivity().launchActivity<MapScreen> {
-                    putExtra("LOCATION", it.currentLocation)
-                    putExtra("TITLE", "Last Seen At")
-                }
-            }
         }
 
 
@@ -95,7 +95,20 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
             val phone = business?.phone ?: return@OnClickListener
             startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null)))
         }
+        binding.liveLocationTv.isGone = business?.currentLocation == null
+        binding.onCurrentLocationClicked = View.OnClickListener {
+            business?.let {
+                requireActivity().launchActivity<MapScreen> {
+                    putExtra("LOCATION", it.currentLocation)
+                    putExtra("TITLE", "Last Seen At")
+                }
+            }
+        }
         binding.onLocationClicked = View.OnClickListener {
+            if (business?.location == null) {
+                requireContext().toast("Not sharing live location")
+                return@OnClickListener
+            }
             requireActivity().launchActivity<MapScreen> {
                 putExtra("LOCATION", business?.location)
                 putExtra("TITLE", "Permanent Location")

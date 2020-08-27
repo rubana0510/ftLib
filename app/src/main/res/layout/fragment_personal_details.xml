@@ -1,119 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
     <data>
-        <variable name="user" type="com.feedbacktower.data.models.User"/>
-        <variable name="onAttachClick" type="android.view.View.OnClickListener"/>
-        <variable name="loading" type="Boolean"/>
-        <variable name="showProfileUploadProgress" type="Boolean"/>
+
+        <variable
+                name="user"
+                type="com.feedbacktower.data.models.User" />
+
+        <variable
+                name="onAttachClick"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="loading"
+                type="Boolean" />
+
+        <variable
+                name="showProfileUploadProgress"
+                type="Boolean" />
     </data>
-    <LinearLayout
+
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            tools:context=".ui.profile.personal.PersonalDetailsFragment">
-        <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp">
-            <ImageView
-                    android:id="@+id/profileImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:onClick="@{onAttachClick}"
-                    android:background="@drawable/bg_count_ring"
-                    app:toMyProfileRound="@{user.id}"/>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fabSize="mini"
-                    android:tint="@color/white"
-                    app:srcCompat="@drawable/ic_create"
-                    app:backgroundTint="@color/grey42"
-                    android:onClick="@{onAttachClick}"
-                    android:layout_gravity="end|bottom"/>
-            <ProgressBar
-                    app:isGone="@{!showProfileUploadProgress}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-        </FrameLayout>
+            android:layout_height="match_parent">
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                tools:context=".ui.profile.personal.PersonalDetailsFragment">
+
+            <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp">
+
+                <ImageView
+                        android:id="@+id/profileImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/bg_count_ring"
+                        android:onClick="@{onAttachClick}"
+                        app:toMyProfileRound="@{user.id}" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:onClick="@{onAttachClick}"
+                        android:tint="@color/white"
+                        app:backgroundTint="@color/grey42"
+                        app:fabSize="mini"
+                        app:srcCompat="@drawable/ic_create" />
+
+                <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:isGone="@{!showProfileUploadProgress}" />
+            </FrameLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/firstNameLayout"
+                        style="@style/TextInputLayoutStyle"
+                        android:layout_width="0dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:hint="@string/first_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/firstNameInput"
+                            style="@style/EditTextStyle"
+                            android:drawableEnd="@drawable/ic_person_outline_black_24dp"
+                            android:drawablePadding="@dimen/drawable_padding"
+                            android:imeOptions="actionNext"
+                            android:maxLines="1"
+                            android:text="@{user.firstName}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/lastNameLayout"
+                        style="@style/TextInputLayoutStyle"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:hint="@string/last_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/lastNameInput"
+                            style="@style/EditTextStyle"
+                            android:drawableEnd="@drawable/ic_person_outline_black_24dp"
+                            android:drawablePadding="@dimen/drawable_padding"
+                            android:imeOptions="actionNext"
+                            android:maxLines="1"
+                            android:text="@{user.lastName}" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailLayout"
                     style="@style/TextInputLayoutStyle"
-                    android:id="@+id/firstNameLayout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:hint="@string/first_name">
+                    android:hint="@string/email">
+
                 <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/emailInput"
                         style="@style/EditTextStyle"
-                        android:id="@+id/firstNameInput"
-                        android:imeOptions="actionNext"
-                        android:drawableEnd="@drawable/ic_person_outline_black_24dp"
+                        android:drawableEnd="@drawable/ic_email_black_24dp"
                         android:drawablePadding="@dimen/drawable_padding"
-                        android:maxLines="1"
-                        android:text="@{user.firstName}"/>
+                        android:imeOptions="actionNext"
+                        android:text="@{user.emailId}" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/birthdateLayout"
                     style="@style/TextInputLayoutStyle"
-                    android:id="@+id/lastNameLayout"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:hint="@string/last_name">
+                    android:hint="@string/birth_date">
+
                 <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/birthdateInput"
                         style="@style/EditTextStyle"
-                        android:id="@+id/lastNameInput"
-                        android:imeOptions="actionNext"
-                        android:drawableEnd="@drawable/ic_person_outline_black_24dp"
+                        android:drawableEnd="@drawable/ic_perm_contact_calendar_black_24dp"
                         android:drawablePadding="@dimen/drawable_padding"
-                        android:maxLines="1"
-                        android:text="@{user.lastName}"/>
+                        android:imeOptions="actionDone"
+                        android:inputType="none"
+                        android:text="@{user.dob}" />
+
             </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <Button
+                        android:id="@+id/cancelButton"
+                        style="@style/ButtonFilledStyle.Big"
+                        android:backgroundTint="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:text="@string/cancel" />
+
+                <Button
+                        android:id="@+id/continueButton"
+                        style="@style/ButtonFilledStyle.Big"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/continue_"
+                        app:showLoading="@{loading}" />
+            </RelativeLayout>
         </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputLayoutStyle"
-                android:id="@+id/emailLayout"
-                android:hint="@string/email">
-            <com.google.android.material.textfield.TextInputEditText
-                    style="@style/EditTextStyle"
-                    android:id="@+id/emailInput"
-                    android:imeOptions="actionNext"
-                    android:drawableEnd="@drawable/ic_email_black_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"
-                    android:text="@{user.emailId}"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-                style="@style/TextInputLayoutStyle"
-                android:id="@+id/birthdateLayout"
-                android:hint="@string/birth_date">
-            <com.google.android.material.textfield.TextInputEditText
-                    style="@style/EditTextStyle"
-                    android:id="@+id/birthdateInput"
-                    android:imeOptions="actionDone"
-                    android:drawableEnd="@drawable/ic_perm_contact_calendar_black_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"
-                    android:inputType="none"
-                    android:text="@{user.dob}"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        <Button
-                style="@style/ButtonFilledStyle.Big"
-                android:id="@+id/continueButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                app:showLoading="@{loading}"
-                android:text="@string/continue_"/>
-    </LinearLayout>
+    </ScrollView>
 </layout>

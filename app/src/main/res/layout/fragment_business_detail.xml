@@ -205,6 +205,7 @@
                         <include layout="@layout/layout_divider" />
 
                         <TextView
+                                android:id="@+id/liveLocationTv"
                                 style="@style/IconTextViewStyle"
                                 android:drawableStart="@drawable/ic_location_on_black_24dp"
                                 android:onClick="@{onCurrentLocationClicked}"

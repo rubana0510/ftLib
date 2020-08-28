@@ -1,7 +1,12 @@
 package com.feedbacktower.ui.account.business
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Handler
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +26,8 @@ import com.feedbacktower.databinding.FragmentBusinessAccountBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.MyBusinessResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
+import com.feedbacktower.ui.location.live.MapTrackingFragment
+import com.feedbacktower.ui.location.live.TrackerService
 import com.feedbacktower.ui.myplan.MyPlanScreen
 import com.feedbacktower.ui.qrtransfer.receiver.ReceiverActivity
 import com.feedbacktower.ui.splash.SplashScreen
@@ -34,6 +41,7 @@ import javax.inject.Inject
 
 class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private val TAG = "AccountFragment"
+
     @Inject
     lateinit var presenter: AccountPresenter
 
@@ -43,12 +51,14 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
     private lateinit var accountOptionsAdapter: AccountOptionsAdapter
     private lateinit var countAdapter: CountAdapter
     private lateinit var user: User
+    private var trackingService: TrackerService? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create()
+            .inject(this)
         binding = FragmentBusinessAccountBinding.inflate(inflater, container, false)
         (activity as AppCompatActivity).supportActionBar?.show()
         return binding.root
@@ -160,13 +170,33 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
                 R.drawable.ic_post_like_filled
             ),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
-            AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
+            AccountOption(
+                3,
+                "My Suggestions",
+                "Suggestions given by you",
+                R.drawable.ic_post_like_filled
+            ),
             AccountOption(8, "My Posts", "Manage your posts", R.drawable.ic_post_like_filled),
             AccountOption(1, "Subscription", "Current plan", R.drawable.ic_post_like_filled),
-            AccountOption(7, "Location tracking", "Update your location automatically", R.drawable.ic_post_like_filled),
+            AccountOption(
+                7,
+                "Location tracking",
+                "Update your location automatically",
+                R.drawable.ic_post_like_filled
+            ),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
-            AccountOption(10, "Rate this app", "Review app on Play Store", R.drawable.ic_post_like_filled),
-            AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
+            AccountOption(
+                10,
+                "Rate this app",
+                "Review app on Play Store",
+                R.drawable.ic_post_like_filled
+            ),
+            AccountOption(
+                5,
+                "Logout",
+                "Logout from ${getString(R.string.app_name)}",
+                R.drawable.ic_post_like_filled
+            )
         )
         accountOptionsAdapter.submitList(options)
     }
@@ -205,6 +235,19 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
                 findNavController().navigate(d)
             }
             5 -> {
+                try {
+                    if (trackingService == null) {
+                        val intent = Intent(requireActivity().application, TrackerService::class.java)
+                        requireActivity().application.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+                        Handler().postDelayed({
+                            trackingService?.stopTracking()
+                        }, 500)
+                    } else {
+                        trackingService?.stopTracking()
+                    }
+                } catch (e: Exception) {
+                    Log.d(TAG, "Error stopping service: $e")
+                }
                 presenter.logOut()
             }
             6 -> {
@@ -220,9 +263,10 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
             8 -> {
                 val businessId = user.business?.id
                 if (businessId != null) {
-                    AccountFragmentDirections.actionNavigationAccountToMyPostsFragment(businessId).let { d ->
-                        findNavController().navigate(d)
-                    }
+                    AccountFragmentDirections.actionNavigationAccountToMyPostsFragment(businessId)
+                        .let { d ->
+                            findNavController().navigate(d)
+                        }
                 }
             }
             9 -> {
@@ -232,6 +276,21 @@ class AccountFragment : BaseViewFragmentImpl(), AccountContract.View {
             }
             10 -> {
                 requireActivity().showAppInStore()
+            }
+        }
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val name = className.className
+            if (name.endsWith("TrackerService")) {
+                trackingService = (service as TrackerService.LocationServiceBinder).service
+            }
+        }
+
+        override fun onServiceDisconnected(className: ComponentName) {
+            if (className.className == "TrackerService") {
+                trackingService = null
             }
         }
     }

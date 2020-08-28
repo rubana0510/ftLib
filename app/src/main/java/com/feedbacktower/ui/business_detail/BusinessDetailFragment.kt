@@ -4,6 +4,7 @@ package com.feedbacktower.ui.business_detail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -95,9 +96,14 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
             val phone = business?.phone ?: return@OnClickListener
             startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null)))
         }
-        binding.liveLocationTv.isGone = business?.currentLocation == null
+
+        Log.d("BusiDetail", "initUi: ${business?.currentLocation}")
         binding.onCurrentLocationClicked = View.OnClickListener {
             business?.let {
+                if (it.currentLocation == null) {
+                    requireContext().toast("Not sharing live location")
+                    return@OnClickListener
+                }
                 requireActivity().launchActivity<MapScreen> {
                     putExtra("LOCATION", it.currentLocation)
                     putExtra("TITLE", "Last Seen At")
@@ -105,10 +111,6 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
             }
         }
         binding.onLocationClicked = View.OnClickListener {
-            if (business?.location == null) {
-                requireContext().toast("Not sharing live location")
-                return@OnClickListener
-            }
             requireActivity().launchActivity<MapScreen> {
                 putExtra("LOCATION", business?.location)
                 putExtra("TITLE", "Permanent Location")
@@ -145,6 +147,8 @@ class BusinessDetailFragment : BaseViewFragmentImpl(), BusinessDetailContract.Vi
         response?.let {
             binding.business = response.business
             business = response.business
+            binding.currentLocationTv.visibility =
+                if (business?.currentLocation == null) View.GONE else View.VISIBLE
             presenter.fetchReviews(businessId)
         }
     }

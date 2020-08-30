@@ -14,13 +14,14 @@ class InterestsPresenter
     private val apiService: ApiService
 ) : BasePresenterImpl<InterestsContract.View>(),
     InterestsContract.Presenter {
+    var isCategoriesLoading = false
     override fun toggleInterest(interest: BusinessCategory) {
         GlobalScope.launch(Dispatchers.Main) {
             //view?.showProgress()
             val response = apiService.setBusinessCategoryInterestAsync(
                 hashMapOf("businessCategoryId" to interest.id, "interest" to interest.selected)
             ).awaitNetworkRequest()
-           // view?.dismissProgress()
+            // view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
@@ -29,16 +30,20 @@ class InterestsPresenter
         }
     }
 
-    override fun fetch(keyword: String?) {
+    override fun fetch(offset: Int) {
         GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
-            val response = apiService.getFeaturedCategoriesAsync(keyword).awaitNetworkRequest()
-            view?.dismissProgress()
+            if (offset == 0)
+                view?.showProgress()
+            isCategoriesLoading = true
+            val response = apiService.getCategoriesAsync(offset = offset).awaitNetworkRequest()
+            isCategoriesLoading = false
+            if (offset == 0)
+                view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
             }
-            view?.onFetched(response.payload)
+            view?.onFetched(offset, response.payload)
         }
     }
 }

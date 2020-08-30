@@ -19,7 +19,9 @@ class CategoryPresenter
     override fun fetch(keyword: String, offset: Int) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()
+            isCategoriesLoading = true
             val response = apiService.getCategoriesAsync(keyword, offset).awaitNetworkRequest()
+            isCategoriesLoading = false
             view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)

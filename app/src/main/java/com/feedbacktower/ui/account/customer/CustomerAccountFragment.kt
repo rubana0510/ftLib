@@ -25,6 +25,7 @@ import javax.inject.Inject
 class CustomerAccountFragment : Fragment() {
 
     private val TAG = "CustomerAccountFrag"
+
     @Inject
     lateinit var appPrefs: ApplicationPreferences
 
@@ -35,7 +36,8 @@ class CustomerAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create()
+            .inject(this)
         val binding = FragmentCustomerAccountBinding.inflate(inflater, container, false)
         initUi(binding)
         return binding.root
@@ -72,10 +74,31 @@ class CustomerAccountFragment : Fragment() {
                 R.drawable.ic_post_like_filled
             ),
             AccountOption(2, "My Reviews", "Reviews given by you", R.drawable.ic_post_like_filled),
-            AccountOption(3, "My Suggestions", "Suggestions given by you", R.drawable.ic_post_like_filled),
+            AccountOption(
+                3,
+                "My Suggestions",
+                "Suggestions given by you",
+                R.drawable.ic_post_like_filled
+            ),
             AccountOption(4, "Help", "Help and FAQs", R.drawable.ic_post_like_filled),
-            AccountOption(10, "Rate this app", "Review app on Play Store", R.drawable.ic_post_like_filled),
-            AccountOption(5, "Logout", "Logout from ${getString(R.string.app_name)}", R.drawable.ic_post_like_filled)
+            AccountOption(
+                10,
+                "Rate this app",
+                "Review app on Play Store",
+                R.drawable.ic_post_like_filled
+            ),
+            AccountOption(
+                5,
+                "Logout",
+                "Logout from ${getString(R.string.app_name)}",
+                R.drawable.ic_post_like_filled
+            ),
+            AccountOption(
+                -1,
+                "Interests",
+                "Logout from ${getString(R.string.app_name)}",
+                R.drawable.ic_post_like_filled
+            )
         )
         accountOptionsAdapter.submitList(options)
     }
@@ -111,6 +134,13 @@ class CustomerAccountFragment : Fragment() {
             }
             10 -> {
                 requireActivity().showAppInStore()
+            }
+
+            -1 -> {
+                CustomerAccountFragmentDirections.actionNavigationCustomerAccountToSelectInterestsFragment()
+                    .let {
+                        findNavController().navigate(it)
+                    }
             }
         }
     }

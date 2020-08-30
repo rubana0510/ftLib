@@ -37,6 +37,9 @@
                 app:destination="@id/selectCityFragment"/>
         <action android:id="@+id/action_navigation_account_to_helpFragment"
                 app:destination="@id/helpFragment"/>
+        <action
+                android:id="@+id/action_navigation_customer_account_to_selectInterestsFragment"
+                app:destination="@id/selectInterestsFragment" />
     </fragment>
     <fragment android:id="@+id/mySuggestionsFragment" android:name="com.feedbacktower.ui.suggestions.my.MySuggestionsFragment"
               android:label="My Suggestions" tools:layout="@layout/fragment_my_suggestions">
@@ -105,6 +108,10 @@
         <action android:id="@+id/action_business_review_to_navigation_business_detail"
                 app:destination="@id/navigation_business_detail"/>
     </fragment>
+    <fragment
+            android:id="@+id/selectInterestsFragment"
+            android:name="com.feedbacktower.ui.category.interests.SelectInterestsFragment"
+            android:label="SelectInterestsFragment" />
 
 
 </navigation>

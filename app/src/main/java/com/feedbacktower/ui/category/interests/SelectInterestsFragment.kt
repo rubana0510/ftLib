@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
 import com.feedbacktower.adapters.CategoryInterestAdapter
 import com.feedbacktower.data.models.BusinessCategory
@@ -12,16 +15,19 @@ import com.feedbacktower.databinding.FragmentSelectInterestsBinding
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetCategoriesResponse
 import com.feedbacktower.ui.base.BaseViewFragmentImpl
+import com.feedbacktower.util.Constants
 import com.feedbacktower.util.setGrid
 import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 class SelectInterestsFragment : BaseViewFragmentImpl(), InterestsContract.View {
-@Inject
+    @Inject
     lateinit var presenter: InterestsPresenter
     private lateinit var binding: FragmentSelectInterestsBinding
     private lateinit var adapter: CategoryInterestAdapter
     private var list: ArrayList<BusinessCategory> = ArrayList()
+    private var categoriesOver: Boolean = false
+    private var categoryDynamicPageSize = Constants.CATEGORY_PAGE_SIZE
 
     companion object {
         fun getInstance(): SelectInterestsFragment = SelectInterestsFragment().apply { }
@@ -31,13 +37,26 @@ class SelectInterestsFragment : BaseViewFragmentImpl(), InterestsContract.View {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create()
+            .inject(this)
         binding = FragmentSelectInterestsBinding.inflate(inflater, container, false)
         presenter.attachView(this)
         adapter = CategoryInterestAdapter(list, toggleListener)
         binding.categoryGridView.setGrid(requireContext(), 2)
         binding.categoryGridView.adapter = adapter
         binding.saveSelectionButton.setOnClickListener { navigateNext() }
+        binding.categoryGridView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (categoriesOver || list.isEmpty()) return
+
+                val lastPostPosition =
+                    (binding.categoryGridView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if (list.size == lastPostPosition + 1 && !presenter.isCategoriesLoading) {
+                    presenter.fetch(offset = list.size)
+                }
+            }
+        })
         presenter.fetch()
         return binding.root
     }
@@ -70,11 +89,16 @@ class SelectInterestsFragment : BaseViewFragmentImpl(), InterestsContract.View {
         requireContext().toast(error.message)
     }
 
-    override fun onFetched(response: GetCategoriesResponse?) {
+    override fun onFetched(offset: Int, response: GetCategoriesResponse?) {
         response?.featured?.let {
-            list.clear()
+            if (it.size > categoryDynamicPageSize) {
+                categoryDynamicPageSize = it.size
+            }
+            if (offset == 0)
+                list.clear()
             list.addAll(it)
             adapter.notifyDataSetChanged()
+            categoriesOver = it.size < categoryDynamicPageSize
         }
     }
 

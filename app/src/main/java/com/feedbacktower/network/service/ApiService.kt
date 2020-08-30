@@ -216,13 +216,14 @@ interface ApiService {
     //BUSINESS
     @GET("/api/business-category/search")
     fun getCategoriesAsync(
-        @Query("search") keyword: String = "",
+        @Query("search") keyword: String? = null,
         @Query("offset") offset: Int = 0
     ): Deferred<ApiResponse<GetCategoriesResponse?>>
 
     @GET("/api/business-category/featured")
     fun getFeaturedCategoriesAsync(
-        @Query("search") keyword: String?
+        @Query("search") keyword: String?,
+        @Query("offset") offset: Int = 0
     ): Deferred<ApiResponse<GetCategoriesResponse?>>
 
 

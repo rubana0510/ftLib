@@ -7,12 +7,12 @@ import com.feedbacktower.ui.base.BaseView
 
 interface InterestsContract {
     interface View : BaseView {
-        fun onFetched(response: GetCategoriesResponse?)
+        fun onFetched(offset: Int, response: GetCategoriesResponse?)
         fun onToggled()
     }
 
     interface Presenter : BasePresenter<View> {
-        fun fetch(keyword: String? = null)
+        fun fetch(offset: Int = 0)
         fun toggleInterest(interest: BusinessCategory)
     }
 }

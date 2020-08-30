@@ -26,14 +26,10 @@ data class Review(
 ) : BaseModel(id) {
     val reviewerName: String
         get() {
-            return if (user == null) {
-                business.name ?: "Unknown"
+            return if (user != null) {
+                "${user.firstName} ${user.lastName}"
             } else {
-                return if (user.business == null) {
-                    "${user.firstName} ${user.lastName}"
-                } else {
-                    user.business?.name ?: "Unknown"
-                }
+               "Unknown user"
             }
         }
     val profileId: String

@@ -15,16 +15,17 @@ class CategoryPresenter
     private val apiService: ApiService
 ) : BasePresenterImpl<CategoryContract.View>(),
     CategoryContract.Presenter {
-    override fun fetch(keyword: String) {
+    var isCategoriesLoading = false
+    override fun fetch(keyword: String, offset: Int) {
         GlobalScope.launch(Dispatchers.Main) {
             view?.showProgress()
-            val response = apiService.getCategoriesAsync(keyword).awaitNetworkRequest()
+            val response = apiService.getCategoriesAsync(keyword, offset).awaitNetworkRequest()
             view?.dismissProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch
             }
-            view?.onFetched(response.payload)
+            view?.onFetched(keyword, offset, response.payload)
         }
     }
 }

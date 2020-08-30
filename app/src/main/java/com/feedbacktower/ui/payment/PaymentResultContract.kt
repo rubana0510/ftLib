@@ -12,6 +12,7 @@ interface PaymentResultContract {
         fun refreshAuthTokenSuccess()
         fun checkPaymentStatusSuccess(transaction: PlanPaymentTransaction)
         fun saveTransactionStatusSuccess()
+        fun onSubscriptionPlanFetched(plan: Plan)
 
         fun showVerifyReferralProgress()
         fun hideVerifyReferralProgress()
@@ -22,7 +23,7 @@ interface PaymentResultContract {
         fun getSubscriptionPlan()
 
         fun verifyReferralCode(code: String)
-        fun refreshAuthToken()
+        fun refreshAuthToken(silent: Boolean = false)
         fun checkPaymentStatus(transactionId: String)
         fun saveTransactionStatus(summary: PaymentSummary)
     }

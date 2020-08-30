@@ -7,10 +7,10 @@ import com.feedbacktower.ui.base.BaseView
 
 interface CategoryContract {
     interface View : BaseView {
-        fun onFetched(response: GetCategoriesResponse?)
+        fun onFetched(keyword: String, offset: Int,response: GetCategoriesResponse?)
     }
 
     interface Presenter : BasePresenter<View> {
-        fun fetch(keyword: String)
+        fun fetch(keyword: String, offset: Int)
     }
 }

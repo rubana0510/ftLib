@@ -1,74 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         tools:context=".ui.account.type_selection.AccountTypeSelectionFragment">
+
     <data>
-        <variable name="onCutomerContinue" type="android.view.View.OnClickListener"/>
-        <variable name="onBusinessContinue" type="android.view.View.OnClickListener"/>
-        <variable name="user" type="com.feedbacktower.data.models.User"/>
+
+        <variable
+                name="onCutomerContinue"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="onBusinessContinue"
+                type="android.view.View.OnClickListener" />
+
+        <variable
+                name="user"
+                type="com.feedbacktower.data.models.User" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
 
         <ImageView
                 android:id="@+id/userProfileImage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/bg_count_ring"
-                app:toProfileRound="@{user.id}"/>
-                <!--app:loadRoundImage="@{user.profile}"/>-->
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:toProfileRound="@{user.id}" />
+        <!--app:loadRoundImage="@{user.profile}"/>-->
         <TextView
                 android:id="@+id/userName"
                 style="@style/MediumBoldText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/userProfileImage"
                 android:layout_marginTop="24dp"
-                tools:text="John Doe"
-                android:text="@{user.firstName  +  ` ` +  user.lastName}"/>
+                android:text="@{user.firstName  +  ` ` +  user.lastName}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userProfileImage"
+                tools:text="John Doe" />
+
         <TextView
                 style="@style/SmallText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="@{user.emailId}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/userName"
-                tools:text="johndoe@gmail.com"
-                android:text="@{user.emailId}"/>
-        <Button
-                style="@style/ButtonFilledStyle.Big"
-                android:id="@+id/customerButton"
+                tools:text="johndoe@gmail.com" />
+
+        <FrameLayout
+                android:id="@+id/msgFrame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/businessButton"
-                android:text="@string/continue_as_customer"
                 android:layout_marginBottom="16dp"
-        android:onClick="@{onCutomerContinue}"/>
+                android:background="@color/bg_gray"
+                android:padding="20dp"
+                app:layout_constraintBottom_toTopOf="@id/customerButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Use the referral code provided by marketing executive (if any) within 15 days of initiating business registration to avail additional wallet balance."
+                    android:textAlignment="center"
+                    android:textColor="#414141"
+                    android:textSize="18sp" />
+        </FrameLayout>
 
         <Button
+                android:id="@+id/customerButton"
                 style="@style/ButtonFilledStyle.Big"
-                android:id="@+id/businessButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="16dp"
+                android:onClick="@{onCutomerContinue}"
+                android:text="@string/continue_as_customer"
+                app:layout_constraintBottom_toTopOf="@id/businessButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+                android:id="@+id/businessButton"
+                style="@style/ButtonFilledStyle.Big"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:onClick="@{onBusinessContinue}"
                 android:text="@string/register_businsess"
-                android:layout_marginBottom="100dp"
-                android:onClick="@{onBusinessContinue}"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

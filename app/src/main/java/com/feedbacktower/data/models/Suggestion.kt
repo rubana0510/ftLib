@@ -30,13 +30,9 @@ data class Suggestion(
     val displayName: String
         get() {
             return if (user != null) {
-                user.firstName + " " + user.lastName
+                "${user.firstName} ${user.lastName}"
             } else {
-                return if (business != null) {
-                    "${business.name}"
-                } else {
-                    "Unknown"
-                }
+                "Unknown user"
             }
         }
     val displayId: String

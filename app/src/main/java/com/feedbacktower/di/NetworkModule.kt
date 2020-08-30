@@ -56,7 +56,7 @@ class NetworkModule {
                 return@ani response
             }
             addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.NONE
+                level = HttpLoggingInterceptor.Level.HEADERS
             })
         }
         return clientBuilder.build()

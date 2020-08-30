@@ -124,19 +124,19 @@
 
             </LinearLayout>
 
-<!--            <TextView-->
-<!--                    android:id="@+id/referralNote"-->
-<!--                    style="@style/MediumText"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_horizontal"-->
-<!--                    android:layout_marginStart="32dp"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:layout_marginEnd="32dp"-->
-<!--                    android:gravity="center_horizontal"-->
-<!--                    android:textColor="#4CAF50"-->
-<!--                    android:textStyle="bold"-->
-<!--                    tools:text="Apply Referral code and \n get Rs. 3000 in wallet" />-->
+            <TextView
+                    android:id="@+id/referralNote"
+                    style="@style/MediumText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center_horizontal"
+                    android:textColor="#4CAF50"
+                    android:textStyle="bold"
+                    tools:text="Use the referral code provided by marketing executive (if any) here to avail 0 in wallet balance. Continue without referral code and receive 0 as wallet balance." />
 
             <Space
                     android:layout_width="match_parent"

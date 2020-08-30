@@ -19,37 +19,6 @@ class PaymentResultPresenter @Inject constructor(
 ) : BasePresenterImpl<PaymentResultContract.View>(), PaymentResultContract.Presenter {
     var statusCallCount = 0
     var plan: Plan? = null
-    override fun verifyReferralCode(code: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            view?.showVerifyReferralProgress()
-            val response = apiService.verifyReferralCodeAsync(hashMapOf("code" to code)).awaitNetworkRequest()
-            view?.hideVerifyReferralProgress()
-            if (response.error != null) {
-                view?.showNetworkError(response.error)
-                return@launch
-            }
-            view?.verifyReferralCodeSuccess()
-        }
-    }
-
-    override fun refreshAuthToken() {
-        GlobalScope.launch(Dispatchers.Main) {
-            view?.showProgress()
-            val response = apiService.refreshTokenAsync().awaitNetworkRequest()
-            view?.dismissProgress()
-            if (response.error != null) {
-                view?.showNetworkError(response.error)
-                return@launch
-            }
-            response.payload?.let { data ->
-                appPrefs.apply {
-                    user = data.user
-                    authToken = data.token
-                }
-            }
-            view?.refreshAuthTokenSuccess()
-        }
-    }
 
     override fun checkPaymentStatus(transactionId: String) {
         statusCallCount++
@@ -80,6 +49,41 @@ class PaymentResultPresenter @Inject constructor(
         }
     }
 
+    override fun refreshAuthToken(silent: Boolean) {
+        GlobalScope.launch(Dispatchers.Main) {
+            if (!silent)
+                view?.showProgress()
+            val response = apiService.refreshTokenAsync().awaitNetworkRequest()
+            if (!silent)
+                view?.dismissProgress()
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
+            }
+            response.payload?.let { data ->
+                appPrefs.apply {
+                    user = data.user
+                    authToken = data.token
+                }
+            }
+            view?.refreshAuthTokenSuccess()
+        }
+    }
+
+    override fun verifyReferralCode(code: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            view?.showVerifyReferralProgress()
+            val response =
+                apiService.verifyReferralCodeAsync(hashMapOf("code" to code)).awaitNetworkRequest()
+            view?.hideVerifyReferralProgress()
+            if (response.error != null) {
+                view?.showNetworkError(response.error)
+                return@launch
+            }
+            view?.verifyReferralCodeSuccess()
+        }
+    }
+
     override fun getSubscriptionPlan() {
         val categoryId: String = appPrefs.getValue("MASTER_CAT_ID", null)
             ?: throw IllegalStateException("CategoryId cannot be null")
@@ -89,9 +93,10 @@ class PaymentResultPresenter @Inject constructor(
             if (response.error != null) {
                 return@launch
             }
-            response.payload?.list?.let{
-                if(it.isNotEmpty()){
+            response.payload?.list?.let {
+                if (it.isNotEmpty()) {
                     plan = it.first()
+                    view?.onSubscriptionPlanFetched(it.first())
                 }
             }
         }

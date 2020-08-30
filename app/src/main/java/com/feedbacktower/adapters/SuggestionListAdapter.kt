@@ -59,7 +59,7 @@ class SuggestionListAdapter(private val list: List<Suggestion>, private val list
         fun bind(listener: View.OnClickListener, profileListener: View.OnClickListener, item: Suggestion) {
             binding.apply {
                 suggestion = item
-                openProfileListener = profileListener
+                //openProfileListener = profileListener
                 replyClickListener = listener
                 executePendingBindings()
             }

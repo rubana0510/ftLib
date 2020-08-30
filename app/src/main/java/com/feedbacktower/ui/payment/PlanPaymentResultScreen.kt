@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.PaymentSummary
+import com.feedbacktower.data.models.Plan
 import com.feedbacktower.data.models.PlanPaymentTransaction
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.ui.base.BaseViewActivityImpl
@@ -134,6 +136,11 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         presenter.checkPaymentStatus(paymentSummary.id)
     }
 
+    override fun onSubscriptionPlanFetched(plan: Plan) {
+        referralNote.text =
+            "Use the referral code provided by marketing executive (if any) here to avail Rs.${plan.maxWalletCashback} in wallet balance. Continue without referral code and receive Rs.${plan.fee} as wallet balance."
+    }
+
     override fun checkPaymentStatusSuccess(transaction: PlanPaymentTransaction) {
         paymentStatus = transaction.paymentStatus
         when (paymentStatus) {
@@ -200,7 +207,6 @@ class PlanPaymentResultScreen : BaseViewActivityImpl(), PaymentResultContract.Vi
         message.text = "Payment Successful"
         image.setImageResource(R.drawable.ic_success_check)
         button.text = "GO TO DASHBOARD"
-        //referralNote.text = "Apply Referral code and get \n Rs.${transaction.amount} in wallet"
         walletBalance.text = "Rs.${transaction.amount}"
         appPrefs.summary = null
         presenter.refreshAuthToken()

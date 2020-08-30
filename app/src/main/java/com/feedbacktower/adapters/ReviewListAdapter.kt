@@ -52,7 +52,7 @@ class ReviewListAdapter(val list: List<Review>, val screen: Screen) :
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(listener: View.OnClickListener, item: Review) {
             binding.apply {
-                openProfileListener = listener
+                //openProfileListener = listener
                 review = item
                 executePendingBindings()
             }

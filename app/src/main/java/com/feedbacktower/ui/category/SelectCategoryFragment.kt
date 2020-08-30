@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
+import androidx.core.view.isEmpty
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.feedbacktower.App
 import com.feedbacktower.R
@@ -18,12 +20,15 @@ import com.feedbacktower.data.models.BusinessCategory
 import com.feedbacktower.network.models.ApiResponse
 import com.feedbacktower.network.models.GetCategoriesResponse
 import com.feedbacktower.ui.base.BaseViewDialogFragmentImpl
+import com.feedbacktower.util.Constants
 import com.feedbacktower.util.gone
 import com.feedbacktower.util.setVertical
 import com.feedbacktower.util.visible
 import kotlinx.android.synthetic.main.dialog_select_category.view.*
 import org.jetbrains.anko.toast
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.View {
@@ -37,6 +42,9 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
     private lateinit var clearButton: ImageButton
     private var list: ArrayList<BusinessCategory> = ArrayList()
     var listener: CategorySelectListener? = null
+    private var categoryDynamicPageSize = Constants.CATEGORY_PAGE_SIZE
+    private var categoriesOver: Boolean = false
+    private var timer = Timer()
 
     companion object {
         fun getInstance(): SelectCategoryFragment {
@@ -50,8 +58,13 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (requireActivity().applicationContext as App).appComponent.accountComponent().create().inject(this)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        (requireActivity().applicationContext as App).appComponent.accountComponent().create()
+            .inject(this)
         presenter.attachView(this)
         val view = inflater.inflate(R.layout.dialog_select_category, container, false)
         val toolbar = view.toolbar
@@ -65,6 +78,18 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
         progressBar = view.progressBar
         categoryList.setVertical(requireContext())
         categoryList.adapter = adapter
+        categoryList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (categoriesOver || categoryList.isEmpty()) return
+
+                val lastPostPosition =
+                    (categoryList.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                if (list.size == lastPostPosition + 1 && !presenter.isCategoriesLoading) {
+                    getCategories(offset = list.size)
+                }
+            }
+        })
         setTextChangeListener()
         getCategories()
         return view
@@ -73,15 +98,15 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
     private fun setTextChangeListener() {
         queryInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
-                if (text.isNullOrEmpty()) {
-                    getCategories()
-                    return
-                }
+                timer.cancel()
+                timer = Timer()
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        categoriesOver = false
+                        getCategories()
+                    }
 
-                val keyword = text.toString().trim()
-
-                getCategories(keyword)
-
+                }, 1000)
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -111,8 +136,8 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
         }
     }
 
-    private fun getCategories(keyword: String = "") {
-        presenter.fetch(keyword)
+    private fun getCategories(offset: Int = 0) {
+        presenter.fetch(keyword = queryInput.text.toString().trim(), offset = offset)
     }
 
     override fun showProgress() {
@@ -130,11 +155,16 @@ class SelectCategoryFragment : BaseViewDialogFragmentImpl(), CategoryContract.Vi
         requireContext().toast(error.message)
     }
 
-    override fun onFetched(response: GetCategoriesResponse?) {
+    override fun onFetched(keyword: String, offset: Int, response: GetCategoriesResponse?) {
         response?.featured?.let {
-            list.clear()
+            if (it.size > categoryDynamicPageSize) {
+                categoryDynamicPageSize = it.size
+            }
+            if (offset == 0)
+                list.clear()
             list.addAll(it)
             adapter.notifyDataSetChanged()
+            categoriesOver = it.size < categoryDynamicPageSize
         }
     }
 

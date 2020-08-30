@@ -92,12 +92,6 @@ class CustomerAccountFragment : Fragment() {
                 "Logout",
                 "Logout from ${getString(R.string.app_name)}",
                 R.drawable.ic_post_like_filled
-            ),
-            AccountOption(
-                -1,
-                "Interests",
-                "Logout from ${getString(R.string.app_name)}",
-                R.drawable.ic_post_like_filled
             )
         )
         accountOptionsAdapter.submitList(options)
@@ -136,12 +130,6 @@ class CustomerAccountFragment : Fragment() {
                 requireActivity().showAppInStore()
             }
 
-            -1 -> {
-                CustomerAccountFragmentDirections.actionNavigationCustomerAccountToSelectInterestsFragment()
-                    .let {
-                        findNavController().navigate(it)
-                    }
-            }
         }
     }
 }

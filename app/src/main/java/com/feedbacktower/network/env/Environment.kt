@@ -7,6 +7,7 @@ interface Environment {
     val S3_BASE_URL: String
     val MERCHANT_ID: String
     val MERCHANT_KEY: String
+    val HELP_DEV_BASE_URL:String
 }
 
 class Prod : Environment {
@@ -18,7 +19,8 @@ class Prod : Environment {
         get() = BuildConfig.PROD_MERCHANT_ID
     override val MERCHANT_KEY: String
         get() = BuildConfig.PROD_MERCHANT_KEY
-
+    override val HELP_DEV_BASE_URL: String
+        get() = BuildConfig.HELP_BASE_URL
 }
 
 
@@ -31,7 +33,8 @@ class Dev : Environment {
         get() = BuildConfig.DEV_MERCHANT_ID
     override val MERCHANT_KEY: String
         get() = BuildConfig.DEV_MERCHANT_KEY
-   
+    override val HELP_DEV_BASE_URL: String
+        get() = BuildConfig.HELP_BASE_URL
 }
 
 val Env: Environment = Dev()

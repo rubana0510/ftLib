@@ -61,6 +61,12 @@ android {
             it.buildConfigField 'String', "DEV_S3_BASE_URL", devS3BaseUrl
             it.resValue 'string', "dev_s3_base_url", devS3BaseUrl
 
+
+            def helpBaseUrl = properties.getProperty("help_base_url", "")
+            it.buildConfigField 'String', "HELP_BASE_URL", helpBaseUrl
+            it.resValue 'string', "help_base_url", helpBaseUrl
+
+
             def devMerchantKey = properties.getProperty("dev_merchant_key", "")
             it.buildConfigField 'String', "DEV_MERCHANT_KEY", devMerchantKey
             it.resValue 'string', "dev_merchant_key", devMerchantKey
@@ -68,8 +74,6 @@ android {
             def devMerchantId = properties.getProperty("dev_merchant_id", "")
             it.buildConfigField 'String', "DEV_MERCHANT_ID", devMerchantId
             it.resValue 'string', "dev_merchant_id", devMerchantId
-
-
 
 
             def placesApiKey = properties.getProperty("places_api_key", "")

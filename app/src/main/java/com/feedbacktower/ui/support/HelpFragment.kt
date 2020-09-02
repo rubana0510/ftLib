@@ -19,7 +19,7 @@ class HelpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View? {git
         // Inflate the layout for this fragment
         binding = FragmentHelpBinding.inflate(inflater, container, false)
         initUi()
@@ -29,6 +29,6 @@ class HelpFragment : Fragment() {
     private fun initUi() {
         binding.webView.settings.apply { javaScriptEnabled = true }
         binding.webView.webViewClient = WebViewClient()
-        binding.webView.loadUrl("${Env.S3_BASE_URL}/help/")
+        binding.webView.loadUrl("${Env.HELP_DEV_BASE_URL}/help/")
     }
 }

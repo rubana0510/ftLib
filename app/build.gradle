@@ -70,6 +70,8 @@ android {
             it.resValue 'string', "dev_merchant_id", devMerchantId
 
 
+
+
             def placesApiKey = properties.getProperty("places_api_key", "")
             it.buildConfigField 'String', "PLACES_API_KEY", placesApiKey
             it.resValue 'string', "places_api_key", placesApiKey

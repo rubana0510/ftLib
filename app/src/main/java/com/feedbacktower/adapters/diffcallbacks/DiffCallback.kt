@@ -1,5 +1,6 @@
 package com.feedbacktower.adapters.diffcallbacks
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import com.feedbacktower.data.models.BaseModel
 
@@ -11,6 +12,7 @@ class DiffCallback<T> : DiffUtil.ItemCallback<T>() {
         return oldItem == newItem
     }
 
+    @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
         return oldItem == newItem
     }

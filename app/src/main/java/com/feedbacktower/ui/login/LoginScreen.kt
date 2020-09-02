@@ -97,6 +97,16 @@ class LoginScreen : BaseViewActivityImpl(), LoginContract.View, ConnectivityRece
         navigateUser(user)
     }
 
+    override fun showLoginProgress() {
+        binding.loading = true
+        loginButton.text = getString(R.string.please_wait_dot_dot)
+
+    }
+
+    override fun hideLoginProgress() {
+        binding.loading = false
+    }
+
     override fun showProgress() {
         super.showProgress()
         loginButton.isEnabled = false

@@ -29,6 +29,6 @@ class HelpFragment : Fragment() {
     private fun initUi() {
         binding.webView.settings.apply { javaScriptEnabled = true }
         binding.webView.webViewClient = WebViewClient()
-        binding.webView.loadUrl("${Env.SERVER_BASE_URL}/help")
+        binding.webView.loadUrl("${Env.S3_BASE_URL}/help/")
     }
 }

@@ -94,7 +94,8 @@
         <activity
                 android:name=".ui.business_detail.BusinessDetailsActivity"
                 android:theme="@style/AppTheme.NoActionBar"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                tools:ignore="MissingClass">
         </activity>
         <activity
                 android:name=".ui.main.BusinessMainActivity"
@@ -157,7 +158,8 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".ui.location.live.MapTrackingFragment$LocationBroadcastReceiver"/>
+        <receiver android:name=".ui.location.live.MapTrackingFragment$LocationBroadcastReceiver"
+                tools:ignore="Instantiatable" />
 
         <service android:name=".notifications.MyFirebaseMessagingService">
             <intent-filter>

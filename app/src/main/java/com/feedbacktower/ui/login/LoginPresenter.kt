@@ -15,7 +15,9 @@ class LoginPresenter @Inject constructor(
 ) : BasePresenterImpl<LoginContract.View>(), LoginContract.Presenter {
     override fun login(phone: String, password: String) {
         GlobalScope.launch(Dispatchers.Main) {
-           val response =  apiService.loginAsync(hashMapOf("phone" to phone, "password" to password)).awaitNetworkRequest()
+            view?.showLoginProgress()
+            val response =  apiService.loginAsync(hashMapOf("phone" to phone, "password" to password)).awaitNetworkRequest()
+            view?.hideLoginProgress()
             if (response.error != null) {
                 view?.showNetworkError(response.error)
                 return@launch

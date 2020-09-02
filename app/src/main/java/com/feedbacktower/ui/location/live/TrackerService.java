@@ -35,7 +35,8 @@ public class TrackerService extends Service {
     private LocationManager mLocationManager;
 
     private final int LOCATION_INTERVAL = 10000;
-    private final int LOCATION_DISTANCE = 1000;
+   // private final int LOCATION_DISTANCE = 1000;
+    private final int LOCATION_DISTANCE = 200;
     public static String INTENT_FILTER = BuildConfig.APPLICATION_ID + ".LOC_RX";
 
     @Override

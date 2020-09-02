@@ -7,6 +7,8 @@ import com.feedbacktower.ui.base.BaseView
 interface LoginContract {
     interface View: BaseView{
         fun onLoginSuccess(user: User)
+        fun showLoginProgress()
+        fun hideLoginProgress()
     }
 
     interface Presenter: BasePresenter<View>{

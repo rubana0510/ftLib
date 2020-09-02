@@ -7,6 +7,14 @@
         <variable name="onSignUpClicked" type="android.view.View.OnClickListener"/>
         <variable name="onForgotClicked" type="android.view.View.OnClickListener"/>
         <variable name="onLoginClicked" type="android.view.View.OnClickListener"/>
+
+        <variable
+                name="loading"
+                type="Boolean" />
+
+        <variable
+                name="showLoginProgress"
+                type="Boolean" />
     </data>
     <ScrollView
             android:layout_width="match_parent"
@@ -112,6 +120,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/donthavelay"
                     android:onClick="@{onLoginClicked}"
+                    app:showLoading="@{loading}"
             />
             <LinearLayout
                     android:id="@+id/donthavelay"

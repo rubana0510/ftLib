@@ -18,6 +18,7 @@ class Prod : Environment {
         get() = BuildConfig.PROD_MERCHANT_ID
     override val MERCHANT_KEY: String
         get() = BuildConfig.PROD_MERCHANT_KEY
+
 }
 
 
@@ -30,6 +31,7 @@ class Dev : Environment {
         get() = BuildConfig.DEV_MERCHANT_ID
     override val MERCHANT_KEY: String
         get() = BuildConfig.DEV_MERCHANT_KEY
+   
 }
 
 val Env: Environment = Dev()

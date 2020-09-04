@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.feedbacktower.App
 import com.feedbacktower.R
 import com.feedbacktower.adapters.MyPostListAdapter
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.util.callbacks.ScrollListener
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.FragmentTimelineBinding
@@ -32,6 +33,9 @@ import javax.inject.Inject
 
 class PostsFragment : BaseViewFragmentImpl(), PostsContract.View {
     private lateinit var binding: FragmentTimelineBinding
+    @Inject
+    lateinit var appPrefs:ApplicationPreferences
+
     @Inject
     lateinit var presenter: PostsPresenter
     private val args: PostsFragmentArgs by navArgs()
@@ -65,7 +69,7 @@ class PostsFragment : BaseViewFragmentImpl(), PostsContract.View {
                 DividerItemDecoration.HORIZONTAL
             )
         )
-        postAdapter = MyPostListAdapter(list, requireActivity(), listener)
+        postAdapter = MyPostListAdapter(list, requireActivity(), listener,appPrefs)
         binding.feedListView.adapter = postAdapter
         binding.feedListView.addOnScrollListener(ScrollListener {
             if (listOver) return@ScrollListener

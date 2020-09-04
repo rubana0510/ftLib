@@ -4,19 +4,24 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.ablanco.zoomy.Zoomy
+import com.feedbacktower.data.ApplicationPreferences
 import com.feedbacktower.data.models.Post
 import com.feedbacktower.databinding.ItemMyPostMediaBinding
 import com.feedbacktower.databinding.ItemMyPostTextBinding
-import com.feedbacktower.ui.home.feed.HomeFragmentDirections
+import kotlinx.android.synthetic.main.item_my_post_text.view.*
 
 /**
  * Created by sanket on 12-02-2019.
  */
 
-class MyPostListAdapter(private val list: List<Post>, private val activity: Activity, private val listener: Listener?) :
+class MyPostListAdapter(
+    private val list: List<Post>,
+    private val activity: Activity,
+    private val listener: Listener?,
+    private val appPrefs: ApplicationPreferences
+) :
     RecyclerView.Adapter<BaseViewHolder<*>>() {
     override fun getItemCount(): Int {
         return list.size
@@ -24,6 +29,18 @@ class MyPostListAdapter(private val list: List<Post>, private val activity: Acti
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         val item = getItem(position)
+
+        if(appPrefs.user?.id.equals(list.get(position).userId))
+        {
+
+            holder.itemView.moreButton.visibility=View.VISIBLE
+        }
+        else
+        {
+            holder.itemView.moreButton.visibility=View.GONE
+
+        }
+
         when (holder) {
             is TextPostViewHolder -> holder.bind(
                 createLikeClickListener(item, position),

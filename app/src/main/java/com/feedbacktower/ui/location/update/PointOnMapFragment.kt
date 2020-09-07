@@ -84,6 +84,7 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
         enableMyLocation()
         val oldLocation = user.business?.location
         if (oldLocation?.latitude != null && oldLocation.longitude != null) {
+            Log.d("MapLatLong1:","Lat:$oldLocation.latitude Long:${oldLocation.longitude}")
             googleMap?.zoomToLocation(LatLng(oldLocation.latitude!!, oldLocation.longitude!!), 15f)
             return
         }
@@ -123,6 +124,7 @@ class PointOnMapFragment : BaseViewFragmentImpl(), BusinessLocationContract.View
             LocationUtils.getInstance().lastKnownLocation = currLocation
             val oldLocation = user.business?.location
             if (oldLocation?.latitude == null || oldLocation.longitude == null) {
+                Log.d("MapLatLong2CurrLoc","$currLocation")
                 googleMap?.zoomToLocation(currLocation, 12f)
             }
         }

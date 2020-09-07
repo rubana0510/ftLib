@@ -161,18 +161,26 @@ class HomeFragment : Fragment() {
                 val view = scrollView.getChildAt(scrollView.childCount - 1) as View
                 val diff: Int = view.bottom - (scrollView.height + scrollView
                     .scrollY)
+
+                Log.d("ListValueDiff:","$diff")
+
                 if (diff == 0) {
                     if (!homeViewModel.postsOver && homeViewModel.postList.isNotEmpty()) {
                         val lastPostPosition = layoutManager.findLastVisibleItemPosition()
                         if (homeViewModel.postList.size == lastPostPosition + 1) {
                             val post = homeViewModel.postList[homeViewModel.postList.size - 1]
+
+
+
                             fetchPostList(post.createdAt)
                         }
                     }
                 }
+
             }
         isLoading = binding.isLoading
         noPosts = binding.noPosts
+
         /*  swipeRefresh.setOnRefreshListener {
               posts.clear()
               fetchPostList()
@@ -326,6 +334,7 @@ class HomeFragment : Fragment() {
             type = "video/*"
             action = Intent.ACTION_GET_CONTENT
         }
+        Log.d("VideoPicked","VideoSelect")
         startActivityForResult(Intent.createChooser(i, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO)
     }
 
@@ -356,6 +365,7 @@ class HomeFragment : Fragment() {
         override fun onVideoClick(item: Post, position: Int) {
             requireActivity().launchActivity<VideoPlayerScreen> {
                 putExtra(VideoPlayerScreen.URI_KEY, Env.S3_BASE_URL + "${item.media}")
+                Log.d("VideoLink","${item.media}")
             }
         }
     }
@@ -363,6 +373,7 @@ class HomeFragment : Fragment() {
 
     private fun fetchPostList(timestamp: String? = null) {
         homeViewModel.getPosts(timestamp)
+
     }
 
 

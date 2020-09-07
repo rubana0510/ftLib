@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.feedbacktower.R
@@ -15,6 +16,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player_screen.*
@@ -35,13 +37,20 @@ class VideoPlayerScreen : BaseActivity() {
     private var playbackPosition: Long = 0
     private val ivHideControllerButton: ImageView by lazy { findViewById<ImageView>(R.id.exo_controller) }
     private lateinit var uri: Uri
+    private var bandwidthMeter = DefaultBandwidthMeter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_player_screen)
+
+
         val url = intent?.getStringExtra(URI_KEY)
             ?: throw  IllegalArgumentException("Video Uri cannot be null")
         uri = Uri.parse(url)
+        
+        Log.d("URI",""+URI_KEY)
+
+
         hideSystemUi()
         closeButton.setOnClickListener{finish()}
     }
@@ -49,17 +58,22 @@ class VideoPlayerScreen : BaseActivity() {
     private fun initializePlayer() {
 
         trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
-        mediaDataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"))
+        mediaDataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"),bandwidthMeter)
 
         val mediaSource = ExtractorMediaSource.Factory(mediaDataSourceFactory)
             .createMediaSource(uri)
 
+        Log.d("URL",""+uri)
+
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+
+        playerView.setPlayer(player);
 
 
         with(player) {
             prepare(mediaSource, false, false)
             playWhenReady = true
+            Log.d("REady",""+playWhenReady)
         }
 
 
@@ -91,11 +105,16 @@ class VideoPlayerScreen : BaseActivity() {
     public override fun onStart() {
         super.onStart()
 
+        Log.d("Start","start")
+
         if (Util.SDK_INT > 23) initializePlayer()
     }
 
     public override fun onResume() {
         super.onResume()
+
+        Log.d("StartR","startR")
+
 
         if (Util.SDK_INT <= 23) initializePlayer()
     }

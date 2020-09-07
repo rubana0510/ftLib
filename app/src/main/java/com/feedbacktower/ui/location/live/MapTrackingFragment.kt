@@ -219,6 +219,9 @@ class MapTrackingFragment : Fragment(), OnMapReadyCallback {
                 if (latitude != 0.0 && longitude != 0.0) {
                     googleMap?.clear()
                     val loc = LatLng(latitude, longitude)
+
+                    Log.d(TAG,"Marker:,$loc")
+
                     googleMap?.addMarker(MarkerOptions().position(loc).title("Location Saved at: ${System.currentTimeMillis().toRelativeTime()}"))
                     googleMap?.moveCamera(CameraUpdateFactory.newLatLng(loc))
                     googleMap?.zoomToLocation(loc, 20f)

@@ -1,6 +1,7 @@
 package com.feedbacktower.ui.map
 
 import android.os.Bundle
+import android.util.Log
 import com.feedbacktower.R
 import com.feedbacktower.data.models.Location
 import com.feedbacktower.ui.base.BaseActivity
@@ -35,6 +36,9 @@ class MapScreen : BaseActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         val loc = LatLng(location.latitude!!, location.longitude!!)
+
+        Log.d("MapLocations:","$loc")
+
         mMap.addMarker(MarkerOptions().position(loc).title("Last location"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc))
         mMap.zoomToLocation(loc, 20f)

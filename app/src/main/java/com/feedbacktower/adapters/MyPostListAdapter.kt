@@ -159,6 +159,7 @@ class MyPostListAdapter(
                 post = item
                 videoClick = videoClickListener
                 likeClickListener = listener
+
                 openProfileListener = profileListener
                 moreClickListener = moreListener
                 executePendingBindings()

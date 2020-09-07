@@ -146,6 +146,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
@@ -190,8 +192,9 @@ dependencies {
     //cropper
     implementation 'com.github.yalantis:ucrop:2.2.3'
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
     //zoomy: for image zoom
-    implementation 'com.ablanco.zoomy:zoomy:1.1.0'
+    implementation 'com.github.rubana0510:ftImage:723729935c'
 
     //dagger
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"

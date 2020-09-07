@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Zoomy" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ft-android" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/myLib" vcs="Git" />
   </component>
 </project>
